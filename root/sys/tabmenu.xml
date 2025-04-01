@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<menu>
+		<!-- 비대면 신규 -->
+		<menucode groupid="1" id="1000" name="비대면 계좌개설" enable="true" file="plist/root/screen_account/p1000_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="1" id="1001" name="본인인증" enable="true" file="plist/root/screen_account/p1001_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+
+
+		
+		<!-- 비대면 -->
+		<menucode groupid="4" id="4100" name="비대면 계좌개설" enable="true" file="plist/root/screen/p4100_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4101" name="본인인증" enable="true" file="plist/root/screen/p4101_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4142" name="본인인증" enable="true" file="plist/root/screen/p4142_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4102" name="본인인증" enable="true" file="plist/root/screen/p4102_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4103" name="계좌개설 신청 내역 안내" enable="true" file="plist/root/screen/p4103_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4104" name="일반투자자 정보확인서 등록" enable="true" file="plist/root/screen/p4104_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4105" name="일반투자자 정보확인서 등록" enable="true" file="plist/root/screen/p4105_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4106" name="일반투자자 정보확인서 등록" enable="true" file="plist/root/screen/p4106_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4107" name="일반투자자 정보확인서 등록" enable="true" file="plist/root/screen/p4107_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4108" name="일반투자자 정보확인서 등록" enable="true" file="plist/root/screen/p4108_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4109" name="일반투자자 정보확인서 등록" enable="true" file="plist/root/screen/p4109_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4110" name="일반투자자 정보확인서 등록" enable="true" file="plist/root/screen/p4110_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4111" name="일반투자자 정보확인서 등록" enable="true" file="plist/root/screen/p4111_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4112" name="일반투자자 정보확인서 등록" enable="true" file="plist/root/screen/p4112_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4113" name="일반투자자 정보확인서 등록" enable="true" file="plist/root/screen/p4113_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4114" name="일반투자자 정보확인서 등록" enable="true" file="plist/root/screen/p4114_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4115" name="일반투자자 정보확인서 등록" enable="true" file="plist/root/screen/p4115_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4116" name="일반투자자 정보확인서 등록" enable="true" file="plist/root/screen/p4116_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4117" name="고객정보입력" enable="true" file="plist/root/screen/p4117_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4143" name="고객정보입력" enable="true" file="plist/root/screen/p4143_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4144" name="고객정보입력" enable="true" file="plist/root/screen/p4144_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4145" name="고객정보입력" enable="true" file="plist/root/screen/p4145_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4118" name="약관승인 및 위험고지 확인" enable="true" file="plist/root/screen/p4118_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4119" name="이체출금 계좌등록" enable="true" file="plist/root/screen/p4119_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4120" name="신분증제출" enable="true" file="plist/root/screen/p4120_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4121" name="영상통화" enable="true" file="plist/root/screen/p4121_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4122" name="영상통화" enable="true" file="plist/root/screen/p4122_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4123" name="영상통화" enable="true" file="plist/root/screen/p4123_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4124" name="본인확인" enable="true" file="plist/root/screen/p4124_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		
+		<menucode groupid="4" id="4125" name="신분증제출" enable="true" file="plist/root/screen/p4125_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<!-- <menucode groupid="4" id="4125" name="신분증제출" enable="true" file="plist/root/screen/p4225_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/> -->
+
+		<menucode groupid="4" id="4129" name="계좌개설 결과" enable="true" file="plist/root/screen/p4129_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		// workContent_20200206
+		<menucode groupid="4" id="4131" name="ID 등록" enable="true" file="plist/root/screen/p4131_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4132" name="ID 등록 완료" enable="true" file="plist/root/screen/p4132_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4133" name="소액이체 계좌인증" enable="true" file="plist/root/screen/p4133_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="4" id="4134" name="타금융기관 계좌인증" enable="true" file="plist/root/screen/p4134_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		// 비대면 절차개선 - 2020.09.28
+        <menucode groupid="4" id="4135" name="약관승인 및 위험고지 확인" enable="true" file="plist/root/screen/p4135_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+        <menucode groupid="4" id="4136" name="위험고지 녹취안내" enable="true" file="plist/root/screen/p4136_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+        <menucode groupid="4" id="4141" name="금융거래 목적 확인서" enable="true" file="plist/root/screen/p4141_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+	</menu>
+</root>
+
+
+
+
+
+
+
+
+
+
+
+

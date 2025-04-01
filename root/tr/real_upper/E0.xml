@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<STRUCT CODE="E0" SERVICECODE="E0" NAME="긴급공지" COMMENT="긴급공지">
+	<BLOCK CODE="PageBlock" NAME="PageBlock" SEND="NO" ATTR="NO" OCCURS="NO">
+		<!-- <FIELD CODE="type" TYPE="CHAR" SIZE="2" NAME="must be 'EO'"/> -->
+		<!-- <FIELD CODE="msgtp" TYPE="CHAR" SIZE="1" NAME="메시지유형(1-긴급공지, 0-일반공지)"/>
+		<FIELD CODE="scope" TYPE="CHAR" SIZE="1" NAME="적용범위(0-직원,1-고객,2-직원개인,3-고객개인,4-전체)"/>
+		<FIELD CODE="rcvr" TYPE="CHAR" SIZE="16" NAME="수신자(개인에게 전달하는 경우 개인의 id(클라이언트 검증용))"/>
+		<FIELD CODE="title" TYPE="CHAR" SIZE="80" NAME="제목"/>
+		<FIELD CODE="content" TYPE="CHAR" SIZE="2048" NAME="내용"/> -->
+
+		<FIELD CODE="msgtp" TYPE="CHAR" SIZE="1" NAME="1-마스터리로드,2:장운영공지,3:강제종료,4:강제제기동,5:장전환공지(주야간)"/>
+		<FIELD CODE="subtp" TYPE="CHAR" SIZE="2" NAME="보조유형 장운영,주야간 전환공지 등에서 사용할 수 있는 추가유형"/>
+		<FIELD CODE="scope" TYPE="CHAR" SIZE="1" NAME="적용범위(0-직원,1-고객,2-직원개인,3-고객개인,4-전체)"/>
+		<FIELD CODE="rcvr" TYPE="CHAR" SIZE="16" NAME="수신자(개인에게 전달하는 경우 개인의 id(클라이언트 검증용))"/>
+		<FIELD CODE="title" TYPE="CHAR" SIZE="80" NAME="제목"/>
+		<FIELD CODE="title" TYPE="CHAR" SIZE="10" NAME="해외선물상품코드"/>
+		<FIELD CODE="content" TYPE="CHAR" SIZE="512" NAME="내용"/>
+	</BLOCK>
+</STRUCT>

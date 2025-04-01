@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<br/>
+<!--
+ *********************************************************************************
+ **
+ ** 화면을 그린 후에 필요한 작업을 한다. 
+ ** - TR을 배열에 담는다. 전송은 특이한 경우가 아니면 basescreen에서 일괄적으로 전송한다.
+ **
+ *********************************************************************************
+ -->
+<class id="css_4105_select"
+	groupid="gr_4105_100" 
+	width="$w($g_lcdwidth,92)" 
+	height="$h($g_lcdHeight,8.3)"  
+	align="center"
+	backcolor="ffffff"
+	backcolor_active="ffffff"
+	fontsize="$g_fontSize_big1" 
+	fontname="$g_baseFontName"
+	textcolor="444444"
+	textcolor_active="e33433"
+	border_width="$g_roundHeight"	
+	border_color="bbbbbb"
+	border_width_active="$g_roundHeight"
+	border_color_active="e33433"
+	onclicked="btn_4105_onclciked"
+	/>
+<action id="btn_4105_onclciked" 
+value="
+	if($g_IN_REQUEST_AGE < 20){		$setvar(vg_4105_100_select.selectkey = 1);	}
+	elseif($g_IN_REQUEST_AGE < 41){		$setvar(vg_4105_100_select.selectkey = 2);	}
+	elseif($g_IN_REQUEST_AGE < 51){		$setvar(vg_4105_100_select.selectkey = 3);	}
+	elseif($g_IN_REQUEST_AGE < 61){		$setvar(vg_4105_100_select.selectkey = 4);	}
+	else{								$setvar(vg_4105_100_select.selectkey = 5);	}
+" />
+<action id="screen_contents_onload" value="
+	$logvar(g_tf_4102_confirm_2_var);
+	$setvar(
+		,img_step_1.hidden=false
+		,img_step_2.hidden=true
+		,img_step_3.hidden=true
+		,img_step_4.hidden=true
+		,img_step_5.hidden=true
+		,img_step_6.hidden=true
+		,img_step_7.hidden=true
+		,img_step_8.hidden=true
+		,lbl_open_account_title.x=$w($g_lcdwidth,4.6) // 순서대로 오지 않을경우에 치우친다.
+		,lbl_account_title_step_1.hidden=true
+		,lbl_account_title_step_2.hidden=false
+		,lbl_account_title_step_3.hidden=false
+		,lbl_account_title_step_4.hidden=false
+		,lbl_account_title_step_5.hidden=false
+		,lbl_account_title_step_6.hidden=false
+		,lbl_account_title_step_7.hidden=false
+		,lbl_account_title_step_8.hidden=false
+		,lbl_account_title_step_2.textcolor=ffffff
+		,lbl_account_title_step_3.textcolor=777777
+		,lbl_account_title_step_4.textcolor=777777
+		,lbl_account_title_step_5.textcolor=777777
+		,lbl_account_title_step_6.textcolor=777777
+		,lbl_account_title_step_7.textcolor=777777
+		,lbl_account_title_step_8.textcolor=777777
+		,vg_account_title_step.hidden=false
+		
+		,popscreen_open_account_history.hidden=true
+		,popscreen_open_account_history_2.hidden=true
+		,popscreen_open_account_confirm.hidden=false
+		,popscreen_open_account_confirm.x=$w($g_lcdwidth,57)
+		,menu_num=4105
+	);
+	//$setControlHidden(popscreen_open_account_history,true);
+	//$setControlHidden(popscreen_open_account_history_2,true);
+	//$setControlHidden(popscreen_open_account_confirm,false);
+
+	$logvar(g_IN_REQUEST_AGE);
+	if($g_IN_REQUEST_AGE < 20){		$setvar(vg_4105_100_select.selectkey = 1);	}
+	elseif($g_IN_REQUEST_AGE < 41){		$setvar(vg_4105_100_select.selectkey = 2);	}
+	elseif($g_IN_REQUEST_AGE < 51){		$setvar(vg_4105_100_select.selectkey = 3);	}
+	elseif($g_IN_REQUEST_AGE < 61){		$setvar(vg_4105_100_select.selectkey = 4);	}
+	else{								$setvar(vg_4105_100_select.selectkey = 5);	}
+			
+"/>
+<action id="btn_4105_confirm_onclicked" value="
+	if($strlen($vg_4105_100_select.selectkey)<1){
+		$alert(,,답변을 선택해주세요.);
+		return;
+	}
+
+	$callaction(fnConfig_SetValue,g_IN_CUST_Q1 	,$vg_4105_100_select.selectkey); 	//Q1
+
+	$callaction(Act_Open_Account_Move,4106);
+"/>
+<screen id="screen_4105_100"
+	class="cs_screen_contents"
+	backcolor="eeeeee"
+	onload="screen_contents_onload"
+	>
+	<br/>
+	<viewgroup 
+		width="$super.width"
+		height="$h($g_lcdHeight,0.5)"
+		backcolor="c3201f"
+		>
+		<label width="$w($g_lcdwidth,10)" backcolor="ffffff"/>
+	</viewgroup>
+	<br/>
+	<screen
+		height="$this.remain_bottom"
+		backcolor="eeeeee"
+		>
+		<viewgroup 
+			width="$w($g_lcdwidth,10.2)"
+			height="$h($g_lcdHeight,8.5)"		
+			>
+			<label textcolor="e33433" fontsize="$g_fontsize_big3"  align="right" value="01"/>
+		</viewgroup>
+		<br/>
+		<label
+			width="$super.width" 
+			height="$h($g_lcdHeight,3)"
+			value="고객님의 연령대는 어떻게 되십니까?" 
+			margin_left="$w($g_lcdWidth,4)"
+			fontsize="$g_fontsize_big1" 
+			fontname="$g_baseFontNameBold"
+			align="center"
+			layout="top"	
+			/>
+		<br height="$h($g_lcdHeight,3)"/><blank width="$w($g_lcdWidth,4)"/>
+		<viewgroup id="vg_4105_100_select" height="$h($g_lcdHeight,50)" >
+			<button
+				class="css_4105_select"
+				value="19세 이하" 
+				key="1"
+				/>
+			<br height="$h($g_lcdHeight,1.5)"/>
+			<button 
+				class="css_4105_select"
+				value="20세 ~ 40세" 
+				key="2"
+				/>
+			<br height="$h($g_lcdHeight,1.5)"/>
+			<button
+				class="css_4105_select"
+				value="41세 ~ 50세" 
+				key="3"
+				/>
+			<br height="$h($g_lcdHeight,1.5)"/>
+			<button 
+				class="css_4105_select"
+				value="51세 ~ 60세" 
+				key="4"
+				/>
+			<br height="$h($g_lcdHeight,1.5)"/>
+			<button 
+				class="css_4105_select"
+				value="61세 이상"
+				key="5" 
+				/>
+		</viewgroup>
+		<br/><blank width="$w($g_lcdWidth,4)"/>
+		<button 
+			id="btn_4105_bf"
+			fontsize="$g_fontsize_big3" 
+			y="$result($this.remain_bottom-$h($g_lcdHeight,13.4))"
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,9.4)" 
+			backcolor="ffffff"
+			border_width="$g_roundHeight"
+			border_color="e33433"
+			backcolor_active="e5e5e5"
+			textcolor="e33433"
+			textcolor_active="e33433"
+			value="이전" 
+			onclicked="btn_open_account_history_onClicked"
+			//$callaction(Act_Open_Account_Move,4104);
+			//$closescreen(popscreen_base)
+			//enable="false"
+			//backcolor_disable="bfbfbf"
+			//textcolor_disable="999999"
+			/>
+		<blank width="$w($g_lcdWidth,1.8)"/>
+		<button 
+			id="btn_4105_af"
+			y="$result($this.remain_bottom-$h($g_lcdHeight,13.4))"
+			fontsize="$g_fontsize_big3" 
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,9.4)" 
+			backcolor="e33433"
+			border_width="$g_roundHeight"
+			backcolor_active="cc2f2e"
+			textcolor="ffffff"
+			textcolor_active="ffffff"
+			value="다음" 
+			onclicked="btn_4105_confirm_onclicked"
+			//enable="false"
+			//backcolor_disable="bfbfbf"
+			//textcolor_disable="999999"
+			/>
+	</screen>
+</screen>

@@ -1,0 +1,1050 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+
+<action id="N_EnterBackGround" scope="common" 
+value="
+	$log(************** N_EnterBackGround [$p_not_background_check][$g_is_vaccine_ing][$g_file_name][$g_menuCode][$g_is_background] ===============);
+	
+	if($g_menuCode==2131
+	|| $g_menuCode==2132
+	|| $g_menuCode==5131
+	|| $g_menuCode==5132
+	|| $g_menuCode==7131
+	|| $g_menuCode==7132
+	|| $g_menuCode==8132
+	|| $g_menuCode==8133
+	){
+		if($g_is_background_check){ 
+			$log(***************** 차트셋팅:N_EnterBackGround);
+			return;	
+		}				// 차트 화면등에서 쓰임 	
+
+		// 20230110 앱 실행시 백그라운드 체크함
+		//if($g_isAndroid){
+		//	$log(***************** 차트셋팅:N_EnterBackGround 리턴 );
+		//	return;	
+		//}	
+	}
+	
+	if($p_not_background_check){		return;		} 		// 안드로이드는 위에 다른 화면이 있을경우 백그라운드 호출한다.
+	if($isequal_string($g_menuCode, 1920)){ 	$log(***********  로그인 화면 리턴); return;		} 	// 로그인 화면일 경우
+
+	if($g_menu_open_npki_flag){ 	$log(***********  로그인 후 공인인증서 화면); return;		} 
+
+	if($isequal_string($g_file_name, intro_after)){ 	$log(***********  intro_after 화면 리턴); return;		} 	// 로그인 화면일 경우
+
+	$setvar_common(g_n_becomeActive_process = false);
+	$stopnstimer(TIMER_DISCONNECT_ALL);  
+
+	$setvar_common(
+        g_background_at_day  	= $now(yyyyMMdd)
+        ,g_background_at_hour 	= $now(HH)
+        ,g_background_at_min  	= $now(mm)
+    );
+    $logvar(
+        g_background_at_day  	
+        ,g_background_at_hour 	
+        ,g_background_at_min  	
+    );
+
+	$setvar(vg_4100_background.hidden = false );
+	$web_background(trading_webview);
+	$setvar_common(g_is_master_relading = false );		// 백그라운드 넘어갈경우 무조건 마스터 받지 않게 하기위해 추가함 - 2020/08/05
+
+
+	$callaction(fnClosePopScreen); // 2020/02/12 추가
+
+	if($g_is_open_3gAlarm){
+		$log(****************** 3G 팝업을 닫는다);
+		$closescreen(pop_3GAlarm); 
+	}
+	//$ssl_close($g_SSLSocketName);  					// Android11 버전에서 소켓을 끊고 나면 반응을 하지 않는다.
+	if($g_is_exit){		$exit();	return;		}
+	if($g_menuCode == 1920 ){		return;		}		//로그인화면
+	if($g_is_fingerprint_background){ 			$setvar_common(g_is_fingerprint_background = );		return;		} // 지문인식 백그라운드일 리턴 
+	$setvar_common(g_is_background = true);
+
+
+	
+	if($g_screen_all_menu_state_flag){
+		// 메뉴가 열려있는 상태로 백그라운드 왔다면. 포그라운드 전환 후 메뉴 닫을때 N_fnBecomeActive_GoScreen 호출
+		$setvar_common(g_is_background_all_menu= true);
+	}else{
+		// 메뉴가 닫혀있는 상태로 백그라운드 왔다면. 아무런 추가내용 없음.
+		$setvar_common(g_is_background_all_menu= false);
+	}
+
+
+	$log(*********** BACKGROUND [$g_is_background]);
+
+	$callaction(N_fnConfig_Save_Background);
+
+	$log(*** 공동인증비번:g_login_cert[$g_login_cert]	);
+	$log(민료시간 공동인증:$g_login_expiry);
+	
+	if(!$g_is_open_account){
+		$closescreen_all();
+	}
+
+	// 서버연결 끊기.
+	if ($g_isAndroid){
+		// 실시간은 다 취소하고, 올라올때 다시 셋팅한다.
+		//$callaction(screen_contents_onunload);
+		$callaction(fnRealData_All_Stop);
+		//$setnstimer(TIMER_DISCONNECT_ALL,0.1,N_fnDisconnect_All_Timer,FALSE);    // 끊지 않는걸로 테스트 한다
+		//$callaction(N_fnDisconnect_All_Timer);
+	}
+	else{
+		//$callaction(N_fnDisconnect_All_Timer);
+		$callaction(fnRealData_All_Stop); 					// 실시간이 들어와서 문제가 된다.
+		//$setnstimer(TIMER_DISCONNECT_ALL,60,N_fnDisconnect_All_Timer,FALSE);    
+	}
+" />
+<action id="fnRealData_All_Stop" 
+scope="common"
+value="
+
+	$log(************* fnRealData_All_Stop g_menuCode:[$g_menuCode]);
+	$log(******** dxFeed 실시간 전부 끊음.);
+	$dxfeed_real_disconnect_all();
+	$dxfeed_real_disconnect_one();
+	
+	$log(******** 미주옵션 끊음.[$getarrayvarcount(g_manager_realdata_del)][$getarrayvarcount(g_manager_realdata_del)]);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_info_search,$g_SiseSocketName); 
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_1220,$g_SiseSocketName);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_2110,$g_SiseSocketName);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_2131,$g_SiseSocketName);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_2132,$g_SiseSocketName);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_2240_fucode,$g_SiseSocketName);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_2240_opcode,$g_SiseSocketName);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_2260_fucode,$g_SiseSocketName);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_2260_opcode,$g_SiseSocketName);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_2320_fucode,$g_SiseSocketName);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_2320_opcode,$g_SiseSocketName);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_2340_fucode,$g_SiseSocketName);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_2340_opcode,$g_SiseSocketName);
+	$callaction(Act_RealData_StartNStop,false, array_rtcd_2370,$g_SiseSocketName);
+	$callaction(Act_RealData_StartNStop,false, array_rtcd_2380,$g_SiseSocketName);
+
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_5110,$g_SiseSocketName_DOMESTIC); 
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_5120,$g_SiseSocketName_DOMESTIC);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_5130,$g_SiseSocketName_DOMESTIC);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_5131,$g_SiseSocketName_DOMESTIC); 
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_5132,$g_SiseSocketName_DOMESTIC); 
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_5140,$g_SiseSocketName_DOMESTIC);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_5150,$g_SiseSocketName_DOMESTIC);
+	$callaction(Act_RealData_StartNStop,false, array_real,$g_SiseSocketName_DOMESTIC);  			//5160
+	$callaction(Act_RealData_StartNStop,false, array_c_real,$g_SiseSocketName_DOMESTIC);    		//5180
+	$callaction(Act_RealData_StartNStop,false, array_p_real,$g_SiseSocketName_DOMESTIC);    		//5180
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_5240,$g_SiseSocketName_DOMESTIC);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_5250,$g_SiseSocketName_DOMESTIC);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_5260,$g_SiseSocketName_DOMESTIC);
+
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_7120,$g_SiseSocketName_DOMESTIC); 
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_7130,$g_SiseSocketName_DOMESTIC);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_7131,$g_SiseSocketName_DOMESTIC);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_7132,$g_SiseSocketName_DOMESTIC);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_7140,$g_SiseSocketName_DOMESTIC);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_7150,$g_SiseSocketName_DOMESTIC);
+	$callaction(Act_RealData_StartNStop,false, array_c_real,$g_SiseSocketName_DOMESTIC);    		//7180
+	$callaction(Act_RealData_StartNStop,false, array_p_real,$g_SiseSocketName_DOMESTIC);    		//7180
+
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_option_search_FA_C,$g_SiseSocketName); 			
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_option_search_FA_P,$g_SiseSocketName); 			
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_option_search_FB_C,$g_SiseSocketName); 			
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_option_search_FB_P,$g_SiseSocketName); 			
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_search_FA_STOCK,$g_SiseSocketName);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_8110,$g_SiseSocketName);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_8110,$g_SiseSocketName);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_8132,$g_SiseSocketName);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_8133,$g_SiseSocketName);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_8180_FA_C,$g_SiseSocketName); 			
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_8180_FA_P,$g_SiseSocketName); 			
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_8180_FB_C,$g_SiseSocketName); 			
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_8180_FB_P,$g_SiseSocketName); 			
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_8180_FA_STOCK,$g_SiseSocketName);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_8220_fucode,$g_SiseSocketName);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_8220_opcode,$g_SiseSocketName);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_8240_fucode,$g_SiseSocketName);
+	$callaction(Act_RealData_StartNStop,false, g_arr_realdata_8240_opcode,$g_SiseSocketName);
+	
+	
+	$logarrayvar(g_manager_realdata);
+	for($i = 0; $i < $getarrayvarcount(g_manager_realdata); $i++){
+		$setvar(
+			tmp_realdata_arr_name = $getarrayvar(g_manager_realdata,$i,0)
+			,tmp_realdata_arr_socket = $getarrayvar(g_manager_realdata,$i,1)
+			,tmp_realdata_arr_cnt = $getarrayvarcount($tmp_realdata_arr_name)
+		);
+		$log(************* fnRealData_All_Stop [$tmp_realdata_arr_name],[$tmp_realdata_arr_cnt],[$tmp_realdata_arr_socket]);
+		
+		if($tmp_realdata_arr_cnt > 0){
+			$callaction(Act_RealData_StartNStop,false, $tmp_realdata_arr_name,$tmp_realdata_arr_socket,true); 
+		}
+	}
+	$delarrayvar(g_manager_realdata);
+	//$logarrayvar(g_manager_realdata_del);
+	if($getarrayvarcount(g_manager_realdata_del)>0){
+		$callaction(Act_RealData_StartNStop,false, g_manager_realdata_del,$g_SiseSocketName,true); 
+		$callaction(Act_RealData_StartNStop,false, g_manager_realdata_del,$g_SiseSocketName_DOMESTIC,true); 
+	}
+	
+"/>
+<action id="fnRequest_CSBLOGOFF_After" 
+scope="common"
+value="
+
+" />
+<action id="N_fnDisconnect_All_Timer"
+scope="common"
+value="
+	$stopnstimer(TIMER_POLLING);  $log(***** 폴링중지 11); // 폴링 멈춤 
+	if(!$g_bLoginStatus){
+		$log(********* LOGOUT TR을 보낸다.);
+		$setvar(
+			,IN_usid = $g_login_id
+			,IN_name = $g_recv_UserName
+			,IN_maca = $g_mac_address
+			,IN_pcip = $g_recv_AUIP
+			,reqid_CSBLOGOFF = $callaction(FNSEND_ORDERDATA,CSBLOGOFF,Input,,,,)
+		); 
+		$setvar_common(g_bLoginStatus = true);
+	}
+	$callaction(N_Act_Network_Disconnect_All);
+"/>
+<action id="N_Act_Network_Disconnect_All" scope="common" 
+params="
+p_disconnect_after_action
+"
+value="
+	$stopnstimer(TIMER_POLLING);  $log(***** 폴링중지 12); // 폴링 멈춤 
+	$setvar_common(g_OrderServerKeyChangeResult = false); 	// 키교환 플래그를 초기화한다. 
+
+	$delvar(g_RealServerIP_Order);
+	$setvar_common(
+		N_g_disconnect_all 			= false
+		,N_g_disconnect_sise 		= false
+		,N_g_disconnect_domestic 	= false
+		,N_g_disconnect_real 	 	= false
+		,N_isBecomeActive 			= true
+	);
+	$disconnect($g_SiseSocketName);	
+	$disconnect($g_SiseSocketName_DOMESTIC);	
+	$disconnect($g_RealSocketName_Order);	
+	return;
+" />
+
+<action id="N_fnBecomeActive_GoScreen" scope="common" 
+value="
+	if($isequal_string($g_menuCode,8211)){
+		$callaction(fnGoScreen,8220);	
+		return;
+	}
+	$callaction(fnGoScreen,$g_menuCode);
+	if($g_menuCode == 8110 		// 와치리스트
+		|| $g_menuCode == 8180 		// 종합시세
+		|| $g_menuCode == 8132 		// 미국주식차트
+		|| $g_menuCode == 8133 		// 미국주식옵션차트
+		|| $g_menuCode == 8210 		// 주문
+		|| $g_menuCode == 8211 		// 정정주문
+		|| $g_menuCode == 8240 		// 순미결제
+	){
+		$log(***** dxFeed BecomeActive 실시간 재요청2);
+		$callaction(fnDxfeed_Real_Send);
+
+	}
+	
+"/>
+
+//20231116 권한 불필요 함으로 제거 (XML상에서 제거)
+<!-- <action id="fnSetUsageStus_Alarm" scope="common"
+value="
+	$callaction(fnPopover_AlertAction,fnSetUsageStus_Alarm_Confirm,사용정보 접근허용\n-원격제어 앱을 통한 금융사기를 예방하기 위해 사용합니다.,,확인);
+" />
+<action id="fnSetUsageStus_Alarm_Confirm" scope="common"
+value="
+	$setPermission_UsageStats();
+	//$exit();
+"/> -->
+
+<action id="N_BecomeActive" scope="common" 
+value="
+	$log(************** N_BecomeActive [$p_not_background_check][$g_is_vaccine_ing][$g_file_name][$g_is_background] ===============);
+
+	$setvar_common(g_is_background = false);
+	$stopnstimer(TIMER_DISCONNECT_ALL);
+
+	//20231116 권한 불필요 함으로 제거 (XML상에서 제거)
+	/* 
+	if($g_isAndroid){
+		$setvar(_permission_usagestaus = $checkPermission_UsageStats());
+		$logvar(_permission_usagestaus);
+		if(!$isequal_string($_permission_usagestaus,true)){
+			$callaction(fnSetUsageStus_Alarm);
+			return;
+		}
+	}
+	*/
+	//$log(실시간 재연결****** dxFeed 빠지면서);
+	//$callaction(fnDxfeed_Real_Send);
+
+
+	if($g_menuCode==2131
+	|| $g_menuCode==2132
+	|| $g_menuCode==5131
+	|| $g_menuCode==5132
+	|| $g_menuCode==7131
+	|| $g_menuCode==7132
+	|| $g_menuCode==8132
+	|| $g_menuCode==8133
+	){
+		if($g_is_background_check){  				// 차트 화면등에서 쓰임 
+			//$log(************** N_BecomeActive Return Chart Screen g_menuCode:[$g_menuCode]);
+			$log(***************** 차트셋팅:N_BecomeActive);
+			$setvar_common(g_is_background_check = );  	
+			return;	
+		}		
+		//if($g_isAndroid){
+		//	if($isconnect($g_SiseSocketName)
+		//	&& $isconnect($g_SiseSocketName_DOMESTIC)
+		//	&& $isconnect($g_RealSocketName_Order)
+		//	){
+		//		$log(***************** 차트셋팅:N_BecomeActive 리턴 );
+		//		return;	
+		//	}
+		//}	
+		
+	}
+	$setvar_common(g_is_background_check = );
+
+	if($p_not_background_check){						// 안드로이드 백신때문에 
+		$log(************** N_BecomeActive Return Android Vaccine p_not_background_check:[$p_not_background_check]);
+		$setvar_common(p_not_background_check = FALSE); 
+		return;		
+	} 		
+	if($isequal_string($g_menuCode,1920)){ 	// 로그인 화면일 경우
+		$log(************** N_BecomeActive Return login.xml g_menuCode:[$g_menuCode]);
+		$checkPushData(fn_push_receive); 			// 들어온 푸쉬가 있는지 확인 
+		return;		
+	} 	
+
+	if($isequal_string($g_file_name,intro_after)){		//intro,intro_after 체크
+		$log(************** N_BecomeActive Return intro_after.xml g_file_name:[$g_file_name]);
+		return;		
+	} 		
+	if($strlen($g_file_name) > 0){						//intro,intro_after 체크
+		$log(************** N_BecomeActive OpenFile intro.xml g_file_name:[$g_file_name]);
+		$openfile(plist/root/intro.xml); 		
+		return;		
+	} 		
+
+	//if($g_isAndroid){
+	if(true){
+		if($isconnect($g_SiseSocketName)
+		&& $isconnect($g_SiseSocketName_DOMESTIC)
+		&& $isconnect($g_RealSocketName_Order)
+		){
+			$log(************** N_BecomeActive Return Android Socket Connected);
+			$logvar(g_menu_open_npki_flag);
+			if($g_screen_all_menu_state_flag || $g_menu_open_npki_flag){ return; }
+
+			$callaction(N_fnBecomeActive_GoScreen); 
+			return;
+		}
+	}
+	
+	$setvar(vg_4100_background.hidden = true );
+	$web_active(trading_webview);
+	//$logvar(tmp_tradeweb);	
+	
+	$setvar_common(g_is_background = false);
+	
+	if($strlen($g_file_name) > 0){	//intro,intro_after 체크
+		$log(************** N_BecomeActive Openfile intro.xml g_file_name:[$g_file_name]);
+		$openfile(plist/root/intro.xml); 		
+		return;		
+	} 		
+
+	//$log(포그라운드  :$g_menuCode,$g_is_fingerprint_background, g_menuCode, g_itemcode_d, g_itemcode_n);
+
+	if($g_is_fingerprint_background){ 	// 지문인식 백그라운드일 경우에는 리턴시킨다. 
+		$log(************** N_BecomeActive Return g_is_fingerprint_background:[$g_is_fingerprint_background]);
+		$setvar_common(g_is_fingerprint_background = );		
+		return;		
+	} 	
+
+	
+	$callaction(fnConfig_Load_All); // 설정파일을 불러온다.  - 어플 실행 시 하고 있는떼 필요가 있는지 확인해야 함. 
+	
+	$log(세로 모드로 강제로 바꾼다. ***********);
+	if($g_isAndroid) {		$rotateView(1);		}
+	$lcdallopen($lcd_open); 	
+	$popscreen(pop_host_msg,center);
+
+	$setvar_common(g_reconnect_processing = true); 	// 사용하는데 없음.
+	$security_delkeytoken();
+	$setvar_common(g_n_becomeActive_process = true); // 사용하는데 없음.
+
+
+	$setvar(tmp_now_check = $now(yyyyMMddHHmm));
+	$logvar(g_login_expiry, tmp_now_check);
+	if($g_login_expiry < $tmp_now_check){		
+		$log(************** N_BecomeActive Openfile Intro.xml g_login_expiry:[$g_login_expiry], tmp_now_check:[$tmp_now_check]);	
+		$callaction(fnConfig_SetValue,g_login_id,));		// 로그인 아이디 초기화 
+		$closescreen(pop_host_msg);
+		$callaction(fnPopover_AlertAction,N_Act_Move_Intro_Alert,로그인 만료기간이 지났습니다.,,확인);
+		return;
+	}
+	
+	$checkPushData(fn_push_receive); 			// 들어온 푸쉬가 있는지 확인 
+	$logvar(N_g_disconnect_sise, N_g_disconnect_domestic, N_g_disconnect_real);
+	$log(************** N 시세: $isconnect($g_SiseSocketName));
+	$log(************** N 국내: $isconnect($g_SiseSocketName_DOMESTIC));
+	$log(************** N 체결: $isconnect($g_RealSocketName_Order));
+
+	if(!$isconnect($g_SiseSocketName)
+		|| !$isconnect($g_SiseSocketName_DOMESTIC)
+		|| !$isconnect($g_RealSocketName_Order)
+	){ 	
+		if($isconnect($g_SiseSocketName)){			$disconnect($g_SiseSocketName);		}
+		if($isconnect($g_SiseSocketName_DOMESTIC)){	$disconnect($g_SiseSocketName_DOMESTIC);		}
+		if($isconnect($g_RealSocketName_Order)){	$disconnect($g_RealSocketName_Order);		}
+
+		$log(************** N_BecomeActive Not Connect g_SiseSocketName:[$isconnect($g_SiseSocketName)], g_SiseSocketName_DOMESTIC:[$isconnect($g_SiseSocketName_DOMESTIC)], g_RealSocketName_Order:[$isconnect($g_RealSocketName_Order)] );	
+
+		//새로 제작 반영
+		$callaction(N_Download_xml_Start,true); 	//intro_after는 false, becomeactive:true
+		return;
+		//$callaction(N_Act_BecomeActive_Connect, N_Act_BecomeActive_Connected_MASTER);	
+
+	}
+	else{
+		$log(************** N_BecomeActive Connected);
+		//$closescreen(pop_host_msg);
+		$closescreen_all();
+	}
+" />
+<action id="N_Act_BecomeActive_Connect" scope="common"
+params="p_after_action"
+value="
+	$log(************** N_Act_BecomeActive_Connect);	
+	$setvar(	tmp_connected_action = $p_after_action 	);
+
+	// 국내선물 서버 연결 
+	$callaction(Act_Network_Connect
+		, $g_SiseSocketName_DOMESTIC
+		, $g_serverIP_DOMESTIC
+		, $g_serverPort_DOMESTIC
+		, $g_strVersionReqStart_DOMESTIC
+		, $g_strVersionReqEnd_DOMESTIC
+		, 0
+		//, Act_Network_RecvData_Master_d 			
+		, Act_Network_RecvData 			
+		, N_Act_Server_Connect_D_BecomeActive 			// 연결 후 액션 
+	);
+"/>
+<action id="N_Act_Server_Connect_D_BecomeActive" scope="common" 
+params="p_socket_name, p_socket_no"
+value="
+	$log(************** N_Act_Server_Connect_D_BecomeActive);
+	if($p_socket_no<0){
+		$log(************* N_Act_Server_Connect_D_BecomeActive Connect Error p_socket_no:[$p_socket_no] );
+		return;
+	}
+	$setvar( p_become_active = true );
+	$setvar_common(g_iSocketNumber_DOMESTIC = $p_socket_no); 		// Act_Network_RecvData 에서 사용 
+
+	// 해외 선물 서버 연결 
+	$callaction(Act_Network_Connect
+		, $g_SiseSocketName
+		, $g_SiseServerIP
+		, $g_SiseServerPort
+		, $g_strVersionReqStart
+		, $g_strVersionReqEnd
+		, 0
+		, Act_Network_RecvData_Master 			
+		, N_Act_Server_Connect_D_connected_BecomeActive
+	);
+" />
+<action id="N_Act_Server_Connect_D_connected_BecomeActive" scope="common" 
+params="p_socket_name, p_socket_no"
+value="
+	$log(************** N_Act_Server_Connect_D_connected_BecomeActive);
+	if($p_socket_no<0){
+		$log(************* N_Act_Server_Connect_D_connected_BecomeActive Connect Error p_socket_no:[$p_socket_no] );
+		return;
+	}
+	$setvar_common(g_iSocketNumber = $p_socket_no); 			// Act_Network_RecvData 에서 사용 
+
+	//$callaction($tmp_connected_action);
+	$setsocketaction($g_SiseSocketName_DOMESTIC,Act_Network_RecvData,); 	// RecvAction 을 변경하여 보낸다.
+	$callaction(Act_KeyChange_Send,,$tmp_connected_action);  	//키교환 
+" />
+<action id="N_Act_BecomeActive_Connected_MASTER" scope="common"
+params="p_after_action"
+value="
+	$setvar(tmp_masterNxml_down_afteraction = $p_after_action);
+	// 마스터다운로드용으로 RecvAction을 변경한다.
+	//$setsocketaction($g_SiseSocketName_DOMESTIC,Act_Network_RecvData_Master_d,); 	// RecvAction 을 변경하여 보낸다.
+	$setvar_common(
+		g_isDownload 		= false
+		,g_isDownload_d		= false 
+		,g_isDownload_xml	= false
+	);
+	$log(************** N_Act_BecomeActive_Connected_MASTER g_isDownload:[$g_isDownload], g_isDownload_d:[$g_isDownload_d], g_isDownload_xml:[$g_isDownload_xml]);
+	$callaction(Act_Download_MasterNXml_Start, $g_strVersionFilePath, $g_strVersionFileName, fnMasterNXmlDownloading_BecomeActive, N_fnMasterNXmlDownloadComplete_BecomeActive);
+"/>
+<action id="N_fnConfig_Save_Background" scope="common"
+value="
+	// 현재 화면 등 저장해야 함.
+	$callaction(fnConfig_SetValue,g_menuCode,$g_menuCode); 	// 현재 화면을 저장한다.
+	// FnExitBtnClicked: 종료시 , fnGoLoginScreen:로그아웃 시 , fn_android_key_callback :안드로이드 백 버튼으로 종료시 
+	// 현재 종목코드를 저장한다.
+	$callaction(fnConfig_SetValue,g_itemcode 	,$g_itemcode); 							// 해외선물코드
+	$callaction(fnConfig_SetValue,g_itemcode_d 	,$g_itemcode_d); 						// 국내선물코드
+	$callaction(fnConfig_SetValue,g_itemcode_n 	,$g_itemcode_n); 						// 국내선물코드
+	// 현재 선택한 계좌번호를 저장한다. 
+	$callaction(fnConfig_SetValue,g_default_account_f 	,$g_default_account_f); 		// 해외계좌
+	$callaction(fnConfig_SetValue,g_default_account_d 	,$g_default_account_d); 		// 국내계좌
+	$callaction(fnConfig_SetValue,g_default_account 	,$g_default_account); 			// 전체계좌
+	$callaction(fnConfig_SetValue,g_default_account_f_l 	,$g_default_account_f_l); 	// 해외계좌
+	$callaction(fnConfig_SetValue,g_default_account_f_g 	,$g_default_account_f_g); 	// 해외계좌
+	//$logarrayvar(arr_config);
+	// 모든 설정파일 저장 
+	$callaction(fnConfig_Save_All); 
+"/>
+<action id="N_fnMasterNXmlDownloadFail" scope="common"
+value="
+	$callaction(Act_Network_Disconnect_All);
+	$openfile(plist/root/intro.xml);
+	return;
+	
+	//$callaction(N_fnConfig_Save_Background);
+	$openfile(plist/root/intro.xml);
+
+"/>
+<action id="N_fnMasterNXmlDownloadComplete_BecomeActive" scope="common"
+value="
+	$log(************** N_fnMasterNXmlDownloadComplete_BecomeActive g_isDownload:[$g_isDownload]);
+	if($p_error_cnt>0){
+	//if(true){			//테스트용
+		$closescreen(pop_host_msg);	
+		$callaction(fnPopover_AlertAction,N_fnMasterNXmlDownloadFail,해외 다운로드가 실패하였습니다.\n다시 시도하시겠습니까?,,확인);
+		return;
+	}
+	else{       
+		// 파일 날짜 저장 - 보낼때 사용한다. 
+		$callaction(fnConfig_SetValue,g_versionFile_date 	,$save_strFile_date);
+		$callaction(fnConfig_SetValue,g_versionFile_size 	,$save_strFile_size);
+
+		if($g_isDownload){
+		//if(true){ 		//테스트용
+			$log(************** N_fnMasterNXmlDownloadComplete_BecomeActive Return);
+			$closescreen(pop_host_msg);	
+			$callaction(fnPopover_AlertAction,N_Act_Move_Intro_Alert,변경된 파일이 존재합니다[해외 Master],,확인);
+			return;
+		}
+		$callaction(Act_Download_Master_Start_d, fnMasterDownloading_d_BecomeActive, N_fnMasterDownloadComplete_d_BecomeActive);
+	 }
+	 
+"/>
+<action id="N_fnMasterDownloadComplete_d_BecomeActive" scope="common"
+value="
+	$log(실패갯수:$p_error_cnt, $g_isDownload_d);
+	if($p_error_cnt>0){
+		$closescreen(pop_host_msg);	
+		$callaction(fnPopover_AlertAction,N_fnMasterNXmlDownloadFail,국내 다운로드가 실패하였습니다.\n다시 시도하시겠습니까?,,확인);
+		return;
+	}
+	else{       
+		// 파일 날짜 저장 - 보낼때 사용한다. 
+		$callaction(fnConfig_SetValue,g_versionFile_date_d 	,$save_strFile_date_d);
+		$callaction(fnConfig_SetValue,g_versionFile_size_d 	,$save_strFile_size_d);
+
+		if($g_isDownload_d){
+			$log(************** N_fnMasterDownloadComplete_d_BecomeActive Return);
+			$callaction(fnPopover_AlertAction,N_Act_Move_Intro_Alert,변경된 파일이 존재합니다[국내 Master],,확인);
+			return;
+		}
+		$callaction(Act_Download_XML_Start, fnXMLDownloading_BecomeActive, N_fnXMLDownloadComplete_BecomeActive);
+	 }
+" />
+
+<action id="N_Act_Move_Intro_Alert" scope="common"
+value="
+	$log(***** N_Act_Move_Intro_Alert );
+	// 현재 화면 등 저장해야 함.
+	//$callaction(N_fnConfig_Save_Background);
+	$callaction(N_fnDisconnectNIntro);
+"/>
+<action id="N_fnXMLDownloadComplete_BecomeActive" scope="common"
+value="
+	$log(********* N_fnXMLDownloadComplete_BecomeActive ********);
+	//$logvar(g_isDownload_xml);
+	if($g_isDownload_xml){		// XML 다운로드가 있으면 
+		$closescreen(pop_host_msg);	
+		$log(****** XML 다운로드 인트로로 보낸다.);
+		$callaction(fnPopover_AlertAction,N_Act_Move_Intro_Alert,XML 파일이 변경되었습니다.,,확인);
+		return;
+	}
+	$callaction(N_fnXMLDownloadComplete_BecomeActive_AfterAction);	
+"/>
+<action id="N_fnXMLDownloadComplete_BecomeActive_AfterAction" scope="common"
+value="
+	$setsocketaction($g_SiseSocketName,Act_Network_RecvData,); 	// RecvAction 을 변경하여 보낸다.
+	$setsocketaction($g_SiseSocketName_DOMESTIC,Act_Network_RecvData,); 	// RecvAction 을 변경하여 보낸다.
+	if($strlen($tmp_masterNxml_down_afteraction) > 0){
+		$callaction($tmp_masterNxml_down_afteraction);
+		$setvar(tmp_masterNxml_down_afteraction = );
+	}
+	else{
+		$callaction(N_Act_BecomeActive_Connected);
+	}
+	
+"/>
+// 마스터파일 로딩완료
+<action id="N_Act_LoadMaster_Complete" scope="common"
+value="
+	$callaction(N_fnXMLDownloadComplete_BecomeActive_AfterAction);
+"/>
+
+<action id="N_Act_BecomeActive_Connected"  scope="common"
+value="
+	$log(******** N_Act_BecomeActive_Connected g_polling_time:$g_polling_time);
+	$closescreen(pop_host_msg);
+	$setvar_common(
+		g_polling_fail_cnt = 0
+		,g_polling_d_fail_cnt = 0
+		,g_polling_r_fail_cnt = 0
+	);
+	$setnstimer(TIMER_POLLING,$g_polling_time,Act_Polling,TRUE);
+	$logvar(g_menuCode);
+	if($isequal_string($g_menuCode, 1920)){		$closescreen(pop_host_msg); return;		}		//로그인 화면에서 올라오는 화면은 로그인처리 하지 않는다.
+
+	// 로그인 처리 
+	$logvar(g_login_id, g_login_pwd, g_login_cert, g_login_type, g_login_kind, g_login_id_save,g_login_dn);
+	$log(공동인증서 로그인 여부:$g_cert_login_status);
+	$setvar(tmp_now_check = $now(yyyyMMddHHmm));
+	
+	$logvar(g_login_expiry, tmp_now_check,g_cert_login_keep);
+
+
+	if($int64($g_login_expiry) > $int64($tmp_now_check) 	// 만료시간이 지나지 않았으면 
+	//&& $g_cert_login_status 							// 현재 공동인증서 로그인 여부
+	&& $g_cert_login_keep 								// 당일접속유지
+	){
+		
+		$callaction(fnConfig_SetValue,g_cert_login_status,true); 
+
+		if($g_login_type == 1){ 						// ID로그인 
+			if($g_login_kind == 0 						// 0:시세전용
+			|| $g_login_kind == 1						// 1:모의투자
+			){
+				$log(여기맞나?);
+				$setvar(
+					var_name_id 		= g_login_id 		// 아이디  변수명 
+					,var_name_pwd 		= g_login_pwd 		// 비밀번호  변수명 
+					,var_name_cert 		=  					// 공동인증서 변수명 
+					,var_login_type 	= $g_login_type 	// 로그인타입 - 1:ID로그인, 2:인증서로그인, 3:지문로그인
+					,var_login_kind 	= $g_login_kind 	//로그인 종류 : 0:시세전용, 1:모의투자, 2:공동인증로그인, 3:직원용
+					,var_is_id_save 	= $g_login_id_save 	// 아이디 저장여부 
+					,var_dn_value  		= 		 			// dn값 
+				); 	
+				$log(백그라운드 로그인 상태 - 1,[$var_login_type],[$var_login_kind]);
+				$callaction(Act_Sise_Login_d, $var_name_id, $var_name_pwd, Act_BecomeActive_Login_End);
+			}
+			else{
+				if($getvarlen(g_login_cert)<1){	$log(인증서패스워드 없음); $callaction(fnGoLoginScreen,1); 	return;		} 	
+				$setvar(
+					var_name_id 		= g_login_id 		// 아이디  변수명 
+					,var_name_pwd 		= g_login_pwd 		// 비밀번호  변수명 
+					,var_name_cert 		= g_login_cert 		// 공동인증서 변수명 
+					,var_login_type 	= $g_login_type 	// 로그인타입 - 1:ID로그인, 2:인증서로그인, 3:지문로그인
+					,var_login_kind 	= $g_login_kind 	//로그인 종류 : 0:시세전용, 1:모의투자, 2:공동인증로그인, 3:직원용
+					,var_is_id_save 	= $g_login_id_save 	// 아이디 저장여부 
+					,var_dn_value  		= 		 		// dn값 
+				); 	
+				$log(백그라운드 로그인 상태 - 2,[$var_login_type],[$var_login_kind]);
+				$callaction(Act_Dn_Request,  $var_name_id, $var_name_pwd, $var_name_cert ,Act_BecomeActive_Login_End);
+			}
+		}	
+		elseif($g_login_type == 2){ 				// dn로그인 
+			if($getvarlen(g_login_cert)<1){	$log(인증서패스워드 없음); $callaction(fnGoLoginScreen,1); 	return;		} 	
+			$setvar(
+				var_name_id 		= $g_login_id 			// 아이디  변수명 
+				,var_name_pwd 		=  						// 비밀번호  변수명 
+				,var_name_cert 		= g_login_cert			// 공동인증서 변수명 
+				,var_login_type 	= $g_login_type			// 로그인타입 - 1:ID로그인, 2:인증서로그인, 3:지문로그인
+				,var_login_kind 	= $g_login_kind			// 로그인 종류 : 0:시세전용, 1:모의투자, 2:공동인증로그인, 3:직원용
+				,var_is_id_save 	= $g_login_id_save 		// 아이디 저장여부 
+				,var_dn_value  		= $g_login_dn 			// dn값 
+			); 	
+			$log(백그라운드 로그인 상태 - 3,[$var_login_type],[$var_login_kind]);
+			$callaction(Act_Id_Request, $var_dn_value, $var_name_cert ,Act_BecomeActive_Login_End,,$var_name_id);
+		}
+		elseif($g_login_type == 3){ 				// 지문로그인 
+			$setvar(
+				var_name_id 		= $g_login_id 						// 아이디  변수명 
+				,var_name_pwd 		=  									// 비밀번호  변수명 
+				,var_name_cert 		= g_fingerprint_login_cert_pwd_enc	// 공동인증서 변수명 
+				,var_login_type 	= $g_login_type 					// 로그인타입 - 1:ID로그인, 2:인증서로그인, 3:지문로그인
+				,var_login_kind 	= $g_login_kind 					//로그인 종류 : 0:시세전용, 1:모의투자, 2:공동인증로그인, 3:직원용
+				,var_is_id_save 	= $g_login_id_save 					// 아이디 저장여부 
+				,var_dn_value  		= $g_fingerprint_login_dn 			// dn값 
+			); 	
+			$log(백그라운드 로그인 상태 - 4,[$var_login_type],[$var_login_kind]);
+			$callaction(Act_Id_Request, $var_dn_value, $var_name_cert ,Act_BecomeActive_Login_End,,$var_name_id);
+		}
+	}
+	else{		
+		//$callaction(fnGoLoginScreen,1); 		// 로그인 화면으로 보낸다. - 시세전용으로 로그인 할 수 없음.
+		$callaction(fnConfig_SetValue,g_cert_login_status,); 
+
+		if($g_login_type == 1){ 						// ID로그인 
+			if($g_login_kind == 0 						// 0:시세전용
+			|| $g_login_kind == 1						// 1:모의투자
+			){
+				$log(여기맞나?);
+				$setvar(
+					var_name_id 		= g_login_id 		// 아이디  변수명 
+					,var_name_pwd 		= g_login_pwd 		// 비밀번호  변수명 
+					,var_name_cert 		=  					// 공동인증서 변수명 
+					,var_login_type 	= $g_login_type 	// 로그인타입 - 1:ID로그인, 2:인증서로그인, 3:지문로그인
+					,var_login_kind 	= $g_login_kind 	//로그인 종류 : 0:시세전용, 1:모의투자, 2:공동인증로그인, 3:직원용
+					,var_is_id_save 	= $g_login_id_save 	// 아이디 저장여부 
+					,var_dn_value  		= 		 			// dn값 
+				); 	
+				$log(백그라운드 로그인 상태 - 5,[$var_login_type],[$var_login_kind]);
+				$callaction(Act_Sise_Login_d, $var_name_id, $var_name_pwd, Act_BecomeActive_Login_End);
+			}
+			else{
+				if($getvarlen(g_login_cert)<1){	$log(인증서패스워드 없음); $callaction(fnGoLoginScreen,1); 	return;		} 	
+				
+				$callaction(fnConfig_SetValue,g_login_kind,0); 		//시세전용으로 변경
+
+				$setvar(
+					var_name_id 		= g_login_id 		// 아이디  변수명 
+					,var_name_pwd 		= g_login_pwd 		// 비밀번호  변수명 
+					,var_name_cert 		= g_login_cert 		// 공동인증서 변수명 
+					,var_login_type 	= $g_login_type 	// 로그인타입 - 1:ID로그인, 2:인증서로그인, 3:지문로그인
+					,var_login_kind 	= $g_login_kind 	// 로그인 종류 : 0:시세전용, 1:모의투자, 2:공동인증로그인, 3:직원용
+					,var_is_id_save 	= $g_login_id_save 	// 아이디 저장여부 
+					,var_dn_value  		= 		 		// dn값 
+				); 	
+				$log(백그라운드 로그인 상태 - 6,[$var_login_type],[$var_login_kind]);
+				$callaction(Act_Dn_Request,  $var_name_id, $var_name_pwd, $var_name_cert ,Act_BecomeActive_Login_End);
+			}
+		}	
+		elseif($g_login_type == 2){ 				// dn로그인 
+			if($getvarlen(g_login_cert)<1){	$log(인증서패스워드 없음); $callaction(fnGoLoginScreen,1); 	return;		} 	
+
+			$callaction(fnConfig_SetValue,g_login_kind,0); 		//시세전용으로 변경
+			$setvar(
+				var_name_id 		= $g_login_id 				// 아이디  변수명 
+				,var_name_pwd 		=  							// 비밀번호  변수명 
+				,var_name_cert 		= g_login_cert				// 공동인증서 변수명 
+				,var_login_type 	= $g_login_type				// 로그인타입 - 1:ID로그인, 2:인증서로그인, 3:지문로그인
+				,var_login_kind 	= $g_login_kind				//로그인 종류 : 0:시세전용, 1:모의투자, 2:공동인증로그인, 3:직원용
+				,var_is_id_save 	= $g_login_id_save 			// 아이디 저장여부 
+				,var_dn_value  		= $g_login_dn 				// dn값 
+			); 	
+			$log(백그라운드 로그인 상태 - 7,[$var_login_type],[$var_login_kind]);
+			$callaction(Act_Id_Request, $var_dn_value, $var_name_cert ,Act_BecomeActive_Login_End,,$var_name_id);
+		}
+		elseif($g_login_type == 3){ 				// 지문로그인 
+			$callaction(fnConfig_SetValue,g_login_kind,0); 		//시세전용으로 변경
+
+			$setvar(
+				var_name_id 		= $g_login_id 						// 아이디  변수명 
+				,var_name_pwd 		=  									// 비밀번호  변수명 
+				,var_name_cert 		= g_fingerprint_login_cert_pwd_enc	// 공동인증서 변수명 
+				,var_login_type 	= $g_login_type 					// 로그인타입 - 1:ID로그인, 2:인증서로그인, 3:지문로그인
+				,var_login_kind 	= $g_login_kind 					// 로그인 종류 : 0:시세전용, 1:모의투자, 2:공동인증로그인, 3:직원용
+				,var_is_id_save 	= $g_login_id_save 					// 아이디 저장여부 
+				,var_dn_value  		= $g_fingerprint_login_dn 			// dn값 
+			); 	
+			$log(백그라운드 로그인 상태 - 8,[$var_login_type],[$var_login_kind]);
+			$callaction(Act_Id_Request, $var_dn_value, $var_name_cert ,Act_BecomeActive_Login_End,,$var_name_id);
+		}
+	}
+	$closescreen_all();
+" />
+<action id="N_fnDisconnectNIntro"
+scope="common"
+value="
+	$log(************** N_fnDisconnectNIntro );
+	$callaction(Act_Network_Disconnect_All);
+	$setnstimer(TIMER_DISCONNECT_AND_INTRO,1,N_fnDisconnectNIntro_Timer,FALSE);    
+"/>
+
+<action id="N_fnDisconnectNIntro_Timer"
+scope="common"
+value="
+	$log(************** N_fnDisconnectNIntro_Timer );
+	$openfile(plist/root/intro.xml);
+"/>
+
+<action id="N_Open_pop_Alarm" scope="common"
+params="
+p_msg,
+p_after_action
+"
+value="
+	$setvar(
+		tmp_alarm_afteraction = $p_after_action
+		,tmp_msg = $p_msg
+	);
+	$popscreen(N_pop_Alarm);
+" />
+<action id="N_pop_Alarm_onload" scope="common"
+value="
+	$setvar(lbl_N_alram.value = $tmp_msg);
+" />
+<action id="N_pop_Alarm_onunload" scope="common"
+value="
+	
+" />
+<popscreen id="N_pop_Alarm"
+	scope="common"
+	width="$g_lcdWidth" 
+	height="$g_lcdHeight"
+	modal="false"
+	onload="N_pop_Alarm_onload"
+	onunload="N_pop_Alarm_onunload"
+	>
+	<button width="$super.width" height="$super.height" backcolor="00000033" />
+	<viewgroup 
+		width="$w($g_lcdWidth,80)" 
+		height="$h($g_lcdHeight,32)"
+		layout="center"
+		layout_vertical="center"
+		backcolor="ffffff"
+		>
+		<viewgroup width="$super.width" height="$h($g_lcdHeight,8.6)" margin_left="$w($g_lcdWidth,3)"
+			backcolor="ffffff">
+			<label id="lbl_orderConfirm_title" value="알림" 
+				width="$super.width" 
+				height="$super.height"
+				fontsize="$result($g_baseFontSize+($g_baseFontUnitSize*2))"
+				fontname="$g_baseFontNameBold"
+				textcolor="000000"
+				/>
+		</viewgroup>
+		<br/><hr backcolor="3b3b3b"/><br height="$h($g_lcdHeight,2)"/>
+		
+		<label id="lbl_N_alram"
+		width="$this.remain_right" height="$h($g_lcdHeight,10)" 
+		value="" 
+		fontsize="$result($g_baseFontSize+($g_baseFontUnitSize*1))"
+		fontname="$g_baseFontNameBold"
+		margin_left="$w($g_lcdWidth,3)"
+		multiline="true"
+		/>
+		<br height="$h($g_lcdHeight,2)"/>
+		<viewgroup id="vg_orderConfirm_btn" height="$this.remain_bottom"
+			backcolor="00ff00">
+			<button id="btn_popscreen_orderConfirm_confirm" 
+				width="$this.remain_right" 
+				height="$super.height"
+				backcolor="bd3135"
+				//backcolor_active="b8240c"
+				fontsize="$result($g_baseFontSize+($g_baseFontUnitSize*1))"
+				fontname="$g_baseFontNameBold"
+				textcolor="ffffff"
+				textcolor_active="ffffff"
+				value="확인" 
+				onclicked="$closescreen(N_pop_Alarm);$callaction($tmp_alarm_afteraction);"
+				/>
+		</viewgroup>
+	</viewgroup>
+</popscreen>
+
+
+<action id="fnPopover_AlertAction"
+scope="common"
+params="
+	p_action,
+	p_msg,
+	p_str_confirm,
+	p_str_cancel,
+	p_height
+"
+value="
+	// 로그인 화면에서 로그인 실패 시 알림창 없애야 함.
+	$setvar(vg_login_process_ing.hidden = true);
+
+	$logvar(g_is_open_alertaction);
+	/*
+	if($g_is_open_alertaction){
+		return;						// If the warning window is floating, return it.
+	}		
+	*/
+	$setvar(
+		tmp_after_alertaction_action	= $p_action,
+		tmp_pop_msg						= $p_msg,
+		tmp_str_confirm					= $p_str_confirm,
+		tmp_str_cancel					= $p_str_cancel,
+		tmp_pop_screen_width			= $w($g_lcdWidth,92),
+		tmp_pop_screen_height			= $h($g_lcdHeight,30)
+	);
+	if($strlen($p_height) > 0){
+		$setvar(tmp_pop_screen_height = $p_height);
+	}
+	$logvar(
+		tmp_after_alertaction_action,			
+		tmp_pop_msg, 					
+		tmp_str_confirm, 				
+		tmp_str_cancel, 				
+		tmp_pop_screen_width, 			
+		tmp_pop_screen_height 			
+	);
+	$popscreen(popscreen_alertaction);
+" 
+/>
+
+<action 
+	id = "fnPopover_alertaction_Closed"
+	scope= "common"
+	params= "p_btn_key"
+	value="
+		$setvar(
+			tmp_btn_key	= $p_btn_key
+		);
+
+		$closescreen(popscreen_alertaction);
+		$callaction($tmp_after_alertaction_action,$tmp_btn_key);
+	" 
+/>
+
+<action 
+	id    = "popscreen_alertaction_onload"
+	scope = "common"
+	value = "
+		$setvar_common(
+			g_is_open_alertaction	= true
+		);
+	" 
+/>
+
+<action 
+	id    = "popscreen_alertaction_onunload"
+	scope = "common"
+	value = "
+		$setvar_common(
+			g_is_open_alertaction	=
+		);
+	" 
+/>
+
+<popscreen id = "popscreen_alertaction"
+	scope     = "common"
+	width     = "$g_lcdWidth"
+	height    = "$p_lcdHeight"
+    x_ori = "$g_lcdBaseX_ori"
+    y_ori = "$g_lcdBaseY_ori"
+    width_ori     = "$g_lcdWidth_ori"
+    height_ori    = "$p_lcdHeight_ori"
+	backcolor = "00000088"							// You should contact transparency.
+	onload    = "popscreen_alertaction_onload"
+	onunload  = "popscreen_alertaction_onunload"
+>
+	<screen 
+		id              = "pop_screen_alertaction"
+		width           = "$tmp_pop_screen_width"
+		height          = "$tmp_pop_screen_height"
+		layout          = "center"
+		layout_vertical = "center"
+		//backcolor		= "$_screen_content_backcolor"
+		backcolor 		= "ffffff"
+	>
+		<viewgroup>
+			<viewgroup 
+				width        = "$super.width"
+				height       = "$h($g_lcdHeight,20)"
+				margin_left  = "$w($g_lcdWidth,2)"
+				margin_right = "$w($g_lcdWidth,2)"
+				>
+				<label 
+				width        = "$this.remain_right"
+				height       = "$super.height"
+				align        = "center"
+				valign       = "center"
+				value        = "$tmp_pop_msg"
+				textcolor    = "000000"
+				multiline    = "true"
+				fontsize 	 = "$g_fontsize_basic"
+				/> 
+			</viewgroup>
+
+			<br/>
+			<viewgroup
+				margin_left  = "$w($g_lcdWidth,2)"
+				margin_right = "$w($g_lcdWidth,2)"
+			>
+<if condition="$strlen($tmp_str_confirm) < 1">
+				<button 
+					width           = "$w($g_lcdWidth,80)"
+					height          = "$h($g_lcdHeight,7)"
+					textcolor       = "ffffff"
+					backcolor 		= "bd3135"
+					fontname 		= "$g_baseFontNameBold"
+					textcolor_active="ffffff"
+					key             = "1"
+					layout          = "center"
+					layout_vertical = "center"
+					value           = "$tmp_str_cancel"
+					onClicked       = "$callaction(fnPopover_alertaction_Closed,$this.key);"
+				/>
+<else>
+				<button 
+					width           = "$w($g_lcdWidth,40)"
+					height          = "$h($g_lcdHeight,7)"
+					backcolor       = "333333"
+					textcolor       = "ffffff"
+					key             = "0"
+					layout          = "left"
+					layout_vertical = "center"
+					value           = "$tmp_str_confirm"
+					onClicked       = "$callaction(fnPopover_alertaction_Closed,$this.key);"
+				/>
+				<button 
+					width           = "$w($g_lcdWidth,40)"
+					height          = "$h($g_lcdHeight,7)"
+					textcolor       = "ffffff"
+					backcolor 		= "bd3135"
+					fontname 		= "$g_baseFontNameBold"
+					textcolor_active="ffffff"
+					key             = "1"
+					layout          = "right"
+					layout_vertical = "center"
+					value           = "$tmp_str_cancel"
+					onClicked       = "$callaction(fnPopover_alertaction_Closed,$this.key);"
+				/>
+</if>
+			</viewgroup>
+		</viewgroup>
+	</screen>
+</popscreen>
+
+<action id="N_Act_Connect_Check" scope="common"
+value="
+	if($isconnect($g_SiseSocketName)
+	|| $isconnect($g_SiseSocketName_DOMESTIC)
+	|| $isconnect($g_RealSocketName_Order)
+	){
+		$log(******************* 재접속 *******************);
+		$callaction(N_Act_BecomeActive_Connect, N_Act_BecomeActive_Connected_MASTER);
+	}
+	else{
+		return;
+	}
+" />
+
+
+
+
+
+
+
+
+

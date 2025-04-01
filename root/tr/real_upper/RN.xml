@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<STRUCT CODE="RN" SERVICECODE="RN" NAME="실시간 뉴스" COMMENT="실시간 뉴스">
+	<!--
+<request Name="RN" descript="실시간 뉴스" >
+	<output>		
+		<record name="OutBlock" type="1" size="0" sizetype="0"  sizeformat="" sizefield="" >	
+			<field name="type" 		type="1" size="2" bindname="메시지구분" fieldformat="" constvalue="" desc="RN"/>
+			<field name="date" 		type="1" size="8" bindname="일자" fieldformat="" constvalue="" desc="일자"/>
+			<field name="time" 		type="1" size="12" bindname="시간" fieldformat="" constvalue="" desc="시각"/>
+			<field name="ggb" 		type="1" size="2" bindname="대분류" fieldformat="" constvalue="" desc="01: 뉴스"/>
+			<field name="sgb" 		type="1" size="2" bindname="소분류" fieldformat="" constvalue="" desc="01:채권,02:선물,03:외환,04:금융/정책, 05:IPO센터,06:국제,07:기업/IT,08:주식,09:기타"/>
+			<field name="inout" 	type="1" size="1" bindname="시황구분" fieldformat="" constvalue="" desc="0:외부, 1: 내부, 2: 전체"/>
+			<field name="color" 	type="1" size="1" bindname="색상" fieldformat="" constvalue="" desc="색상: 1 ~ F"/>
+			<field name="grade" 	type="1" size="1" bindname="긴급여부" fieldformat="" constvalue="" desc="1:긴급, 2:보통"/>
+			<field name="title" 	type="1" size="80" bindname="제목" fieldformat="" constvalue="" />
+		</record>
+	</output>
+</request>
+	-->
+	<BLOCK CODE="PageBlock" NAME="PageBlock" SEND="NO" ATTR="NO" OCCURS="NO">
+		<!-- <FIELD CODE="type" TYPE="CHAR" SIZE="2" NAME="메시지구분"/> -->
+		<FIELD CODE="date" TYPE="CHAR" SIZE="8" NAME="일자"/>
+		<FIELD CODE="time" TYPE="CHAR" SIZE="12" NAME="시간"/>
+		<FIELD CODE="ggb" TYPE="CHAR" SIZE="2" NAME="대분류(01: 뉴스)"/>
+		<FIELD CODE="sgb" TYPE="CHAR" SIZE="2" NAME="소분류(01:채권,02:선물,03:외환,04:금융/정책, 05:IPO센터,06:국제,07:기업/IT,08:주식,09:기타)"/>
+		<FIELD CODE="inout" TYPE="CHAR" SIZE="1" NAME="시황구분(0:외부, 1: 내부, 2: 전체)"/>
+		<FIELD CODE="color" TYPE="CHAR" SIZE="1" NAME="색상(색상: 1 ~ F)"/>
+		<FIELD CODE="grade" TYPE="CHAR" SIZE="1" NAME="긴급여부(1:긴급, 2:보통)"/>
+		<FIELD CODE="title" TYPE="CHAR" SIZE="80" NAME="제목"/>
+		<!--
+		//<FIELD CODE="type" TYPE="CHAR" SIZE="2" NAME="must be 'RN'"/> 
+		<FIELD CODE="trcode" TYPE="CHAR" SIZE="6" NAME="TR Code"/>
+		<FIELD CODE="date" TYPE="CHAR" SIZE="8" NAME="일자"/>
+		<FIELD CODE="time" TYPE="CHAR" SIZE="12" NAME="시간"/>
+		<FIELD CODE="ggb" TYPE="CHAR" SIZE="2" NAME="대분류"/>
+		<FIELD CODE="sgb" TYPE="CHAR" SIZE="2" NAME="소분류"/>
+		<FIELD CODE="inout" TYPE="CHAR" SIZE="1" NAME="시황구분(0:외부, 1:내부, 2:전체)"/>
+		<FIELD CODE="color" TYPE="CHAR" SIZE="1" NAME="색상(1~F)"/>
+		<FIELD CODE="grade" TYPE="CHAR" SIZE="1" NAME="긴급여부(1:긴급, 2:보통)"/>
+		<FIELD CODE="title" TYPE="CHAR" SIZE="80" NAME="제목"/>
+		-->
+	</BLOCK>
+</STRUCT>

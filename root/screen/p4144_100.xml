@@ -1,0 +1,844 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<br/>
+<!--
+ *********************************************************************************
+ **
+ ** 화면을 그린 후에 필요한 작업을 한다. 
+ ** - TR을 배열에 담는다. 전송은 특이한 경우가 아니면 basescreen에서 일괄적으로 전송한다.
+ **
+ *********************************************************************************
+ -->
+ <!-- <actiondata value="
+ 	$setvar_common(
+ 		g_SSLSocketName = $callaction(Act_SSL_Connect,$g_serverIP_account,$g_serverPort_account_ssl,Act_SSL_Connected,Act_SSL_Closed,Act_SSL_RecvData)
+	);
+ "/> -->
+<action id="screen_contents_onload" value="
+	
+	$setvar(
+		,img_step_1.hidden=false
+		,img_step_2.hidden=false
+		,img_step_3.hidden=true
+		,img_step_4.hidden=true
+		,img_step_5.hidden=true
+		,img_step_6.hidden=true
+		,img_step_7.hidden=true
+		,img_step_8.hidden=true
+		,lbl_open_account_title.x=$w($g_lcdwidth,4.6) // 순서대로 오지 않을경우에 치우친다.
+		,lbl_account_title_step_1.hidden=true
+		,lbl_account_title_step_2.hidden=true
+		,lbl_account_title_step_3.hidden=false
+		,lbl_account_title_step_4.hidden=false
+		,lbl_account_title_step_5.hidden=false
+		,lbl_account_title_step_6.hidden=false
+		,lbl_account_title_step_7.hidden=false
+		,lbl_account_title_step_8.hidden=false
+		,lbl_account_title_step_3.textcolor=ffffff
+		,lbl_account_title_step_4.textcolor=777777
+		,lbl_account_title_step_5.textcolor=777777
+		,lbl_account_title_step_6.textcolor=777777
+		,lbl_account_title_step_7.textcolor=777777
+		,lbl_account_title_step_8.textcolor=777777
+		,vg_account_title_step.hidden=false
+		,popscreen_open_account_history.hidden=true
+		,popscreen_open_account_history_2.hidden=true
+		,popscreen_open_account_confirm.hidden=false
+		,popscreen_open_account_confirm.x=$w($g_lcdwidth,30)
+		,menu_num=4117
+		,4144_choice_key=
+		,4117_check_f=
+		,4117_check_d=
+		,tmp_4117_pass_1=
+		,tmp_4117_pass_2=
+	);
+
+	$setvar(members_gubun=1);
+	
+"/>
+<action id="btn_4144_confirm_onclicked" value="	
+	if(!$chk_4144_3gr_1.checked){
+		$alert(,,본인 명의의 계좌개설만 가능합니다.);
+		return;
+	}
+	if(!$chk_4144_4gr_2.checked){
+		$alert(,,외국인은 본점방문 계좌개설만 가능합니다.);
+		return;
+	}
+
+	if($btn_4144_purpose.key == 0){
+		$alert(,,거래목적을 선택하세요.);
+		return;
+	}
+	if($btn_4144_jagum.key == 0){
+		$alert(,,자금의 원천 및 출처를 선택하세요.);
+		return;
+	}
+	if($btn_4144_meme.key == 0){
+		$alert(,,매매거래통지를 선택하세요.);
+		return;
+	}
+	if($btn_4144_month.key == 0){
+		$alert(,,월간거래통지를 선택하세요.);
+		return;
+	}
+	
+
+	if($btn_4144_meme.key == 3){  // HTS
+	}
+	elseif($btn_4144_meme.key == 5){  // E-mail
+		if($strlen($tf_4144_email_1.value) < 1 || $strlen($tf_4144_email_2.value) < 1){
+			$alert(,,E-mail을 입력하세요.);
+			return;
+		}
+	}
+
+	if($btn_4144_jagum.key == 1 && $isequal_string($g_IN_REQUEST_JOB_NM,6004)){
+		$alert(,,무직의경우 자금의 원천 및 출처를 \n 근로소득으로 선택할 수 없습니다.);
+		return;
+		
+	}
+	if($btn_4144_jagum.key == 1 && $isequal_string($g_IN_REQUEST_JOB_NM,6002)){
+		$alert(,,주부의경우 자금의 원천 및 출처를 \n 근로소득으로 선택할 수 없습니다.);
+		return;
+		
+	}
+	if($btn_4144_jagum.key == 1 && $isequal_string($g_IN_REQUEST_JOB_NM,6003)){
+		$alert(,,학생의경우 자금의 원천 및 출처를 \n 근로소득으로 선택할 수 없습니다.);
+		return;
+		
+	}
+
+	if($btn_4144_month.key == 2){  // 직장
+		if($strlen($g_IN_REQUEST_COM_POST_NO) < 1 ) {
+			$alert(,,월간 거래 통지 직장 선택시\n이전 단계로 돌아가서 직장주소를 입력하세요.);
+			return;
+		}
+		if($strlen($g_IN_REQUEST_COM_ADDR2) < 1 ) {
+			$alert(,,월간 거래 통지 직장 선택시\n이전 단계로 돌아가서 직장 나머지 주소를 입력하세요.);
+			return;
+		}
+	}
+
+// 비대면 절차개선 - 2020.09.28
+// 추천직원 예외처리
+	// 이메일주소 
+	if($strlen($tf_4144_email_1.value) > 0 && $strlen($tf_4144_email_2.value) > 0){
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_CLNT_EMAIL 	,$addstring($tf_4144_email_1.value,@,$tf_4144_email_2.value));
+	}
+	else{
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_CLNT_EMAIL 	,);
+	}
+	
+	// 거래목적
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_TRD_PPO 	,$btn_4144_purpose.key);
+	// 자금의 원천 및 출처
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_FUNDS 	,$btn_4144_jagum.key);
+	// 실제 당사자 여부 Y/N 
+	if($chk_4144_3gr_1.checked){		$callaction(fnConfig_SetValue,g_IN_REQUEST_OWN_YN 	,Y);	}
+	else{								$callaction(fnConfig_SetValue,g_IN_REQUEST_OWN_YN 	,N);	}
+	// 미국인 여부
+	if($chk_4144_4gr_1.checked){		$callaction(fnConfig_SetValue,g_IN_REQUEST_AMERICAN_YN 	,Y);	}
+	else{								$callaction(fnConfig_SetValue,g_IN_REQUEST_AMERICAN_YN 	,N);	}
+	// 매매거래통지
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_TRADE 	,$btn_4144_meme.key);
+	// 월간거래통지
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_DEAL 	,$btn_4144_month.key);
+	/*
+	$log(
+		확인용 : 
+			4101 g_IN_AGREE_ITEM1[$g_IN_AGREE_ITEM1],
+
+			4142 g_IN_AGREE_ITEM2[$g_IN_AGREE_ITEM2],
+			4142 g_IN_AGREE_ITEM3[$g_IN_AGREE_ITEM3],
+
+			4102 g_save_tel_num[$g_save_tel_num],
+			4102 g_IN_AGREE_RMN_NO[$g_IN_AGREE_RMN_NO],
+			4102 g_IN_AGREE_CLNT_NM[$g_IN_AGREE_CLNT_NM],
+			4102 g_IN_REQUEST_TEL_NUM[$g_IN_REQUEST_TEL_NUM],
+			4102 g_IN_REQUEST_AGE[$g_IN_REQUEST_AGE],
+			4102 g_OUT_AGREE_WORK_NO[$g_OUT_AGREE_WORK_NO],
+
+			4117 g_IN_REQUEST_LOCAL_YN[$g_IN_REQUEST_LOCAL_YN],
+			4117 g_IN_REQUEST_ABODE_NM[$g_IN_REQUEST_ABODE_NM],
+			4117 g_IN_REQUEST_HOME_POST_NO[$g_IN_REQUEST_HOME_POST_NO],
+			4117 g_IN_REQUEST_HOME_ADDR[$g_IN_REQUEST_HOME_ADDR],
+			4117 g_IN_REQUEST_HOME_ADDR2[$g_IN_REQUEST_HOME_ADDR2],
+
+			4143 g_IN_REQUEST_JOB_NM[$g_IN_REQUEST_JOB_NM],
+			4143 g_IN_REQUEST_COM_NM[$g_IN_REQUEST_COM_NM],
+			4143 g_IN_REQUEST_COM_DEPART[$g_IN_REQUEST_COM_DEPART],
+			4143 g_IN_REQUEST_COM_TEL[$g_IN_REQUEST_COM_TEL],
+			4143 g_IN_REQUEST_COM_POST_NO[$g_IN_REQUEST_COM_POST_NO],
+			4143 g_IN_REQUEST_COM_ADDR[$g_IN_REQUEST_COM_ADDR],
+			4143 g_IN_REQUEST_COM_ADDR2[$g_IN_REQUEST_COM_ADDR2],
+
+			4144 g_IN_REQUEST_CLNT_EMAIL[$g_IN_REQUEST_CLNT_EMAIL],
+			4144 g_IN_REQUEST_TRD_PPO[$g_IN_REQUEST_TRD_PPO],
+			4144 g_IN_REQUEST_FUNDS[$g_IN_REQUEST_FUNDS],
+			4144 g_IN_REQUEST_OWN_YN[$g_IN_REQUEST_OWN_YN],
+			4144 g_IN_REQUEST_AMERICAN_YN[$g_IN_REQUEST_AMERICAN_YN],
+			4144 g_IN_REQUEST_TRADE[$g_IN_REQUEST_TRADE],
+			4144 g_IN_REQUEST_DEAL[$g_IN_REQUEST_DEAL],
+	);
+	*/
+
+	$callaction(Act_Open_Account_Move,4145);
+"/>
+<action id="chk_4144_onclicked_confirm" value="
+	//실제당사자여부
+	if($chk_4144_onclicked_confirm_param1==5){
+		if($chk_4144_3gr_1.checked){
+			$setvar(chk_4144_3gr_2.checked=false);
+		}else{
+			$setvar(chk_4144_3gr_1.checked=true);
+		}
+	}
+	elseif($chk_4144_onclicked_confirm_param1==6){
+		if($chk_4144_3gr_2.checked){
+			$setvar(chk_4144_3gr_1.checked=false);
+		}else{
+			$setvar(chk_4144_3gr_2.checked=true);
+		}
+		$alert(,,본인 명의의 계좌개설만 가능합니다.);
+	}
+
+	//미국인여부
+	elseif($chk_4144_onclicked_confirm_param1==7){
+		if($chk_4144_4gr_1.checked){
+			$setvar(chk_4144_4gr_2.checked=false);
+		}else{
+			$setvar(chk_4144_4gr_1.checked=true);
+		}
+		$alert(,,외국인은 본점방문 계좌개설만 가능합니다.);
+	}
+	elseif($chk_4144_onclicked_confirm_param1==8){
+		if($chk_4144_4gr_2.checked){
+			$setvar(chk_4144_4gr_1.checked=false);
+		}else{
+			$setvar(chk_4144_4gr_2.checked=true);
+		}
+	}
+	
+"/>
+<screen id="screen_4144_100"
+	class="cs_screen_contents"
+	backcolor="f1f1f1"
+	onload="screen_contents_onload"
+	>
+	<screen id="screen_4144_200"
+		height="$this.remain_bottom"
+		backcolor="f1f1f1"
+		>
+		<viewgroup 
+			margin_left="$w($g_lcdWidth,6.3)"
+			width="$this.remain_right"
+			height="$h($g_lcdHeight,5)" 
+			backcolor="ffffff"			
+			>			
+			<label 
+				height="$h($g_lcdHeight,5)" 
+				fontname="$g_baseFontNameBold" 
+				fontsize="$g_fontsize_big1" 
+				textcolor="222222"
+				value="개인정보 입력" 
+				/>
+		</viewgroup>
+		<br/><hr backcolor="cccccc"/><br /><hr height="$h($g_lcdHeight,1)" backcolor="f1f1f1"/><br />
+		<blank width="$w($g_lcdWidth,4.4)" />
+
+		<viewgroup 
+		width="$super.width"
+		height="$h($g_lcdHeight,75)"
+		>
+			<label 
+				height="$h($g_lcdHeight,3)" 
+				fontname="$g_baseFontNameBold" 
+				//fontsize="$g_fontsize_big1" 
+				value="이메일" 
+				/>
+			<br/>
+			<viewgroup
+				height="$h($g_lcdHeight,6.3)"
+				>
+				<textfield 
+					id="tf_4144_email_1"
+					width="$w($g_lcdWidth,29)"
+					height="$h($g_lcdHeight,6.3)"
+					keyboard_type="text"
+					border_color="dcdcdc"
+					border_width="1"
+					margin_left="$w($g_lcdWidth,4.5)"
+					margin_right="$w($g_lcdWidth,2)"
+					//maxlength="11"
+					textcolor_placeholder="cccccc"
+					textcolor="000000"
+					fontsize="$g_fontSize_basic"
+					backcolor="ffffff"
+					/>
+				<label 
+					width="$w($g_lcdWidth,6)"
+					height="$h($g_lcdHeight,6.3)" 
+					fontname="$g_baseFontNameBold" 
+					//fontsize="$g_fontsize_big1" 
+					value="@" 
+					align="center"
+					/>
+				<viewgroup 
+					width="$w($g_lcdWidth,28.5)"
+					height="$h($g_lcdHeight,6.3)"
+					border_width="$g_roundHeight"
+					border_color="dcdcdc"
+					>
+					<textfield 
+						id="tf_4144_email_2"
+						width="$w($g_lcdWidth,28.5)"
+						height="$h($g_lcdHeight,6.3)"
+						keyboard_type="text"
+						border_color="dcdcdc"
+						border_width="1"
+						margin_left="$w($g_lcdWidth,4.5)"
+						margin_right="$w($g_lcdWidth,2)"
+						//maxlength="11"
+						textcolor_placeholder="cccccc"
+						textcolor="000000"
+						fontsize="$g_fontSize_basic"
+						backcolor="ffffff"
+						//placeholder="naver.com"
+						/>
+				</viewgroup>
+				<viewgroup 
+					width="$w($g_lcdWidth,28.5)"
+					height="$h($g_lcdHeight,6.3)"
+					border_width="$g_roundHeight"
+					border_color="dcdcdc"
+					>
+					<button id="btn_4144_100_mail_sel"
+						width="$w($g_lcdWidth,28.5)"
+						height="$h($g_lcdHeight,6.3)"
+						value="직접입력" 
+						fontsize="$g_fontSize_basic"
+						textcolor="000000"
+						textcolor_active="000000"
+						backcolor="ffffff"
+						backcolor_active="ffffff"
+						align="left"
+						margin_left="$w($g_lcdWidth,4)"
+						onclicked="$callaction(popscreen_4144_choice_onclicked,3);"
+						/>
+					<img id="img_4144_4" src="$icon_down" x="$result($this.remain_right-$w($g_lcdWidth,6))" layout_vertical="center"/>
+				</viewgroup>
+			
+
+			</viewgroup>
+			<br height="$h($g_lcdHeight,1.4)"/>
+			<label 
+				width="$w($g_lcdWidth,14)"
+				height="$h($g_lcdHeight,3)" 
+				fontname="$g_baseFontNameBold" 
+				//fontsize="$g_fontsize_big1" 
+				value="거래목적" 
+				//backcolor="00ff00"
+				/>
+			<label 
+			height="$h($g_lcdHeight,3)" 
+			fontname="$g_baseFontNameBold" 
+			textcolor="ff0000"
+			value="*" 
+			/>
+
+			<br/>
+			<viewgroup 
+				width="$w($g_lcdWidth,92)"
+				height="$h($g_lcdHeight,6.3)"
+				border_width="$g_roundHeight"
+				border_color="dcdcdc"
+				>
+				<button 
+					id="btn_4144_purpose"
+					width="$this.remain_right" 
+					height="$h($g_lcdHeight,6.3)"
+					value="선택하세요" 
+					fontsize="$g_fontSize_basic"
+					textcolor="000000"
+					textcolor_active="000000"
+					backcolor="ffffff"
+					backcolor_active="ffffff"
+					align="left"
+					margin_left="$w($g_lcdWidth,4)"
+					key="0"
+					onclicked="$callaction(popscreen_4144_choice_onclicked,4);"
+					/>
+				<img id="img_4144_5" src="$icon_down" x="$result($this.remain_right-$w($g_lcdWidth,6))" layout_vertical="center"/>
+			</viewgroup>
+			<br height="$h($g_lcdHeight,1.4)"/>
+			<label 
+				width="$w($g_lcdWidth,32)"
+				//backcolor="00ff00"
+				height="$h($g_lcdHeight,3)" 
+				fontname="$g_baseFontNameBold" 
+				//fontsize="$g_fontsize_big1" 
+				value="자금의 원천 및 출처" 
+				/>
+			<label 
+			height="$h($g_lcdHeight,3)" 
+			fontname="$g_baseFontNameBold" 
+			textcolor="ff0000"
+			value="*" 
+			/>
+			<br/>
+			<viewgroup 
+				width="$w($g_lcdWidth,92)"
+				height="$h($g_lcdHeight,6.3)"
+				border_width="$g_roundHeight"
+				border_color="dcdcdc"
+				>
+				<button 
+					id="btn_4144_jagum"
+					width="$this.remain_right" 
+					height="$h($g_lcdHeight,6.3)"
+					value="선택하세요" 
+					fontsize="$g_fontSize_basic"
+					textcolor="000000"
+					textcolor_active="000000"
+					backcolor="ffffff"
+					backcolor_active="ffffff"
+					align="left"
+					margin_left="$w($g_lcdWidth,4)"
+					key="0"
+					onclicked="$callaction(popscreen_4144_choice_onclicked,5);"
+					/>
+				<img id="img_4144_6" src="$icon_down" x="$result($this.remain_right-$w($g_lcdWidth,6))" layout_vertical="center"/>
+			</viewgroup>
+			<br height="$h($g_lcdHeight,1.4)"/>
+			<label 
+				height="$h($g_lcdHeight,3)" 
+				fontname="$g_baseFontNameBold" 
+				//fontsize="$g_fontsize_big1" 
+				value="실제 당사자 여부" 
+				/>
+			<br/>
+			<viewgroup 
+				width="$w($g_lcdwidth,92)"
+				height="$h($g_lcdHeight,6.3)"
+				backcolor="ffffff"
+				>
+				<checkbox
+					id="chk_4144_3gr_1"  
+					width="$w($g_lcdwidth,25)" 
+					height="$h($g_lcdHeight,6.3)"
+					checked="true"
+					checkimage="$icon_radio_on" 
+					uncheckimage="$icon_radio_off"
+					//layout_vertical="center"
+					view_reverse="false"
+					checkimage_leftmargin="$w($g_lcdWidth,4)"
+					margin_left="$w($g_lcdWidth,12)" 
+					value_overlay="true"
+					align="left" 
+					//margin_right="$w($g_lcdWidth,2)" 
+					fontsize="$g_fontSize_basic"
+					value="예"
+					onclicked="$callaction(chk_4144_onclicked_confirm,5);"
+					/>
+				<blank width="$w($g_lcdWidth,4)"/>
+				<checkbox
+					id="chk_4144_3gr_2"  
+					width="$this.remain_right" 
+					height="$h($g_lcdHeight,6.3)"
+					checked="false"
+					checkimage="$icon_radio_on" 
+					uncheckimage="$icon_radio_off"
+					//layout_vertical="center"
+					view_reverse="false"
+					checkimage_leftmargin="$w($g_lcdWidth,4)"
+					margin_left="$w($g_lcdWidth,12)" 
+					value_overlay="true"
+					align="left" 
+					//margin_right="$w($g_lcdWidth,2)" 
+					fontsize="$g_fontSize_basic"
+					value="아니오"
+					onclicked="$callaction(chk_4144_onclicked_confirm,6);"
+					/>
+			</viewgroup>
+			<br height="$h($g_lcdHeight,1.4)"/>
+			<label 
+				height="$h($g_lcdHeight,3)" 
+				fontname="$g_baseFontNameBold" 
+				//fontsize="$g_fontsize_big1" 
+				value="미국인 여부"
+				/>
+			<br/>
+			<viewgroup 
+				width="$w($g_lcdwidth,92)"
+				height="$h($g_lcdHeight,6.3)"
+				backcolor="ffffff"
+				>
+				<checkbox
+					id="chk_4144_4gr_1"  
+					width="$w($g_lcdwidth,25)" 
+					height="$h($g_lcdHeight,6.3)"
+					checked="false"
+					checkimage="$icon_radio_on" 
+					uncheckimage="$icon_radio_off"
+					//layout_vertical="center"
+					view_reverse="false"
+					checkimage_leftmargin="$w($g_lcdWidth,4)"
+					margin_left="$w($g_lcdWidth,12)" 
+					value_overlay="true"
+					align="left" 
+					//margin_right="$w($g_lcdWidth,2)" 
+					fontsize="$g_fontSize_basic"
+					value="예"
+					onclicked="$callaction(chk_4144_onclicked_confirm,7);"
+					/>
+				<blank width="$w($g_lcdWidth,4)"/>
+				<checkbox
+					id="chk_4144_4gr_2"  
+					width="$this.remain_right" 
+					height="$h($g_lcdHeight,6.3)"
+					checked="true"
+					checkimage="$icon_radio_on" 
+					uncheckimage="$icon_radio_off"
+					//layout_vertical="center"
+					view_reverse="false"
+					checkimage_leftmargin="$w($g_lcdWidth,4)"
+					margin_left="$w($g_lcdWidth,12)" 
+					value_overlay="true"
+					align="left" 
+					//margin_right="$w($g_lcdWidth,2)" 
+					fontsize="$g_fontSize_basic"
+					value="아니오"
+					onclicked="$callaction(chk_4144_onclicked_confirm,8);"
+					/>
+			</viewgroup>
+			<br height="$h($g_lcdHeight,1.4)"/>
+			<label
+				width="$w($g_lcdWidth,22)"
+				//backcolor="00ff00" 
+				height="$h($g_lcdHeight,3)" 
+				fontname="$g_baseFontNameBold" 
+				//fontsize="$g_fontsize_big1" 
+				value="매매거래통지"
+				/>
+			<label 
+			height="$h($g_lcdHeight,3)" 
+			fontname="$g_baseFontNameBold" 
+			textcolor="ff0000"
+			value="*" 
+			/>
+			<br/>
+			<viewgroup 
+				width="$w($g_lcdWidth,92)"
+				height="$h($g_lcdHeight,6.3)"
+				border_width="$g_roundHeight"
+				border_color="dcdcdc"
+				>
+				<button 
+					id="btn_4144_meme"
+					width="$this.remain_right" 
+					height="$h($g_lcdHeight,6.3)"
+					value="선택하세요" 
+					fontsize="$g_fontSize_basic"
+					textcolor="000000"
+					textcolor_active="000000"
+					backcolor="ffffff"
+					backcolor_active="ffffff"
+					align="left"
+					margin_left="$w($g_lcdWidth,4)"
+					key="3"
+					value="HTS"
+					onclicked="$callaction(popscreen_4144_choice_onclicked,6);"
+					/>
+				<img id="img_4144_7" src="$icon_down" x="$result($this.remain_right-$w($g_lcdWidth,6))" layout_vertical="center"/>
+			</viewgroup>
+			<br height="$h($g_lcdHeight,1.4)"/>
+			<label 
+				width="$w($g_lcdWidth,22)"
+				//backcolor="00ff00" 
+				height="$h($g_lcdHeight,3)" 
+				fontname="$g_baseFontNameBold" 
+				//fontsize="$g_fontsize_big1" 
+				value="월간거래통지"
+				/>
+			<label 
+			height="$h($g_lcdHeight,3)" 
+			fontname="$g_baseFontNameBold" 
+			textcolor="ff0000"
+			value="*" 
+			/>
+			<br/>
+			<viewgroup id="vg_4144_info_08" 
+				width="$w($g_lcdWidth,92)"
+				height="$h($g_lcdHeight,6.3)"
+				border_width="$g_roundHeight"
+				border_color="dcdcdc"
+				>
+				<button 
+					id="btn_4144_month"
+					width="$this.remain_right" 
+					height="$h($g_lcdHeight,6.3)"
+					value="선택하세요" 
+					fontsize="$g_fontSize_basic"
+					textcolor="000000"
+					textcolor_active="000000"
+					backcolor="ffffff"
+					backcolor_active="ffffff"
+					align="left"
+					margin_left="$w($g_lcdWidth,4)"
+					key="3"
+					value="HTS"
+					onclicked="$callaction(popscreen_4144_choice_onclicked,7);"
+					/>
+				<img id="img_4144_8" src="$icon_down" x="$result($this.remain_right-$w($g_lcdWidth,6))" layout_vertical="center"/>
+			</viewgroup>
+		</viewgroup>
+
+		<br/>
+		<blank width="$w($g_lcdWidth,4.4)" />
+		<button 
+			id="btn_4144_bf"
+			fontsize="$g_fontsize_big3" 
+			//y="$result($this.remain_bottom-$h($g_lcdHeight,13.4))"
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,9.4)" 
+			backcolor="ffffff"
+			border_width="$g_roundHeight"
+			border_color="e33433"
+			backcolor_active="e5e5e5"
+			textcolor="e33433"
+			textcolor_active="e33433"
+			value="이전" 
+			onclicked="
+			btn_open_account_history_onClicked
+			"
+			/>
+		<blank width="$w($g_lcdWidth,1.8)"/>
+		<button 
+			id="btn_4144_af"
+			fontsize="$g_fontsize_big3" 
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,9.4)" 
+			backcolor="e33433"
+			border_width="$g_roundHeight"
+			backcolor_active="cc2f2e"
+			textcolor="ffffff"
+			textcolor_active="ffffff"
+			value="다음" 
+			onclicked="btn_4144_confirm_onclicked"
+			/>
+	</screen>
+</screen>
+<action id="popscreen_4144_choice_onclicked" value="
+ 	//메일
+ 	if($popscreen_4144_choice_onclicked_param1==3){
+ 		$setvar(4144_choice_key=3);
+ 	}
+ 	//거래목적
+ 	elseif($popscreen_4144_choice_onclicked_param1==4){
+ 		$setvar(4144_choice_key=4);
+ 	}
+ 	//자금의 원천 및 출처
+ 	elseif($popscreen_4144_choice_onclicked_param1==5){
+ 		$setvar(4144_choice_key=5);
+ 	}
+ 	//매매거래통지
+ 	elseif($popscreen_4144_choice_onclicked_param1==6){
+ 		$setvar(4144_choice_key=6);
+ 	}
+ 	//월간거래통지
+ 	elseif($popscreen_4144_choice_onclicked_param1==7){
+ 		$setvar(4144_choice_key=7);
+ 	}
+ 	$popscreen(popscreen_4144_choice);
+"/>
+<class id="css_4144_td_combo" 
+	width="$super.width"
+	height="$super.height" 
+	align="center"
+	fontsize="$g_fontSize_basic" 
+	fontname="$g_baseFontName"
+	textcolor="bbbbbb"
+	textcolor_active="222222"
+	
+/>
+<action id="popscreen_4144_choice_onload" value="
+	$setvar(4144_click_check=false);
+	$delarrayvar(arr_4144_choice);
+	if( $isequal_string($4144_choice_key,3) ){
+		$setvar(
+	 		arr_4144_choice=[
+	 			[,naver.com],[,hanmail.net],[,nate.com],[,gmail.com],[,hotmail.com],[,직접입력]
+	 		]
+ 		);
+	}
+	elseif( $isequal_string($4144_choice_key,4) ){
+		$setvar(
+	 		arr_4144_choice=[
+	 			[1,급여 및 생활비]
+	 			,[2,사업상거래]
+	 			,[3,저축 및 투자]
+	 			,[4,물품대금결제]
+	 			,[5,상속]
+	 			,[6,증여]
+	 			,[7,부채상환]
+	 			,[8,기타]
+	 		]
+ 		);
+	}
+	elseif( $isequal_string($4144_choice_key,5) ){
+		$setvar(
+	 		arr_4144_choice=[
+	 			[1,근로 및 연금소득]
+	 			,[2,사업소득]
+	 			,[3,부동산 임대소득]
+	 			,[4,금융소득]
+	 			,[5,상속/증여]
+	 			,[6,부동산 양도소득]
+	 			,[7,일시 재산양도로 인한 소득]
+	 			,[8,퇴직소득]
+	 			,[9,기타]
+	 		]
+ 		);
+	}
+	elseif( $isequal_string($4144_choice_key,6) ){
+		$setvar(
+ 			arr_4144_choice=[
+ 				[3,HTS]
+ 				,[5,E-mail]
+ 			]
+ 		);
+	}
+	elseif( $isequal_string($4144_choice_key,7) ){
+		$setvar(
+	 		arr_4144_choice=[
+	 			[1,자택]
+	 			,[2,직장]
+	 			,[3,HTS]
+	 		]
+ 		);
+	}
+	$add_parsetag_parent(screen_pop_4144,
+		<table 
+			width='$super.width' height='$super.height'
+			rowheight='$h($g_lcdHeight,7.3)'
+			margin_left=''
+			nsrowline='true'
+			nsrowlinecolor='none'
+			selectrow='true'
+			selectfixedcol='true'
+			selectrow_touchdown='true'
+			textcolor_select='222222'
+			>
+	);
+	for($arrCnt=0; $arrCnt<$getarrayvarcount(arr_4144_choice); $arrCnt++){
+		$add_parsetag_parent(screen_pop_4144,
+			<tr onclicked='tbl_4144_onclciked' 
+				key='[[$getarrayvar(arr_4144_choice,$arrCnt,0)]]' 
+				value='[[$getarrayvar(arr_4144_choice,$arrCnt,1)]]'
+				>
+				<td class='css_4144_td_combo' value='[[$getarrayvar(arr_4144_choice,$arrCnt,1)]]'></td>
+			</tr>
+		);
+	}//for End
+	$add_parsetag_parent(screen_pop_4144,
+ 		</table>
+	 );
+	 $parsetagend();
+"/>
+<action id="tbl_4144_onclciked" value="
+	$setvar(
+		4144_choice_set_key 	= $this.key
+		,4144_choice_set_val 	= $this.value
+		,4144_click_check 		= true
+	);
+	
+
+" />
+
+<action id="4144_choice_confirm" 
+value="
+	$log(4144_choice_key:$4144_choice_key);
+
+	if(!$4144_click_check){
+		$alert(,,항목을 선택해 주세요.);
+		return;
+	}
+	if( $isequal_string($4144_choice_key,3) ){
+		
+		$setvar(
+			tf_4144_email_2.key = $4144_choice_set_key
+			,tf_4144_email_2.value = $4144_choice_set_val
+			,btn_4144_100_mail_sel.value = $4144_choice_set_val
+		);
+		if($isequal_string($4144_choice_set_val,직접입력)){
+			$setvar(tf_4144_email_2.value = );
+		}
+	}
+	elseif( $isequal_string($4144_choice_key,4) ){
+		$setvar(
+			btn_4144_purpose.key=$4144_choice_set_key
+			,btn_4144_purpose.value=$4144_choice_set_val
+		);
+	}
+	elseif( $isequal_string($4144_choice_key,5) ){
+		$setvar(
+			btn_4144_jagum.key=$4144_choice_set_key
+			,btn_4144_jagum.value=$4144_choice_set_val
+		);
+	}
+	elseif( $isequal_string($4144_choice_key,6) ){
+		$setvar(
+			btn_4144_meme.key=$4144_choice_set_key
+			,btn_4144_meme.value=$4144_choice_set_val
+		);
+	}
+	elseif( $isequal_string($4144_choice_key,7) ){
+		$setvar(
+			btn_4144_month.key=$4144_choice_set_key
+			,btn_4144_month.value=$4144_choice_set_val
+		);
+	}
+	$closescreen(popscreen_4144_choice)
+"/>
+
+<popscreen id="popscreen_4144_choice"
+	width="$g_lcdWidth" 
+	height="$this.remain_bottom"
+	backcolor="00000088"
+	layout="center"
+	layout_vertical="bottom"
+	onload="popscreen_4144_choice_onload"
+	>
+	<button
+		width="$super.width"
+		height="$h($g_lcdHeight,63.5)" 
+		/>
+	<br />
+	<viewgroup
+		height="$h($g_lcdHeight,7.3)" 
+		backcolor="f8f8f8"
+		>
+		<button
+			layout="right"
+			width="$w($g_lcdwidth,15)" 
+			height="$h($g_lcdHeight,7.3)" 
+			value="완료"
+			textcolor="e33433"
+			textcolor_active="e33433"
+			backcolor="none"
+			backcolor_active="none"
+			onclicked="4144_choice_confirm"
+			/>
+	</viewgroup>
+	<br />
+	<screen 
+		id="screen_pop_4144"
+		width="$super.width"
+		height="$this.remain_bottom" 
+		margin_right="0"
+		border_width="$g_roundHeight"
+		border_color="cccccc"
+		backcolor="ffffff"
+		>
+	</screen>
+</popscreen>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<STRUCT CODE="SM" SERVICECODE="SM" NAME="시스템 메시지-클라이언트 시스템에 공지하는 메시지" COMMENT="시스템 메시지-클라이언트 시스템에 공지하는 메시지">
+<!--
+<request Name="SM" descript="시스템 메시지-클라이언트 시스템에 공지하는 메시지" >
+	<output>        
+		<record name="OutBlock" type="1" size="0" sizetype="0"  sizeformat="" sizefield="" >    
+			<field name="type" type="1" size="2" bindname="메시지구분" fieldformat="" constvalue="" desc="SM"/>
+			<field name="msgtp" type="1" size="1" bindname="메시지유형" fieldformat="" constvalue="" desc="1-마스터 데이터 리로드, 2-장운영공지, 3-강제종료, 4-강제 재기동, 5-장전환공지(주야간)"/>
+			<field name="subtp" type="1" size="2" bindname="보조유형" fieldformat="" constvalue="" desc="장운영, 주야간 전환 공지등에서 사용할 수 있는 추가 유형"/>
+			<field name="scope" type="1" size="1" bindname="적용범위" fieldformat="" constvalue="" desc="0-직원,1-고객,2-직원개인,3-고객개인,4-전체"/>
+			<field name="rcvr" type="1" size="16" bindname="수신자" fieldformat="" constvalue="" desc="개인에게 전달하는 경우 개인의 id(클라이언트 검증용)"/>
+			<field name="title" type="1" size="80" bindname="제목" fieldformat="" constvalue="" />
+			<field name="content" type="1" size="1024" bindname="내용" fieldformat="" constvalue="" />
+		</record>
+	</output>
+</request>
+
+-->
+	<BLOCK CODE="PageBlock" NAME="PageBlock" SEND="NO" ATTR="NO" OCCURS="NO">
+		<!-- <FIELD CODE="type" TYPE="CHAR" SIZE="2" NAME="must be 'SM'"/> -->
+		<FIELD CODE="msgtp" TYPE="CHAR" SIZE="1" NAME="메시지유형(1-마스터 데이터 리로드, 2-장운영공지, 3-강제종료, 4-강제 재기동, 5-장전환공지(주야간))"/>
+		<FIELD CODE="subtp" TYPE="CHAR" SIZE="2" NAME="보조유형(장운영, 주야간 전환 공지등에서 사용할 수 있는 추가 유형)"/>
+		<FIELD CODE="scope" TYPE="CHAR" SIZE="1" NAME="적용범위(0-직원,1-고객,2-직원개인,3-고객개인,4-전체)"/>
+		<FIELD CODE="rcvr" TYPE="CHAR" SIZE="16" NAME="수신자(개인에게 전달하는 경우 개인의 id(클라이언트 검증용))"/>
+		<FIELD CODE="title" TYPE="CHAR" SIZE="80" NAME="제목"/>
+		//<FIELD CODE="content" TYPE="CHAR" SIZE="1024" NAME="내용"/>
+		//<FIELD CODE="content" TYPE="CHAR" SIZE="522" NAME="내용"/>
+		<FIELD CODE="content1" TYPE="CHAR" SIZE="10" NAME="tmp" COMMENT="2017/06/29 5 -> 10"/>
+		<FIELD CODE="content" TYPE="CHAR" SIZE="512" NAME="내용" COMMENT="2017/06/29 517 -> 512"/>
+	</BLOCK>
+</STRUCT>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<import filename="plist/root/common/css.xml"/>
+<actiondata value="
+    $checkapns_key();
+    $logvar(p_APNS_RegKey);
+"/>
+<action id="screen_main_onload"
+value="
+    $logvar(g_is_push_exec);
+    // 푸쉬로 실행 된것이면 
+    $setvar(lbl_tmp_g_is_push_exec.value = $g_is_push_exec);
+    if($g_is_push_exec){
+        $setvar_common(g_is_push_exec = );
+        $log(***** 비대면 실행한다.);
+
+        if(!$ssl_isconnect($g_SSLSocketName)) {
+            $callaction(fnPush_Recv_Start_Play);
+        }
+        else{
+            $callaction(fnPopover_AlertAction,fn_Mo_CALL_confirm,상담사로부터 영상통화가 신청되었습니다\n영상통화를 하시겠습니까?,취소,확인);
+        }
+    }
+    else{
+        $log(***** 비대면 안함.);    
+    }
+"/>
+<screen id="screen_main"
+    backcolor="ffffff"
+    width="$p_lcdWidth"
+    height="$p_lcdHeight"
+    onLoad="screen_main_onload"
+    >
+    <button 
+        width="$w($g_lcdWidth,38)" 
+        layout="center"
+        height="$h($g_lcdHeight,7.8)"
+        backcolor="e2e60e"
+        backcolor_active="d0d40d"
+        textcolor="000000"
+        textcolor_active="000000"
+        fontsize="$g_fontsize_big2"
+        border_width="$g_roundHeight"
+        value="비대면 계좌개설"
+        onclicked="$callaction(Act_Open_Account_Popup, 1001);"
+    />
+    <br/>
+    <webview id="trading_webview" width="$super.width" height="$this.remain_bottom"
+        href="https://dev-options.eugenefutures.com/wts/login/egcloud"
+    />
+</screen>
+// 뒤로가기 버튼 클릭 
+<action id="btn_open_account_history_onClicked" 
+value="
+    $setvar(    tmp_arr_last_idx        = $result( $getarrayvarcount(arr_open_account_menu) - 1));
+
+    $delarrayvar(arr_open_account_menu, $tmp_arr_last_idx);
+    if($tmp_arr_last_idx == 0){
+        $closescreen(popscreen_open_account);   
+        $setvar(g_is_open_account =); //로그인화면에서 종료위해 초기화
+        return; 
+    }
+
+    $callaction(popscreen_open_account_onload);
+" />

@@ -1,0 +1,1021 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<br/>
+<!--
+ *********************************************************************************
+ **
+ ** 화면을 그린 후에 필요한 작업을 한다. 
+ ** - TR을 배열에 담는다. 전송은 특이한 경우가 아니면 basescreen에서 일괄적으로 전송한다.
+ **
+ *********************************************************************************
+ -->
+
+ <class id="css_4125_td_combo" 
+	width="$super.width"
+	height="$super.height" 
+	align="center"
+	fontsize="$g_fontSize_basic" 
+	fontname="$g_baseFontName"
+	textcolor="bbbbbb"
+	textcolor_active="222222"
+/>
+ <action id="screen_contents_onload" value="
+	// 애드브릭스 테스트
+	$setvar(
+		tmp_arr_custom_data = [
+			[menucode, $tmp_account_menu]
+			,[acntname, $g_save_acnt_name]
+		]
+	);
+	// 배열명(키,밸류), 이벤트명
+	$adbrixCustom(tmp_arr_custom_data,screen);	// 화면별 데이터	
+	$removefile($frontImageName,$photoImageName);
+	$callaction(4125_camera_Shooting);
+"/>
+<action id="screen_contents_onunload_4125" 
+value="
+	$setvar(frontImage.SRCCLEAR = true); 		// 아이폰 이미지 초기화를 위해 사용 
+    $delvar_all(
+        strType, strName, strJuminNumber, strIssueDate, strLicenceNumber, strAddress, strIssueOffice, strSecuritySerial, common,
+        viewJuminNumber, viewIssueDate, viewLicenceNumber, utf8_JuminNumber, utf8_IssueDate, utf8_LicenceNumber
+    );
+	$json_delete(ALLFREE);
+	$clearCamera();
+	$delvar_all(frontImageEncryptData, photoImageEncryptData, frontImageData, photoImageData);
+	$delvar_all(frontImageEncryptData_base64, photoImageEncryptData, frontImageData, photoImageData);
+	$removefile($frontImageName);
+	
+" />
+<action id="subscreen_4125_100_onload"
+value="
+    $reloadcontrol(frontImage);
+"/>
+<action id="subscreen_4125_100_onunload" 
+value="
+	$delvar(frontImageData);
+"/>
+<action id="4125_camera_Shooting" value="
+	$setvar(
+			tf_4125_name.value 				=
+			,tf_4125_jumin.value 			=
+			,tf_4125_date.value 			=
+			,tf_4125_SecuritySerial.value 	=
+			,tf_4125_LicenceNumber.value 	=
+			,frontImage.src  				= 
+			,photoImage.src 				= 
+		);
+	// startCamera : 액션명, 자동촬영여부($isAutoShooting()), 마스킹여부, 뒷명촬영여부, 테스트카메라모드 
+	$startCamera(camera_callback,false,true,false,true);
+"/>
+<action id="camera_callback" 
+params="result" 
+value="
+	if($result == 0) {
+		$alert(,인식을 실패하였습니다.);
+		$clearCamera();
+		return;
+	}
+	elseif($result == -2) {
+		$alert(,인식 타입이 불분명합니다.);
+		$clearCamera();
+		return;
+	}
+	elseif($result == -1) {
+		$alert(,촬영이 취소되었습니다.);
+		$clearCamera();
+		return;
+	}
+	$popscreen(pop_image_process);
+	$setnstimer(pop_image_process_timer,0.1,call_pop_image_process,FALSE);
+"/>
+
+<action id="call_pop_image_process" value="
+	$delvar_common(
+        strType, strName, strJuminNumber, strIssueDate, strLicenceNumber, strAddress, strIssueOffice, strSecuritySerial,viewJuminNumber, viewIssueDate, viewLicenceNumber, utf8_JuminNumber, utf8_IssueDate, utf8_LicenceNumber
+    );
+	$getCameraValue(
+        strType, strName, strJuminNumber, strIssueDate, strLicenceNumber, strAddress, strIssueOffice, strSecuritySerial, common,
+        viewJuminNumber, viewIssueDate, viewLicenceNumber
+    );
+	$getCameraImageData(frontImageEncryptData,,,frontImageData,,,local);
+	$clearCamera(); 		// 인지소프트 모듈 초기화
+/*
+	$checkDevelopVersion_saveVarData(frontImage.png, frontImageData);
+	$checkDevelopVersion_saveVarData(frontImage.enc, frontImageEncryptData);
+*/
+
+	if($strlen($strType) <  1){		$setvar(strType = 1);	}
+	if($isequal_string($strType,1)){ 		// 주민등록증 
+		$setvar(
+			,lbl_4125_LicenceNumber.hidden 	= true 
+			,tf_4125_LicenceNumber.hidden 	= true 
+			,lbl_4125_SecuritySerial.hidden = true 
+			,tf_4125_SecuritySerial.hidden 	= true 
+
+			,tf_4125_name.value 			= $strName 					// 이름
+			,tf_4125_jumin.value 			= $viewJuminNumber 			// 주민번호 (마스킹 O) 
+			,tf_4125_date.value 			= $viewIssueDate 			// 발급일자 (마스킹 O)
+			
+		);
+		$delvar_all(viewJuminNumber);
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_IDCARD_TYPE 	,ID01);
+	}
+	elseif($isequal_string($strType,2)){ 		// 운전면허증
+		$setvar(
+			,lbl_4125_LicenceNumber.hidden 	= false 
+			,tf_4125_LicenceNumber.hidden 	= false 
+			,lbl_4125_SecuritySerial.hidden = false 
+			,tf_4125_SecuritySerial.hidden 	= false 
+
+			,tf_4125_name.value 			= $strName 					// 이름
+			,tf_4125_jumin.value 			= $viewJuminNumber 			// 주민번호 (마스킹 O)
+			,tf_4125_date.value 			= $viewIssueDate 			// 발급일자 (마스킹 O)
+			,tf_4125_SecuritySerial.value 	= $strSecuritySerial 		// 암호일련번호 (마스킹 X)
+			,tf_4125_LicenceNumber.value 	= $viewLicenceNumber 		// 면허번호 (마스킹 O)
+			
+		);
+        $delvar_all(viewJuminNumber);
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_IDCARD_TYPE 	,ID02);
+	}
+	else{
+		$callaction(fnPopover_AlertAction,,신분증 타입을 확인하세요.,,확인);
+		return;
+	}
+	$setvar( frontImageName = frontImageFile.png );
+	$removefile($frontImageName);
+	$writefile($frontImageName,frontImageData);
+	//$logvar(frontImageName);
+	$delvar(frontImageData);
+	$changescreen_parse(screen_4125_100_photo,subscreen_4125_100);
+
+	$base64_encode(frontImageEncryptData,frontImageEncryptData_base64);
+	$callaction(fnConfig_SetValue,g_save_frontImageEncryptData_base64,); 	// 신분증 이미지 바이너리 초기화
+	$callaction(fnConfig_SetValue,g_save_frontImageEncryptData_base64,$frontImageEncryptData_base64);
+	$closescreen(pop_image_process);
+	$popscreen(pop_caution4);
+"/>
+
+
+<screen id="screen_4125_100"
+	class="cs_screen_contents"
+	backcolor="f1f1f1"
+	onload="screen_contents_onload"
+	>
+	<screen id="screen_4125_100"
+	backcolor="f1f1f1"
+	>
+		<screen id="screen_4125_100_photo"
+		width="$super.width"
+		height="$h($g_lcdHeight,34)"
+		>
+			<subscreen
+			id="subscreen_4125_100"
+			width="$super.width"
+			height="$h($g_lcdHeight,34)"
+            onload="subscreen_4125_100_onload"
+			onunload="subscreen_4125_100_onunload"
+			>
+                <ACCOUNT_PHOTO
+                id="frontImage"
+                width="$w($g_lcdwidth,80)"
+                height="$h($g_lcdHeight,30)"
+                backcolor="00ff00"
+                layout="center"
+                layout_vertical="center"
+                border_width="$g_roundHeight"
+                border_color="dddfe0"
+				imagesizefit="false"
+                filename="$frontImageName"
+                />
+			</subscreen>
+		</screen>
+		<br />
+		<viewgroup
+			height="$h($g_lcdHeight,10)" 
+			backcolor="f1f1f1"
+			>
+			<button 
+				id="btn_4125_100_1"
+				layout="center"
+				layout_vertical="top"
+				width="$w($g_lcdwidth,80)" 
+				height="$h($g_lcdHeight,8)" 
+				border_radius="$w($g_lcdWidth,0.5)"
+				backcolor="e33433"
+				border_width="$g_roundHeight"
+				value="신분증 재촬영" 
+				textcolor="ffffff"
+				textcolor_active="ffffff"
+				backcolor_active="bd3135"
+				fontsize="$g_fontsize_big2"
+				fontname="$g_baseFontNameBold"
+				align="center"
+				onclicked="
+				$callaction(4125_camera_Shooting);
+				" 
+				/>
+		</viewgroup>
+		<br /><blank width="$w($g_lcdwidth,4.4)"/>
+		<viewgroup
+			width="$w($g_lcdwidth,92)"
+			height="$h($g_lcdHeight,35)"
+			backcolor="f1f1f1">
+			<label
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,4.5)"
+			value="이름"
+			/>
+			<blank width="$w($g_lcdWidth,1.8)"/>
+			<label
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,4.5)"
+			value="주민번호"
+			/>
+			<br />
+			<textfield
+			id="tf_4125_name"
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,6.3)"
+			margin_left="$w($g_lcdWidth,2)"
+			keyboard_type="text"
+			backcolor="ffffff"
+			border_color="cccccc"
+			backcolor_disable="e9e9e9"
+			enable="true"
+			/>
+			<blank width="$w($g_lcdWidth,1.8)"/>
+			<textfield id="tf_4125_jumin"
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,6.3)"
+			margin_left="$w($g_lcdWidth,2)"
+			backcolor="ffffff"
+			border_color="cccccc"
+			input_type="number"
+			keyboard_type="number"
+			backcolor_disable="e9e9e9"
+			align="left"
+			maxlength="32"
+			fontsize="$g_fontSize_basic"
+			fontname="$g_baseFontName"
+			enable="false"
+			/>
+			<br />
+			<label id="lbl_4125_LicenceNumber"
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,4.5)"
+			value="면허번호"
+			/>
+			<br />
+			<textfield id="tf_4125_LicenceNumber"
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,6.3)"
+			margin_left="$w($g_lcdWidth,2)"
+			backcolor="ffffff"
+			border_color="cccccc"
+			input_type="number"
+			keyboard_type="number"
+			backcolor_disable="e9e9e9"
+			align="left"
+			maxlength="32"
+			fontsize="$g_fontSize_basic"
+			fontname="$g_baseFontName"
+			enable="false"
+			/>
+			<br />
+			<label id="lbl_4125_date"
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,4.5)"
+			value="발급일자"
+			/>
+			<blank width="$w($g_lcdWidth,1.8)"/>
+			<label id="lbl_4125_SecuritySerial"
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,4.5)"
+			value="암호일련번호"
+			/>
+			<br />
+			<textfield id="tf_4125_date"  		// 발급일자 
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,6.3)"
+			margin_left="$w($g_lcdWidth,2)"
+			keyboard_type="number"
+			input_type="number"
+			backcolor_disable="e9e9e9"
+			align="left"
+			enable="false"
+			/>
+			<blank width="$w($g_lcdWidth,1.8)"/>
+			<textfield id="tf_4125_SecuritySerial" 		// 암호일련번호
+			width="$this.remain_right" 
+			height="$h($g_lcdHeight,6.3)"
+			margin_left="$w($g_lcdWidth,2)"
+			backcolor_disable="e9e9e9"
+			align="left"
+			enable="false"
+			/>
+		</viewgroup>
+		<br/>
+		<blank width="$w($g_lcdWidth,4)" />
+		<button 
+		id="btn_4125_bf"
+		fontsize="$g_fontsize_big3" 
+		y="$result($this.remain_bottom-$h($g_lcdHeight,13.4))"
+		width="$w($g_lcdwidth,45.1)" 
+		height="$h($g_lcdHeight,9.4)" 
+		backcolor="ffffff"
+		border_width="$g_roundHeight"
+		border_color="e33433"
+		backcolor_active="e5e5e5"
+		textcolor="e33433"
+		textcolor_active="e33433"
+		value="이전" 
+		onclicked="btn_open_account_history_onClicked"
+		/>
+		<blank width="$w($g_lcdWidth,1.8)"/>
+		<button 
+		id="btn_4125_af"
+		y="$result($this.remain_bottom-$h($g_lcdHeight,13.4))"
+		fontsize="$g_fontsize_big3" 
+		width="$w($g_lcdwidth,45.1)" 
+		height="$h($g_lcdHeight,9.4)" 
+		backcolor="e33433"
+		border_width="$g_roundHeight"
+		backcolor_active="cc2f2e"
+		textcolor="ffffff"
+		textcolor_active="ffffff"
+		value="신분증 진위확인" 
+		onclicked="btn_4125_af_onClicked"
+		/>
+		<br height="$h($g_lcdHeight,4)"/>
+	</screen>
+</screen>
+
+<popscreen id="pop_image_process" modal="true"
+	width="$w($g_lcdwidth,60)" height="$h($g_lcdHeight,10)"  layout="center" layout_vertical="center"
+	backcolor="ffffff" border_color="cccccc" border_radius="$result($this.height/4)" border_width="$g_roundHeight"
+	>
+	<label width="$super.width" height="$super.height" fontsize="$g_fontsize_basic"  value="이미지\n변환작업중입니다" align="center"/>
+</popscreen>
+
+
+
+<action id="btn_4125_af_onClicked" 
+value="
+	/*
+	if(!$isequal_string($g_IN_AGREE_CLNT_NM,$tmp_input_name)){
+		$callaction(fnPopover_AlertAction,,본인인증 이름과 상이합니다.,,확인);
+		return;
+	}
+	$logvar(g_tf_4102_confirm_2_var,tmp_input_birth);
+	
+	if(!$isequal_string($g_tf_4102_confirm_2_var, $tmp_input_birth)){
+		$callaction(fnPopover_AlertAction,,본인인증 주민번호와 상이합니다.,,확인);
+		return;
+	}
+	*/
+
+	if($isequal_string($strType,1)){ 			// 주민등록증 선택
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_IDCARD_TYPE,ID01);		// ID01: 주민등록증, ID02: 운전면허증
+	}
+	elseif($isequal_string($strType,2)){		// 운전면허증 선택
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_IDCARD_TYPE,ID02);		// ID01: 주민등록증, ID02: 운전면허증
+	}
+	
+	$callaction(fnSendSSL_MO_IDCARD);
+" />
+<action id="fnSendSSL_MO_IDCARD"
+value="	// 비대면 절차개선 - 2020.09.28
+		// 신분증 진위여부 조회
+	$popscreen(pop_host_msg,center); 		// 동글뱅이 띄운다.
+	$setvar(	
+		jsonName 		= MO_IDCARD 	
+	);
+
+	$iconv_utf32le_to_utf8(strJuminNumber,utf8_JuminNumber,1); 		//UTF32-LE 를 UTF-8로 변환 후 사용
+    $iconv_utf32le_to_utf8(strIssueDate,utf8_IssueDate,3);
+    $iconv_utf32le_to_utf8(strLicenceNumber,utf8_LicenceNumber,2);
+
+	$json_create($jsonName);
+	$json_setdata($jsonName,,HDR,,{});
+	$json_setdata($jsonName,HDR,VER,,1.0); 					// 1.0 : 연동버전
+	$json_setdata($jsonName,HDR,CMD,,$jsonName);			// 
+	$json_setdata($jsonName,,BODY,,{});
+	$json_setdata($jsonName,BODY,IDCARD_TYPE,,$g_IN_REQUEST_IDCARD_TYPE); 	// ID01: 주민등록증, ID02: 운전면허증
+	$json_setdata($jsonName,BODY,CLNT_NM,,$tf_4125_name.value); 			// 고객명
+	$json_setdata($jsonName,BODY,RMN_NO,,$utf8_JuminNumber); 				// 주민등록번호
+	$json_setdata($jsonName,BODY,RMN_DATE,,$utf8_IssueDate); 				// 주민등록증 발급일자
+	$json_setdata($jsonName,BODY,DRV_NO,,$utf8_LicenceNumber); 				// 운전면허번호
+	$json_setdata($jsonName,BODY,DRV_CODE,,$strSecuritySerial); 			// 운전면허증 암호일련번호
+	$json_setdata($jsonName,BODY,WORK_NO,,$g_OUT_AGREE_WORK_NO); 			// 상담번호
+	$json_setdata($jsonName,BODY,PICTURE,,{});								// 실명증표 20240617 금결원 이슈로 인해 추가요청함.
+	$json_setdata($jsonName,BODY.PICTURE,IMAGE,,$g_save_frontImageEncryptData_base64); 					
+	
+	$json_print($jsonName); 			// 메모리보안 때문에 로그 남기면 안됨.
+
+	$delvar(strSSLSendData);
+	$json_getfullstring($jsonName,strSSLSendData);
+	$json_delete($jsonName);
+	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
+	//$delvar(strSSLSendData); 		// Act_SSL_SendData 여기 안에서 삭제한다. reconnect 일 경우 문제가 됨.
+"/>
+<action id="fnRecvSSL_MO_IDCARD" 
+value="	// 비대면 절차개선 - 2020.09.28
+		// 신분증 진위여부 조회
+	$setvar(
+		recvSSL_hdr_ret 			= $json_getdata($jsonname,HDR.RET)
+		,recvSSL_hdr_msg 			= $json_getdata($jsonname,HDR.MSG)
+		,recvSSL_hdr_err_code		= $json_getdata($jsonname,HDR.ERR_CODE)
+		,recvSSL_body_result_yn 	= $json_getdata($jsonname,BODY.RESULT_YN)		// 진위여부 Y/N
+		,recvSSL_body_reject_reason = $json_getdata($jsonname,BODY.REJECT_REASON) 	// 거부사유
+
+	);
+	$setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_hdr_err_code));
+
+	$log(========= SSL 받은데이터 ==============);
+	$logvar(
+		recvSSL_hdr_ret 
+		,recvSSL_hdr_msg 
+		,recvSSL_body_result_yn
+		,recvSSL_body_reject_reason
+	);
+
+	if(!$isequal_string($recvSSL_hdr_ret,OK)){
+		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
+		$callaction(fnPopover_AlertAction,,$recvSSL_hdr_msg,,확인);
+		return;
+	}
+
+	$setvar($date_compare=$now(dd));
+	$log(현재일자[$now(dd)], 변수 현재일자[$date_compare], 전역변수 저장일자[$g_date_compare]);
+
+	if($strlen($g_date_compare)<1){
+		$callaction(fnConfig_SetValue,g_date_compare,$date_compare);
+	}
+	if($date_compare!=$g_date_compare){
+		$log(>> 진위여부 횟수 초기화);
+		$callaction(fnConfig_SetValue,g_date_compare,$date_compare); 	// 자정마다 날짜를 전역변수에 저장
+		$callaction(fnConfig_SetValue,g_recvSSL_body_result_count,0);	// 자정이후 진위여부 횟수 초기화
+	}
+	else{
+		$log(>> 일자 변동없음..진위여부 횟수 초기화 x);
+	}
+
+	if($isequal_string($recvSSL_body_result_yn,N)){ 	// 신용등급 확인후 팝업띄움
+		// 진위여부가 N일 경우 5까지 카운트
+		$callaction(fnConfig_SetValue,g_save_result_yn,$recvSSL_body_result_yn);	// 진위여부 N 저장
+
+		$log( =============== 진위여부판독 =============== );
+		$log(카운트1[$g_recvSSL_body_result_count]);
+		if($strlen($g_recvSSL_body_result_count)<1){
+			$setvar(recvSSL_body_result_count=1);
+			$callaction(fnConfig_SetValue,g_recvSSL_body_result_count,$recvSSL_body_result_count);
+			$log(카운트2[$g_recvSSL_body_result_count]);
+		}
+		elseif($strlen($g_recvSSL_body_result_count)>0){
+			if($g_recvSSL_body_result_count<5){
+				$setvar(recvSSL_body_result_count=$result($g_recvSSL_body_result_count+1));
+				$callaction(fnConfig_SetValue,g_recvSSL_body_result_count,$recvSSL_body_result_count);
+				$log(카운트3[$g_recvSSL_body_result_count]);
+			}
+			if($g_recvSSL_body_result_count==5){
+				$log(카운트4[$g_recvSSL_body_result_count]);
+				$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
+				$log(진위여부 데이터 확인 (N 이어야함) >> g_save_result_yn[$g_save_result_yn]);
+				$popscreen(pop_caution2);
+				return;
+			}
+		}
+		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
+		$setvar(recvSSL_body_reject_reason=$recvSSL_body_reject_reason 신분증 재촬영 또는 입력정보를 수정해주세요.);
+		$popscreen(pop_caution1);
+		return;
+	}
+	elseif($isequal_string($recvSSL_body_result_yn,Y)){
+		if($g_recvSSL_body_result_count==5){
+			$log(카운트 5회 초과로 영상통화만 가능);
+			$callaction(fnConfig_SetValue,g_save_result_yn,N);	// 진위여부 Y 저장
+			$log(진위여부 Y로 성공해도 5회초과이므로 N으로 강제 변경);
+			$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
+			$log(진위여부 데이터 확인 (N 이어야함) >> g_save_result_yn[$g_save_result_yn]);
+			$popscreen(pop_caution2);
+			return;
+		}
+	}
+	$callaction(fnConfig_SetValue,g_save_result_yn,$recvSSL_body_result_yn);	// 진위여부 Y 저장
+
+	// 국내선택시 16시이후 역이체불가능 팝업
+	//$callaction(fnConfig_SetValue,g_open_tp_select,2);	// g_open_tp_select 해외:1, 국내:2
+	if($g_open_tp_select==2){		// 국내 선택시
+		if($now(HH) >= 16){			// 16시 이후
+			$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
+			
+			$popscreen(pop_caution6);
+			return;
+		}
+	}
+	$callaction(fnConfig_SetValue,g_recvSSL_body_result_count,0);
+	$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
+	$log(진위여부 데이터 확인 (Y 이어야함) >> g_save_result_yn[$g_save_result_yn]);
+	$callaction(Act_Open_Account_Move,4133);
+"/>
+
+<popscreen id="pop_caution1"
+	width="$g_lcdWidth" 
+	height="$p_lcdHeight"
+	//backcolor="0000ff"
+	modal="true"
+	modalbackcolor="#00000088"
+	layout="center"
+	layout_vertical="center"
+	onload=""
+	onclicked="$closescreen();"
+	key=""
+	>
+	<screen id="screen_comboAccountPopover"
+		width="$w($g_lcdWidth,88.3)"
+		//height="$h($g_lcdHeight,70)"
+		height="$h($g_lcdHeight,52.5)"
+		backcolor="none"
+		layout="center"
+		layout_vertical="center"
+		noscroll_width="true"
+		>
+		<viewgroup 
+			width="$super.width"
+			height="$h($g_lcdHeight,8.6)"
+			backcolor="ffffff"
+			>
+			<label width="$super.width" height="$super.height" align="left" margin_left="$w($g_lcdWidth,3.2)" 
+			fontname="$g_baseFontNameBold"
+			fontsize="$g_fontsize_big2"
+			value="알림" />
+		</viewgroup>
+		<br/><hr backcolor="3c3c3c" /><br/>
+		<viewgroup 
+			width="$super.width"
+			//height="$h($g_lcdHeight,49)"
+			height="$h($g_lcdHeight,18)"
+			backcolor="ffffff"
+			>
+			<viewgroup
+				width="$super.width"
+				height="$h($g_lcdHeight,15)"
+				>
+				<br height="$h($g_lcdHeight,3)" /><blank width="$w($g_lcdWidth,4)"/>
+				<htmlview width="$w($g_lcdWidth,78.3)" height="$h($g_lcdHeight,12)" 
+					fontname="$g_baseFontName" 
+					fontsize="$g_fontSize_big1"
+					lineheight="$h($g_lcdHeight,3)"
+					VALUE_HTML_VAR="recvSSL_body_reject_reason"
+					/>
+
+			</viewgroup>
+		</viewgroup>
+		<br />
+		<viewgroup height="$h($g_lcdHeight,10)">
+			<button 
+				width="100%" 
+				height="$super.height" 
+				value="확인" 
+				backcolor="bd3135"
+				backcolor_active="b8240c"
+				fontsize="$g_fontsize_big2"
+				fontname="$g_baseFontNameBold"
+				textcolor="ffffff"
+				textcolor_active="ffffff"
+				onclicked="$closescreen();"
+				/>
+		</viewgroup>
+	</screen>
+</popscreen>
+<popscreen id="pop_caution2"
+	width="$g_lcdWidth" 
+	height="$p_lcdHeight"
+	//backcolor="0000ff"
+	modal="true"
+	modalbackcolor="#00000088"
+	layout="center"
+	layout_vertical="center"
+	onload=""
+	onclicked="$closescreen();"
+	key=""
+	>
+	<screen id="screen_comboAccountPopover"
+		width="$w($g_lcdWidth,88.3)"
+		//height="$h($g_lcdHeight,70)"
+		height="$h($g_lcdHeight,49.5)"
+		backcolor="none"
+		layout="center"
+		layout_vertical="center"
+		noscroll_width="true"
+		>
+		<viewgroup 
+			width="$super.width"
+			height="$h($g_lcdHeight,8.6)"
+			backcolor="ffffff"
+			>
+			<label width="$super.width" height="$super.height" align="left" margin_left="$w($g_lcdWidth,3.2)" 
+			fontname="$g_baseFontNameBold"
+			fontsize="$g_fontsize_big2"
+			value="안내" />
+		</viewgroup>
+		<br/><hr backcolor="3c3c3c" /><br/>
+		<viewgroup 
+			width="$super.width"
+			//height="$h($g_lcdHeight,49)"
+			height="$h($g_lcdHeight,17)"
+			backcolor="ffffff"
+			>
+			<viewgroup
+				width="$super.width"
+				height="$h($g_lcdHeight,20)"
+				>
+				<br height="$h($g_lcdHeight,2)" /><blank width="$w($g_lcdWidth,3.5)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName" 
+					fontsize="$g_fontSize_big1"
+					value="진위여부가 확인되지 않습니다." />
+				<!--	
+				<br /><blank width="$w($g_lcdWidth,3.5)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName"
+					fontsize="$g_fontSize_big1" 
+					value="수동 진위여부후 영상통화를 신청하시겠습니까?" />    
+				<br /><blank width="$w($g_lcdWidth,3.5)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName" 
+					fontsize="$g_fontSize_basic"
+					value="(영상통화의 경우 오전9시~오후4시 사이에만 가능" />
+					<br /><blank width="$w($g_lcdWidth,3.5)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName" 
+					fontsize="$g_fontSize_basic"
+					value="합니다. 이후 시간에는 예약만 가능합니다.)" />
+				-->
+			</viewgroup>
+		</viewgroup>
+		<br />
+		<viewgroup height="$h($g_lcdHeight,10)" backcolor="ffffff">
+			<blank width="3.5%" />
+			<button 
+				width="45%" 
+				height="$result($super.height-$h($g_lcdHeight,1.5))" 
+				value="영상통화 신청" 
+				backcolor="bd3135"
+				backcolor_active="b8240c"
+				fontsize="$g_fontsize_big2"
+				fontname="$g_baseFontNameBold"
+				textcolor="ffffff"
+				textcolor_active="ffffff"
+				onclicked="$closescreen();
+				$callaction(Act_Open_Account_Move, 4121);"
+				/>
+			<blank width="3%" />
+			<button 
+				width="45%" 
+				height="$result($super.height-$h($g_lcdHeight,1.5))"
+				value="취소" 
+				backcolor="ffffff"
+				backcolor_active="e5e5e5"
+				border_width="$g_roundHeight"
+				border_color="bd3135"
+				fontsize="$g_fontsize_big2"
+				fontname="$g_baseFontNameBold"
+				textcolor="bd3135"
+				textcolor_active="bd3135"
+				onclicked="
+				$closescreen();
+				$popscreen(pop_caution5);
+				"
+				/>
+		</viewgroup>
+	</screen>
+</popscreen>
+<popscreen id="pop_caution3"
+	width="$g_lcdWidth" 
+	height="$p_lcdHeight"
+	//backcolor="0000ff"
+	modal="true"
+	modalbackcolor="#00000088"
+	layout="center"
+	layout_vertical="center"
+	onload=""
+	onclicked="$closescreen();"
+	key=""
+	>
+	<screen id="screen_comboAccountPopover"
+		width="$w($g_lcdWidth,88.3)"
+		//height="$h($g_lcdHeight,70)"
+		height="$h($g_lcdHeight,49.5)"
+		backcolor="none"
+		layout="center"
+		layout_vertical="center"
+		noscroll_width="true"
+		>
+		<viewgroup 
+			width="$super.width"
+			height="$h($g_lcdHeight,8.6)"
+			backcolor="ffffff"
+			>
+			<label width="$super.width" height="$super.height" align="left" margin_left="$w($g_lcdWidth,3.2)" 
+			fontname="$g_baseFontNameBold"
+			fontsize="$g_fontsize_big2"
+			value="알림" />
+		</viewgroup>
+		<br/><hr backcolor="3c3c3c" /><br/>
+		<viewgroup 
+			width="$super.width"
+			//height="$h($g_lcdHeight,49)"
+			height="$h($g_lcdHeight,15)"
+			backcolor="ffffff"
+			>
+			<viewgroup
+				width="$super.width"
+				height="$h($g_lcdHeight,20)"
+				>
+				<br height="$h($g_lcdHeight,2)" /><blank width="$w($g_lcdWidth,4)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName" 
+					fontsize="$g_fontSize_big1"
+					value="귀하의 신용등급이 개설조건에" />
+				<br /><blank width="$w($g_lcdWidth,4)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName"
+					fontsize="$g_fontSize_big1"
+					value="만족하지 않아 계좌개설이 불가능합니다." />    
+				<br /><blank width="$w($g_lcdWidth,4)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName"
+					fontsize="$g_fontSize_big1"
+					value="확인버튼을 누르시면 초기화면으로 이동합니다." />
+			</viewgroup>
+		</viewgroup>
+		<br />
+		<viewgroup height="$h($g_lcdHeight,10)">
+			<button 
+				width="100%" 
+				height="$super.height" 
+				value="확인" 
+				backcolor="bd3135"
+				backcolor_active="b8240c"
+				fontsize="$g_fontsize_big2"
+				fontname="$g_baseFontNameBold"
+				textcolor="ffffff"
+				textcolor_active="ffffff"
+				onclicked="$closescreen();
+				$closescreen(popscreen_open_account);
+				"
+				/>
+		</viewgroup>
+	</screen>
+</popscreen>
+<popscreen id="pop_caution4"
+	width="$g_lcdWidth" 
+	height="$p_lcdHeight"
+	//backcolor="0000ff"
+	modal="true"
+	modalbackcolor="#00000088"
+	layout="center"
+	layout_vertical="center"
+	onload=""
+	onclicked="$closescreen();"
+	key=""
+	>
+	<screen id="screen_comboAccountPopover"
+		width="$w($g_lcdWidth,88.3)"
+		//height="$h($g_lcdHeight,70)"
+		height="$h($g_lcdHeight,49.5)"
+		backcolor="none"
+		layout="center"
+		layout_vertical="center"
+		noscroll_width="true"
+		>
+		<viewgroup 
+			width="$super.width"
+			height="$h($g_lcdHeight,8.6)"
+			backcolor="ffffff"
+			>
+			<label width="$super.width" height="$super.height" align="left" margin_left="$w($g_lcdWidth,3.2)" 
+			fontname="$g_baseFontNameBold"
+			fontsize="$g_fontsize_big2"
+			value="안내" />
+		</viewgroup>
+		<br/><hr backcolor="3c3c3c" /><br/>
+		<viewgroup 
+			width="$super.width"
+			//height="$h($g_lcdHeight,49)"
+			height="$h($g_lcdHeight,10)"
+			backcolor="ffffff"
+			>
+			<viewgroup
+				width="$super.width"
+				height="$h($g_lcdHeight,20)"
+				>
+				<br height="$h($g_lcdHeight,2)" /><blank width="$w($g_lcdWidth,4)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName" 
+					fontsize="$g_fontSize_big1"
+					value="정보가 맞는지 다시 한번 확인후에" />
+				<br /><blank width="$w($g_lcdWidth,4)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName" 
+					fontsize="$g_fontSize_big1"
+					value="다음단계로 진행해주시기 바랍니다." />
+			</viewgroup>
+		</viewgroup>
+		<br />
+		<viewgroup height="$h($g_lcdHeight,10)">
+			<button 
+				width="100%" 
+				height="$super.height" 
+				value="확인" 
+				backcolor="bd3135"
+				backcolor_active="b8240c"
+				fontsize="$g_fontsize_big2"
+				fontname="$g_baseFontNameBold"
+				textcolor="ffffff"
+				textcolor_active="ffffff"
+				onclicked="$closescreen();"
+				/>
+		</viewgroup>
+	</screen>
+</popscreen>
+<popscreen id="pop_caution5"
+	width="$g_lcdWidth" 
+	height="$p_lcdHeight"
+	//backcolor="0000ff"
+	modal="true"
+	modalbackcolor="#00000088"
+	layout="center"
+	layout_vertical="center"
+	onload=""
+	onclicked="$closescreen();"
+	key=""
+	>
+	<screen id="screen_comboAccountPopover"
+		width="$w($g_lcdWidth,88.3)"
+		//height="$h($g_lcdHeight,70)"
+		height="$h($g_lcdHeight,49.5)"
+		backcolor="none"
+		layout="center"
+		layout_vertical="center"
+		noscroll_width="true"
+		>
+		<viewgroup 
+			width="$super.width"
+			height="$h($g_lcdHeight,8.6)"
+			backcolor="ffffff"
+			>
+			<label width="$super.width" height="$super.height" align="left" margin_left="$w($g_lcdWidth,3.2)" 
+			fontname="$g_baseFontNameBold"
+			fontsize="$g_fontsize_big2"
+			value="안내" />
+		</viewgroup>
+		<br/><hr backcolor="3c3c3c" /><br/>
+		<viewgroup 
+			width="$super.width"
+			//height="$h($g_lcdHeight,49)"
+			height="$h($g_lcdHeight,14)"
+			backcolor="ffffff"
+			>
+			<viewgroup
+				width="$super.width"
+				height="$h($g_lcdHeight,20)"
+				>
+				<br height="$h($g_lcdHeight,2)" /><blank width="$w($g_lcdWidth,4)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName" 
+					fontsize="$g_fontSize_big1"
+					value="영상통화 신청이 취소되었습니다." />
+				<br /><blank width="$w($g_lcdWidth,4)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName" 
+					fontsize="$g_fontSize_big1"
+					value="다음날 계좌이체방식으로 다시 신청해 " />
+				<br /><blank width="$w($g_lcdWidth,4)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName" 
+					fontsize="$g_fontSize_big1"
+					value="주시기 바랍니다." />
+			</viewgroup>
+		</viewgroup>
+		<br />
+		<viewgroup height="$h($g_lcdHeight,10)">
+			<button 
+				width="100%" 
+				height="$super.height" 
+				value="확인" 
+				backcolor="bd3135"
+				backcolor_active="b8240c"
+				fontsize="$g_fontsize_big2"
+				fontname="$g_baseFontNameBold"
+				textcolor="ffffff"
+				textcolor_active="ffffff"
+				onclicked="$closescreen();
+				$closescreen(popscreen_open_account);"
+				/>
+		</viewgroup>
+	</screen>
+</popscreen>
+<popscreen id="pop_caution6"
+	width="$g_lcdWidth" 
+	height="$p_lcdHeight"
+	//backcolor="0000ff"
+	modal="true"
+	modalbackcolor="#00000088"
+	layout="center"
+	layout_vertical="center"
+	onload=""
+	onclicked="$closescreen();"
+	key=""
+	>
+	<screen id="screen_comboAccountPopover"
+		width="$w($g_lcdWidth,88.3)"
+		//height="$h($g_lcdHeight,70)"
+		height="$h($g_lcdHeight,49.5)"
+		backcolor="none"
+		layout="center"
+		layout_vertical="center"
+		noscroll_width="true"
+		>
+		<viewgroup 
+			width="$super.width"
+			height="$h($g_lcdHeight,8.6)"
+			backcolor="ffffff"
+			>
+			<label width="$super.width" height="$super.height" align="left" margin_left="$w($g_lcdWidth,3.2)" 
+			fontname="$g_baseFontNameBold"
+			fontsize="$g_fontsize_big2"
+			value="안내" />
+		</viewgroup>
+		<br/><hr backcolor="3c3c3c" /><br/>
+		<viewgroup 
+			width="$super.width"
+			//height="$h($g_lcdHeight,49)"
+			height="$h($g_lcdHeight,17)"
+			backcolor="ffffff"
+			>
+			<viewgroup
+				width="$super.width"
+				height="$h($g_lcdHeight,20)"
+				>
+				<br height="$h($g_lcdHeight,2)" /><blank width="$w($g_lcdWidth,3.5)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName" 
+					fontsize="$g_fontSize_big1"
+					value="16시 이후에는 영상통화 예약만 가능" />
+				<br /><blank width="$w($g_lcdWidth,3.5)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName"
+					fontsize="$g_fontSize_big1" 
+					value="합니다. 영상통화를 신청하시겠습니까?" />    
+				<br /><blank width="$w($g_lcdWidth,3.5)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName" 
+					fontsize="$g_fontSize_basic"
+					value="(영상통화의 경우 오전9시~오후4시 사이에만 가능" />
+					<br /><blank width="$w($g_lcdWidth,3.5)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName" 
+					fontsize="$g_fontSize_basic"
+					value="합니다. 이후 시간에는 예약만 가능합니다.)" />
+			</viewgroup>
+		</viewgroup>
+		<br />
+		<viewgroup height="$h($g_lcdHeight,10)" backcolor="ffffff">
+			<blank width="3.5%" />
+			<button 
+				width="45%" 
+				height="$result($super.height-$h($g_lcdHeight,1.5))" 
+				value="영상통화 신청" 
+				backcolor="bd3135"
+				backcolor_active="b8240c"
+				fontsize="$g_fontsize_big2"
+				fontname="$g_baseFontNameBold"
+				textcolor="ffffff"
+				textcolor_active="ffffff"
+				onclicked="$closescreen();
+				$callaction(Act_Open_Account_Move, 4121);"
+				/>
+			<blank width="3%" />
+			<button 
+				width="45%" 
+				height="$result($super.height-$h($g_lcdHeight,1.5))"
+				value="취소" 
+				backcolor="ffffff"
+				backcolor_active="e5e5e5"
+				border_width="$g_roundHeight"
+				border_color="bd3135"
+				fontsize="$g_fontsize_big2"
+				fontname="$g_baseFontNameBold"
+				textcolor="bd3135"
+				textcolor_active="bd3135"
+				onclicked="$closescreen();
+				$popscreen(pop_caution5);"
+				/>
+			<blank width="3.5%" />
+		</viewgroup>
+	</screen>
+</popscreen>
+
+
+

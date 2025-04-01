@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<br/>
+<actiondata value="
+//	$logvar(g_htmlFontName,g_htmlFontNameBold,g_deviceName);
+	$setvar_single(strCommentData_1=본인 계좌 확인을 위해 1원을 보내드립니다.);
+	$setvar_single(strCommentData_2=이체출금계좌로 등록한 계좌로 이체됩니다.);
+	$setvar_single(strCommentData_3=금융기관: $g_save_bank_name);
+	$setvar_single(strCommentData_4=계좌번호: $g_save_acnt_no);
+	$setvar_single(strCommentData_5=계좌명);
+	$setvar_single(strCommentData_6=* 인증가능 시간);
+	$setvar_single(strCommentData_7=- 타금융기관 계좌인증 : 24시간(시스템 점검시간 제외));
+	//$setvar_single(strCommentData_8=- 영상통화 인증 : 09시 ~ 16시);
+
+"/>
+<action id="screen_contents_onload" value="
+	$setvar(
+		,img_step_1.hidden=false
+		,img_step_2.hidden=false
+		,img_step_3.hidden=false
+		,img_step_4.hidden=false
+		,img_step_5.hidden=false
+		,img_step_6.hidden=false
+		,img_step_7.hidden=false
+		,img_step_8.hidden=true
+		,lbl_open_account_title.x=$w($g_lcdwidth,4.6) // 순서대로 오지 않을경우에 치우친다.
+		,lbl_account_title_step_1.hidden=true
+		,lbl_account_title_step_2.hidden=true
+		,lbl_account_title_step_3.hidden=true
+		,lbl_account_title_step_4.hidden=true
+		,lbl_account_title_step_5.hidden=true
+		,lbl_account_title_step_6.hidden=true
+		,lbl_account_title_step_7.hidden=true
+		,lbl_account_title_step_8.hidden=false
+		,lbl_account_title_step_8.textcolor=ffffff
+		,vg_account_title_step.hidden=false
+		,popscreen_open_account_history.hidden=true
+		,popscreen_open_account_history_2.hidden=true
+		,popscreen_open_account_confirm.hidden=false
+		,popscreen_open_account_confirm.x=$w(200)
+		,menu_num=4133
+	);
+	$setvar(
+		, chk_4133_kind_1.checked=true
+		, txt_x = $w(160)
+		, txt_4133_account.x = $txt_x
+		, txt_4133_id.x = $txt_x
+		, txt_4133_password.x = $txt_x
+		, txt_4133_password_confirm.x = $txt_x
+		, txt_4133_question_1.x = $txt_x
+		, txt_4133_question_2.x = $txt_x
+	);
+	
+	// 애드브릭스 테스트
+	$setvar(
+		tmp_arr_custom_data = [
+			[menucode, $tmp_account_menu]
+			,[acntname, $g_save_acnt_name]
+		]
+	);
+	// 배열명(키,밸류), 이벤트명
+	$adbrixCustom(tmp_arr_custom_data,screen);	// 화면별 데이터
+	
+	$log(입금은행코드    >> g_save_bank_code[$g_save_bank_code]);
+	$log(입금은행명     >> g_save_bank_name[$g_save_bank_name]);
+	$log(입금은행계좌번호 >> g_save_acnt_no[$g_save_acnt_no]);
+	$log(고객명        >> g_save_acnt_name[$g_save_acnt_name]);
+	$log(고객 전화번호   >> g_save_tel_num[$g_save_tel_num]);
+	$log(상담번호       >> g_OUT_AGREE_WORK_NO[$g_OUT_AGREE_WORK_NO]);
+
+// 비대면 절차개선 - 2020.09.28
+// 앞단계에서 입력한 계좌명
+	$setvar( lbl_acnt_name.value = $g_save_acnt_name );
+
+// 국내선택시 16시이후 역이체 비활성
+	//$callaction(fnConfig_SetValue,g_open_tp_select,1);	// g_open_tp_select 해외:1, 국내:2
+	if($g_open_tp_select==2){		// 국내 선택시
+		if($now(HH) >= 16){			// 16시 이후
+			$setvar(btn_4133_yes.enable=false);
+		}
+	}
+// 진위여부값(g_save_result_yn)이 N일 경우 역이체 비활성화
+	if($isequal_string($g_save_result_yn,N)){		// 진위여부 N 일경우 역이체 막음
+		$setvar(btn_4133_yes.enable=false);
+	}
+"/>
+
+<class id="clsHtmlView" width="$w(240)" height="$h(100)" fontsize="$w(20)" fontname="$g_baseFontName"
+	 backcolor="none" lineheight="$w($g_lcdWidth,8)" 
+	 width="$w($g_lcdWidth,64)"
+
+/>
+<class id="clsHtmlViewBottom" width="$w(450)" height="$h(40)" fontsize="$w(20)" fontname="$g_baseFontName"
+	 backcolor="none" lineheight="$h(30)"
+/>
+<class id="clsButton" width="$w(220)" height="$h($g_lcdHeight,9.4)" fontsize="$w(30)" fontname="$g_baseFontName"
+	 backcolor="ffffff" margin_left="$w(20)" border_width="$w(1)" textcolor_disable="ffffff" backcolor_disable="999999"
+/>
+<screen id="screen_4133_100" class="cs_screen_contents" backcolor="f1f1f1" onload="screen_contents_onload">
+	<br height="$h($g_lcdHeight,1.4)"/><blank width="$w(30)"/>
+	<htmlview class="clsHtmlView" VALUE_HTML_VAR="strCommentData_1" height="$h(40)" width="$w(400)"/>
+	<br height="$h($g_lcdHeight,0.7)"/><blank width="$w($g_lcdWidth,3.2)"/>
+
+	<viewgroup width="$w(450)" height="$h($g_lcdHeight,17)" >
+		<img src="$icon_bdm"  layout="center" layout_vertical="center" />
+	</viewgroup>
+	<!-- <br height="$h($g_lcdHeight,0.7)"/>
+	<blank width="$w($g_lcdWidth,3.2)"/>
+	<viewgroup width="$w($g_lcdWidth,94)" height="$h(110)" backcolor="000000">
+		<img src="$icon_bdm"  layout="center" layout_vertical="center" />
+	</viewgroup> -->
+
+	<br height="$h($g_lcdHeight,1.4)"/>
+	<blank width="$w($g_lcdWidth,3.2)"/>
+	<viewgroup id="idRealNameCheck_1" width="$w(450)" height="$h(120)" border_width="$w(1)" border_color="#083f9e" backcolor="ffffff">
+		<br height="$w(10)"/><blank width="$w(10)"/>
+		<htmlview class="clsHtmlView" width="$w(450)" height="$h(30)" fontsize="$w(25)" VALUE_HTML_VAR="strCommentData_2"
+			textcolor="0d66ff" noscroll_height="true" />
+		<br height="$w(10)"/><blank width="$w(10)"/>
+		<htmlview class="clsHtmlView" width="$w(450)" height="$h(30)" fontsize="$w(25)" VALUE_HTML_VAR="strCommentData_3"
+			noscroll_height="true"/>
+		<br height="$w(0)"/><blank width="$w(10)"/>
+		<htmlview class="clsHtmlView" width="$w(450)" height="$h(30)" fontsize="$w(25)" VALUE_HTML_VAR="strCommentData_4"
+			noscroll_height="true"/>
+		/>
+	</viewgroup>
+	<br height="$h($g_lcdHeight,1.4)"/>
+	<blank width="$w(245)"/>
+	<button id="btn_4133_yes" width="$w(220)" height="$h(50)" fontsize="$w(30)" fontname="$g_baseFontName" 
+		backcolor="ffffff" backcolor_disable="999999" backcolor_active="e5e5e5" border_width="$w(1)" border_color="#000000" 
+		textcolor="#000000" textcolor_disable="ffffff" value="확인" 
+		onclicked="$callaction(fnInputDataCheck,1)"
+		/>
+	<br height="$h(20)"/><blank width="$w(10)"/>
+	<htmlview class="clsHtmlViewBottom" width="$w(60)" height="$h(25)" VALUE_HTML_VAR="strCommentData_5" noscroll_height="true"/>
+	<blank width="$w(20)"/>
+	<label id="lbl_acnt_name" width="$w(300)" height="$h(30)" fontsize="$w(20)" fontname="$g_baseFontName" 
+		textcolor="0d66ff" value="계 좌 명"/>
+	<br height="$h($g_lcdHeight,1.4)"/><blank width="$w(10)"/>
+	<htmlview class="clsHtmlViewBottom" height="$h(25)" VALUE_HTML_VAR="strCommentData_6" noscroll_height="true"/>
+	<br height="$h($g_lcdHeight,0.7)"/><blank width="$w(10)"/>
+	<htmlview class="clsHtmlViewBottom" height="$h(25)" VALUE_HTML_VAR="strCommentData_7" noscroll_height="true"/>
+    <!-- </if> -->
+	<br height="$h($g_lcdHeight,3.4)"/><blank width="$w($g_lcdWidth,3.2)"/>
+	<button id="btn_4133_prev" class="clsButton" width="$w(450)"
+		value="이전" textcolor="#e33433" textcolor_active="e33433" border_color="#e33433"
+		backcolor_active="e5e5e5"
+		 onclicked="btn_open_account_history_onClicked"
+		 />
+	<!-- <blank width="$w(10)"/>
+	<button id="btn_4133_ok" class="clsButton" value="다음" textcolor="#ffffff" textcolor_active="ffffff" border_color="#ffffff" width="0"
+		backcolor="#e33433" backcolor_active="b8240c"
+		 onclicked="$callaction(fnInputDataCheck,1)"
+		 /> -->
+</screen>
+<action id="fnInputDataCheck" value="
+	if($fnInputDataCheck_param1 == 1){
+		$callaction(fnSendSSL_MO_TRANSIN);		// 역이체 입금 서비스
+		return;
+	}
+	elseif($fnInputDataCheck_param1 == 2){
+		$callaction(Act_Open_Account_Move, 4121); 	// 영상통화 인증화면
+		return;
+	}
+"/>
+<action id="fnSendSSL_MO_TRANSIN"
+value="	// 비대면 절차개선 - 2020.09.28
+		// 역이체 입금
+// 역이체 테스트용 계좌번호 알려드립니다.
+// KEB하나은행[081] : 7179-1001-1086-04
+// 국민[004] : 8169-0104-084-732
+
+	$log(입금은행코드    >> g_save_bank_code[$g_save_bank_code]);
+	$log(입금은행계좌번호 >> g_save_acnt_no[$g_save_acnt_no]);
+	$log(고객명        >> g_save_acnt_name[$g_save_acnt_name]);
+	$log(고객 전화번호   >> g_save_tel_num[$g_save_tel_num]);
+	$log(상담번호       >> g_OUT_AGREE_WORK_NO[$g_OUT_AGREE_WORK_NO]);
+
+$popscreen(pop_host_msg,center); 		// 동글뱅이 띄운다.
+	$setvar(	
+		jsonName 		= MO_TRANSIN 	
+	);
+	$logvar(g_tf_4102_confirm_2_var);
+	$json_create($jsonName);
+
+	$json_setdata($jsonName,,HDR,,{});
+	$json_setdata($jsonName,HDR,VER,,1.0); 					// 1.0 : 연동버전
+	$json_setdata($jsonName,HDR,CMD,,$jsonName);			// 
+
+	$json_setdata($jsonName,,BODY,,{});
+	$json_setdata($jsonName,BODY,OPEN_TP,,1); 								// 1:국내, 2:해외
+	$json_setdata($jsonName,BODY,EBCD,,$g_save_bank_code); 					// 입금은행코드
+	$json_setdata($jsonName,BODY,EBAN,,$g_save_acnt_no); 					// 입금은행계좌번호
+	$json_setdata($jsonName,BODY,CLNT_NM,,$g_save_acnt_name); 				// 고객명
+	$json_setdata($jsonName,BODY,TEL_NUM,,$g_save_tel_num); 				// 고객 전화번호
+	$json_setdata($jsonName,BODY,WORK_NO,,$g_OUT_AGREE_WORK_NO); 			// 상담번호
+
+	$json_print($jsonName);
+	$delvar(strSSLSendData);
+	$json_getfullstring($jsonName,strSSLSendData);
+	$json_delete($jsonName);
+	$logvar(strSSLSendData);
+	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
+"/>
+<action id="fnRecvSSL_MO_TRANSIN" 
+value="	// 비대면 절차개선 - 2020.09.28
+		// 역이체 입금
+	$setvar(
+		recvSSL_hdr_ret 			= $json_getdata($jsonname,HDR.RET)
+		,recvSSL_hdr_msg 			= $json_getdata($jsonname,HDR.MSG)
+		,recvSSL_hdr_err_code		= $json_getdata($jsonname,HDR.ERR_CODE)
+		,recvSSL_body_bsns_date 	= $json_getdata($jsonname,BODY.BSNS_DATE)		// 거래일자
+		,recvSSL_body_inout_no 		= $json_getdata($jsonname,BODY.INOUT_NO) 		// 입출금번호
+		,recvSSL_body_mast_acctno 	= $json_getdata($jsonname,BODY.MAST_ACCTNO) 	// 대표계좌번호
+
+	);
+	$setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_hdr_err_code));
+
+	$log(========= SSL 받은데이터 ==============);
+	$logvar(
+		recvSSL_hdr_ret 
+		,recvSSL_hdr_msg 
+		,recvSSL_body_bsns_date
+		,recvSSL_body_inout_no
+		,recvSSL_body_mast_acctno
+	);
+	if(!$isequal_string($recvSSL_hdr_ret,OK)){
+		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤
+		//$alertaction(,,$recv_error_msg,확인);
+		$callaction(fnPopover_AlertAction,,$recv_error_msg,,확인);
+		return;
+	}
+	
+	$callaction(fnConfig_SetValue,g_save_bsns_date,$recvSSL_body_bsns_date);		// 거래일자
+	$callaction(fnConfig_SetValue,g_save_inout_no,$recvSSL_body_inout_no); 			// 입출금번호
+	$callaction(fnConfig_SetValue,g_save_mast_acctno,$recvSSL_body_mast_acctno);	// 대표계좌번호
+
+	$logvar(
+		g_save_bsns_date
+		,g_save_inout_no
+		,g_save_mast_acctno
+	);
+	$closescreen(pop_host_msg); 		// 동글뱅이 멈춤
+	$callaction(Act_Open_Account_Move, 4134); 	// 역이체 인증화면
+	return;
+
+"/>
+<action id="fnSendSSL_MO_BANK" 
+value="
+	$setvar(	jsonName 		= MO_BANK 	);
+	$json_create($jsonName);
+
+	$json_setdata($jsonName,,HDR,,{});
+	$json_setdata($jsonName,HDR,VER,,1.0); 					// 1.0 : 연동버전
+	$json_setdata($jsonName,HDR,CMD,,$jsonName);			//  
+	$json_setdata($jsonName,,BODY,,{});
+	$json_setdata($jsonName,BODY,WORK_NO,,$g_OUT_AGREE_WORK_NO); 	// 상담번호
+
+	$json_print($jsonName);
+	$delvar(strSSLSendData);
+	$json_getfullstring($jsonName,strSSLSendData);
+	$json_delete($jsonName);
+	$logvar(strSSLSendData);
+	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
+"/>
+<action id="fnRecvSSL_MO_BANK" 
+value="
+	$setvar(
+		recvSSL_hdr_ret 		= $json_getdata($jsonname,HDR.RET)
+		,recvSSL_hdr_msg 		= $json_getdata($jsonname,HDR.MSG)
+		,recvSSL_hdr_err_code	= $json_getdata($jsonname,HDR.ERR_CODE)
+	);
+	$setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_hdr_err_code));
+
+	if(!$isequal_string($recvSSL_hdr_ret,OK)){
+		//$alertaction(,,$recv_error_msg,확인);
+		$callaction(fnPopover_AlertAction,,$recv_error_msg,,확인);
+		return;
+	}
+
+	$log(배열갯수 = [$json_getcount($jsonname,BODY.BNKS)]);
+	$json_getdata($jsonname,BODY.BNKS[1].BNK_NM,strBNKName);
+	$logvar(strBNKName);
+
+	$delarrayvar(arrJsonData_Bank);
+	$json_toArrayData(arrJsonData_Bank,$jsonName,BODY.BNKS,,$(BNK_CODE,BNK_NM));
+	$logarrayvar(arrJsonData_Bank);
+	
+	$delarrayvar(arrData_Bank);
+	$delarrayvar(arrData_Stock);
+	$getCompareArray(arrData_Bank,arrJsonData_Bank,0,GT,200);
+	$getCompareArray(arrData_Stock,arrJsonData_Bank,0,LT,200);
+	$logarrayvar(arrData_Bank);
+	$logarrayvar(arrData_Stock);
+
+	$callaction(subscreen_4133_menu_1_onload);
+"/>
+<action id="btn_4133_number_onclicked" value="
+	$log(g_is_open_account_testing:$g_is_open_account_testing);
+	if($g_is_open_account_testing){		
+		$callaction(fnActive_Next_4133);
+	}
+
+	$callaction(fnConfig_SetValue,g_IN_BNKNAME_BNK_CODE 	,$btn_4118_100.key);
+	$callaction(fnConfig_SetValue,g_IN_BNKNAME_BNK_NO 	,$tf_4133_confirm_01.value);
+
+	$callaction(fnSendSSL_MO_BNKNAME);
+" />
+//계좌 명의 확인
+<action id="fnSendSSL_MO_BNKNAME" 
+value="
+	$popscreen(pop_host_msg,center); 
+
+	$setvar(	jsonName 		= MO_BNKNAME 	);
+	$json_create($jsonName);
+
+	$json_setdata($jsonName,,HDR,,{});
+	$json_setdata($jsonName,HDR,VER,,1.0); 					// 1.0 : 연동버전
+	$json_setdata($jsonName,HDR,CMD,,$jsonName);			// 
+
+	$json_setdata($jsonName,,BODY,,{});
+	$json_setdata($jsonName,BODY,BNK_CODE,,$g_IN_BNKNAME_BNK_CODE); 	// 은행 코드
+	$json_setdata($jsonName,BODY,BNK_NO,,$g_IN_BNKNAME_BNK_NO); 		// 은행 계좌 번호
+	$json_setdata($jsonName,BODY,WORK_NO,,$g_OUT_AGREE_WORK_NO); 	// 상담번호
+
+	// 추가됨 
+	//$json_setdata($jsonName,BODY,HCB_BANK_CD,,006);		 				//주택은행코드
+	//$json_setdata($jsonName,BODY,TOT_AMT,,1); 							//송금총금액
+	//$json_setdata($jsonName,BODY,CHECK_AMT,,0); 						//수표금액
+	//$json_setdata($jsonName,BODY,CH_AMT,,1); 							//현금금액
+
+	$json_print($jsonName);
+	$delvar(strSSLSendData);
+	$json_getfullstring($jsonName,strSSLSendData);
+	$json_delete($jsonName);
+	$logvar(strSSLSendData);
+	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
+"/>
+<action id="fnRecvSSL_MO_BNKNAME" 
+value="
+	
+	$closescreen(pop_host_msg);
+
+	$setvar(
+		recvSSL_hrd_ret 		= $json_getdata($jsonname,HDR.RET)
+		,recvSSL_hrd_msg 		= $json_getdata($jsonname,HDR.MSG)
+		,recvSSL_hdr_err_code	= $json_getdata($jsonname,HDR.ERR_CODE)
+		,recvSSL_body_result	= $json_getdata($jsonname,BODY.RESULT)
+		,recvSSL_body_NAME		= $json_getdata($jsonname,BODY.NAME)
+	);
+	$setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_hdr_err_code));
+	$log(========= SSL 받은데이터 ==============);
+	$logvar(
+		recvSSL_hrd_ret 	
+		,recvSSL_hrd_msg 	
+		,recvSSL_body_result	
+		,recvSSL_body_NAME		
+		,recvSSL_hdr_err_code
+		,recv_error_msg
+	);
+	if(!$isequal_string($recvSSL_hrd_ret,OK)){
+		$setvar(vg_4199_100_result.hidden = true);
+		//$alertaction(,,$recv_error_msg,확인);
+		$callaction(fnPopover_AlertAction,,$recv_error_msg,,확인);
+		return;
+	}
+
+	$callaction(fnConfig_SetValue,g_IN_BNKNAME_BNK_NM 	,$recvSSL_body_NAME);
+
+	$setvar(
+		vg_4199_100_result.hidden = false
+		,lbl_4199_100_result_bank.value = $btn_4118_100.value
+		,lbl_4199_100_result_name.value = $recvSSL_body_NAME
+		,lbl_4199_100_result_no.value = $tf_4133_confirm_01.value
+	);
+
+	//$alertaction(fnActive_Next_4133,,계좌조회가 완료되었습니다.,확인);
+	$callaction(fnPopover_AlertAction,fnActive_Next_4133,계좌조회가 완료되었습니다.,,확인);
+"/>
+
+
+
+
+
+

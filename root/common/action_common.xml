@@ -1,0 +1,4591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<action id="TEXTFIELDEND" scope="common" value="
+	
+	if($isequal_string($TEXTFIELDEND_PARAM1,combo_chart_base_value)){
+		$callaction(textFieldEnd_base);
+	}else{
+		$callaction(textFieldEnd_local,$TEXTFIELDEND_PARAM1);
+	}
+" />
+
+<action id="fnGoScreen_Base" scope="common" 
+params="p_menu_code"
+value="
+	$callaction(fnAddPreScreen,$g_menuCode,$g_itemCode);        // 화면 히스토리 저장
+	$callaction(fnSetVarCommon,g_menuCode,$p_menu_code,메뉴코드);
+
+	$setvar(
+		tmpScreenFile 	= $getxmlvalue(MENUDATA,,file,^|id == $g_menuCode)
+		,tmpIsOpenFile 	= $getxmlvalue(MENUDATA,,open,^|id == $g_menuCode)
+		,tmpGroupId 	= $getxmlvalue(MENUDATA,,groupid,^|id == $g_menuCode)
+		,tmpDxfeed_Stock_Search = $getxmlvalue(MENUDATA,,dxfeed,^|id == $g_menuCode)
+	);	
+	$callaction(fnSetVarCommon,g_screenFile,$tmpScreenFile,스크린파일);
+	$logvar(
+		tmpScreenFile 
+		,tmpIsOpenFile
+		,tmpGroupId 
+		,tmpDxfeed_Stock_Search
+	);	
+	
+	$log(********** fnGoScreen_Base 종목코드 셋팅한다 );
+	$logvar(g_itemCode,g_itemCode_d,g_itemCode_n);
+	$callaction(fnSetItemCode,$g_itemCode);
+	$callaction(fnSetItemCode_d,$g_itemCode_d);
+	$callaction(fnSetItemCode_n,$g_itemCode_n);
+	$callaction(fnSetItemCode_a_stock,$g_itemCode_a_stock);
+	$callaction(fnSetItemCode_a_option,$g_itemCode_a_option);
+
+	$openfile(plist/root/basescreen.xml);	
+"/>
+<!-- <action id="fnSet_DxFeed_Stock_After"  scope="common" 
+value="
+	$openfile(plist/root/basescreen.xml);	
+"/> -->
+<action id="fnGoScreen_Base_Move"  scope="common" 
+value="
+	$callaction(fnAddPreScreen,$g_menuCode,$g_itemCode);        // 화면 히스토리 저장
+	$callaction(fnSetVarCommon,g_menuCode,$tmp_goscreen_base_menu,메뉴코드);
+
+	$setvar(
+		tmpScreenFile 	= $getxmlvalue(MENUDATA,,file,^|id == $g_menuCode)
+		,tmpIsOpenFile 	= $getxmlvalue(MENUDATA,,open,^|id == $g_menuCode)
+		,tmpGroupId 	= $getxmlvalue(MENUDATA,,groupid,^|id == $g_menuCode)
+	);	
+	$callaction(fnSetVarCommon,g_screenFile,$tmpScreenFile,스크린파일);
+	$logvar(
+		tmpScreenFile 
+		,tmpIsOpenFile
+		,tmpGroupId 
+	);	
+	
+	$log(********** fnGoScreen_Base 종목코드 셋팅한다 );
+	$logvar(g_itemCode,g_itemCode_d,g_itemCode_n);
+	$callaction(fnSetItemCode,$g_itemCode);
+	$callaction(fnSetItemCode_d,$g_itemCode_d);
+	$callaction(fnSetItemCode_n,$g_itemCode_n);
+
+	$openfile(plist/root/basescreen.xml);
+" />
+<action id="fnGoScreen" scope="common" 
+params="p_menu_code, p_is_self"
+value="
+	
+	$log(이전화면 저장:$p_is_self);
+	// if($g_ChekcSiseOnly && $isequal_string($p_menu_code,9100)){   // 계좌 관련된것은 시세에서 이동하면 안된다.
+
+	if(!$g_cert_login_status && $isequal_string($p_menu_code,9100)  && !$isequal_string($lbl_login_status.key,1)  ){   // 계좌 관련된것은 시세에서 이동하면 안된다.
+		//$alertaction(fnCertLogin_Confirm,,공동인증서 로그인 하시겠습니까?,취소,확인);
+		$callaction(fnPopover_AlertAction,fnCertLogin_Confirm,공동인증서 로그인 하시겠습니까?,취소,확인);
+		return;
+	}
+
+	$log(확인인 [$isequal_string($p_menu_code,8900)] , $isequal_string($lbl_login_status.key,1));
+	$log(확인인 [$p_menuCode] , [$lbl_login_status.key]);
+
+	if($isequal_string($lbl_login_status.key,0)){
+		if( $isequal_string($p_menu_code,8900)
+		|| $isequal_string($p_menu_code,9999)
+		){
+			$setvar( tmp_menuKey = $p_menu_code);
+			$popscreen(pop_SISE_login_cert_kind_select);
+			return;
+		}
+	}
+
+	if(!$isequal_string($p_is_self,self)){
+		// 저장되지 않아야 하는 화면들이 있다.(청산주문, 정정주문 등)
+		if($g_menuCode==2314        //헷지청산주문 
+		|| $g_menuCode==2313        //헷지청산주문 
+		|| $g_menuCode==2311        //헷지정정주문
+		|| $g_menuCode==2211        //정정주문
+		|| $g_menuCode==2213        //정정주문(특화주문)
+
+		|| $g_menuCode==5211        //정정주문
+		|| $g_menuCode==5213        //정정주문(특화주문)
+
+		|| $g_menuCode==7211        //정정주문
+		|| $g_menuCode==7213        //정정주문(특화주문)
+		|| $g_menuCode==8211        //정정주문 미주옵션
+		
+		){
+
+		}
+		else{
+			$log(저장한다:$g_menuCode);
+			if($strlen($g_pre_menu_code) < 1){}
+			else{		$callaction(fnAddPreScreen,$g_menuCode,$g_itemCode);        } 	// 이전화면 저장 
+			$setvar_common(g_pre_menu_code = $g_menuCode);
+			$logarrayvar(arr_screenHistory);
+		}
+	}
+
+	$callaction(fnSetVarCommon,g_menuCode,$p_menu_code,메뉴코드);
+
+	// 탭메뉴 있는 것들 설정 
+	if($g_menuCode==1110){
+		$log(******* 현재 기본계좌 :$g_default_account);
+		$setvar(
+			tmp_arrIdx 		= $getarrayindex(g_arr_account,1,$g_default_account)
+			,tmp_sysm_tp 		= $getarrayvar(g_arr_account,$tmp_arrIdx,13)
+		);
+		$logvar(
+			tmp_arrIdx
+			,tmp_sysm_tp
+		);
+		if($isequal_string($tmp_sysm_tp,D)){	$callaction(fnSetVarCommon,g_menuCode,1111,메뉴코드);	}
+	}
+	elseif($g_menuCode==1130){
+		$log(******* 현재 기본계좌 :$g_default_account);
+		$setvar(
+			tmp_arrIdx 		= $getarrayindex(g_arr_account,1,$g_default_account)
+			,tmp_sysm_tp 		= $getarrayvar(g_arr_account,$tmp_arrIdx,13)
+		);
+		$logvar(
+			tmp_arrIdx
+			,tmp_sysm_tp
+		);
+		if($isequal_string($tmp_sysm_tp,D)){	$callaction(fnSetVarCommon,g_menuCode,1131,메뉴코드);	}
+	}
+	elseif($g_menuCode==1150){
+		$log(******* 현재 기본계좌 :$g_default_account);
+		$setvar(
+			tmp_arrIdx 		= $getarrayindex(g_arr_account,1,$g_default_account)
+			,tmp_sysm_tp 		= $getarrayvar(g_arr_account,$tmp_arrIdx,13)
+		);
+		$logvar(
+			tmp_arrIdx
+			,tmp_sysm_tp
+		);
+		if($isequal_string($tmp_sysm_tp,D)){	$callaction(fnSetVarCommon,g_menuCode,1151,메뉴코드);	}
+    }
+    elseif($g_menuCode==1155){
+        $log(******* 현재 기본계좌 :$g_default_account);
+        $setvar(
+            tmp_arrIdx         = $getarrayindex(g_arr_account,1,$g_default_account)
+            ,tmp_sysm_tp         = $getarrayvar(g_arr_account,$tmp_arrIdx,13)
+        );
+        $logvar(
+            tmp_arrIdx
+            ,tmp_sysm_tp
+        );
+        if($isequal_string($tmp_sysm_tp,D)){    $callaction(fnSetVarCommon,g_menuCode,1156,메뉴코드);    }
+	}elseif($g_menuCode==1170){
+		$log(******* 현재 기본계좌 :$g_default_account);
+		$setvar(
+			tmp_arrIdx 		= $getarrayindex(g_arr_account,1,$g_default_account)
+			,tmp_sysm_tp 		= $getarrayvar(g_arr_account,$tmp_arrIdx,13)
+		);
+		$logvar(
+			tmp_arrIdx
+			,tmp_sysm_tp
+		);
+		if($isequal_string($tmp_sysm_tp,D)){	$callaction(fnSetVarCommon,g_menuCode,1171,메뉴코드);	}
+	}
+
+	//  무슨 이유가 있으니까 이게 여기서 막았을텐데 이유가 뭘까? 
+	//if($g_menuCode==2310
+	//|| $g_menuCode==2312
+	//){
+	//	$setvar_common(
+	//		g_itemCode = $g_itemFuture
+	//	);
+
+	//}
+	//else{
+        // 아래주석처리함 - 20221207 - 버그 6)
+        /*
+		if($g_itemCls == 2){
+			$setvar_common(g_itemCode = $g_itemOption);
+		}
+		else{
+			$setvar_common(g_itemCode = $g_itemFuture);
+		}
+        */
+	//}
+
+	$setvar(
+		tmpScreenFile = $getxmlvalue(MENUDATA,,file,^|id == $g_menuCode)
+		,tmpIsOpenFile = $getxmlvalue(MENUDATA,,open,^|id == $g_menuCode)
+		,tmpGroupId = $getxmlvalue(MENUDATA,,groupid,^|id == $g_menuCode)
+	);
+
+	$log(이동화면:$tmpScreenFile);
+	if($tmpIsOpenFile){
+		$openfile($tmpScreenFile);
+	}
+	else{
+	
+		// 차트는 안드로이드와 아이폰 따로 구분지어진다. 
+		if($g_menuCode==2130 || $g_menuCode==2131 ){
+			$setvar(
+				tmpScreenFile = $getxmlvalue(MENUDATA,,file,^|id == 2131)
+				,tmpIsOpenFile = $getxmlvalue(MENUDATA,,open,^|id == 2131)
+				,tmpGroupId = $getxmlvalue(MENUDATA,,groupid,^|id == 2131)
+			);
+		}elseif($g_menuCode==5130 || $g_menuCode==5131 ){
+			$setvar(
+				tmpScreenFile = $getxmlvalue(MENUDATA,,file,^|id == 5131)
+				,tmpIsOpenFile = $getxmlvalue(MENUDATA,,open,^|id == 5131)
+				,tmpGroupId = $getxmlvalue(MENUDATA,,groupid,^|id == 5131)
+			);
+			
+		}elseif($g_menuCode==7130 || $g_menuCode==7131 ){
+			$setvar(
+				tmpScreenFile = $getxmlvalue(MENUDATA,,file,^|id == 7131)
+				,tmpIsOpenFile = $getxmlvalue(MENUDATA,,open,^|id == 7131)
+				,tmpGroupId = $getxmlvalue(MENUDATA,,groupid,^|id == 7131)
+			);
+		}
+		elseif($g_menuCode==8130 || $g_menuCode==8132 ){
+			$setvar(
+				tmpScreenFile = $getxmlvalue(MENUDATA,,file,^|id == 8132)
+				,tmpIsOpenFile = $getxmlvalue(MENUDATA,,open,^|id == 8132)
+				,tmpGroupId = $getxmlvalue(MENUDATA,,groupid,^|id == 8132)
+			);
+		}
+		elseif($g_menuCode==8131 || $g_menuCode==8133 ){
+			$setvar(
+				tmpScreenFile = $getxmlvalue(MENUDATA,,file,^|id == 8133)
+				,tmpIsOpenFile = $getxmlvalue(MENUDATA,,open,^|id == 8133)
+				,tmpGroupId = $getxmlvalue(MENUDATA,,groupid,^|id == 8133)
+			);
+		}
+		$callaction(fnSetVarCommon,g_screenFile,$tmpScreenFile,스크린파일);
+		$log(멀티차트:$g_screenFile);
+		//$openfile(plist/root/basescreen.xml);
+
+		// 기본계좌 설정
+		if($g_menuCode > 2000 && $g_menuCode < 5000){
+			$callaction(fnConfig_SetValue,g_default_account ,$g_default_account_f); 
+		}
+		elseif($g_menuCode > 5000 && $g_menuCode < 8000 && $g_menuCode != 5100){
+			$callaction(fnConfig_SetValue,g_default_account ,$g_default_account_d);
+		}
+		elseif($g_menuCode == 5100){
+		}
+		$changescreen_parse(basescreen,subscreen_base_contents);
+	}    
+" />
+<action id="fnGoPreScreen" scope="common" 
+value="
+	//20231031 CDDEDD 변경관련
+	//20231130 CDDEDD 변경관련 주석처리
+	//20240220 0304 CDDEDD 강제화
+	if($isequal_string($g_CDD_EDD_flag,Y) && !$isequal_string($g_fpercor,2)){
+		$callaction(fnPopover_AlertAction,fnGoLoginScreen_confirm_cdd_edd, “고객확인등록”을 선택 후\n반드시 등록하여 주시기 바랍니다.,로그아웃,고객확인등록);
+		return;
+	}
+
+	if($isequal_string($g_warn_sect,Y)){
+		$callaction(fnPopover_AlertAction,fnGoLoginScreen_confirm_warn_sect, “투자자정보 확인서”를 선택 후\n반드시 등록하여 주시기 바랍니다.,로그아웃,투자자정보 확인서);
+		return;
+	}
+	
+	
+	$log(************ fnGoPreScreen);
+	$logarrayvar(arr_screenHistory);
+
+	if($isequal_string($g_menuCode,2131)
+	|| $isequal_string($g_menuCode,2132)
+	|| $isequal_string($g_menuCode,5131)
+	|| $isequal_string($g_menuCode,5132)
+	|| $isequal_string($g_menuCode,7131)
+	|| $isequal_string($g_menuCode,7132)
+	|| $isequal_string($g_menuCode,8132)
+	|| $isequal_string($g_menuCode,8133)
+	){
+		$log(차트 화면 가로모드 뒤로가기 시 강제 세로모드);
+		$rotateView(1);
+	}
+
+
+	$setvar(
+		tmp_cnt = $result($getarrayvarcount(arr_screenHistory)-1)
+		,preMenuCode = $getarrayvar(arr_screenHistory,$tmp_cnt,0)
+		,preItemCode = $getarrayvar(arr_screenHistory,$tmp_cnt,1)
+	);
+	$logvar(
+		tmp_cnt 
+		,preMenuCode 
+		,preItemCode 
+	);
+	if($tmp_cnt<0){
+		//$alertaction(fnGoLoginScreen,,로그아웃 하시겠습니까?,취소,확인);
+		$callaction(fnPopover_AlertAction,fnGoLoginScreen,로그아웃 하시겠습니까?,취소,확인);
+		return;
+	}
+	$setvar(
+		tmpScreenFile = $getxmlvalue(MENUDATA,,file,^|id == $preMenuCode)
+		,tmpIsOpenFile = $getxmlvalue(MENUDATA,,open,^|id == $preMenuCode)
+	);
+
+	
+
+	if($isequal_string($preMenuCode,1920) && $g_bLoginStatus){           // 로그인 여부
+		$setvar_common(tmp_g_menuCode=$preMenuCode);
+		//$alertaction(fnGoLoginScreen,,로그아웃 하시겠습니까?,취소,확인);
+		$callaction(fnPopover_AlertAction,fnGoLoginScreen,로그아웃 하시겠습니까?,취소,확인);
+	}
+	else{
+		$setvar(
+			tmp_certlogin 		= $getxmlvalue(MENUDATA,menu,certlogin,^|id == '$g_menuCode')
+			,tmp_simulation 	= $getxmlvalue(MENUDATA,menu,simulation,^|id == '$g_menuCode')
+			,tmp_s_login 		= $getxmlvalue(MENUDATA,menu,s_login,^|id == '$g_menuCode')              // 직원용 메뉴설정 
+		);
+		$logvar(
+			tmp_certlogin 		
+			,tmp_simulation 	
+			,tmp_s_login 		
+			,g_cert_login_status
+		);
+
+		if($g_login_kind == 1){ 				// 모의투자 
+
+		}
+		else{
+			if($tmp_certlogin && !$g_cert_login_status ) { 		// 시세만 가능한 화면으로 이동해야한다.
+				$log(tmp_certlogin:$tmp_certlogin, g_cert_login_status:$g_cert_login_status);
+				$callaction(fnGoScreen,1220);
+				return;
+			}
+		}
+		
+		
+
+		//$callaction(fnSetVarCommon,g_menuCode,$preMenuCode,메뉴코드);
+		$callaction(fnConfig_SetValue,g_menuCode,$preMenuCode);
+
+		if($strlen($preItemCode)>0){
+			$setvar_common(g_itemCode = $preItemCode);
+		}
+
+		// 탭메뉴 있는 것들 설정 
+		if($g_menuCode==1110){
+			$log(******* 현재 기본계좌 :$g_default_account);
+			$setvar(
+				tmp_arrIdx 		= $getarrayindex(g_arr_account,1,$g_default_account)
+				,tmp_sysm_tp 		= $getarrayvar(g_arr_account,$tmp_arrIdx,13)
+			);
+			$logvar(
+				tmp_arrIdx
+				,tmp_sysm_tp
+			);
+			if($isequal_string($tmp_sysm_tp,D)){	$callaction(fnSetVarCommon,g_menuCode,1111,메뉴코드);	}
+		}
+		elseif($g_menuCode==1130){
+			$log(******* 현재 기본계좌 :$g_default_account);
+			$setvar(
+				tmp_arrIdx 		= $getarrayindex(g_arr_account,1,$g_default_account)
+				,tmp_sysm_tp 		= $getarrayvar(g_arr_account,$tmp_arrIdx,13)
+			);
+			$logvar(
+				tmp_arrIdx
+				,tmp_sysm_tp
+			);
+			if($isequal_string($tmp_sysm_tp,D)){	$callaction(fnSetVarCommon,g_menuCode,1131,메뉴코드);	}
+		}
+		elseif($g_menuCode==1150){
+			$log(******* 현재 기본계좌 :$g_default_account);
+			$setvar(
+				tmp_arrIdx 		= $getarrayindex(g_arr_account,1,$g_default_account)
+				,tmp_sysm_tp 		= $getarrayvar(g_arr_account,$tmp_arrIdx,13)
+			);
+			$logvar(
+				tmp_arrIdx
+				,tmp_sysm_tp
+			);
+			if($isequal_string($tmp_sysm_tp,D)){	$callaction(fnSetVarCommon,g_menuCode,1151,메뉴코드);	}
+        }
+        elseif($g_menuCode==1155){
+            $log(******* 현재 기본계좌 :$g_default_account);
+            $setvar(
+                tmp_arrIdx         = $getarrayindex(g_arr_account,1,$g_default_account)
+                ,tmp_sysm_tp         = $getarrayvar(g_arr_account,$tmp_arrIdx,13)
+            );
+            $logvar(
+                tmp_arrIdx
+                ,tmp_sysm_tp
+            );
+            if($isequal_string($tmp_sysm_tp,D)){    $callaction(fnSetVarCommon,g_menuCode,1156,메뉴코드);    }
+		}elseif($g_menuCode==1170){
+			$log(******* 현재 기본계좌 :$g_default_account);
+			$setvar(
+				tmp_arrIdx 		= $getarrayindex(g_arr_account,1,$g_default_account)
+				,tmp_sysm_tp 		= $getarrayvar(g_arr_account,$tmp_arrIdx,13)
+			);
+			$logvar(
+				tmp_arrIdx
+				,tmp_sysm_tp
+			);
+			if($isequal_string($tmp_sysm_tp,D)){	$callaction(fnSetVarCommon,g_menuCode,1171,메뉴코드);	}
+		}
+
+		// 차트는 안드로이드와 아이폰 따로 구분지어진다. 
+		if($g_menuCode==2130 || $g_menuCode==2131 ){
+			$setvar(
+				tmpScreenFile = $getxmlvalue(MENUDATA,,file,^|id == 2131)
+				,tmpIsOpenFile = $getxmlvalue(MENUDATA,,open,^|id == 2131)
+				,tmpGroupId = $getxmlvalue(MENUDATA,,groupid,^|id == 2131)
+			);
+		}elseif($g_menuCode==5130 || $g_menuCode==5131 ){
+			$setvar(
+				tmpScreenFile = $getxmlvalue(MENUDATA,,file,^|id == 5131)
+				,tmpIsOpenFile = $getxmlvalue(MENUDATA,,open,^|id == 5131)
+				,tmpGroupId = $getxmlvalue(MENUDATA,,groupid,^|id == 5131)
+			);
+		}elseif($g_menuCode==7130 || $g_menuCode==7131 ){
+			
+			$setvar(
+				tmpScreenFile = $getxmlvalue(MENUDATA,,file,^|id == 7131)
+				,tmpIsOpenFile = $getxmlvalue(MENUDATA,,open,^|id == 7131)
+				,tmpGroupId = $getxmlvalue(MENUDATA,,groupid,^|id == 7131)
+			);
+		}
+		elseif($g_menuCode==8130 || $g_menuCode==8132 ){
+			$setvar(
+				tmpScreenFile = $getxmlvalue(MENUDATA,,file,^|id == 8132)
+				,tmpIsOpenFile = $getxmlvalue(MENUDATA,,open,^|id == 8132)
+				,tmpGroupId = $getxmlvalue(MENUDATA,,groupid,^|id == 8132)
+			);
+		}
+		elseif($g_menuCode==8131 || $g_menuCode==8133 ){
+			$setvar(
+				tmpScreenFile = $getxmlvalue(MENUDATA,,file,^|id == 8133)
+				,tmpIsOpenFile = $getxmlvalue(MENUDATA,,open,^|id == 8133)
+				,tmpGroupId = $getxmlvalue(MENUDATA,,groupid,^|id == 8133)
+			);
+		}
+
+
+		if($tmpIsOpenFile){
+			$delarrayvar(arr_screenHistory,$tmp_cnt);
+			$logarrayvar(arr_screenHistory);
+			//$openfile($tmpScreenFile);
+
+			$changescreen_parse(basescreen,subscreen_base_contents);
+		}
+		else{
+			$delarrayvar(arr_screenHistory,$tmp_cnt);
+			$logarrayvar(arr_screenHistory);            
+			$callaction(fnSetVarCommon,g_screenFile,$tmpScreenFile,스크린파일);
+			//$openfile(plist/root/basescreen.xml);
+
+			$changescreen_parse(basescreen,subscreen_base_contents);
+		}
+	}
+" />
+<!--
+ *********************************************************************************
+ **
+ ** fnGoLoginScreen: 로그인 화면으로 이동한다. 로그인 화면은 basescreen.xml에서 제외
+ **
+ *********************************************************************************
+-->
+<action id="fnGoLoginScreen" scope="common" 
+value="
+	$log(************** 로그아웃 );
+
+	if($FNGOLOGINSCREEN_PARAM1 == 0){
+		return;
+
+	}
+
+	$setvar(
+		,IN_usid = $g_login_id
+		,IN_name = $g_recv_UserName
+		,IN_maca = $g_mac_address
+		,IN_pcip = $g_recv_AUIP
+		
+		,reqid_CSBLOGOFF = $callaction(FNSEND_ORDERDATA,CSBLOGOFF,Input,,,,)
+	);  
+	$logvar(IN_usid, IN_name, IN_maca, IN_pcip);
+
+	// 로그인 정보 삭제 
+	$callaction(fnConfig_SetValue,g_login_id,);
+	$callaction(fnConfig_SetValue,g_login_pwd,);
+	$callaction(fnConfig_SetValue,g_login_cert,);
+	$callaction(fnConfig_SetValue,g_login_type,);
+	$callaction(fnConfig_SetValue,g_login_kind,);
+	//$callaction(fnConfig_SetValue,g_login_id_save ,$var_is_id_save);
+	$callaction(fnConfig_SetValue,g_login_dn,);
+
+	$callaction(fnConfig_SetValue,g_cert_login_status,); 		//공동인증서 로그인 상태
+	
+
+	//cn=양준영-3732879,ou=HTS,ou=대
+	$callaction(fnConfig_SetValue,g_recv_dn,);
+	$setvar_common(g_recv_dn = );
+
+//	$logvar(g_login_id, g_login_pwd, g_login_cert, g_login_type, g_login_kind, g_login_id_save,g_login_dn);
+
+	$callaction(fnConfig_Load_All);        // 새버젼 
+//	$callaction(fnConfig_Log);       		// 새버젼 
+	
+	// 계좌번호 삭제
+	$setvar_common(
+		g_default_account = 
+		,g_default_account_f = 
+		,g_default_account_d = 
+		,g_default_account_f_l = 
+		,g_default_account_f_g = 
+	);
+	$callaction(fnConfig_SetValue,g_default_account 	,$g_default_account); 
+	$callaction(fnConfig_SetValue,g_default_account_f 	,$g_default_account_f); 
+	$callaction(fnConfig_SetValue,g_default_account_d 	,$g_default_account_d); 
+	$callaction(fnConfig_SetValue,g_default_account_f_l 	,$g_default_account_f_l); 
+	$callaction(fnConfig_SetValue,g_default_account_f_g 	,$g_default_account_f_g); 
+
+	$delarrayvar(g_arr_account,);
+	$delarrayvar(g_arr_account_f);
+	$delarrayvar(g_arr_account_d);
+	$delarrayvar(g_arr_account_f_l);
+	$delarrayvar(g_arr_account_f_g);
+	
+	$logarrayvar(g_arr_account);
+	$logarrayvar(g_arr_account_f);
+	$logarrayvar(g_arr_account_d);
+	$logarrayvar(g_arr_account_f_l);
+	$logarrayvar(g_arr_account_f_g);
+
+	// 종목정보 삭제 
+//	$callaction(fnConfig_SetValue,g_itemCode 	,); 	// 이 액션에는 빈값이 들어가면 안된다. - 염이사 확인 
+//	$callaction(fnConfig_SetValue,g_itemCode_d 	,);
+//	$callaction(fnConfig_SetValue,g_itemCode_n 	,);
+
+	$logvar(g_itemCode, g_itemCode_d, g_itemCode_n);
+
+	$delarrayvar(arr_screenHistory);
+	$setvar_common(g_menuCode=1920);
+	$openfile(plist/root/main.xml);
+" />
+<!--
+ *********************************************************************************
+ **
+ ** android_keymap: 안드로이드에서 뒤로가기 버튼을 터치 콜백액션
+ **
+ *********************************************************************************
+-->
+<action id="android_keymap" scope="common" 
+value="
+	if($android_keymap_param1 == 1 && $android_keymap_param2 == 4) {
+
+		//일괄취소중 '처리중' 팝업이 존재할때.
+		if($popscreen_loding_all_cancel_check || $popscreen_loding_order_check){
+			return;
+		}
+
+		//$alert(,,[$tmp_account_menu]뒤로가기 버튼 클릭.,확인,);
+		if($tmp_account_menu==4129 || $tmp_account_menu==4134){
+			//$alert(,,비대면 뒤로가기 막음.,확인,);
+			return;
+		}
+		if($finger_pop_check || $g_is_open_3gAlarm){
+			$logvar(finger_pop_check,g_is_open_3gAlarm);
+			if($g_is_open_3gAlarm) {
+				$log(3G 체크팝업이 떠있다.);
+			}
+		//지문인증 손가락 팝업일때 막는다
+			return;
+		}
+		
+		//해외 종목검색 히든true일때 히든만시킨다
+		if($screen_item_search_open){
+			$setvar(
+			screen_item_search.hidden_all=true
+			,screen_item_search_open=false
+			);
+			return;
+		}
+		//국내주간 종목검색 히든true일때 히든만시킨다
+		if($screen_item_search_d_open){
+			$setvar(
+			screen_item_search_d.hidden_all=true
+			,screen_item_search_d_open=false
+			);
+			return;
+		}
+		//국내야간 종목검색 히든true일때 히든만시킨다
+		if($screen_item_search_n_open){
+			$setvar(
+			screen_item_search_n.hidden_all=true
+			,screen_item_search_n_open=false
+			);
+			return;
+		}
+
+		//현재가,주문 오른쪽메뉴 열려잇을때
+		if($screen_right_open){
+			$setvar( screen_right.x=$g_lcdWidth,btn_right_close.hidden=true);	
+       			$callaction(base_right_screen_unonload);
+       			$setvar(screen_right_open=false);
+		}
+		//비대면 도움말 열렷을때
+		if($pop_info_tip_open_check){
+			$closescreen(pop_info_tip);
+		}
+		//팝스크린 열린거 있을때 팝스크린 상위꺼닫는다
+		if($getcount_popscreen()>0){
+			//비대면화면은 뒤로가기 안되고 로그인화면으로 이동하기때문에 예외처리
+			if(!$isequal_string($getcurr_popscreen(),popscreen_open_account)){
+				$closescreen($getcurr_popscreen());
+				return;
+			}
+		}
+		$logvar(g_is_open_account,g_menuCode);
+		if($g_is_open_account){
+			$callaction(BTN_OPEN_ACCOUNT_HISTORY_ONCLICKED);
+			return;
+			
+		}
+		//얘는 안되는것 같음
+		//if($int($getcount_popscreen())>0){
+		//	$closescreen($getcurr_popscreen());
+		//}
+		else{
+			$setvar(tmp_isPreScreen = $callaction(fnIsPreScreen));
+			if($g_menuCode==1920){  // 로그인 화면에서는 무조건 종료알림 띄운다.
+				//$alertaction(fn_android_key_callback,,SMART 챔피언 FUTURES를 종료하시겠습니까?,취소,확인);
+				$callaction(fnPopover_AlertAction,fn_android_key_callback,SMART 챔피언 FUTURES를 종료하시겠습니까?,취소,확인);
+				return;
+			}
+			if($tmp_isPreScreen){
+				if($g_menuCode == 2130 || $g_menuCode == 2131){
+					$log(차트에서:ori_kind[$ori_kind]);
+					if($ori_kind==2){
+						return;
+					}
+					else{
+						// 이전화면 이동 
+						$callaction(fnGoPreScreen);
+					}
+				}elseif($g_menuCode == 5130 || $g_menuCode == 5131){
+					$log(차트에서:ori_kind[$ori_kind]);
+					if($ori_kind==2){
+						return;
+					}
+					else{
+						// 이전화면 이동 
+						$callaction(fnGoPreScreen);
+					}
+				}elseif($g_menuCode == 7130 || $g_menuCode == 7131){
+					$log(차트에서:ori_kind[$ori_kind]);
+					if($ori_kind==2){
+						return;
+					}
+					else{
+						// 이전화면 이동 
+						$callaction(fnGoPreScreen);
+					}
+				}
+				
+				else{
+					// 이전화면 이동 
+					$callaction(fnGoPreScreen);
+				}
+			}else{
+				//$alertaction(fn_android_key_callback,,SMART 챔피언 FUTURES를 종료하시겠습니까?,취소,확인);
+				$callaction(fnPopover_AlertAction,fn_android_key_callback,SMART 챔피언 FUTURES를 종료하시겠습니까?,취소,확인);
+			}
+		}
+	}
+" />
+
+<!--
+ *********************************************************************************
+ **
+ ** android_keymap: 안드로이드 종료 확인 팝업창에서 확인 터치 콜백 액션
+ **
+ *********************************************************************************
+-->
+<action id="fn_android_key_callback" scope="common" 
+value="
+	if($fn_android_key_callback_param1 == 1){
+		// Config 파일이나 관심종목 등 저장되어야 백그라운드 갈때 저장하는 것들은 여기서도 저장이 되어야한다.
+
+		$callaction(fnSaveDBInterestItemCode);      // 관심종목 저장
+		$callaction(fnSaveDBInterestItemCode_d);      // 관심종목 저장 - 국내 
+		
+	
+		// 현재 종목코드를 저장한다.
+		$callaction(fnConfig_SetValue,g_itemcode 	,$g_itemcode); 	// 해외선물코드
+		$callaction(fnConfig_SetValue,g_itemcode_d 	,$g_itemcode_d); 	// 국내선물코드
+		$callaction(fnConfig_SetValue,g_itemcode_n 	,$g_itemcode_n); 	// 국내선물코드
+
+		// 현재 선택한 계좌번호를 저장한다. 
+		$callaction(fnConfig_SetValue,g_default_account_f 	,$g_default_account_f); 	// 해외계좌
+		$callaction(fnConfig_SetValue,g_default_account_d 	,$g_default_account_d); 	// 국내계좌
+		$callaction(fnConfig_SetValue,g_default_account 	,$g_default_account); 	// 전체계좌
+
+		$callaction(fnConfig_SetValue,g_default_account_f_l 	,$g_default_account_f_l); 	// 해외계좌
+		$callaction(fnConfig_SetValue,g_default_account_f_g 	,$g_default_account_f_g); 	// 해외계좌
+		
+		
+		// 모든 설정파일 저장 
+		$callaction(fnConfig_Save_All); 
+
+		$exit();
+	}
+"/>
+
+
+<popscreen id="pop_host_msg" scope="common"
+	width="$g_lcdWidth" 
+	height="$g_lcdHeight"
+	//backcolor="0000ff22"
+	modal="true"
+	modalbackcolor="none"
+	layout="center"
+	layout_vertical="center"
+	onload="$xmlactivity_start(,,000000);"
+	onUnload="$xmlactivity_stop();"
+	>
+</popscreen>
+<!--
+ *********************************************************************************
+ **
+ ** fnOnLayoutChangeAndroid: 안드로이드 가로,세로 또는 레이아웃 크기변화시 호출
+ **
+ *********************************************************************************
+-->
+<action id="fnOnLayoutChangeAndroid" scope="common"
+params="
+p_Type
+,p_left
+,p_top
+,p_right
+,p_bottom
+,p_oldLeft
+,p_oldTop
+,p_oldRight
+,p_oldBottom
+,p_DeviceOriKind
+,p_DeviceOriType
+"
+value="
+	$setvar_common(
+    	g_orinetation_kind  = $p_DeviceOriKind		// 가로,세로 
+		,g_orinetation_type = $p_DeviceOriType
+		//,g_cur_orientation 	= $orientation
+    );
+"/>
+<!--
+ *********************************************************************************
+ **
+ ** SetOrientation: 가로모드 또는 세로모드를 셋팅한다. 관련변수:orientation
+ **
+ *********************************************************************************
+-->
+<action id="SetOrientation" scope="common" 
+params="
+p_kind 			// 가로,세로 
+,p_type
+"
+value="
+	
+	$log(SetOrientation : action.xml);
+	if($g_menuCode==8132
+    || $g_menuCode==8133
+	){
+		if($p_kind == 2){
+			$closescreen_all();
+		}
+	}
+
+    if($g_menuCode==2131
+    || $g_menuCode==2132
+    || $g_menuCode==5131
+    || $g_menuCode==5132
+    || $g_menuCode==7131
+    || $g_menuCode==7132
+    || $g_menuCode==8132
+    || $g_menuCode==8133
+    ){
+    	$setvar_common(orientation=true);
+    	// 아이폰 노치형 때문에 추가 
+		if( $g_iBottomVar > 0) {
+			if($p_kind == 2 ){
+				if($p_type == 3){		$setvar(root_screen.x_ori = 0);		}
+				else{					$setvar(root_screen.x_ori = $g_lcdBaseX_ori);	}
+			}
+			if($p_kind == 1 ){
+				if($p_type == 2){		$setvar(root_screen.x_ori = 0);	}
+				else{					$setvar(root_screen.x_ori = $g_lcdBaseX_ori);	}
+			}
+		}
+    }
+    else{
+        $setvar_common(orientation=false);
+    }
+    $setvar_common(
+    	g_orinetation_kind  = $p_kind		// 가로,세로 
+		,g_orinetation_type = $p_type
+		,g_cur_orientation 	= $orientation
+    );
+    
+    return ;
+
+	//2022_11_30 해당 소스 추가 안드로이드 , 아이폰 동일하게 화면회전 처리.
+	$setvar_common(orientation=false); return;
+
+	//2022_11_30 아이폰도 동일하게 처리하기에 주석처리.
+	//if($g_isAndroid){		$setvar_common(orientation=false); return;			}
+
+	$setvar(
+		ori_kind=$SetOrientation_param1
+		,ori_type=$SetOrientation_param2
+	);
+	// 아이폰 노치형 때문에 추가 
+	if( $g_iBottomVar > 0) {
+		if($ori_kind == 2 ){
+			if($ori_type == 3){		$setvar(root_screen.x_ori = 0);		}
+			else{					$setvar(root_screen.x_ori = $g_lcdBaseX_ori);	}
+		}
+		if($ori_kind == 1 ){
+			if($ori_type == 2){		$setvar(root_screen.x_ori = 0);	}
+			else{					$setvar(root_screen.x_ori = $g_lcdBaseX_ori);	}
+		}
+	}
+
+	$setvar_common(orientation=true);
+	$setvar_common(m_Orientation_Kind =$ori_kind);
+	
+	if($ori_type==2){
+		$setvar_common(orientation=false);
+		$log(ori_type:2);
+	}
+
+	if($g_menuCode == 2130 || $g_menuCode == 2131 || $g_menuCode == 2132){
+		$closescreen($getcurr_popscreen());
+	}elseif($g_menuCode == 5130 || $g_menuCode == 5131 || $g_menuCode == 5132){
+		$closescreen($getcurr_popscreen());
+	}elseif($g_menuCode == 7130 || $g_menuCode == 7131 || $g_menuCode == 7132){
+		$closescreen($getcurr_popscreen());
+	}
+	if($ori_kind==2){
+		$log(ori_kind:2);
+		$setvar_common(orientation=false);
+
+		if($g_menuCode == 2130 || $g_menuCode == 2131 || $g_menuCode == 2132){
+			$setvar_common(orientation=true);
+			$closescreen($getcurr_popscreen());
+		}elseif($g_menuCode == 5130 || $g_menuCode == 5131 || $g_menuCode == 5132){
+			$setvar_common(orientation=true);
+			$closescreen($getcurr_popscreen());
+		}elseif($g_menuCode == 7130 || $g_menuCode == 7131 || $g_menuCode == 7132){
+			$setvar_common(orientation=true);
+			$closescreen($getcurr_popscreen());
+		}
+	}
+	
+	$setvar_common(cur_orientation=$orientation);
+	$callaction(SetOrientation_LOCAL);      // 해당 화면에서 생성함. - 티커가 있을경우 티커도 적용시킨다.
+	$logvar(orientation);
+" />
+
+<!--
+ *********************************************************************************
+ **
+ ** fnSetCertSetSignTypeInit: 공동인증 암호화 타입 초기화 **
+ *********************************************************************************
+-->
+
+<!--
+// 관심종목 코드를 가져온다. TR Send 용 
+<action id="fnGetMakeInterestItemCode" scope="common" value="
+	//[300][16] 16자리로 구분된다.
+	$setvar(
+		arrCnt=$getarrayvarcount(arr_interestItem)
+		,retStr = 
+	);
+	// 추후 플랫폼 함수 추가해서 수정하기로 함.
+	for($i = 0; $i < $arrCnt; $i++){
+		$setvar(
+			tmp_interestItemCode=$getarrayvar(arr_interestItem,$i,0)
+			,tmp_interestItemName=$getarrayvar(arr_interestItem,$i,1)
+			,tmp_Code =$padding_after($tmp_interestItemCode,16,|)   //%20:space
+			,retStr = $addstring($retStr,$tmp_Code)
+		);
+	}
+	return $replace(|,%20,$retStr);
+" />
+-->
+<action id="fnSetMultiItemCode" scope="common" 
+params="p_code"
+value="
+	if($strlen($p_code)<1){   return; }
+
+	$setvar(tmp_item_cls = $callaction(fnGetItemCls, $p_code));
+	$logvar(tmp_item_cls);
+
+	if($tmp_item_cls==2){ 			// 해외 옵션
+		$setvar_common(
+			multi_itemCode 	=$p_code
+			,multi_itemOption 	=$p_code
+			,multi_itemCls 		= 2
+		);
+		$setvar(
+			tmp_opcode_idx = $getarrayindex(arr_MasterData_OPCODE,0,$p_code)
+		);
+		$logvar(tmp_opcode_idx);
+		$setvar_common(
+			multi_itemVenderCode 	= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,1)
+			,multi_itemExchName 		= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,2)
+			,multi_itemUnderCode		= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,3)
+			,multi_itemStrikePrice		= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,4)
+			,multi_itemOptionType		= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,5)
+			,multi_itemAtmFlag		= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,6)
+			,multi_itemCOMD 		= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,7)
+			,multi_itemYYMM 		= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,8)
+			,multi_itemPrevLast 		= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,9)
+		);
+		
+		$setvar(	tmp_opitem_index = $getarrayindex(arr_MasterData_OPITEM,0,$multi_itemCOMD)		);
+		$setvar_common(
+			,multi_itemTSIZ 		= $getarrayvar(arr_MasterData_OPITEM,$tmp_opitem_index,9)
+			,multi_itemPIND 		= $getarrayvar(arr_MasterData_OPITEM,$tmp_opitem_index,8)
+			,multi_itemADJV 		= $getarrayvar(arr_MasterData_OPITEM,$tmp_opitem_index,10)
+			,multi_itemNAME 		= $getarrayvar(arr_MasterData_OPITEM,$tmp_opitem_index,4)
+		);
+
+		$logvar(
+			,multi_itemCode
+			,multi_itemOption 	
+			,multi_itemCls 		
+			,multi_itemVenderCode 	
+			,multi_itemExchName 	
+			,multi_itemUnderCode	
+			,multi_itemStrikePrice	
+			,multi_itemOptionType	
+			,multi_itemAtmFlag	
+			,multi_itemCOMD 		
+			,multi_itemYYMM 		
+			,multi_itemPrevLast 	
+			,multi_itemTSIZ 
+			,multi_itemPIND 
+			,multi_itemADJV 
+			,multi_itemNAME
+		);
+		$setvar_common(g_itemCls=2,check_leader.hidden_all=true);
+		if($isequal_string($leader_checked,T)) {
+				$setVar(display_code=$code, check_leader.checked=false);
+			}
+		return;
+	}
+	else{ 	// 해외 선물
+		$setvar_common(
+			multi_itemCode 	=$p_code
+			,multi_itemFuture 	=$p_code
+			,multi_itemCls 	= 1
+		);
+		$setvar(
+			tmp_item_idx = $getarrayindex(arr_MasterData_fucode,0,$multi_itemCode)
+		);
+
+		$logvar(
+			multi_itemCode 	
+			,multi_itemFuture 	
+			,multi_itemCls 	
+			,tmp_item_idx
+			,p_code
+		);
+		//$logarrayvar(arr_MasterData_fucode);
+		if($tmp_item_idx < 0){
+			return;
+		}
+		
+		$setvar_common(
+			multi_itemVenderCode 	= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,1)
+			,multi_itemExchName 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,2)
+			,multi_itemENAM 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,3)
+			,multi_itemNAME 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,4)
+			,multi_itemEXCH 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,5)
+			,multi_itemTYPE 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,6)
+			,multi_itemSection 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,7)
+			,multi_itemPIND 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,8)
+			,multi_itemTRDF 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,9)
+			,multi_itemONOF 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,10)
+			,multi_itemTSIZ 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,11)
+			,multi_itemADJV 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,12)
+			,multi_itemLMON 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,13)
+			,multi_itemCOMD 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,14)
+			,multi_itemYYMM 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,15)
+			,multi_itemPrevLast 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,16)
+
+		);
+		$logvar(
+			,multi_itemCode
+			,multi_itemOption 	
+			,multi_itemCls 		
+			,multi_itemVenderCode
+			,multi_itemExchName
+			,multi_itemENAM
+			,multi_itemNAME
+			,multi_itemEXCH
+			,multi_itemTYPE
+			,multi_itemSection
+			,multi_itemPIND
+			,multi_itemTRDF
+			,multi_itemONOF
+			,multi_itemTSIZ
+			,multi_itemADJV
+			,multi_itemLMON
+			,multi_itemCOMD
+			,multi_itemYYMM
+			,multi_itemPrevLast
+		);
+		$callaction(fnLeaderCode_Set);
+		$setvar_common(g_itemCls=1,check_leader.hidden_all=false);
+		return;		
+	}
+" />
+<action id="fnSetItemCode" scope="common" 
+params="p_code, p_itemcls"
+value="
+	if($strlen($p_code)<1){   return; }
+
+	$setvar(tmp_item_cls = $callaction(fnGetItemCls, $p_code));
+
+	if($tmp_item_cls==2){
+		$setvar_common(
+			g_itemCode 	=$p_code
+			,g_itemOption 	=$p_code
+			,g_itemCls 	= 2
+		);
+		$callaction(fnConfig_SetValue,g_itemCode 	,$g_itemCode);
+
+		//$logarrayvar(arr_MasterData_OPITEM);
+		//$logarrayvar(arr_MasterData_OPCODE);
+		$setvar(
+			tmp_opcode_idx = $getarrayindex(arr_MasterData_OPCODE,0,$g_itemCode)
+		);
+		//$logvar(tmp_opcode_idx);
+
+		$setvar_common(
+			g_itemVenderCode 	= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,1)
+			,g_itemExchName 	= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,2)
+			,g_itemUnderCode	= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,3)
+			,g_itemStrikePrice	= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,4)
+			,g_itemOptionType	= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,5)
+			,g_itemAtmFlag	= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,6)
+			,g_itemCOMD 		= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,7)
+			,g_itemYYMM 		= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,8)
+			,g_itemPrevLast 	= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,9)
+		);
+		
+		$setvar(
+			tmp_opitem_index = $getarrayindex(arr_MasterData_OPITEM,0,$g_itemCOMD)
+			,tmp_opitem_index_2 = $getarrayindex(arr_MasterData_OPTICK,0,$g_itemCOMD)
+			);
+		$setvar_common(
+			//,g_itemTSIZ = $getarrayvar(arr_MasterData_OPITEM,$tmp_opitem_index,9)
+			,g_itemTSIZ = $getarrayvar(arr_MasterData_OPTICK,$tmp_opitem_index_2,3)
+			,g_itemPIND = $getarrayvar(arr_MasterData_OPITEM,$tmp_opitem_index,8)
+			//,g_itemADJV = $getarrayvar(arr_MasterData_OPITEM,$tmp_opitem_index,10)
+			,g_itemADJV = $getarrayvar(arr_MasterData_OPTICK,$tmp_opitem_index_2,4)
+			,g_itemNAME = $getarrayvar(arr_MasterData_OPITEM,$tmp_opitem_index,4)
+		);
+		$setvar_common(
+			g_MasterData_OPTICK = arr_MasterData_OPTICK
+		);
+		$logvar(
+			g_itemVenderCode 	
+			,g_itemExchName 	
+			,g_itemUnderCode	
+			,g_itemStrikePrice	
+			,g_itemOptionType	
+			,g_itemAtmFlag	
+			,g_itemCOMD 		
+			,g_itemYYMM 		
+			,g_itemPrevLast 	
+			,g_itemTSIZ 
+			,g_itemPIND 
+			,g_itemADJV 
+			,g_itemNAME
+		);
+		return;
+	}
+	else{
+		$setvar_common(
+			g_itemCode 	=$p_code
+			,g_itemFuture 	=$p_code
+			,g_itemCls 	= 1
+		);
+		$setvar(
+			tmp_item_idx = $getarrayindex(arr_MasterData_fucode,0,$g_itemCode)
+		);
+		$callaction(fnConfig_SetValue,g_itemCode 	,$g_itemCode);
+
+		$logvar(
+			g_itemCode 	
+			,g_itemFuture 	
+			,g_itemCls 	
+			,tmp_item_idx
+			,p_code
+		);
+		//$logarrayvar(arr_MasterData_fucode);
+		if($tmp_item_idx < 0){
+			return;
+		}
+		
+		$setvar_common(
+			g_itemVenderCode 	= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,1)
+			,g_itemExchName 	= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,2)
+			,g_itemENAM 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,3)
+			,g_itemNAME 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,4)
+			,g_itemEXCH 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,5)
+			,g_itemTYPE 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,6)
+			,g_itemSection 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,7)
+			,g_itemPIND 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,8)
+			,g_itemTRDF 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,9)
+			,g_itemONOF 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,10)
+			,g_itemTSIZ 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,11)
+			,g_itemADJV 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,12)
+			,g_itemLMON 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,13)
+			,g_itemCOMD 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,14)
+			,g_itemYYMM 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,15)
+			,g_itemPrevLast 	= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,16)
+
+		);
+		$setvar_common(
+			g_MasterData_OPTICK =
+		);
+		$logvar(
+			g_itemVenderCode
+			,g_itemExchName
+			,g_itemENAM
+			,g_itemNAME
+			,g_itemEXCH
+			,g_itemTYPE
+			,g_itemSection
+			,g_itemPIND
+			,g_itemTRDF
+			,g_itemONOF
+			,g_itemTSIZ
+			,g_itemADJV
+			,g_itemLMON
+			,g_itemCOMD
+			,g_itemYYMM
+			,g_itemPrevLast
+		);
+
+		$callaction(fnLeaderCode_Set);
+		return;		
+	}
+" />
+// 
+<action id="fnSetItemName" scope="common" 
+params="p_code"
+value="
+	if($strlen($p_code)<1){   return; }
+
+	$setvar(tmp_item_cls = $callaction(fnGetItemCls, $p_code));
+
+	if($tmp_item_cls==2){
+		$setvar_common(
+			g_itemCode 	=$p_code
+			,g_itemOption 	=$p_code
+			,g_itemCls 	= 2
+		);
+		//$logarrayvar(arr_MasterData_OPITEM);
+		//$logarrayvar(arr_MasterData_OPCODE);
+		$setvar(
+			tmp_opcode_idx = $getarrayindex(arr_MasterData_OPCODE,0,$g_itemCode)
+		);
+		//$logvar(tmp_opcode_idx);
+
+		$setvar_common(
+			g_itemVenderCode 	= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,1)
+			,g_itemExchName 	= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,2)
+			,g_itemUnderCode	= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,3)
+			,g_itemStrikePrice	= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,4)
+			,g_itemOptionType	= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,5)
+			,g_itemAtmFlag	= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,6)
+			,g_itemCOMD 		= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,7)
+			,g_itemYYMM 		= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,8)
+			,g_itemPrevLast 	= $getarrayvar(arr_MasterData_OPCODE,$tmp_opcode_idx,9)
+		);
+		
+		$setvar(
+			tmp_opitem_index = $getarrayindex(arr_MasterData_OPITEM,0,$g_itemCOMD)
+			,tmp_opitem_index_2 = $getarrayindex(arr_MasterData_OPTICK,0,$g_itemCOMD)
+			);
+		$setvar_common(
+			//,g_itemTSIZ = $getarrayvar(arr_MasterData_OPITEM,$tmp_opitem_index,9)
+			,g_itemTSIZ = $getarrayvar(arr_MasterData_OPTICK,$tmp_opitem_index_2,3)
+			,g_itemPIND = $getarrayvar(arr_MasterData_OPITEM,$tmp_opitem_index,8)
+			//,g_itemADJV = $getarrayvar(arr_MasterData_OPITEM,$tmp_opitem_index,10)
+			,g_itemADJV = $getarrayvar(arr_MasterData_OPTICK,$tmp_opitem_index_2,4)
+			,g_itemNAME = $getarrayvar(arr_MasterData_OPITEM,$tmp_opitem_index,4)
+		);
+		$setvar_common(
+			g_MasterData_OPTICK = arr_MasterData_OPTICK
+		);
+		$logvar(
+			g_itemVenderCode 	
+			,g_itemExchName 	
+			,g_itemUnderCode	
+			,g_itemStrikePrice	
+			,g_itemOptionType	
+			,g_itemAtmFlag	
+			,g_itemCOMD 		
+			,g_itemYYMM 		
+			,g_itemPrevLast 	
+			,g_itemTSIZ 
+			,g_itemPIND 
+			,g_itemADJV 
+			,g_itemNAME
+		);
+	}
+	else{
+		$setvar_common(
+			g_itemCode 	=$p_code
+			,g_itemFuture 	=$p_code
+			,g_itemCls 	= 1
+		);
+		$setvar(
+			tmp_item_idx = $getarrayindex(arr_MasterData_fucode,0,$g_itemCode)
+		);
+
+		$logvar(
+			g_itemCode 	
+			,g_itemFuture 	
+			,g_itemCls 	
+			,tmp_item_idx
+			,p_code
+		);
+		//$logarrayvar(arr_MasterData_fucode);
+		if($tmp_item_idx < 0){
+			return;
+		}
+		
+		$setvar_common(
+			g_itemVenderCode 	= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,1)
+			,g_itemExchName 	= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,2)
+			,g_itemENAM 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,3)
+			,g_itemNAME 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,4)
+			,g_itemEXCH 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,5)
+			,g_itemTYPE 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,6)
+			,g_itemSection 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,7)
+			,g_itemPIND 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,8)
+			,g_itemTRDF 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,9)
+			,g_itemONOF 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,10)
+			,g_itemTSIZ 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,11)
+			,g_itemADJV 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,12)
+			,g_itemLMON 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,13)
+			,g_itemCOMD 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,14)
+			,g_itemYYMM 		= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,15)
+			,g_itemPrevLast 	= $getarrayvar(arr_MasterData_fucode,$tmp_item_idx,16)
+
+		);
+
+		$setvar_common(
+			g_MasterData_OPTICK =
+		);
+		$logvar(
+			g_itemVenderCode
+			,g_itemExchName
+			,g_itemENAM
+			,g_itemNAME
+			,g_itemEXCH
+			,g_itemTYPE
+			,g_itemSection
+			,g_itemPIND
+			,g_itemTRDF
+			,g_itemONOF
+			,g_itemTSIZ
+			,g_itemADJV
+			,g_itemLMON
+			,g_itemCOMD
+			,g_itemYYMM
+			,g_itemPrevLast
+		);
+
+		$callaction(fnLeaderCode_Set);
+	}
+	if($tmp_item_idx<0){
+		$setvar_common(
+			g_itemNAME = 지난월물
+		);
+	}
+" />
+
+//미주옵션 주식종목
+<action id="fnSetItemCode_a_stock" scope="common" 
+params="p_code, p_itemcls"
+value="
+	if($strlen($p_code)<1){   return; }	
+	$setvar_common(
+		g_itemCode_a_stock 		= $p_code
+		,g_itemOption_a_stock 	= $p_code
+		,g_itemCls_a_stock		= 1
+	);
+	$callaction(fnConfig_SetValue,g_itemCode_a_stock 	,$p_code);
+
+	$setvar(	tmp_item_idx = $getarrayindex(arr_MasterData_opitem_99,18,$g_itemCode_a_stock) 	);
+
+	$logvar(
+		g_itemCode_a_stock 	
+		,g_itemOption_a_stock 	
+		,g_itemCls_a_stock 	
+		,tmp_item_idx
+		,p_code
+	);
+	//$logarrayvar(arr_MasterData_opitem_99_Stock);
+	if($tmp_item_idx < 0){		$log(배열에 없는 종목); 	return;			}
+	
+	$setvar_common(
+		g_item_a_Stock_Symbol 			= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx,0)
+		,g_item_a_Stock_ExchCd			= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx,1)
+		,g_item_a_Stock_ExchId			= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx,2)
+		,g_item_a_Stock_EngName			= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx,3)
+		,g_item_a_Stock_KorName			= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx,4)
+		,g_item_a_Stock_SymbolType		= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx,5)
+		,g_item_a_Stock_Tradable		= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx,6)
+		,g_item_a_Stock_Section			= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx,7)
+		,g_item_a_Stock_Pind 			= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx,8)
+		,g_item_a_Stock_TickSize 		= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx,9)
+		,g_item_a_Stock_TickValue 		= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx,10)
+		,g_item_a_Stock_AdjustValue		= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx,11)
+		,g_item_a_Stock_CabTickSize		= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx,12)
+		,g_item_a_Stock_CabValue		= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx,13)
+		,g_item_a_Stock_StrikePind		= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx,14)
+		,g_item_a_Stock_OptionStyle		= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx,15)
+		,g_item_a_Stock_Onoff			= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx,16)
+		,g_item_a_Stock_SubExchange		= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx,17)
+		,g_item_a_Stock_Symbol_N 		= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx,18)
+		//,g_item_a_Stock_ArrName 		= $addstring(arr_MasterData_opitem_99_Stock_,$g_item_a_Stock_Symbol_N) //전부수정완료.
+	);
+	$logvar(
+		g_item_a_Stock_Symbol 			
+		,g_item_a_Stock_ExchCd			
+		,g_item_a_Stock_ExchId			
+		,g_item_a_Stock_EngName			
+		,g_item_a_Stock_KorName			
+		,g_item_a_Stock_SymbolType		
+		,g_item_a_Stock_Tradable		
+		,g_item_a_Stock_Section			
+		,g_item_a_Stock_Pind 			
+		,g_item_a_Stock_TickSize 		
+		,g_item_a_Stock_TickValue 		
+		,g_item_a_Stock_AdjustValue		
+		,g_item_a_Stock_CabTickSize		
+		,g_item_a_Stock_CabValue		
+		,g_item_a_Stock_StrikePind		
+		,g_item_a_Stock_OptionStyle		
+		,g_item_a_Stock_Onoff			
+		,g_item_a_Stock_SubExchange		
+		,g_item_a_Stock_Symbol_N 		
+		,g_item_a_Stock_ArrName 		
+	);
+
+	//$callaction(fnLeaderCode_Set);
+	return;		
+"/>
+// 미주옵션 주식종목 - 검색종목 추가 
+<action id="fnAddInterest_Search_ItemCode_a_stock" scope="common"
+params="p_code,p_code_nm"
+value="	
+	if($strlen($p_code) < 1){		return;			}
+	$setvar(
+		arrCnt 		= $getarrayvarcount(arr_interest_search_Item_a_stock)
+		,tmp_arrIdx = $getarrayindex(arr_interest_search_Item_a_stock,0,$p_code)
+	);
+	if($tmp_arrIdx<0){      
+		$setvar(tmp_arrIdx = $arrCnt);
+		$setsubarray_common(arr_interest_search_Item_a_stock,$tmp_arrIdx,$p_code,$p_code_nm);
+	}
+	else{
+		$setvar(tmp_arrIdx=-1);
+	}
+	$logarrayvar(arr_interest_search_Item_a_stock);
+	$arraycopy_common(arr_interest_search_Item_a_stock,arr_interest_search_Item_a_stock_copy);
+	$arraysort(arr_interest_search_Item_a_stock_copy);
+	// 바로 저장하는걸로 변경
+	$callaction(fnSaveDBInterest_Search_ItemCode_a_stock);
+	return $tmp_arrIdx;
+" />
+// 미주옵션 주식종목 - 검색종목 추가 
+<action id="fnRemoveInterest_Search_ItemCode_a_stock" scope="common" 
+params="p_code"
+value="
+	$setvar(
+		tmp_arrIdx = $getarrayindex(arr_interest_search_Item_a_stock,0,$p_code)
+	);
+	if($tmp_arrIdx < 0){	return;		}
+	$delarrayvar(arr_interest_search_Item_a_stock,$tmp_arrIdx);
+	$logarrayvar(arr_interest_search_Item_a_stock);
+	$arraycopy_common(arr_interest_search_Item_a_stock,arr_interest_search_Item_a_stock_copy);
+	$arraysort(arr_interest_search_Item_a_stock_copy);
+	$callaction(fnSaveDBInterest_Search_ItemCode_a_stock);
+" />
+// 미주옵션 주식종목 - 관심종목 추가 
+<action id="fnAddInterestItemCode_a_stock" scope="common"
+params="p_code"
+value="	
+	if($strlen($p_code) < 1){		return;			}
+	$setvar(
+		arrCnt 		= $getarrayvarcount(arr_interestItem_a_stock)
+		,tmp_arrIdx = $getarrayindex(arr_interestItem_a_stock,0,$p_code)
+	);
+	if($tmp_arrIdx<0){      
+		$setvar(tmp_arrIdx = $arrCnt);
+		$setsubarray_common(arr_interestItem_a_stock,$tmp_arrIdx,$p_code);
+	}
+	else{
+		$setvar(tmp_arrIdx=-1);
+	}
+	$logarrayvar(arr_interestItem_a_stock);
+	// 바로 저장하는걸로 변경
+	$callaction(fnSaveDBInterestItemCode_a_stock);
+	return $tmp_arrIdx;
+" />
+// 미주옵션 주식종목 - 관심종목 삭제
+<action id="fnRemoveInterestItemCode_a_stock" scope="common" 
+params="p_code"
+value="
+	$setvar(
+		tmp_arrIdx = $getarrayindex(arr_interestItem_a_stock,0,$p_code)
+	);
+	if($tmp_arrIdx < 0){	return;		}
+	$delarrayvar(arr_interestItem_a_stock,$tmp_arrIdx);
+	$logarrayvar(arr_interestItem_a_stock);
+	$callaction(fnSaveDBInterestItemCode_a_stock);
+" />
+//  미주옵션 주식종목  - 관심종목 여부 
+<action id="fnIsInterestItemCode_a_stock" scope="common" 
+params="p_code"
+value="
+	$setvar(
+		,tmp_arrIdx = $getarrayindex(arr_interestItem_a_stock,0,$p_code)
+	);
+
+	if($tmp_arrIdx<0){      return false;    }
+	else{                   return true;     }
+" />
+//미주옵션 옵션종목
+<action id="fnSetItemCode_a_option" scope="common" 
+params="p_code, p_itemcls"
+value="
+
+	if($strlen($p_code)<1){   return; }	
+	$setvar_common(
+		g_itemCode_a_option 	= $p_code
+		,g_itemOption_a_option 	= $p_code
+		,g_itemCls_a_option		= 1
+	);
+	$callaction(fnConfig_SetValue,g_itemCode_a_option 	,$p_code);
+	
+	$setvar(	tmp_item_idx = $getarrayindex(arr_MasterData_oprcode,0,$g_itemCode_a_option) 	);
+
+	$logvar(
+		g_itemCode_a_option 	
+		,g_itemOption_a_option 	
+		,g_itemCls_a_option 	
+		,tmp_item_idx
+		,p_code
+	);
+	//$logarrayvar(arr_MasterData_opitem_99_option);
+	if($tmp_item_idx < 0){		$log(배열에 없는 종목); 	return;			}
+	
+	$setvar_common(
+		g_item_a_option_Symbol 				= $getarrayvar(arr_MasterData_oprcode,$tmp_item_idx,0)
+		,g_item_a_option_VenderCode			= $getarrayvar(arr_MasterData_oprcode,$tmp_item_idx,1)
+		,g_item_a_option_ExchName			= $getarrayvar(arr_MasterData_oprcode,$tmp_item_idx,2)
+		,g_item_a_option_UnderCode 			= $getarrayvar(arr_MasterData_oprcode,$tmp_item_idx,3)
+		,g_item_a_option_StrikePrice 		= $getarrayvar(arr_MasterData_oprcode,$tmp_item_idx,4)
+		,g_item_a_option_OptionType 		= $getarrayvar(arr_MasterData_oprcode,$tmp_item_idx,5)
+		,g_item_a_option_AtmFlag 			= $getarrayvar(arr_MasterData_oprcode,$tmp_item_idx,6)
+		,g_item_a_option_Commodity 			= $getarrayvar(arr_MasterData_oprcode,$tmp_item_idx,7)
+		,g_item_a_option_MonthYear			= $getarrayvar(arr_MasterData_oprcode,$tmp_item_idx,8)
+		,g_item_a_option_PrevLast 			= $getarrayvar(arr_MasterData_oprcode,$tmp_item_idx,9)
+		,g_item_a_option_ExchUnderCode 		= $getarrayvar(arr_MasterData_oprcode,$tmp_item_idx,10)
+		,g_item_a_option_Pind 				= $getarrayvar(arr_MasterData_oprcode,$tmp_item_idx,11)
+		,g_item_a_option_UnderCommodity 	= $getarrayvar(arr_MasterData_oprcode,$tmp_item_idx,12)
+		,g_item_a_option_SubExchange 		= $getarrayvar(arr_MasterData_oprcode,$tmp_item_idx,13) 
+	);
+	$logvar(
+		g_item_a_option_Symbol 				
+		,g_item_a_option_VenderCode			
+		,g_item_a_option_ExchName			
+		,g_item_a_option_UnderCode 			
+		,g_item_a_option_StrikePrice 		
+		,g_item_a_option_OptionType 		
+		,g_item_a_option_AtmFlag 			
+		,g_item_a_option_Commodity 			
+		,g_item_a_option_MonthYear			
+		,g_item_a_option_PrevLast 			
+		,g_item_a_option_ExchUnderCode 		
+		,g_item_a_option_Pind 				
+		,g_item_a_option_UnderCommodity 	
+		,g_item_a_option_SubExchange 		
+	);
+	/*
+	$setvar(
+		tmp_item_idx_s = $getarrayindex(arr_MasterData_opitem_99,0,$g_item_a_option_Commodity)
+	);
+	$setvar_common(
+		,g_item_a_Stock_Symbol 			= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx_s,0)
+		,g_item_a_Stock_ExchCd			= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx_s,1)
+		,g_item_a_Stock_ExchId			= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx_s,2)
+		,g_item_a_Stock_EngName			= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx_s,3)
+		,g_item_a_Stock_KorName			= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx_s,4)
+		,g_item_a_Stock_SymbolType		= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx_s,5)
+		,g_item_a_Stock_Tradable		= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx_s,6)
+		,g_item_a_Stock_Section			= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx_s,7)
+		,g_item_a_Stock_Pind 			= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx_s,8)
+		,g_item_a_Stock_TickSize 		= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx_s,9)
+		,g_item_a_Stock_TickValue 		= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx_s,10)
+		,g_item_a_Stock_AdjustValue		= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx_s,11)
+		,g_item_a_Stock_CabTickSize		= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx_s,12)
+		,g_item_a_Stock_CabValue		= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx_s,13)
+		,g_item_a_Stock_StrikePind		= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx_s,14)
+		,g_item_a_Stock_OptionStyle		= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx_s,15)
+		,g_item_a_Stock_Onoff			= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx_s,16)
+		,g_item_a_Stock_SubExchange		= $getarrayvar(arr_MasterData_opitem_99,$tmp_item_idx_s,17)
+	);
+	$logvar(
+		tmp_item_idx_s
+		,g_item_a_Stock_Symbol 			
+		,g_item_a_Stock_ExchCd			
+		,g_item_a_Stock_ExchId			
+		,g_item_a_Stock_EngName			
+		,g_item_a_Stock_KorName			
+		,g_item_a_Stock_SymbolType		
+		,g_item_a_Stock_Tradable		
+		,g_item_a_Stock_Section			
+		,g_item_a_Stock_Pind 			
+		,g_item_a_Stock_TickSize 		
+		,g_item_a_Stock_TickValue 		
+		,g_item_a_Stock_AdjustValue		
+		,g_item_a_Stock_CabTickSize		
+		,g_item_a_Stock_CabValue		
+		,g_item_a_Stock_StrikePind		
+		,g_item_a_Stock_OptionStyle		
+		,g_item_a_Stock_Onoff			
+		,g_item_a_Stock_SubExchange		
+	);
+	*/
+
+	/*
+	$setvar(
+		tmp_opitem_index 	= $getarrayindex(arr_MasterData_OPITEM,0,$g_item_a_option_Commodity)
+		,tmp_opitem_index_2 = $getarrayindex(arr_MasterData_OPTICK,0,$g_item_a_option_Commodity)
+	);
+	$setvar_common(
+		,g_item_a_option_TSIZ = $getarrayvar(arr_MasterData_OPTICK,$tmp_opitem_index_2,3)
+		,g_item_a_option_PIND = $getarrayvar(arr_MasterData_OPITEM,$tmp_opitem_index,8)
+		,g_item_a_option_ADJV = $getarrayvar(arr_MasterData_OPTICK,$tmp_opitem_index_2,4)
+	);
+	*/
+	
+
+	//$logarrayvar(arr_MasterData_opitem_99);
+	$setvar(tmp_arr_idx 					= $getarrayindex(arr_MasterData_opitem_99,0,$g_item_a_option_Commodity)	);
+	$setvar_common(	g_item_a_option_Name 	= $getarrayvar(arr_MasterData_opitem_99,$tmp_arr_idx,4)	);
+	$logvar(
+		tmp_arr_idx
+		,g_item_a_option_Name
+	);
+
+	//$callaction(fnLeaderCode_Set);
+	return;		
+"/>
+// 미주옵션 옵션종목 - 관심종목 추가 
+<action id="fnAddInterestItemCode_a_option" scope="common"
+params="p_code"
+value="
+	if($strlen($p_code) < 1){		return;			}
+	$setvar(
+		arrCnt 		= $getarrayvarcount(arr_interestItem_a_option)
+		,tmp_arrIdx = $getarrayindex(arr_interestItem_a_option,0,$p_code)
+	);
+	if($tmp_arrIdx<0){      
+		$setvar(tmp_arrIdx = $arrCnt);
+		$setsubarray_common(arr_interestItem_a_option,$tmp_arrIdx,$p_code);
+	}
+	else{
+		$setvar(tmp_arrIdx=-1);
+	}
+	$logarrayvar(arr_interestItem_a_option);
+	// 바로 저장하는걸로 변경
+	$callaction(fnSaveDBInterestItemCode_a_option);
+	return $tmp_arrIdx;
+" />
+// 미주옵션 옵션종목 - 관심종목 삭제
+<action id="fnRemoveInterestItemCode_a_option" scope="common" 
+params="p_code"
+value="
+	$setvar(
+		tmp_arrIdx = $getarrayindex(arr_interestItem_a_option,0,$p_code)
+	);
+	if($tmp_arrIdx < 0){	return;		}
+	$delarrayvar(arr_interestItem_a_option,$tmp_arrIdx);
+	$logarrayvar(arr_interestItem_a_option);
+	$callaction(fnSaveDBInterestItemCode_a_option);
+" />
+//  미주옵션 옵션종목  - 관심종목 여부 
+<action id="fnIsInterestItemCode_a_option" scope="common" 
+params="p_code"
+value="
+	$setvar(
+		,tmp_arrIdx = $getarrayindex(arr_interestItem_a_option,0,$p_code)
+	);
+
+	if($tmp_arrIdx<0){      return false;    }
+	else{                   return true;     }
+" />
+//  미주옵션 -주식 Symbol값으로 최근만기월물의 ATM의 콜옵션 종목 설정.
+<action id="fnSetItem_atm_a_option" scope="common" 
+params="p_code"
+value="
+	//전체 미국옵션종목 마스터 배열에서 7번째(Commodity) 필드값이 예)BA로 끝나는 데이터들을 arr_oprcode_commodity배열에 대입
+	$getsearcharray(arr_MasterData_oprcode,arr_oprcode_commodity,$p_code,,7,,LAST);
+
+
+	//마스터 배열에서 7(Commodity)필드 가 예)BA로 끝나는 데이터들이 존재하는 arr_oprcode_commodity배열에서 
+	//6번째(AtmFlag) 필드값이 1인 데이터들을 arr_oprcode_atm배열에 대입.	
+	$getsearcharray(arr_oprcode_commodity,arr_oprcode_atm, 1,,6,,EQUAL);
+
+	$delarrayvar(arr_oprcode_commodity);
+	//$logarrayvar(arr_oprcode_atm);
+
+
+	//마스터배열에서 7번째 필드값이 BA로 끝나며 6번째 필드값이 1인 CALL,PUT 데이터들이 존재하는 arr_oprcode_atm배열에서
+	//5번째 필드(OptionType)이 C(CALL)인 데이터를 arr_oprcode_atm_call배열에 대입.
+	$getsearcharray(arr_oprcode_atm,arr_oprcode_atm_call,C,,5,,EQUAL);
+
+	if( $isequal_string($g_item_a_Stock_Symbol_N,BA) ){
+		$getsearcharray(arr_oprcode_atm_call,arr_oprcode_atm_call_BA,BABA,,7,,NOTLAST);
+		$delarrayvar(arr_oprcode_atm_call);
+		$arraycopy(arr_oprcode_atm_call_BA,arr_oprcode_atm_call);
+		$delarrayvar(arr_oprcode_atm_call_BA);
+	}
+
+	$delarrayvar(arr_oprcode_atm);
+
+
+	//arr_oprcode_atm_call배열 8번째 필드(ExpDate) 오름차순 , 숫자
+	$arraysort(arr_oprcode_atm_call,true,true,8); //해당 부분 제거해도되긴하나..혹시모르니..
+	$logarrayvar(arr_oprcode_atm_call);
+
+	//arr_oprcode_atm_call배열의 0번째 인덱스의 0번째 필드(Symbol) 값 item_a_option_Symbol
+	$setvar(
+		item_a_option_Symbol = $getarrayvar(arr_oprcode_atm_call,0,0)
+	);
+
+	$delarrayvar(arr_oprcode_atm_call);
+
+	$logvar(item_a_option_Symbol);
+	$callaction(fnSetItemCode_a_option, $item_a_option_Symbol);
+" />
+<action id="fnGetMonthly_a_option_str" 
+params="p_Symbol_first"
+value="
+	if($isequal_string($p_Symbol_first,K)
+	|| $isequal_string($p_Symbol_first,L)
+	|| $isequal_string($p_Symbol_first,M)
+	|| $isequal_string($p_Symbol_first,N)
+	|| $isequal_string($p_Symbol_first,O)
+	){
+		$setvar(retStr = M);
+	}
+	else{
+		$setvar(retStr = W);
+	}
+	return $retStr;
+" />
+
+
+<!-- 
+최대근 20230705 추가.
+국내선물 - 국내제도 변경 관련하여 상품별 장운영시간 , 종료시간 따로 설정
+p_key  	: sfile03마스터파일 7번째 필드값  예)004
+p_flage	: true(오픈시간 return) , false(종료시간 return)
+return 	: 장 운영시간(sfile14 1번째) 및 종료시간(sfile14 2번째)
+-->
+<action id="fnGetOpenCloseTimeToItem" scope="common"
+params="p_key,p_flage"
+value="
+	$log(******fnGetOpenCloseTimeToItem******);
+
+	$delvar(tmp_open_close_idx);
+	$delvar(tmp_open_close_openTime);
+	$delvar(tmp_open_close_closeTime);
+
+	$setvar(
+		tmp_open_close_idx = $getarrayindex(arr_MasterData_sfile14,0,$p_key)
+		,tmp_open_close_openTime = $getarrayvar(arr_MasterData_sfile14,$tmp_open_close_idx,1)
+		,tmp_open_close_closeTime = $getarrayvar(arr_MasterData_sfile14,$tmp_open_close_idx,2)
+	);
+
+	/*
+	if($tmp_open_close_idx < 0 ){
+		$setvar_common(
+			g_domestic_item_open_time = 0900
+			,g_domestic_item_close_time = 1545
+		);
+		return;
+	}
+	*/
+
+	$logarrayvar(arr_MasterData_sfile14);
+
+	$logvar(
+		tmp_open_close_idx
+		,tmp_open_close_openTime
+		,tmp_open_close_closeTime
+	);
+
+	$setvar_common(
+		g_domestic_item_open_time = $tmp_open_close_openTime
+		,g_domestic_item_close_time = $tmp_open_close_closeTime
+	);
+"/>
+// 국내선물 - 관심종목 추가 
+<action id="fnAddInterestItemCode_d" scope="common"
+params="p_code,p_name,p_market"
+value="
+	
+	//$logarrayvar(g_arrMaster_day); 	// 주간 
+
+
+	$setvar(
+		tmp_item_idx = $getarrayindex(g_arrMaster_day,8,$p_code)
+		,tmp_item_name = $getarrayvar(g_arrMaster_day,$tmp_item_idx,10) 		// 종목명 
+		,tmp_market_code = $getarrayvar(g_arrMaster_day,$tmp_item_idx,7)		// 시장코드 
+	);
+	$logvar(
+		tmp_item_idx 
+		,tmp_item_name 
+		,tmp_market_code 
+	);
+
+	$setvar(
+		arrCnt=$getarrayvarcount(arr_interestItem_d)
+		,tmp_arrIdx = $getarrayindex(arr_interestItem_d,0,$p_code)
+	);
+
+	if($tmp_arrIdx<0){      
+		$setvar(tmp_arrIdx=$arrCnt);
+		$setsubarray_common(arr_interestItem_d,$tmp_arrIdx,$p_code,$tmp_item_name,$tmp_market_code);
+	}
+	else{
+		$setvar(tmp_arrIdx=-1);
+	}
+	$logarrayvar(arr_interestItem_d);
+	// 바로 저장하는걸로 변경
+	$callaction(fnSaveDBInterestItemCode_d);
+	return $tmp_arrIdx;
+" />
+
+<action id="fnSetMultiItemCode_d"  scope="common"
+params="p_code"
+value="
+	$setvar_common(multi_itemCode_d = $p_code);
+	$setvar(
+		tmp_idx = $getarrayindex(arr_MasterData_sfile03,8,$p_code)
+	);
+
+	$setvar_common(
+		multi_itemMTYPE_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,0)
+		,multi_itemFOKIND_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,1)
+		,multi_itemOKIND_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,2)
+		,multi_itemBASENAME_d 	=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,3)
+		,multi_itemEXPIRES_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,4)
+		,multi_itemDNKIND_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,5)
+		,multi_itemCLASS_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,6)
+		,multi_itemMCODE_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,7)
+		,multi_itemITEMCODE_d 	=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,8)
+		,multi_itemUPCODE_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,9)
+		,multi_itemITEMNAME_d 	=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,10)
+		,multi_itemITEMNAME_E_d	 =$getarrayvar(arr_MasterData_sfile03,$tmp_idx,11)
+		,multi_itemUPRC_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,12)
+		,multi_itemDPRC_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,13)
+		,multi_itemEPRC_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,14)
+		,multi_itemDCODE_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,15)
+		,multi_itemPINFO_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,16)
+		,multi_itemCSIZE_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,17)
+		,multi_itemSDAY_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,18)
+		,multi_itemBRUPRC_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,19)
+		,multi_itemRUPRC_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,20)
+		,multi_itemRDPRC_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,21)
+		,multi_itemRCODE_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,22)
+	);
+	
+	$setvar_common(
+		,multi_realitemCode_d 	= $multi_itemRCODE_d 		// 실시간 종목코드 
+		,multi_itemNAME_d 	= $multi_itemITEMNAME_d
+		,multi_marketCode_d 	= $multi_itemMCODE_d 			//거래소코드 - 시장구분
+		,multi_marketName_d	= $multi_itemBASENAME_d 			//거래소코드 - 시장구분
+	);
+	$logvar(
+		multi_itemMTYPE_d 		
+		,multi_itemFOKIND_d 		
+		,multi_itemOKIND_d 		
+		,multi_itemBASENAME_d 	
+		,multi_itemEXPIRES_d 		
+		,multi_itemDNKIND_d 		
+		,multi_itemCLASS_d 		
+		,multi_itemMCODE_d 		
+		,multi_itemITEMCODE_d 	
+		,multi_itemUPCODE_d 		
+		,multi_itemITEMNAME_d 	
+		,multi_itemITEMNAME_E_d	
+		,multi_itemUPRC_d 		
+		,multi_itemDPRC_d 		
+		,multi_itemEPRC_d 		
+		,multi_itemDCODE_d 		
+		,multi_itemPINFO_d 		
+		,multi_itemCSIZE_d 		
+		,multi_itemSDAY_d 		
+		,multi_itemBRUPRC_d 		
+		,multi_itemRUPRC_d 		
+		,multi_itemRDPRC_d 		
+		,multi_itemRCODE_d 		
+		,multi_realitemCode_d 	
+		,multi_itemNAME_d 	
+		,multi_marketCode_d 	
+		,multi_marketName_d	
+	);
+	
+	$setvar_common(
+		//g_leaderCode_d = $addstring($substring($multi_itemITEMCODE_d,0,3),00,$substring($multi_itemITEMCODE_d,5))
+		,multi_leaderCode_d = $addstring($substring($multi_itemITEMCODE_d,0,3),00,$substring($multi_itemITEMCODE_d,5))
+	);
+	$logvar(g_leaderCode_d);
+
+	if( $isequal_string($multi_itemFOKIND_d,O) || $isequal_string($multi_itemFOKIND_d,C) )
+		{
+			if($isequal_string($leader_checked,T)) {
+				$setVar(display_code=$code, check_leader.checked=false);
+			}
+		 	$setvar_common(g_itemCls_d=2,check_leader.hidden_all=true);                     
+		 }
+	 else{
+		 $setvar_common(g_itemCls_d=1,check_leader.hidden_all=false);                     
+		 }
+"/>
+
+<action id="fnSetItemCode_d"  scope="common"
+params="p_code"
+value="
+	$setvar_common(g_itemCode_d = $p_code);
+	$callaction(fnConfig_SetValue,g_itemCode_d 	,$g_itemCode_d);
+	$setvar(
+		tmp_idx = $getarrayindex(arr_MasterData_sfile03,8,$p_code)
+	);
+
+	$setvar_common(
+		g_itemMTYPE_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,0)
+		,g_itemFOKIND_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,1)
+		,g_itemOKIND_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,2)
+		,g_itemBASENAME_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,3)
+		,g_itemEXPIRES_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,4)
+		,g_itemDNKIND_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,5)
+		,g_itemCLASS_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,6)
+		,g_itemMCODE_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,7)
+		,g_itemITEMCODE_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,8)
+		,g_itemUPCODE_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,9)
+		,g_itemITEMNAME_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,10)
+		,g_itemITEMNAME_E_d	 =$getarrayvar(arr_MasterData_sfile03,$tmp_idx,11)
+		,g_itemUPRC_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,12)
+		,g_itemDPRC_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,13)
+		,g_itemEPRC_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,14)
+		,g_itemDCODE_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,15)
+		,g_itemPINFO_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,16)
+		,g_itemCSIZE_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,17)
+		,g_itemSDAY_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,18)
+		,g_itemBRUPRC_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,19)
+		,g_itemRUPRC_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,20)
+		,g_itemRDPRC_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,21)
+		,g_itemRCODE_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,22)
+	);
+
+	$logvar(g_itemMTYPE_d,g_itemFOKIND_d,g_itemOKIND_d,g_itemBASENAME_d,g_itemEXPIRES_d,g_itemDNKIND_d,g_itemCLASS_d,g_itemMCODE_d,g_itemITEMCODE_d,g_itemUPCODE_d,g_itemITEMNAME_d,g_itemITEMNAME_E_d,g_itemUPRC_d,g_itemDPRC_d,g_itemEPRC_d,g_itemDCODE_d,g_itemPINFO_d,g_itemCSIZE_d,g_itemSDAY_d,g_itemBRUPRC_d,g_itemRUPRC_d,g_itemRDPRC_d,g_itemRCODE_d);
+
+	
+	$setvar_common(
+		,g_realitemCode_d 	= $g_itemRCODE_d 		// 실시간 종목코드 
+		,g_itemNAME_d 	= $g_itemITEMNAME_d
+		,g_marketCode_d 	= $g_itemMCODE_d 			//거래소코드 - 시장구분
+		//,g_marketName_d	= $g_itemBASENAME_d 			//거래소코드 - 시장구분
+		,g_marketName_d	= $g_itemCLASS_d 			//거래소코드 - 시장구분
+	);
+	
+	if($isequal_string($g_itemCLASS_d,지수)){
+		$setvar_common(
+			g_marketName_d= 주가지수
+		);
+	}elseif($isequal_string($g_itemCLASS_d,주식)){
+		$setvar_common(
+			g_marketName_d= 개별주식
+		);
+	}
+	
+	$setvar_common(g_leaderCode_d = $addstring($substring($g_itemITEMCODE_d,0,3),00,$substring($g_itemITEMCODE_d,5)));
+
+	$callaction(fnGetOpenCloseTimeToItem,$g_itemMCODE_d);
+
+	$logvar(g_leaderCode_d);
+" />
+<action id="fnSetItemName_d"  scope="common"
+params="p_code"
+value="
+	$setvar_common(g_itemCode_d = $p_code);
+	$setvar(
+		tmp_idx = $getarrayindex(arr_MasterData_sfile03,8,$p_code)
+	);
+
+	$setvar_common(
+		g_itemMTYPE_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,0)
+		,g_itemFOKIND_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,1)
+		,g_itemOKIND_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,2)
+		,g_itemBASENAME_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,3)
+		,g_itemEXPIRES_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,4)
+		,g_itemDNKIND_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,5)
+		,g_itemCLASS_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,6)
+		,g_itemMCODE_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,7)
+		,g_itemITEMCODE_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,8)
+		,g_itemUPCODE_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,9)
+		,g_itemITEMNAME_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,10)
+		,g_itemITEMNAME_E_d	 =$getarrayvar(arr_MasterData_sfile03,$tmp_idx,11)
+		,g_itemUPRC_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,12)
+		,g_itemDPRC_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,13)
+		,g_itemEPRC_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,14)
+		,g_itemDCODE_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,15)
+		,g_itemPINFO_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,16)
+		,g_itemCSIZE_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,17)
+		,g_itemSDAY_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,18)
+		,g_itemBRUPRC_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,19)
+		,g_itemRUPRC_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,20)
+		,g_itemRDPRC_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,21)
+		,g_itemRCODE_d 		=$getarrayvar(arr_MasterData_sfile03,$tmp_idx,22)
+	);
+
+	$logvar(g_itemMTYPE_d,g_itemFOKIND_d,g_itemOKIND_d,g_itemBASENAME_d,g_itemEXPIRES_d,g_itemDNKIND_d,g_itemCLASS_d,g_itemMCODE_d,g_itemITEMCODE_d,g_itemUPCODE_d,g_itemITEMNAME_d,g_itemITEMNAME_E_d,g_itemUPRC_d,g_itemDPRC_d,g_itemEPRC_d,g_itemDCODE_d,g_itemPINFO_d,g_itemCSIZE_d,g_itemSDAY_d,g_itemBRUPRC_d,g_itemRUPRC_d,g_itemRDPRC_d,g_itemRCODE_d);
+
+	
+	$setvar_common(
+		,g_realitemCode_d 	= $g_itemRCODE_d 		// 실시간 종목코드 
+		,g_itemNAME_d 	= $g_itemITEMNAME_d
+		,g_marketCode_d 	= $g_itemMCODE_d 			//거래소코드 - 시장구분
+		//,g_marketName_d	= $g_itemBASENAME_d 			//거래소코드 - 시장구분
+		,g_marketName_d	= $g_itemCLASS_d 			//거래소코드 - 시장구분
+	);
+	
+	if($isequal_string($g_itemCLASS_d,지수)){
+		$setvar_common(
+			g_marketName_d= 주가지수
+		);
+	}elseif($isequal_string($g_itemCLASS_d,주식)){
+		$setvar_common(
+			g_marketName_d= 개별주식
+		);
+	}
+	
+	$setvar_common(g_leaderCode_d = $addstring($substring($g_itemITEMCODE_d,0,3),00,$substring($g_itemITEMCODE_d,5)));
+	if($tmp_idx<0){
+		$setvar_common(
+			g_itemNAME_d = 지난월물
+		);
+	}
+	$callaction(fnGetOpenCloseTimeToItem,$g_itemMCODE_d);
+	$logvar(g_leaderCode_d);
+" />
+<action id="fnSetMultiItemCode_n"  scope="common"
+params="p_code"
+value="
+	$setvar_common(multi_itemCode_n = $p_code);
+	$delarrayvar(arr_fucode_n_tmp);
+	$setvar(
+		,tmp_2 = night
+	);
+	
+	$getmultisearcharray(arr_MasterData_sfile03,arr_fucode_n_tmp,tmp_2,local,5,,first);
+	//$logarrayvar(arr_fucode_n_tmp);         // 선물 배열
+
+	$setvar_common(g_itemCode_n = $p_code);
+	$setvar(
+		tmp_idx = $getarrayindex(arr_fucode_n_tmp,8,$p_code)
+	);
+
+	$setvar_common(
+		multi_itemMTYPE_n 		= $getarrayvar(arr_fucode_n_tmp,$tmp_idx,0)
+		,multi_itemFOKIND_n 		= $getarrayvar(arr_fucode_n_tmp,$tmp_idx,1)
+		,multi_itemOKIND_n 		= $getarrayvar(arr_fucode_n_tmp,$tmp_idx,2)
+		,multi_itemBASENAME_n 	= $getarrayvar(arr_fucode_n_tmp,$tmp_idx,3)
+		,multi_itemEXPIRES_n 		= $getarrayvar(arr_fucode_n_tmp,$tmp_idx,4)
+		,multi_itemDNKIND_n 		= $getarrayvar(arr_fucode_n_tmp,$tmp_idx,5)
+		,multi_itemCLASS_n 		= $getarrayvar(arr_fucode_n_tmp,$tmp_idx,6)
+		,multi_itemMCODE_n 		= $getarrayvar(arr_fucode_n_tmp,$tmp_idx,7)
+		,multi_itemITEMCODE_n 	= $getarrayvar(arr_fucode_n_tmp,$tmp_idx,8)
+		,multi_itemUPCODE_n 		= $getarrayvar(arr_fucode_n_tmp,$tmp_idx,9)
+		,multi_itemITEMNAME_n 	= $getarrayvar(arr_fucode_n_tmp,$tmp_idx,10)
+		,multi_itemITEMNAME_E_n 	= $getarrayvar(arr_fucode_n_tmp,$tmp_idx,11)
+		,multi_itemUPRC_n 		= $getarrayvar(arr_fucode_n_tmp,$tmp_idx,12)
+		,multi_itemDPRC_n 		= $getarrayvar(arr_fucode_n_tmp,$tmp_idx,13)
+		,multi_itemEPRC_n 		= $getarrayvar(arr_fucode_n_tmp,$tmp_idx,14)
+		,multi_itemDCODE_n 		= $getarrayvar(arr_fucode_n_tmp,$tmp_idx,15)
+		,multi_itemPINFO_n 		= $getarrayvar(arr_fucode_n_tmp,$tmp_idx,16)
+		,multi_itemCSIZE_n 		= $getarrayvar(arr_fucode_n_tmp,$tmp_idx,17)
+		,multi_itemSDAY_n 		= $getarrayvar(arr_fucode_n_tmp,$tmp_idx,18)
+		,multi_itemBRUPRC_n 		= $getarrayvar(arr_fucode_n_tmp,$tmp_idx,19)
+		,multi_itemRUPRC_n 		= $getarrayvar(arr_fucode_n_tmp,$tmp_idx,20)
+		,multi_itemRDPRC_n 		= $getarrayvar(arr_fucode_n_tmp,$tmp_idx,21)
+		,multi_itemRCODE_n 		= $getarrayvar(arr_fucode_n_tmp,$tmp_idx,22)
+	);
+
+	
+	$setvar_common(
+		,multi_realitemCode_n 		= $multi_itemRCODE_n 		// 실시간 종목코드 
+		,multi_itemNAME_n 		= $multi_itemITEMNAME_n
+		,multi_marketCode_n 		= $multi_itemMCODE_n 			//거래소코드 - 시장구분
+		,multi_marketName_n 		= $multi_itemBASENAME_n 			//거래소코드 - 시장구분
+	);
+	$logvar(
+		multi_itemMTYPE_n 		
+		,multi_itemFOKIND_n 		
+		,multi_itemOKIND_n 		
+		,multi_itemBASENAME_n 	
+		,multi_itemEXPIRES_n 		
+		,multi_itemDNKIND_n 		
+		,multi_itemCLASS_n 		
+		,multi_itemMCODE_n 		
+		,multi_itemITEMCODE_n 	
+		,multi_itemUPCODE_n 		
+		,multi_itemITEMNAME_n 	
+		,multi_itemITEMNAME_E_n 	
+		,multi_itemUPRC_n 		
+		,multi_itemDPRC_n 		
+		,multi_itemEPRC_n 		
+		,multi_itemDCODE_n 		
+		,multi_itemPINFO_n 		
+		,multi_itemCSIZE_n 		
+		,multi_itemSDAY_n 		
+		,multi_itemBRUPRC_n 		
+		,multi_itemRUPRC_n 		
+		,multi_itemRDPRC_n 		
+		,multi_itemRCODE_n 		
+		,multi_realitemCode_n 		
+		,multi_itemNAME_n 		
+		,multi_marketCode_n 		
+		,multi_marketName_n 		
+	);
+	
+	$setvar_common(
+		//g_leaderCode_n = $addstring($substring($multi_itemITEMCODE_n,0,3),00,$substring($multi_itemITEMCODE_n,5))
+		,multi_leaderCode_n = $addstring($substring($multi_itemITEMCODE_n,0,3),00,$substring($multi_itemITEMCODE_n,5))
+	);
+	$logvar(g_leaderCode_n);
+
+	if( $isequal_string($multi_itemFOKIND_n,O) || $isequal_string($multi_itemFOKIND_n,C) )
+		{
+			if($isequal_string($leader_checked,T)) {
+				$setVar(display_code=$code, check_leader.checked=false);
+			}
+		 	$setvar_common(g_itemCls_n=2,check_leader.hidden_all=true);                     
+		 }
+	 else{
+		 $setvar_common(g_itemCls_n=1,check_leader.hidden_all=false);                     
+		 }
+" />
+
+<action id="fnSetItemCode_n"  scope="common"
+params="p_code"
+value="
+	$delarrayvar(arr_fucode_n_tmp);
+	$setvar(
+		,tmp_2 = night
+	);
+	
+	$getmultisearcharray(arr_MasterData_sfile03,arr_fucode_n_tmp,tmp_2,local,5,,first);
+	$logarrayvar(arr_fucode_n_tmp);         // 선물 배열
+
+	$setvar_common(g_itemCode_n = $p_code);
+	$callaction(fnConfig_SetValue,g_itemCode_n 	,$g_itemCode_n);
+
+	$setvar(
+		tmp_idx = $getarrayindex(arr_fucode_n_tmp,8,$p_code)
+	);
+
+	$setvar_common(
+		g_itemMTYPE_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,0)
+		,g_itemFOKIND_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,1)
+		,g_itemOKIND_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,2)
+		,g_itemBASENAME_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,3)
+		,g_itemEXPIRES_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,4)
+		,g_itemDNKIND_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,5)
+		,g_itemCLASS_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,6)
+		,g_itemMCODE_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,7)
+		,g_itemITEMCODE_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,8)
+		,g_itemUPCODE_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,9)
+		,g_itemITEMNAME_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,10)
+		,g_itemITEMNAME_E_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,11)
+		,g_itemUPRC_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,12)
+		,g_itemDPRC_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,13)
+		,g_itemEPRC_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,14)
+		,g_itemDCODE_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,15)
+		,g_itemPINFO_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,16)
+		,g_itemCSIZE_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,17)
+		,g_itemSDAY_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,18)
+		,g_itemBRUPRC_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,19)
+		,g_itemRUPRC_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,20)
+		,g_itemRDPRC_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,21)
+		,g_itemRCODE_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,22)
+	);
+
+	$logvar(g_itemMTYPE_n,g_itemFOKIND_n,g_itemOKIND_n,g_itemBASENAME_n,g_itemEXPIRES_n,g_itemDNKIND_n,g_itemCLASS_n,g_itemMCODE_n,g_itemITEMCODE_n,g_itemUPCODE_n,g_itemITEMNAME_n,g_itemITEMNAME_E_n,g_itemUPRC_n,g_itemDPRC_n,g_itemEPRC_n,g_itemDCODE_n,g_itemPINFO_n,g_itemCSIZE_n,g_itemSDAY_n,g_itemBRUPRC_n,g_itemRUPRC_n,g_itemRDPRC_n,g_itemRCODE_n);
+
+	
+	$setvar_common(
+		,g_realitemCode_n = $g_itemRCODE_n 		// 실시간 종목코드 
+		,g_itemNAME_n = $g_itemITEMNAME_n
+		,g_marketCode_n = $g_itemMCODE_n 			//거래소코드 - 시장구분
+		//,g_marketName_n= $g_itemBASENAME_n 			//거래소코드 - 시장구분
+		,g_marketName_n= $g_itemCLASS_n 			//거래소코드 - 시장구분
+	);
+	if($isequal_string($g_itemCLASS_n,지수)){
+		$setvar_common(
+			g_marketName_n= 주가지수
+		);
+	}elseif($isequal_string($g_itemCLASS_n,주식)){
+		$setvar_common(
+			g_marketName_n= 개별주식
+		);
+	}
+	$setvar_common(g_leaderCode_n = $addstring($substring($g_itemITEMCODE_n,0,3),00,$substring($g_itemITEMCODE_n,5)));
+
+	$callaction(fnGetOpenCloseTimeToItem,$g_itemMCODE_n);
+
+	$logvar(g_leaderCode_n);
+" />
+
+<action id="fnSetItemName_n"  scope="common"
+params="p_code"
+value="
+	$delarrayvar(arr_fucode_n_tmp);
+	$setvar(
+		,tmp_2 = night
+	);
+	
+	$getmultisearcharray(arr_MasterData_sfile03,arr_fucode_n_tmp,tmp_2,local,5,,first);
+	$logarrayvar(arr_fucode_n_tmp);         // 선물 배열
+
+	$setvar_common(g_itemCode_n = $p_code);
+	$setvar(
+		tmp_idx = $getarrayindex(arr_fucode_n_tmp,8,$p_code)
+	);
+
+	$setvar_common(
+		g_itemMTYPE_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,0)
+		,g_itemFOKIND_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,1)
+		,g_itemOKIND_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,2)
+		,g_itemBASENAME_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,3)
+		,g_itemEXPIRES_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,4)
+		,g_itemDNKIND_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,5)
+		,g_itemCLASS_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,6)
+		,g_itemMCODE_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,7)
+		,g_itemITEMCODE_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,8)
+		,g_itemUPCODE_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,9)
+		,g_itemITEMNAME_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,10)
+		,g_itemITEMNAME_E_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,11)
+		,g_itemUPRC_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,12)
+		,g_itemDPRC_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,13)
+		,g_itemEPRC_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,14)
+		,g_itemDCODE_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,15)
+		,g_itemPINFO_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,16)
+		,g_itemCSIZE_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,17)
+		,g_itemSDAY_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,18)
+		,g_itemBRUPRC_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,19)
+		,g_itemRUPRC_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,20)
+		,g_itemRDPRC_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,21)
+		,g_itemRCODE_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,22)
+	);
+
+	$logvar(g_itemMTYPE_n,g_itemFOKIND_n,g_itemOKIND_n,g_itemBASENAME_n,g_itemEXPIRES_n,g_itemDNKIND_n,g_itemCLASS_n,g_itemMCODE_n,g_itemITEMCODE_n,g_itemUPCODE_n,g_itemITEMNAME_n,g_itemITEMNAME_E_n,g_itemUPRC_n,g_itemDPRC_n,g_itemEPRC_n,g_itemDCODE_n,g_itemPINFO_n,g_itemCSIZE_n,g_itemSDAY_n,g_itemBRUPRC_n,g_itemRUPRC_n,g_itemRDPRC_n,g_itemRCODE_n);
+
+	
+	$setvar_common(
+		,g_realitemCode_n = $g_itemRCODE_n 		// 실시간 종목코드 
+		,g_itemNAME_n = $g_itemITEMNAME_n
+		,g_marketCode_n = $g_itemMCODE_n 			//거래소코드 - 시장구분
+		//,g_marketName_n= $g_itemBASENAME_n 			//거래소코드 - 시장구분
+		,g_marketName_n= $g_itemCLASS_n 			//거래소코드 - 시장구분
+	);
+	if($isequal_string($g_itemCLASS_n,지수)){
+		$setvar_common(
+			g_marketName_n= 주가지수
+		);
+	}elseif($isequal_string($g_itemCLASS_n,주식)){
+		$setvar_common(
+			g_marketName_n= 개별주식
+		);
+	}
+	$setvar_common(g_leaderCode_n = $addstring($substring($g_itemITEMCODE_n,0,3),00,$substring($g_itemITEMCODE_n,5)));
+	if($tmp_idx<0){
+		$setvar_common(
+			g_itemNAME_n = 지난월물
+		);
+	}
+	$callaction(fnGetOpenCloseTimeToItem,$g_itemMCODE_n);
+	$logvar(g_leaderCode_n);
+" />
+<action id="fnGetItemCls" 
+params="p_code"
+scope="common" 
+value="
+	//$logarrayvar(arr_MasterData_fucode);
+	//$logarrayvar(arr_MasterData_opcode);
+
+	$setvar(
+		tmp_idx_option = $getarrayindex(arr_MasterData_opcode,0,$p_code)
+		,tmp_idx_future = $getarrayindex(arr_MasterData_fucode,0,$p_code)
+	);
+	$logvar(
+		tmp_idx_option
+		,tmp_idx_future
+	);
+	if($tmp_idx_option > -1){
+		return 2; 		// 해외옵션 
+	}
+	if($tmp_idx_future > -1){
+		return 1; 		// 해외선물 
+	}
+
+	// 종목이 없을 경우 최근 월물로 대체한다.
+
+
+	// 최근 월물을 조회하여 넣어야 한다.
+	$setvar(tmp_exch_code=$getarrayvar(arr_EXCH,0,0));
+	$setvar(tmpArrExchName=$callaction(fnGetExchArrayName,$tmp_exch_code));
+	//$logarrayvar($tmpArrExchName);
+	$setvar( 
+		tmp_g_itemCode          =   $getarrayvar($tmpArrExchName,0,3)
+	);
+	$callaction(fnSetItemCode,$tmp_g_itemCode);                         // 종목셋팅
+
+"/>
+<action id="fnGetItemCls_d" 
+params="p_code"
+scope="common" 
+value="
+	$setvar(
+		,tmp_idx = $getarrayindex(arr_MasterData_sfile03,8,$p_code)
+		,tmp_itemMTYPE_d =$getarrayvar(arr_MasterData_sfile03,$tmp_idx,0)
+		,tmp_itemFOKIND_d =$getarrayvar(arr_MasterData_sfile03,$tmp_idx,1)
+		,tmp_itemOKIND_d =$getarrayvar(arr_MasterData_sfile03,$tmp_idx,2)
+	);
+	if($isequal_string($tmp_itemMTYPE_d,6)){ 			// 주식선물 
+		if($isequal_string($tmp_itemFOKIND_d,F)){ 		// 선물 
+			return 3;
+		}
+		else{							// 스프레드 
+			return 4;
+		}
+	}
+	else{
+		if($isequal_string($tmp_itemOKIND_d,3)){ 		// 옵션 
+			return 5;
+		}
+		else{
+			if($isequal_string($tmp_itemFOKIND_d,F)){ 		// 선물 
+				return 1;
+			}
+			else{							// 스프레드 
+				return 2;
+			}
+		}
+	}
+" />
+<action id="fnGetItemCls_n" 
+params="p_code"
+scope="common" 
+value="
+	$setvar(
+		,tmp_idx = $getarrayindex(arr_fucode_n_tmp,8,$p_code)
+		,tmp_itemFOKIND_n =$getarrayvar(arr_fucode_n_tmp,$tmp_idx,1)
+	);
+	
+	if($isequal_string($tmp_itemFOKIND_n,F)){ 		// 선물 
+		return 1;
+	}
+	else{							// 옵션
+		return 2;
+	}
+	
+" />
+
+<action id="fnOptionMkt" scope="common" 
+params="p_lprc, p_pqty, p_mdms, p_code"
+value="
+	if($p_mdms==1){
+		$setvar(p_mdms_gubun=1);
+	}
+	else{
+		$setvar(p_mdms_gubun=-1);	
+	}
+	if($getarrayindex(arr_MasterData_OPCODE,0,$p_code)>-1)
+	    {
+	    $setvar_common(g_itemCls=2);
+	    $callaction(fnSetItemCode,$p_code,$g_itemCls);    // 종목셋팅            
+
+		    if(
+		    $isequal_string($g_opitem_comd,OHHI) || $isequal_string($g_opitem_comd,OHSI)
+		    )
+		    {
+			    $setvar(
+			    g_opitem_tsiz=1
+			    ,g_opitem_tval=50
+			    ,g_opitem_adjv=1
+			    );
+		    }
+		    elseif(
+		    $isequal_string($g_opitem_comd,OFESX) || $isequal_string($g_opitem_comd,OFDAX)
+		    )
+		    {
+			    $setvar(
+			    g_opitem_tsiz=0.1
+			    ,g_opitem_tval=1
+			    ,g_opitem_adjv=1
+			    );
+		    }
+	     }
+	     else{
+	     $setvar_common(g_itemCls=1);
+	     }
+	//(현재가/호가단위)*가격변동폭*가격조정계수*미결제*매매(매수:1 매도:-1)
+	if($g_itemCls==2){
+	$setvar(g_opMktPrice=$result_double(($p_lprc/$g_opitem_tsiz)*$g_opitem_tval*$g_opitem_adjv*$p_pqty*$p_mdms_gubun));
+	return $getdoublemoney($g_opMktPrice,2);
+	}else{
+		return;
+	}
+"
+/>
+
+//연결선물 코드를 셋팅한다.
+<action id="fnLeaderCode_Set" scope="common"
+value="
+		//$logarrayvar(g_ArrFuturesAll_01);
+		//$logarrayvar(g_arrMasterData);
+		//$gtarrayvar(g_arrMasterData,idx,14);
+		$setvar(
+			,tmp_excode=$getarrayvar(arr_MasterData_fucode,$tmp_item_idx,14)
+		);
+		$setvar_common(
+			g_leaderCode = $addstring($tmp_excode,.1)
+		);
+		$setvar_common(
+			multi_leaderCode = $addstring($tmp_excode,.1)
+		);
+		$logvar(g_leaderCode,multi_leaderCode);
+" />
+// 관심종목 코드를 추가한다.
+<action id="fnRemoveInterestItemCode" scope="common" value="
+	$setvar(
+		tmp_arrIdx = $getarrayindex(arr_interestItem,0,$fnRemoveInterestItemCode_param1)
+	);
+	if($tmp_arrIdx < 0){	return;		}
+	$delarrayvar(arr_interestItem,$tmp_arrIdx);
+	$logarrayvar(arr_interestItem);
+	$callaction(fnSaveDBInterestItemCode);
+" />
+// 해당종목이 존재할 경우 -1을 리턴한다. - 알림창으로 알려준다.
+<action id="fnAddInterestItemCode" scope="common" 
+params="
+p_code
+"
+value="
+	$setvar(
+		arrCnt=$getarrayvarcount(arr_interestItem)
+		,tmp_arrIdx = $getarrayindex(arr_interestItem,0,$p_code)
+	);
+
+	if($tmp_arrIdx<0){      
+		$setvar(tmp_arrIdx=$arrCnt);
+		//$logarrayvar(arr_MasterData_fucode);
+		//$logarrayvar(arr_MasterData_opcode);
+
+		$setvar(
+			tmp_fucode_idx = $getarrayindex(arr_MasterData_fucode,0,$p_code)
+			,tmp_opcode_idx = $getarrayindex(arr_MasterData_opcode,0,$p_code)
+		);
+		if($tmp_fucode_idx > -1){
+			$setvar(
+				tmp_code 		= $getarrayvar(arr_MasterData_fucode,$tmp_fucode_idx,0)
+				,tmp_vender 		= $getarrayvar(arr_MasterData_fucode,$tmp_fucode_idx,1)
+				,tmp_exchName 	= $getarrayvar(arr_MasterData_fucode,$tmp_fucode_idx,2)
+				,tmp_item_cls 	 	= F
+			);
+		}
+		else{
+			if($tmp_opcode_idx > -1 ){
+				$setvar(
+					tmp_code 		= $getarrayvar(arr_MasterData_opcode,$tmp_opcode_idx,0)
+					,tmp_vender 		= $getarrayvar(arr_MasterData_opcode,$tmp_opcode_idx,1)
+					,tmp_exchName 	= $getarrayvar(arr_MasterData_opcode,$tmp_opcode_idx,2)
+					,tmp_item_cls 	 	= O
+				);
+			}
+			else{
+				//$alertaction(,해외 관심종목,관심종목 확인요함 ,확인);			
+				$callaction(fnPopover_AlertAction,,관심종목 확인요함,,확인);
+			}
+		}
+		$setsubarray_common(arr_interestItem,$tmp_arrIdx,$p_code,$tmp_vender, $tmp_exchName,$tmp_item_cls);
+	}
+	else{
+		$setvar(tmp_arrIdx=-1);
+	}
+	
+	$callaction(fnSaveDBInterestItemCode);   
+	$logarrayvar(arr_interestItem);
+
+	return $tmp_arrIdx;
+" />
+
+// 관심종목을 DB에서 읽어온다.
+<action id="fnLoadDBInterestItemCode" scope="common" value="
+	$delarrayvar(arr_interestItem);
+	$setvar(SQL=$(
+		SELECT  EXNM
+		,ISYM
+		,ESYM
+		,ITEMCLS
+		FROM  T_INTERESTITEM_LIST
+	));
+
+	$db_exec_array(arr_interestItem, $SQL, MASTER, TRUE);
+	$logarrayvar(arr_interestItem);
+" />
+// 미주옵션 - 주식 검색종목
+<action id="fnLoadDBInterest_Search_ItemCode_a_stock" scope="common" value="
+	$delarrayvar(arr_interest_search_Item_a_stock);
+	$setvar(SQL=$(
+		SELECT  EXNM,ISYM
+		FROM  T_INTEREST_SEARCH_ITEM_LIST_A_STOCK
+	));
+
+	$db_exec_array(arr_interest_search_Item_a_stock, $SQL, MASTER, TRUE);
+	$logarrayvar(arr_interest_search_Item_a_stock);
+	$arraycopy_common(arr_interest_search_Item_a_stock,arr_interest_search_Item_a_stock_copy);
+	$arraysort(arr_interest_search_Item_a_stock_copy);
+	$logarrayvar(arr_interest_search_Item_a_stock_copy);
+" />
+// 미주옵션 - 주식
+<action id="fnLoadDBInterestItemCode_a_stock" scope="common" value="
+	$delarrayvar(arr_interestItem_a_stock);
+	$setvar(SQL=$(
+		SELECT  EXNM
+		FROM  T_INTERESTITEM_LIST_A_STOCK
+	));
+
+	$db_exec_array(arr_interestItem_a_stock, $SQL, MASTER, TRUE);
+	$logarrayvar(arr_interestItem_a_stock);
+" />
+// 미주옵션 - 옵션
+<action id="fnLoadDBInterestItemCode_a_option" scope="common" value="
+	$delarrayvar(arr_interestItem_a_option);
+	$setvar(SQL=$(
+		SELECT  EXNM
+		FROM  T_INTERESTITEM_LIST_A_OPTION
+	));
+
+	$db_exec_array(arr_interestItem_a_option, $SQL, MASTER, TRUE);
+	$logarrayvar(arr_interestItem_a_option);
+" />
+// 국내선옵
+<action id="fnLoadDBInterestItemCode_d" scope="common" value="
+	$delarrayvar(arr_interestItem_d);
+
+	$setvar(SQL=$(
+		SELECT  EXNM
+		,ISYM
+		,ESYM
+		,ITEMCLS
+		FROM  T_INTERESTITEM_LIST_D
+	));
+	
+	$db_exec_array(arr_interestItem_d, $SQL, MASTER, TRUE);
+	$logarrayvar(arr_interestItem_d);
+" />
+// 미주옵션 - 주식 검색종목
+<action id="fnSaveDBInterest_Search_ItemCode_a_stock" scope="common">
+	<query value="
+	DELETE FROM T_INTEREST_SEARCH_ITEM_LIST_A_STOCK;
+	"/>
+	<actiondata value="
+	$logarrayvar(arr_interest_search_Item_a_stock);
+	$setarrayquery(MASTER,arr_interest_search_Item_a_stock,INSERT INTO T_INTEREST_SEARCH_ITEM_LIST_A_STOCK VALUES('[[0]]','[[1]]','[[2]]','[[3]]'));
+	" />
+</action>
+// 관심종목을 DB 에 저장한다. - DB열기와 닫기가 없음:테스트필요.
+<action id="fnSaveDBInterestItemCode" scope="common">
+	<query value="
+	DELETE FROM T_INTERESTITEM_LIST;
+	"/>
+	<actiondata value="
+	$logarrayvar(arr_interestItem);
+	$setarrayquery(MASTER,arr_interestItem,INSERT INTO T_INTERESTITEM_LIST VALUES('[[0]]','[[1]]','[[2]]','[[3]]'));
+	" />
+</action>
+// 미주옵션 - 주식
+<action id="fnSaveDBInterestItemCode_a_stock" scope="common">
+	<query value="
+	DELETE FROM T_INTERESTITEM_LIST_A_STOCK;
+	"/>
+	<actiondata value="
+	$logarrayvar(arr_interestItem_a_stock);
+	$setarrayquery(MASTER,arr_interestItem_a_stock,INSERT INTO T_INTERESTITEM_LIST_A_STOCK VALUES('[[0]]','[[1]]','[[2]]','[[3]]'));
+	" />
+</action>
+// 미주옵션 - 옵션
+<action id="fnSaveDBInterestItemCode_a_option" scope="common">
+	<query value="
+	DELETE FROM T_INTERESTITEM_LIST_A_OPTION;
+	"/>
+	<actiondata value="
+	$logarrayvar(arr_interestItem_a_option);
+	$setarrayquery(MASTER,arr_interestItem_a_option,INSERT INTO T_INTERESTITEM_LIST_A_OPTION VALUES('[[0]]','[[1]]','[[2]]','[[3]]'));
+	" />
+</action>
+
+// 국내선옵
+<action id="fnSaveDBInterestItemCode_d" scope="common">
+	<query value="
+	DELETE FROM T_INTERESTITEM_LIST_D;
+	"/>
+	<actiondata value="
+	$logarrayvar(arr_interestItem_d);
+	$setarrayquery(MASTER,arr_interestItem_d,INSERT INTO T_INTERESTITEM_LIST_D VALUES('[[0]]','[[1]]','[[2]]','[[3]]'));
+	" />
+</action>
+
+<action id="fnCreateDBInterestSearchItem" scope="common">
+	<query value="
+	// 관심종목 테이블 삭제를 어떻게 할 것인지 결정.
+	CREATE TABLE IF NOT EXISTS T_INTEREST_SEARCH_ITEM_LIST_A_STOCK (
+		EXNM            VARCHAR
+		,ISYM           VARCHAR
+		,ESYM           VARCHAR
+		,ITEMCLS       VARCHAR
+	);    
+	"/>
+</action>
+
+// 관심종목 테이블 생성 
+<action id="fnCreateDBInterestItem" scope="common">
+	<query value="
+	// 관심종목 테이블 삭제를 어떻게 할 것인지 결정.
+	CREATE TABLE IF NOT EXISTS T_INTERESTITEM_LIST (
+		EXNM            VARCHAR
+		,ISYM           VARCHAR
+		,ESYM           VARCHAR
+		,ITEMCLS       VARCHAR
+	);    
+	// 국내선물 관심종목 테이블 
+	CREATE TABLE IF NOT EXISTS T_INTERESTITEM_LIST_D (
+		EXNM            VARCHAR
+		,ISYM           VARCHAR
+		,ESYM           VARCHAR
+		,ITEMCLS       VARCHAR
+	);    
+	// 미주옵션 -주식 관심종목 테이블
+	CREATE TABLE IF NOT EXISTS T_INTERESTITEM_LIST_A_STOCK (
+		EXNM            VARCHAR
+		,ISYM           VARCHAR
+		,ESYM           VARCHAR
+		,ITEMCLS       VARCHAR
+	);    
+	// 미주옵션 -주식 관심종목 테이블
+	CREATE TABLE IF NOT EXISTS T_INTERESTITEM_LIST_A_OPTION (
+		EXNM            VARCHAR
+		,ISYM           VARCHAR
+		,ESYM           VARCHAR
+		,ITEMCLS       VARCHAR
+	);    
+	// 뉴스 테이블 생성
+	CREATE TABLE IF NOT EXISTS T_MYNEW_LIST (
+		KEY 		VARCHAR
+		,REG_DT            VARCHAR
+		,REG_TM           VARCHAR
+		,REG_TM2           VARCHAR
+		,GRP1_CD           VARCHAR
+		,GRP2_CD           VARCHAR
+		,COLOR           	VARCHAR
+		,GRADE_TP           VARCHAR
+		,TITLE 	           	VARCHAR
+		,SORT 	           	VARCHAR
+	);    
+
+	CREATE TABLE IF NOT EXISTS T_POPSCREENITEM_LIST (
+		EXNM            VARCHAR
+		,ISYM           VARCHAR
+		,ESYM           VARCHAR
+	);    
+	"/>
+</action>
+// 관심종목 인지 여부 
+<action id="fnIsInterestItemCode" scope="common" value="
+	$log(fnIsInterestItemCode);
+	$setvar(
+		arrCnt=$getarrayvarcount(arr_interestItem)
+		,tmp_arrIdx = $getarrayindex(arr_interestItem,0,$fnIsInterestItemCode_param1)
+	);
+
+	if($tmp_arrIdx<0){      return false;    }
+	else{                   return true;     }
+" />
+// 관심종목 인지 여부 
+<action id="fnIsInterestItemCode_d" scope="common" value="
+	$log(fnIsInterestItemCode_d);
+	$setvar(
+		arrCnt=$getarrayvarcount(arr_interestItem_d)
+		,tmp_arrIdx = $getarrayindex(arr_interestItem_d,0,$fnIsInterestItemCode_d_param1)
+	);
+
+	if($tmp_arrIdx<0){      return false;    }
+	else{                   return true;     }
+" />
+
+<action id="fnCallbackPopoverClose" scope="common" 
+    value="
+    // 실시간을 다시 쏜다.
+    $callaction(fnExeSendTrAction);
+    $callaction(fnGoScreen,$g_menuCode,self);
+" />
+// 국내선물인지 해외선옵 화면인지 구분 
+<action id="fnIsDomesticScreen" scope="common" value="
+	if($g_menuCode > 5000 && $g_menuCode < 8000){
+		return true;
+	}
+	else{
+		return false;
+	}
+
+"/>
+// 주간인지 야간인지 구분 
+<action id="fnIsDomestic_DayScreen" scope="common" value="
+	if($g_menuCode < 7000 ){
+		return true;
+	}
+	else{
+		return false;
+	}
+
+"/>
+// 팝오버 띄우기 - 종목검색시 사용 
+<action id="fnOpenPopover" scope="common" 
+value="
+	$callaction(Act_RealData_StartNStop,false); 		// 실시간을 끊는다. 
+
+	$setvar(tmp_is_domestic = $callaction(fnIsDomesticScreen));
+	if($tmp_is_domestic){			// 국내선물이면 
+		$setvar(
+			popoverXmlFile = plist/root/screen/p5121_100.xml
+			,popoverCallbackAction = $fnOpenPopover_param1
+			,popoverTile = $fnOpenPopover_param2
+			,popoverKind = $fnOpenPopover_param3
+		);
+	}
+	else{
+		if($g_menuCode==2210 || $g_menuCode==2212 || $g_menuCode==2310 || $g_menuCode==2312){
+			$setvar_common(g_param_order_kind=$vg_order_sel.selectkey,g_param_order_hoga=$vg_order_hogatype.selectkey);
+			$log(어디주문:[$g_menuCode],g_param_order_kind:[$g_param_order_kind],g_param_order_hoga:[$g_param_order_hoga]);
+
+		}
+		$setvar(
+			popoverXmlFile = plist/root/screen/p2121_100.xml
+			,popoverCallbackAction = $fnOpenPopover_param1
+			,popoverTile = $fnOpenPopover_param2
+			,popoverKind = $fnOpenPopover_param3
+		);
+	}
+	$popscreen(PopoverScreen);
+" />
+<popscreen id="PopoverScreen" 
+	scope="common"
+	width="$g_lcdWidth"
+	height="$g_lcdHeight"
+	width_ori="$g_lcdWidth"
+	height_ori="$g_lcdHeight_ori"
+	backcolor="ffffff"
+	modal="true"
+	modalbackcolor="00000088"
+	noscroll_width="true"
+	//noscroll_height="true"
+	onload=""
+	onunload=""
+	layout="center"
+	>
+	<viewgroup id="vg_popover_title"
+		width="$g_lcdWidth"
+		height="$h($g_lcdHeight,7.1)"
+		height_ori="$h($g_lcdHeight,7.1)"
+		backcolor="000000"
+		>
+		<label width="$super.width" height="$super.height" align="center" textcolor="ffffff" fontsize='$g_fontsize_big1' fontname="$g_baseFontNameBold" value="$popoverTile"  />
+
+		<viewgroup  x="$w($g_lcdWidth,86)" width="$w($g_lcdWidth,14)" height="$this.remain_bottom">
+			<img src="$icon_pop_cancel_w" id="btn_popover_close" x="$w($g_lcdWidth,5)" layout_vertical="center" />
+			<button width="$w($g_lcdWidth,14)" height="$super.height" class="cs_button_none" onClicked="$closescreen(PopoverScreen);$callaction(fnCallbackPopoverClose)" />
+		</viewgroup>
+
+	</viewgroup>
+	<br/>
+	<screen id="vg_popover_contents"
+		width="$super.width"
+		height="$this.remain_bottom"
+		height_ori="$this.remain_bottom_ori"
+		backcolor="ffffff"
+		>
+		<import_dynamic filename="$popoverXmlFile"/>
+	</screen>
+</popscreen>
+
+<action id="fnAccountPwdSave" scope="common" 
+params="p_account, p_encvar"
+value="
+	$logarrayvar(g_arr_account);
+	$setvar(
+		tmp_arrIdx 		= $getarrayindex(g_arr_account,1,$p_account)
+		,tmp_group_nm 	= $getarrayvar(g_arr_account,$tmp_arrIdx,0)
+		,tmp_acct_no 		= $getarrayvar(g_arr_account,$tmp_arrIdx,1)
+		,tmp_acct_pswd 	= $getarrayvar(g_arr_account,$tmp_arrIdx,2)
+		,tmp_acct_nm 		= $getarrayvar(g_arr_account,$tmp_arrIdx,3)
+		,tmp_nick_nm 		= $getarrayvar(g_arr_account,$tmp_arrIdx,4)
+		,tmp_rate 		= $getarrayvar(g_arr_account,$tmp_arrIdx,5)
+		,tmp_levl 		= $getarrayvar(g_arr_account,$tmp_arrIdx,6)
+		,tmp_mgn_cd 		= $getarrayvar(g_arr_account,$tmp_arrIdx,7)
+		,tmp_kse_dang_yn 	= $getarrayvar(g_arr_account,$tmp_arrIdx,8)
+		,tmp_cme_trad_yn 	= $getarrayvar(g_arr_account,$tmp_arrIdx,9)
+		,tmp_auth_sect 	= $getarrayvar(g_arr_account,$tmp_arrIdx,10)
+		,tmp_pwd_yn 		= $getarrayvar(g_arr_account,$tmp_arrIdx,11)
+		,tmp_acnt_heg_sect 	= $getarrayvar(g_arr_account,$tmp_arrIdx,12)
+		,tmp_sysm_tp 		= $getarrayvar(g_arr_account,$tmp_arrIdx,13)
+		,tmp_emp_no 		= $getarrayvar(g_arr_account,$tmp_arrIdx,14)
+	);
+	$logvar(
+		tmp_arrIdx 		
+		,tmp_group_nm 	
+		,tmp_acct_no 		
+		,tmp_acct_pswd 	
+		,tmp_acct_nm 		
+		,tmp_nick_nm 		
+		,tmp_rate 		
+		,tmp_levl 		
+		,tmp_mgn_cd 		
+		,tmp_kse_dang_yn 	
+		,tmp_cme_trad_yn 	
+		,tmp_auth_sect 	
+		,tmp_pwd_yn 		
+		,tmp_acnt_heg_sect 	
+		,tmp_sysm_tp 		
+		,tmp_emp_no
+	);
+	if($tmp_arrIdx < 0){
+		//$alertaction(,,Error-계좌번호 Key값 확인,확인);
+		$callaction(fnPopover_AlertAction,,Error-계좌번호 Key값 확인,,확인);
+		return;
+	}
+	$setvar(
+		savePasswd = $p_encvar
+	);
+	$logvar(savePasswd);
+	if($strlen($savePasswd) < 1){ $setvar(savePasswd=); }
+	$setsubarray_common(g_arr_account,$tmp_arrIdx,$tmp_group_nm,$tmp_acct_no,$tmp_acct_pswd,$tmp_acct_nm,$tmp_nick_nm,$tmp_rate,$tmp_levl,$tmp_mgn_cd,$tmp_kse_dang_yn,$tmp_cme_trad_yn,$tmp_auth_sect,$tmp_pwd_yn,$tmp_acnt_heg_sect,$tmp_sysm_tp,$tmp_emp_no,$savePasswd);
+
+	//20230707 최대근 작업 계좌비밀번호 자동연결 관련
+	$delvar_common(g_accout_connect_acct_no);
+	$delvar_common(g_accout_connect_save_pwd);
+	$setvar_common(
+		g_accout_connect_acct_no = $tmp_acct_no
+		,g_accout_connect_save_pwd = $savePasswd
+	);
+	
+	$logvar(
+		g_accout_connect_acct_no
+		,g_accout_connect_save_pwd
+	);
+	$logarrayvar(g_arr_account);
+
+	
+	return;
+	
+" />
+
+
+
+
+<action id="fnIsPreScreen" scope="common" value="
+	$setvar(tmp_cnt = $getarrayvarcount(arr_screenHistory));
+	if($tmp_cnt > 0){   return true;}
+	else{               return false;   }
+"/>
+<action id="fnAddPreScreen" scope="common" 
+params="p_menuCode, p_itemCode"
+value="
+	$addarray_common(arr_screenHistory,$p_menuCode,$p_itemCode);
+	$setvar(tmp_cnt = $getarrayvarcount(arr_screenHistory));
+	if($tmp_cnt>100){    $delarrayvar(arr_screenHistory,0);  }
+" />
+
+
+// 로그인 프로세스 시작
+<action id="fnLoginProcess" scope="common" value="
+
+	$setvar_common(g_LoginProcessCompleteAction=fnSuccessLoginProcess); // 로그인 프로세스 완료 후 액션 등록 
+	if($strlen($fnLoginProcess_param1)>0){      $setvar_common(g_LoginProcessCompleteAction=$fnLoginProcess_param1);    }
+	
+	$callaction(fnSendTr_usrlogon);
+" />
+<action id="fnSendTr_usrlogon" scope="common" value="
+	if($g_OrderServerCheckSimulation){      $setvar(tmp_usrlogon_type=1);   }
+	else{                                   $setvar(tmp_usrlogon_type=5);   }
+	$delvar(in_usrlogon_usid,in_usrlogon_pswd);
+	$logvar(in_usrlogon_usid,g_user_id_var);
+	$memcpy(in_usrlogon_usid,g_user_id_var);
+	$memcpy(in_usrlogon_pswd,g_user_pw_var);
+	$setvar(
+		//in_usrlogon_usid = $paramLoginProcess_user_id
+		//in_usrlogon_usid = $g_user_id_var
+		//,in_usrlogon_pswd= $g_user_pw_var
+		,in_usrlogon_type= $tmp_usrlogon_type                                // 모의투자:1, 개발서버:5
+		,in_usrlogon_optn= $g_combo_usrlogon_optn                           //고객용:C 직원용:S
+		,in_usrlogon_ipad=$g_deviceinfo_IPADDRESS
+	);
+	$logvar(
+		in_usrlogon_usid 
+		,in_usrlogon_pswd
+		,in_usrlogon_type
+		,in_usrlogon_optn
+		,in_usrlogon_ipad
+	);
+	$setvar(reqid_usrlogon=$callaction(FNSEND_ORDERDATA,usrlogon,Input,,,,fnSendTr_usrlogon_After));
+" />
+
+ <action id="fnSendTr_usrlogon_After" scope="common" value="
+	$setvar_common( 
+		usrlogon_sign = $recvmap_data(usrlogon,PageBlock.sign,$reqid_usrlogon,trim)
+		,usrlogon_cmsk = $recvmap_data(usrlogon,PageBlock.cmsk,$reqid_usrlogon,trim)
+		,usrlogon_smsk = $recvmap_data(usrlogon,PageBlock.smsk,$reqid_usrlogon,trim)
+		,usrlogon_auth = $recvmap_data(usrlogon,PageBlock.auth,$reqid_usrlogon,trim)
+		,usrlogon_usid = $recvmap_data(usrlogon,PageBlock.usid,$reqid_usrlogon,trim)
+		,usrlogon_usnm = $recvmap_data(usrlogon,PageBlock.usnm,$reqid_usrlogon,trim)
+		,usrlogon_scrn = $recvmap_data(usrlogon,PageBlock.scrn,$reqid_usrlogon,trim)
+		,usrlogon_perm = $recvmap_data(usrlogon,PageBlock.perm ,$reqid_usrlogon,trim)
+		,usrlogon_svtm = $recvmap_data(usrlogon,PageBlock.svtm ,$reqid_usrlogon,trim)
+		,usrlogon_svip = $recvmap_data(usrlogon,PageBlock.svip,$reqid_usrlogon,trim)
+		,usrlogon_rmsg = $recvmap_data(usrlogon,PageBlock.rmsg,$reqid_usrlogon,trim)
+		,usrlogon_aflg = $recvmap_data(usrlogon,PageBlock.aflg,$reqid_usrlogon,trim)
+		,usrlogon_brok = $recvmap_data(usrlogon,PageBlock.brok,$reqid_usrlogon,trim)
+		,usrlogon_clnt = $recvmap_data(usrlogon,PageBlock.clnt,$reqid_usrlogon,trim)
+		,usrlogon_unit = $recvmap_data(usrlogon,PageBlock.unit,$reqid_usrlogon,trim)
+		,usrlogon_orgn = $recvmap_data(usrlogon,PageBlock.orgn,$reqid_usrlogon,trim)
+		,usrlogon_sgrp = $recvmap_data(usrlogon,PageBlock.sgrp,$reqid_usrlogon,trim)
+		,usrlogon_calf = $recvmap_data(usrlogon,PageBlock.calf,$reqid_usrlogon,trim)
+		,usrlogon_cadn = $recvmap_data(usrlogon,PageBlock.cadn,$reqid_usrlogon,trim)
+		,usrlogon_casn = $recvmap_data(usrlogon,PageBlock.casn,$reqid_usrlogon,trim)
+		,usrlogon_capw = $recvmap_data(usrlogon,PageBlock.capw,$reqid_usrlogon,trim)
+		,usrlogon_cass = $recvmap_data(usrlogon,PageBlock.cass,$reqid_usrlogon,trim)
+		,usrlogon_mutl = $recvmap_data(usrlogon,PageBlock.mutl,$reqid_usrlogon,trim)
+		,usrlogon_warn = $recvmap_data(usrlogon,PageBlock.warn,$reqid_usrlogon,trim)
+		,usrlogon_rsvb = $recvmap_data(usrlogon,PageBlock.rsvb,$reqid_usrlogon,trim)
+	);
+	$logvar(    
+		usrlogon_sign
+		,usrlogon_cmsk
+		,usrlogon_smsk
+		,usrlogon_auth
+		,usrlogon_usid
+		,usrlogon_usnm
+		,usrlogon_scrn
+		,usrlogon_perm
+		,usrlogon_svtm
+		,usrlogon_svip
+		,usrlogon_rmsg
+		,usrlogon_aflg
+		,usrlogon_brok
+		,usrlogon_clnt
+		,usrlogon_unit
+		,usrlogon_orgn
+		,usrlogon_sgrp
+		,usrlogon_calf
+		,usrlogon_cadn
+		,usrlogon_casn
+		,usrlogon_capw
+		,usrlogon_cass
+		,usrlogon_mutl
+		,usrlogon_warn
+		,usrlogon_rsvb
+	);
+
+	if($isbit(strLoginData,0x01)){
+		if(!$g_ChekcSiseOnly && !$g_OrderServerCheckSimulation && !$isequal_string($g_combo_usrlogon_optn,S) && !$g_isTempId){ $callaction(fnRequestDN);  }                           // 공동인증 로그인:DN요청
+		else{
+			if($g_OrderServerCheckSimulation){      $callaction(fnSendTr_ph015101);     }   // 모의투자 로그인 함.
+			else{                               $callaction(fnSendTr_ph100601);     }   // 시세전용으로 로그인 함.
+		}
+	}
+	else{                                   
+		//$alertaction(fnLoginProcessFail,,$usrlogon_rmsg,확인);              
+		$callaction(fnPopover_AlertAction,fnLoginProcessFail,$usrlogon_rmsg,,확인);
+
+	}
+	
+"/>
+// 공동인증서 DN값 서버 요청
+<action id="fnRequestDN" scope="common" value=" 
+	$setvar(
+		IN_GUBN = 0                 // 0 : DN요청, 1 : 서명검증, 2 : 비밀번호 오류
+		,IN_USID= $usrlogon_usid
+		,IN_USDN=
+		,IN_SIGN=
+	);
+	$setvar(reqid_pibo0301=$callaction(FNSEND_ORDERDATA,pibo0301,Input,,,,fnRequestDN_After));
+"
+/>
+<action id="fnRequestDN_After" scope="common" value="
+	$log(안탔나??);
+	$setvar(
+		pibo0301_rcod = $recvmap_data(pibo0301,PageBlock.rcod,$reqid_pibo0301,trim)         //결과코드
+		,pibo0301_rmsg = $recvmap_data(pibo0301,PageBlock.rmsg,$reqid_pibo0301,trim)        //결과메세지
+		,pibo0301_gubn = $recvmap_data(pibo0301,PageBlock.gubn,$reqid_pibo0301,trim)        //구분값 0 : DN요청, 1 : 서명검증, 2 : 비밀번호 오류
+		,pibo0301_stat = $recvmap_data(pibo0301,PageBlock.stat,$reqid_pibo0301,trim)        //인증서상태
+		,pibo0301_errn = $recvmap_data(pibo0301,PageBlock.errn,$reqid_pibo0301,trim)        //비밀번호오류횟수
+		,pibo0301_pkey = $recvmap_data(pibo0301,PageBlock.pkey,$reqid_pibo0301,trim)        //키값 - 인증서 DN/공개키 - 0 : DN요청   :DN값저장, 1 : 서명검증 :PKEY값저장
+	);
+
+	if(!$isequal_string($pibo0301_rcod,000000)){
+		//$alertaction(fnLoginProcessFail,,$pibo0301_rmsg,확인);
+		$callaction(fnPopover_AlertAction,fnLoginProcessFail,$pibo0301_rmsg,,확인);
+		return;
+	}
+
+	$setvar_common(g_cert_dn=$pibo0301_pkey);
+	
+	$callaction(fnCertPassVerify,$pibo0301_pkey);
+" />
+// 공동인증서 비밀번호 검증
+<action id="fnCertPassVerify" scope="common" value="
+	$setvar(    tmp_cert_index = $cert_getdnindex($fnCertPassVerify_param1)     );
+	if($tmp_cert_index<0){
+		$callaction(fnLoginProcessFail);
+		//$alertaction(fnGoCertifyScreenConfirm,,인증서가 존재하지 않습니다.\n공동인증센터로 이동하시겠습니까?,취소,확인);
+		$callaction(fnPopover_AlertAction,fnGoCertifyScreenConfirm,인증서가 존재하지 않습니다.\n공동인증센터로 이동하시겠습니까?,취소,확인);
+		return;
+	}
+	$setvar(
+		tmpIsPwd=$cert_ispassword($tmp_cert_index,g_user_pw_cert_var,$g_cert_is_enc_flag)
+	);
+	if(!$tmpIsPwd){
+			 // 공동인증서 비밀번호 검증
+		if($isequal_string($g_LoginProcessCompleteAction,fnBecomeActive_LOGINED)){
+			//$alertaction(fnApp_Restart,,안정적인 구동을 위하여\SMART챔피언FUTURES를 재시작합니다.,확인);
+			$callaction(fnPopover_AlertAction,fnApp_Restart,안정적인 구동을 위하여\SMART챔피언FUTURES를 재시작합니다.,,확인);
+		}
+		else{
+			$callaction(fnCertPassVerify_Fail); // 비밀번호 오류
+		}
+		return;
+	}
+	$callaction(fnCertSignVerify,$tmp_cert_index);
+" />
+<action id="fnApp_Restart" scope="common" 
+value="
+	$openfile(plist/root/intro.xml); 
+"/>
+<action id="fnCertPassVerify_Fail" scope="common" value="
+	$setvar(
+		IN_GUBN = 2                 // 0 : DN요청, 1 : 서명검증, 2 : 비밀번호 오류
+		,IN_USID= $usrlogon_usid
+		,IN_USDN=
+		,IN_SIGN=
+	);
+	$setvar(reqid_pibo0301=$callaction(FNSEND_ORDERDATA,pibo0301,Input,,,,fnCertPassVerify_Fail_After));
+"/>
+<action id="fnCertPassVerify_Fail_After" scope="common" value="
+	$log(나와라오바.);
+	$setvar(
+		pibo0301_rcod = $recvmap_data(pibo0301,PageBlock.rcod,$reqid_pibo0301,trim)         //결과코드
+		,pibo0301_rmsg = $recvmap_data(pibo0301,PageBlock.rmsg,$reqid_pibo0301,trim)        //결과메세지
+		,pibo0301_gubn = $recvmap_data(pibo0301,PageBlock.gubn,$reqid_pibo0301,trim)        //구분값 0 : DN요청, 1 : 서명검증, 2 : 비밀번호 오류
+		,pibo0301_stat = $recvmap_data(pibo0301,PageBlock.stat,$reqid_pibo0301,trim)        //인증서상태
+		,pibo0301_errn = $recvmap_data(pibo0301,PageBlock.errn,$reqid_pibo0301,trim)        //비밀번호오류횟수
+		,pibo0301_pkey = $recvmap_data(pibo0301,PageBlock.pkey,$reqid_pibo0301,trim)        //키값 - 인증서 DN/공개키 - 0 : DN요청   :DN값저장, 1 : 서명검증 :PKEY값저장
+	);
+
+	if(!$isequal_string($pibo0301_rcod,000000)){
+		//$alertaction(fnLoginProcessFail,,$pibo0301_rmsg,확인);
+		$callaction(fnPopover_AlertAction,fnLoginProcessFail,$pibo0301_rmsg,,확인);
+		return;
+	}
+	$setvar(retStr=$addstring(공동인증 비밀번호가 ,$pibo0301_errn,회 틀렸습니다.));
+	//$alertaction(fnLoginProcessFail,,$retStr,확인);
+	$callaction(fnPopover_AlertAction,fnLoginProcessFail,$retStr,,확인);
+" />
+// 공동인증서 서명검증
+<action id="fnCertSignVerify" scope="common" value="
+	$log(나와라오바.성공);
+	$setvar( 
+		tmp_cert_index = $fnCertSignVerify_param1
+	);
+	$logvar( 
+		tmp_cert_index
+	);
+	$log(***************아하하하);
+	$logvar(tmp_cert_index, g_user_pw_cert_var,usrlogon_usid);
+	if($cert_getfulldata($tmp_cert_index,g_user_pw_cert_var,usrlogon_usid,IN_SIGN,IN_SIGN_LEN,false,true,true,$g_cert_is_enc_flag)) {     
+		$callaction(fnRequestSignVerify, $tmp_cert_index);
+	} 
+	else{
+		$alertaction(fnLoginProcessFail,,전자서명에 실패하였습니다.,확인,);
+		return;
+	}
+" />
+// 공동인증서 서명검증 서버 요청 $
+<action id="fnRequestSignVerify" scope="common" value=" 
+	
+	$cert_getpublickey($fnRequestSignVerify_param1,IN_USDN,false);
+
+	$setvar(
+		IN_GUBN = 1                 // 0 : DN요청, 1 : 서명검증, 2 : 비밀번호 오류
+		,IN_USID= $usrlogon_usid
+		//,IN_USDN= 
+		//,IN_SIGN=
+	);
+	$setvar(reqid_pibo0301=$callaction(FNSEND_ORDERDATA,pibo0301,Input,,,,fnRequestSignVerify_After));
+" />
+<action id="fnRequestSignVerify_After" scope="common" value="
+	$log(fnRequestSignVerify_After 받음.);
+	$setvar(
+		pibo0301_rcod = $recvmap_data(pibo0301,PageBlock.rcod,$reqid_pibo0301,trim)         //결과코드
+		,pibo0301_rmsg = $recvmap_data(pibo0301,PageBlock.rmsg,$reqid_pibo0301,trim)        //결과메세지
+		,pibo0301_gubn = $recvmap_data(pibo0301,PageBlock.gubn,$reqid_pibo0301,trim)        //구분값 0 : DN요청, 1 : 서명검증, 2 : 비밀번호 오류
+		,pibo0301_stat = $recvmap_data(pibo0301,PageBlock.stat,$reqid_pibo0301,trim)        //인증서상태
+		,pibo0301_errn = $recvmap_data(pibo0301,PageBlock.errn,$reqid_pibo0301,trim)        //비밀번호오류횟수
+		,pibo0301_pkey = $recvmap_data(pibo0301,PageBlock.pkey,$reqid_pibo0301,trim)        //키값 - 인증서 DN/공개키 - 0 : DN요청   :DN값저장, 1 : 서명검증 :PKEY값저장
+	);
+
+	/*
+	if(!$isequal_string($pibo0301_rcod,000000)){
+		//$alertaction(fnLoginProcessFail,,$pibo0301_rmsg,확인);
+		$callaction(fnPopover_AlertAction,fnLoginProcessFail,$pibo0301_rmsg,,확인);
+		return;
+	}
+	*/
+
+	if(!$isequal_string($pibo0301_stat,0)){
+		//$alertaction(fnLoginProcessFail,,$pibo0301_rmsg,확인);
+		$callaction(fnPopover_AlertAction,fnLoginProcessFail,$pibo0301_rmsg,,확인);
+		return;
+	}
+
+	$setvar_common(g_publickey=$recvmap_data(pibo0301,PageBlock.pkey,$reqid_pibo0301,trim));
+	$logvar(g_publickey);
+	// 계좌번호 조회
+	$callaction(fnSendTr_ph015101);
+" />
+<action id="fnGoCertifyScreenConfirm" scope="common" value="
+	if($fnGoCertifyScreenConfirm_param1 == 1){     
+		//$callaction(fnAddPreScreen,$g_menuCode);        // 화면 히스토리 저장
+		//$setvar_common(g_menuCode=1180);
+		//$openfile(plist/root/screen/p1180_100.xml);
+		$callaction(fnGoScreen,1180);   
+	}else{
+		$callaction(fnGoLoginScreen,1); 				// 로그인 화면으로 보낸다.
+	}
+" />
+
+//  계좌정보조회
+<action id="fnSendTr_ph015101" scope="common" value="
+	// Input 확인 필요함.
+  /*
+	$callaction(fnUserHaderSet);
+	$setvar(reqid_ph015101=$callaction(FNSEND_ORDERDATA,ph015101,Input,,,,fnSendTr_ph015101_After));
+  */
+
+	$callaction(fnUserHaderSet);
+	$setvar(IN_LOGIN_TP=$g_combo_usrlogon_optn);
+	$setvar(reqid_ph015101=$callaction(FNSEND_ORDERDATA,ph015501,Input,,,,fnSendTr_ph015101_After));    
+
+" />
+<action id="fnSendTr_ph015101_After" scope="common" value="
+	// 에러메세지 확인 
+	$map_getfielddata($g_OrderSocketName,varErrCode,$ledgerBlockCode,rcod,strLedgerBlockData);
+	$map_getfielddata($g_OrderSocketName,varErrMsg,$ledgerBlockCode,rmsg,strLedgerBlockData);
+	if(!$isequal_string($varErrCode,00000)){
+		//$alertaction(fnLoginProcessFail,,$varErrMsg,확인);
+		$callaction(fnPopover_AlertAction,fnLoginProcessFail,$varErrMsg,,확인);
+		return;
+	}
+
+	if(!$g_isBackground){
+		$setuserinfo(ph015501,$reqid_ph015101,g_account_data);
+		$MakeUserQuery(g_fuaccount_data,g_account_data,OutBlock,1);
+		$makeuserarray_common(g_fuaccount_data,g_arr_fuaccount_data);
+	}
+	else{
+		$setvar_common(g_isBackground = );
+	}
+
+
+	if($getarrayvarcount(g_arr_fuaccount_data)<1){
+		//$alertaction(fnLoginProcessFail,,Dev:사용가능한 계좌가 없습니다.,확인);
+		$callaction(fnPopover_AlertAction,fnLoginProcessFail,Dev:사용가능한 계좌가 없습니다.,,확인);
+		return;
+	}
+
+	// 이전에 로그인 한 아이디와 틀릴 경우 기본계좌 초기화한다.
+	$setvar_common(g_default_account=);
+	$config_getvalue_common(cf_last_login_userid,last_login_userid);
+	
+
+
+	$log(기본계좌 초기화 되냐? : [$usrlogon_usid],[$last_login_userid],[$g_default_account]);
+
+	if(!$isequal_string($usrlogon_usid,$last_login_userid)){
+		$setvar_common(g_default_account= $getarrayvar(g_arr_fuaccount_data,0,0));  
+		$config_setvalue(cf_default_account,$g_default_account);
+	}
+	else{
+		$config_getvalue_common(cf_default_account,g_default_account);
+	}
+
+	$logarrayvar(g_arr_fuaccount_data);
+
+	//$callaction(fnSendTr_ph171401);       // 위험고지팝업은 빼기로 함.
+
+	$callaction(fnSendTr_ph100601);
+" />
+/*
+// 호가주문 자동주문 위험고지 조회 
+<action id="fnSendTr_ph171401" scope="common" value="
+	$setvar(reqid_ph171401=$callaction(FNSEND_ORDERDATA,ph171401,Input,,,,fnSendTr_ph171401_After));
+" />
+<action id="fnSendTr_ph171401_After" scope="common" value="
+	// 에러메세지 확인 
+	$map_getfielddata($g_OrderSocketName,varErrCode,$ledgerBlockCode,rcod,strLedgerBlockData);
+	$map_getfielddata($g_OrderSocketName,varErrMsg,$ledgerBlockCode,rmsg,strLedgerBlockData);
+	$log(fnSendTr_ph171401_After:[$varErrCode][$varErrMsg]);
+	if(!$isequal_string($varErrCode,00000)){
+		//$alertaction(fnLoginProcessFail,,$varErrMsg,확인);
+		$callaction(fnPopover_AlertAction,fnLoginProcessFail,$varErrMsg,,확인);
+		return;
+	}
+
+	$setvar(ph171401_wchk = $recvmap_data(ph171401,PageBlock.wchk,$reqid_ph171401,trim));       //'0' 신청, '1' 미신청
+	$log(호가주문 자동주문 위험고지 조회  : $ph171401_wchk);
+
+	$callaction(fnSendTr_ph100601);
+" />
+*/
+// 전자금융사기 예방서비스 팝업
+<action id="fnSendTr_ph100601" scope="common" value="
+	$setvar_common(g_ph100601_popup_yn = );       
+	$callaction(fnUserHaderSet);
+
+	$setvar(
+		USID=$usrlogon_usid 
+	);
+	$setvar(reqid_ph100601=$callaction(FNSEND_ORDERDATA,ph100601,Input,,,,fnSendTr_ph100601_After));
+" />
+<action id="fnSendTr_ph100601_After" scope="common" value="
+	$map_getfielddata($g_OrderSocketName,varErrCode,$ledgerBlockCode,rcod,strLedgerBlockData);
+	$map_getfielddata($g_OrderSocketName,varErrMsg,$ledgerBlockCode,rmsg,strLedgerBlockData);
+	$log(fnSendTr_ph100601_After:[$varErrCode][$varErrMsg]);
+	if(!$isequal_string($varErrCode,00000)){
+		//$alertaction(fnLoginProcessFail,,$varErrMsg,확인);
+		$callaction(fnPopover_AlertAction,fnLoginProcessFail,$varErrMsg,,확인);
+		return;
+	}
+
+	$setvar_common(g_ph100601_popup_yn = $recvmap_data(ph100601,PageBlock.popup_yn,$reqid_ph100601,trim));       
+	$log(전자금융사기 예방서비스 팝업여부:$g_ph100601_popup_yn);
+
+	$callaction(fnSendTr_ph103304);
+" />
+// HTS 거래소별 시세조회 관리[종목선택시 사용]
+<action id="fnSendTr_ph103304"  scope="common" value="
+	$callaction(fnUserHaderSet);
+
+	$setvar(
+		USID=$usrlogon_usid 
+	);
+	$setvar(reqid_ph103304=$callaction(FNSEND_ORDERDATA,ph103304,Input,,,,fnSendTr_ph103304_After));
+" />
+
+// 상품 CAB 관리 조회 :옵션에서 사용하는 TR
+<action id="fnSendTr_ph800801" scope="common" value="
+	$callaction(fnUserHaderSet);
+
+	// 문의: 인자값을 어디서 받아와야 하는가? 
+	$setvar(
+		IN_COMMD_CD=280* 
+	);
+	$setvar(reqid_ph800801=$callaction(FNSEND_ORDERDATA,ph800801,Input,,,,fnSendTr_ph800801_After));
+" />
+<action id="fnSendTr_ph800801_After" scope="common" value="
+	$map_getfielddata($g_OrderSocketName,varErrCode,$ledgerBlockCode,rcod,strLedgerBlockData);
+	$map_getfielddata($g_OrderSocketName,varErrMsg,$ledgerBlockCode,rmsg,strLedgerBlockData);
+	$log(fnSendTr_ph800801_After:[$varErrCode][$varErrMsg]);
+	if(!$isequal_string($varErrCode,00000)){
+		//$alertaction(fnLoginProcessFail,,$varErrMsg,확인);
+		$callaction(fnPopover_AlertAction,fnLoginProcessFail,$varErrMsg,,확인);
+		return;
+	}
+	
+	// 로그인프로세스 완료 후 액션 호출
+	$log(로그인 프로세스:: $g_LoginProcessCompleteAction);
+	$callaction($g_LoginProcessCompleteAction);
+" />
+<action id="fnLoginProcessFail" scope="common" value="
+	$closescreen(pop_host_msg);
+
+	$setnstimer(TIMER_DISCONNECTALL,0.1,fnDisConnectAll,FALSE);
+	//$callaction(fnDisConnectAll);
+"/>
+<action id="fnKeyChangeNetwork_Fail" scope="common" value="
+	$closescreen(pop_host_msg);
+	//$alertaction(fnLoginProcessFail,,키교환이 실패하였습니다.,확인);
+	$callaction(fnPopover_AlertAction,fnLoginProcessFail,키교환이 실패하였습니다.,,확인);
+"/>               
+// 로그인 프로세스 끝 
+
+<action id="fnIsHedgeScreen" scope="common" value="
+	if($g_menuCode>8000 && $g_menuCode<8300){       return 0;    }
+	elseif($g_menuCode>2300){       return 1;    }
+	else{                       return 0;   }
+" />
+<action id="fnIsHedgeAccountWKTP" scope="common" 
+params="p_account"
+value="
+	$logarrayvar(g_arr_account);
+	$setvar(
+		tmp_account_idx = $getarrayindex(g_arr_account,1,$p_account)
+		,tmp_account_hedge = $getarrayvar(g_arr_account,$tmp_account_idx,12)
+	);
+	if($isequal_string($tmp_account_hedge,1)){
+		return 2;
+	}
+	else{
+		return 1;
+	}	
+" />
+<action id="fnGetLedgeWKTP" scope="common" value="
+	if($g_menuCode>2300){       return 5;    }
+	else{                       return 2;   }
+"/>
+<action id="fnGetOrderModifyMenuCode" scope="common" value="
+	if($g_menuCode>2300){       return 2311;    }
+	elseif($g_menuCode==2260){       return 2213;    }
+	else{                       return 2211;   }
+"/>
+<action id="fnGetOrderModifyMenuCode_d" scope="common" value="
+	if($g_menuCode>5300){       return 5311;    }
+	else{                       return 5211;   }
+"/>
+<action id="fnGetOrderModifyMenuCode_n" scope="common" value="
+	if($g_menuCode>7300){       return 7311;    }
+	else{                       return 7211;   }
+"/>
+<action id="fnServerErrorMsg" scope="common" value="
+	$closescreen(pop_host_msg);
+	//$setnstimer(TIMER_DISCONNECTALL,0.1,fnDisConnectAll,FALSE);
+"/>
+
+// 일괄청산 및 복수주문에 대한 결과 확인창
+<action id="fnOpenOrederResult" scope="common" value="
+	$setvar(
+		arr_result_var=$fnOpenOrederResult_param1
+		,action_close_after=$fnOpenOrederResult_param2
+		,popscreen_title = $fnOpenOrederResult_param3
+	);
+	 $popscreen(popscreen_order_result);
+"/>
+<action id="popscreen_order_result_onload" value="
+	$cleartablerow(tbl_popscreen_order_result_list);
+	$setarraydata(tbl_popscreen_order_result_list,$arr_result_var);
+	$reloadcontrol(tbl_popscreen_order_result_list);
+" />
+<action id="popscreen_order_result_onunload" value="
+	$delarrayvar($arr_result_var);
+	$callaction($action_close_after);
+" />
+<class id="cs_popscreen_order_result_th"
+	align="center" 
+	backcolor="999999" 
+	textcolor="ffffff" 
+	fontname="$g_baseFontNameBold" 
+	fontsize="$g_fontSize_small1"
+/>
+<popscreen id="popscreen_order_result" scope="common"
+	width="$w($g_lcdWidth,90)" 
+	height="$h($g_lcdHeight,58)"
+	backcolor="ffffff"
+	modal="false"
+	layout="center"
+	layout_vertical="center"
+	border_color="333333"
+	border_width="1"
+	onload="popscreen_order_result_onload"
+	onunload="popscreen_order_result_onunload"
+	//autoclose_time="5"
+	> 
+	<viewgroup id="vg_popscreen_notify_alarm_title" height="$h($g_lcdHeight,7)" backcolor="333333" >
+		<label id="lbl_popscreen_order_result_title" value="$popscreen_title" align="center" textcolor="ffffff" fontsize="$g_fontSize_big1" fontname="$g_baseFontNameBold"/>
+		<viewgroup  x="$w($g_lcdWidth,76)" width="$w($g_lcdWidth,14)" height="$this.remain_bottom">
+			<img src="$icon_pop_cancel_w" id="btn_popover_close" x="$w($g_lcdWidth,5)" layout_vertical="center" />
+			<button width="$w($g_lcdWidth,14)" height="$super.height" class="cs_button_none" onClicked="$closescreen();" />
+		</viewgroup>
+	</viewgroup>
+	<br/>
+	<viewgroup height="$h($g_lcdHeight,5)" >
+		<label class="cs_popscreen_order_result_th" width="$w($g_lcdWidth,18)" value="계좌번호"/>
+		<label class="cs_popscreen_order_result_th" width="$w($g_lcdWidth,15)" value="종목"/>
+		<label class="cs_popscreen_order_result_th" width="$w($g_lcdWidth,10)" value="구분" />
+		<label class="cs_popscreen_order_result_th" width="$this.remain_right" value="주문상태" />
+	</viewgroup>
+	<br/>
+	<table id="tbl_popscreen_order_result_list" width="$this.remain_right" height="$h($g_lcdHeight,42)">
+		<tr width="$super.width" height="$h($g_lcdHeight,9)" blank="true" arraydata="0:key~2:rowkey1~1:rowkey2" backcolor="none">
+			<td width="$w($g_lcdWidth,18)" height="$super.height" backcolor="none" align="center" 
+				margin_left="$w($g_lcdWidth,1)"
+				fontsize="$g_fontSize_small1"
+				arraydata="1:value"
+				>
+			</td>
+			<td width="$w($g_lcdWidth,15)" height="$super.height" backcolor="none" align="center" 
+				fontsize="$g_fontSize_small1"
+				arraydata="2:value"
+				>
+			</td>
+			<td width="$w($g_lcdWidth,10)" height="$super.height" backcolor="none" align="center" 
+				fontsize="$g_fontSize_small1"
+				arraydata="3:value~3:textcolor:if:$isequal_string(##,매수):$color_red:$color_blue"
+				>
+			</td>
+			<td width="$this.remain_right" height="$super.height" backcolor="none" 
+				//arraydata="5:value"
+				>
+				<label 
+				width="$this.remain_right"
+				height="$super.height"
+				fontsize="$g_fontSize_small1"
+				//minfontsize="2"
+				valign="center"
+				multiline="true"
+				arraydata="5:value"
+				/>
+			</td>
+		</tr>
+	</table>
+</popscreen>
+
+<action id="fnQuickMenuInit" scope="common" value="
+	$delarrayvar(arr_quickMenu);
+	$setsubarray_common(arr_quickMenu,0,btn_menu_1110,자산\n현황,1110);
+	$setsubarray_common(arr_quickMenu,1,btn_menu_2120,현재가\n(해),2120);
+	$setsubarray_common(arr_quickMenu,2,btn_menu_2110,관심\n종목(해),2110);
+	$setsubarray_common(arr_quickMenu,3,btn_menu_2150,종목\n상세(해),2150);
+	$setsubarray_common(arr_quickMenu,4,btn_menu_2210,해외주문\n(가로),2210);
+	//$setsubarray_common(arr_quickMenu,5,btn_menu_2360,헷지계좌\n신청,2360);
+	
+" />
+<!-- <action id="fnCreateDBQuickMenu" scope="common">
+	<query value="
+		CREATE TABLE IF NOT EXISTS T_QUICKMENU(
+			BTN_ID VARCHAR
+			, VALUE_LIST VARCHAR
+			, KEY VARCHAR
+		);
+	"/>
+</action> -->
+<action id="fnCreateDBQuickMenu" scope="common"
+value="
+	$logvar(g_OrderServerCheckSimulation);
+	if($g_OrderServerCheckSimulation){
+		$setvar_common(
+			VAR_T_QUICKMENU = T_QUICKMENU_SIMU
+		);
+	}
+	else{
+		$setvar_common(
+			VAR_T_QUICKMENU = T_QUICKMENU
+		);
+	}
+
+	$setvar_common(
+		SQL_QUICKMENU_CREATE=$(
+	 		CREATE TABLE IF NOT EXISTS $VAR_T_QUICKMENU (
+	 			BTN_ID VARCHAR
+				, VALUE_LIST VARCHAR
+				, KEY VARCHAR
+	 		)
+	 	)
+	 	,SQL_QUICKMENU_DELETE=$(
+	 		DELETE FROM $VAR_T_QUICKMENU
+	 	)
+	 	,SQL_QUICKMENU_SELECT=$(
+	 		SELECT BTN_ID, VALUE_LIST, KEY FROM $VAR_T_QUICKMENU
+	 	)
+	);
+	$logvar(SQL_QUICKMENU_CREATE,SQL_QUICKMENU_DELETE,SQL_QUICKMENU_SELECT);
+
+	$db_sid=$db_exec(MASTER, $SQL_QUICKMENU_CREATE);
+" />
+// 퀵메뉴를 DB에서 읽어온다.
+<action id="fnLoadDBQuickMenu" scope="common" value="
+	$delarrayvar(arr_quickMenu);
+	$db_exec_array(arr_quickMenu, $SQL_QUICKMENU_SELECT, MASTER, TRUE);
+	//$logarrayvar(arr_quickMenu);
+" />
+// 퀵메뉴를 DB에 저장한다.
+<action id="fnSaveDBQuickMenu" scope="common">
+	<query value="
+		$db_sid=$db_exec(MASTER, $SQL_QUICKMENU_DELETE);
+	"/>
+<actiondata value="
+	//$log(********** 여기가 fnSaveDBQuickMenu);
+	//$logarrayvar(arr_quickMenu);
+	$setarrayquery(MASTER,arr_quickMenu,INSERT INTO $VAR_T_QUICKMENU VALUES('[[0]]','[[1]]','[[2]]'));
+	"/>
+</action>
+
+<popscreen id="popscreen_exitConfirm"
+	scope="common"
+	width="$g_lcdWidth" 
+	height="$g_lcdHeight"
+	modal="false"
+	>
+	<button width="$super.width" height="$super.height" backcolor="00000033" onclicked="$closescreen();"/>
+	<viewgroup 
+		width="$w($g_lcdWidth,88)" 
+		height="$h($g_lcdHeight,28)"
+		layout="center"
+		layout_vertical="center"
+		backcolor="none"
+	>
+		<viewgroup id="vg_orderConfirm_title" height="$h($g_lcdHeight,8)" margin_left="$w($g_lcdWidth,3)"
+			backcolor="ffffff">
+			<label id="lbl_orderConfirm_title" value="종료확인" 
+				fontsize="$g_fontSize_big1"
+				fontname="$g_baseFontNameBold"
+				textcolor="000000"
+				/>
+		</viewgroup>
+		<br/><hr backcolor="3b3b3b"/><br/>
+		<viewgroup
+			width="$super.width"
+			height="$h($g_lcdHeight,10)"
+			backcolor="ffffff">
+			<br height="$h($g_lcdHeight,1)"/>
+		   <label 
+				width="$this.remain_right"
+				height="$h($g_lcdHeight,4)"
+				value="접속을 종료합니다." 
+				margin_left="$w($g_lcdWidth,6)"
+				fontsize="$g_fontSize_basic"
+				fontname="$g_baseFontName"
+				textcolor="000000"
+				/>
+			<br/>
+			<label 
+				width="$this.remain_right"
+				height="$h($g_lcdHeight,4)"
+				margin_left="$w($g_lcdWidth,6)"
+				value="로그아웃 또는 App종료를 선택하세요." 
+				fontsize="$g_fontSize_basic"
+				fontname="$g_baseFontName"
+				textcolor="000000"
+				/>
+			<br/>
+		</viewgroup>
+		<br/>
+		<viewgroup id="vg_orderConfirm_btn" height="$h($g_lcdHeight,10)"
+			backcolor="ffffff">
+			<button 
+				width="50%" 
+				height="$super.height"
+				backcolor="5f6263"
+				backcolor_active="595c5d"
+				fontsize="$g_fontsize_big1"
+				fontname="$g_baseFontNameBold"
+				textcolor="ffffff"
+				textcolor_active="ffffff"
+				value="로그아웃" 
+				onclicked="$closescreen();$callaction(FnExitBtnClicked,0);"
+				/>
+			<button id="btn_popscreen_orderConfirm_confirm" 
+				width="$this.remain_right" 
+				height="$super.height"
+				backcolor="bd3135"
+				//backcolor_active="b8240c"
+				fontsize="$g_fontsize_big1"
+				fontname="$g_baseFontNameBold"
+				textcolor="ffffff"
+				textcolor_active="ffffff"
+				value="종료" 
+				onclicked="$closescreen();$callaction(FnExitBtnClicked,1);"
+				/>
+		</viewgroup>
+	</viewgroup>
+</popscreen>
+
+// 실시간 모두 제거 
+<action id="fnDelRealDataAll" scope="common" value="
+	$logarrayvar(arr_real_reqid);    
+	$setvar(
+		arrCnt=$getarrayvarcount(arr_real_reqid)
+	);
+	// 추후 플랫폼 함수 추가해서 수정하기로 함.
+	for($i = 0; $i < $arrCnt; $i++){
+		$setvar(
+			tmp_reqid=$getarrayvar(arr_real_reqid,$i,0)
+		);
+		if($isconnect($g_SiseSocketName)){
+			$callaction(FNREALSISE_DELETE,$tmp_reqid);
+		}
+		
+	}
+	$delarrayvar(arr_real_reqid);
+" />
+
+<action id="fnOpenAlarmScreenMsg" scope="common" value="
+	$closescreen(pop_host_msg);	
+	$setvar(
+		screen_alarm.hidden=false
+		,lbl_alarm.value=$fnOpenAlarmScreenMsg_param1
+	);
+	$setnstimer(TIMER_SCREEN_ALAME_VIEW,$g_alarmMsg_time,fnScreenAlarmClose_Timer,FALSE);
+" />
+<action id="fnScreenAlarmClose_Timer" scope="common" value="
+	$setvar(
+		screen_alarm.hidden=true
+	);
+" />
+
+
+<!--
+// 국내선옵 테이블 생성 
+<action id="fnCreateDBDomestic" scope="common">
+	<query value="
+	// 기초자산정보
+	CREATE TABLE IF NOT EXISTS T_DOMESTIC_sfile01 (
+		MKIND            VARCHAR 		//마켓구분
+		,FOKIND           VARCHAR 		//선물/옵션구분
+		,BASENAME           VARCHAR		//기초자산명
+		,BASECODE           VARCHAR		//기초자산코드
+		,BASEDETAILK           VARCHAR		//기초자산설명(한글)
+		,BASEDETAILE           VARCHAR 		//기초자산설명(영문)
+	);    
+	//만기월물정보
+	CREATE TABLE IF NOT EXISTS T_DOMESTIC_sfile02 (
+		MTYPE            VARCHAR 		//마켓타입
+		,FOKIND           VARCHAR 		//선물/옵션구분
+		,BASENAME           VARCHAR		//기초자산명
+		,EXPIRES           VARCHAR		//만기년월
+		
+	);    
+	//종목정보
+	CREATE TABLE IF NOT EXISTS T_DOMESTIC_sfile03 (
+		MTYPE            VARCHAR 		//거래소구분 => 1:KOFEX, 2:KOSPI 5:MINI KOSPI
+		,FOKIND           VARCHAR 		//선물옵션구분 => F:선물 O:옵션
+		,OKIND           VARCHAR		//옵션구분
+		,BASENAME           VARCHAR		//기초자산명
+		,EXPIRES           VARCHAR		//만기년월
+		,DNKIND	VARCHAR		//주야간구분 => day, night
+		,CLASS 	VARCHAR		//분류
+		,MCODE 	VARCHAR		//거래소코드
+		,ITEMCODE 	VARCHAR		//종목코드
+		,UPCODE 	VARCHAR		//상위종목(KTB에서만사용)
+		,ITEMNAME 	VARCHAR		//한글종목명
+		,ITEMNAME_E 	VARCHAR		//영문종목명
+		,UPRC 		VARCHAR		//상한가
+		,DPRC 		VARCHAR		//하한가
+		,EPRC 		VARCHAR		//행사가격
+		,DCODE 	VARCHAR		//파생상품코드
+		,PINFO	 	VARCHAR		//소수점정보
+		,CSIZE	 	VARCHAR		//계약크기
+		,SDAY	 	VARCHAR		//잔존일수
+		,BRUPRC 	VARCHAR		//실시간상한가적용여부
+		,RUPRC	 	VARCHAR		//실시간상한가
+		,RDPRC	 	VARCHAR		//실시간하한가
+		,RCODE 	VARCHAR		//실시간종목코드
+	);    
+	//스프레드정보
+	CREATE TABLE IF NOT EXISTS T_DOMESTIC_sfile05 (
+		BASENAME            VARCHAR 		//기초자산명
+		,ITEMCODE           VARCHAR 		//종목코드
+		,CITEM 	          VARCHAR		//구성종목
+		,CSNO 	           VARCHAR		//구성일련번호
+		,CRATIO            VARCHAR		//구성비율
+		,BKIND 		          VARCHAR		//매수시매매구분
+		,SKIND 	          	 VARCHAR		//매도시매매구분
+	);    
+	//틱사이즈테이블
+	CREATE TABLE IF NOT EXISTS T_DOMESTIC_sfile07 (
+		FOKIND            VARCHAR 		//선물옵션구분 => C : 스프레드정보 F:선물 O:옵션
+		,BASENAME           VARCHAR 		//기초자산명
+		,DCODE 	          VARCHAR		//파생상품코드
+		,DPRC 	           VARCHAR		//하한
+		,UPRC 	            VARCHAR		//상한
+		,TSIZE 		          VARCHAR		//틱사이즈(소수점미포함)
+		,PINFO 	          	 VARCHAR		//소수점정보
+	);    
+	//연속월물정보
+	CREATE TABLE IF NOT EXISTS T_DOMESTIC_sfile09 (
+		MTYPE            VARCHAR 		//거래소구분
+		,CMITEM           VARCHAR 		//연속월물종목
+		,ITEMCODE 	          VARCHAR		//종목코드
+		,BASENAME 	           VARCHAR		//기초자산명
+		
+	);    
+	//옵션ATM
+	CREATE TABLE IF NOT EXISTS T_DOMESTIC_sfile11 (
+		BASENAME            VARCHAR 		//기초자산명
+		,EXPIRES           VARCHAR 		//만기년월
+		,EPRC 	          VARCHAR		//행사가격
+	);    
+
+	//연도코드
+	CREATE TABLE IF NOT EXISTS T_DOMESTIC_sfile12 (
+		YCODE            VARCHAR 		//연도코드
+		,YEAR           VARCHAR 		//연도
+	);    	
+	//
+	CREATE TABLE IF NOT EXISTS T_DOMESTIC_fojmcd (
+		IKIND            VARCHAR 		//종목구분 => 1:KOFEX, 2:KOSPI
+		,ITEMCODE           VARCHAR 		//종목
+		,BASENAME           VARCHAR 		//기초자산명
+		,EXPIRES           VARCHAR 		//만기년월
+		,RORDER           VARCHAR 		//근월물순서
+		,FCODE           VARCHAR 		//선물코드 => 선물만사용
+		,EPRC           VARCHAR 		//행사가
+		,OKIND           VARCHAR 		//옵션구분 => 1:현물옵션, 2,선물옵션, 3:지수옵션
+		,DCODE           VARCHAR 		//파생상품코드 => 001:유럽형콜 002:유럽형풋 004:선물 006:미국형콜 007:미국형풋
+		,SDAY           VARCHAR 		//잔존일수
+		,CBDEPOSIT           VARCHAR 		//계약당기준증거금
+		,BLTPRC           VARCHAR 		//전일최대이론가
+		,OSTPRC          VARCHAR 		//옵션매도이론가
+		,TPRC5           VARCHAR 		//5%이론가
+		,BPRC           VARCHAR 		//전일종가
+		,BASEKIND           VARCHAR 		//기초자산구분 => 1:채권 2:통화 3:지수
+	);    	
+	CREATE TABLE IF NOT EXISTS T_DOMESTIC_fogjcd (
+		IKIND            VARCHAR 			//종목구분=> 1:KOFEX, 2:KOSPI
+		,BASE           VARCHAR 			//기초자산
+		,OMULTI           VARCHAR 		//옵션승수
+		,FMULTI           VARCHAR 		//선물승수
+		,DIRATE           VARCHAR 		//국내이자율
+		,FIRATE           VARCHAR 		//국외이자율
+		,DIDX           VARCHAR 			//배당액지수
+		,HVAR           VARCHAR 			//역사적변동성(X 179개)
+		,OKIND           VARCHAR 		//옵션구분=> 1:현물, 2: 선물, 3:지수
+	);    	
+	"/>
+</action>
+-->
+
+
+// 틱사이즈 검증 
+<action id="Act_StopLiimit_Tick_Verify"  scope="common"
+params="p_base,p_mdms, p_limit, p_stop, p_hoga"
+value="
+	$setvar(
+		tmp_up_prc 	= $getupdowntick($p_base,$g_itemPIND,$g_itemTSIZ,$g_itemADJV,5)
+		,tmp_dn_prc 	= $getupdowntick($p_base,$g_itemPIND,$g_itemTSIZ,$g_itemADJV,$result(5*-1))
+
+		,tmp_up_prc_db 	= $getwinwaydata_double($tmp_up_prc,$g_itemPIND)  		// 위로 5틱 계산 
+		,tmp_dn_prc_db 	= $getwinwaydata_double($tmp_dn_prc,$g_itemPIND) 		// 아래로 5틱 계산
+		,tmp_limit_db 		= $getwinwaydata_double($p_limit,$g_itemPIND)
+		,tmp_stop_db 		= $getwinwaydata_double($p_stop,$g_itemPIND)
+	);
+	$logvar(
+		tmp_up_prc 	
+		,tmp_dn_prc 	
+
+		,tmp_up_prc_db 	
+		,tmp_dn_prc_db 	
+		,tmp_limit_db 		
+		,tmp_stop_db 		
+	);
+
+	
+	if($p_hoga == 1){	$setvar(errorStr = 현재가 대비 5틱 이상의 차이가 있어야 합니다.);	}
+	elseif($p_hoga == 2){	$setvar(errorStr = 주문가격 대비 5틱 이상의 차이가 있어야 합니다.);	}
+	elseif($p_hoga == 3){	$setvar(errorStr = STOP가격 대비 5틱 이상의 차이가 있어야 합니다.);	}
+	elseif($p_hoga == 4){	$setvar(errorStr = 주문가격 대비 5틱 이상의 차이가 있어야 합니다.);	}
+
+
+	$log(Act_StopLiimit_Tick_Verify 메뉴:$g_menuCode);
+	
+		// 작업중 
+		if($p_mdms == 1){ 	// 매수 
+			$log(***************매수 );
+			if($strlen($p_limit) > 0){
+				$log(비교1[$g_menuCode]:$tmp_limit_db<$tmp_up_prc_db);
+				if($tmp_limit_db < $tmp_up_prc_db){
+					$log(여기1); 
+					//$alertaction(,,$errorStr,확인);	
+					$callaction(fnPopover_AlertAction,,$errorStr,,확인);
+					return false;
+				}
+			}
+			if($strlen($p_stop) > 0){
+				$log(비교2[$g_menuCode]:$tmp_limit_db>$tmp_up_prc_db);
+				if($tmp_stop_db > $tmp_dn_prc_db){
+					$log(여기2); 
+					//$alertaction(,,$errorStr,확인);	
+					$callaction(fnPopover_AlertAction,,$errorStr,,확인);
+					return false;
+				}
+			}
+		}
+		else{ 			// 매도 
+			$log(***************매도 );
+			if($strlen($p_limit) > 0){
+				$log(비교3[$g_menuCode]:$tmp_limit_db>$tmp_dn_prc_db);
+				if($tmp_limit_db > $tmp_dn_prc_db){
+					$log(여기1); 
+					//$alertaction(,,$errorStr,확인);	
+					$callaction(fnPopover_AlertAction,,$errorStr,,확인);
+					return false;
+				}
+			}
+			if($strlen($p_stop) > 0){
+				$log(비교4[$g_menuCode]:$tmp_stop_db<$tmp_up_prc_db);
+				if($tmp_stop_db < $tmp_up_prc_db){
+					$log(여기2); 
+					//$alertaction(,,$errorStr,확인);	
+					$callaction(fnPopover_AlertAction,,$errorStr,,확인);
+					return false;
+				}
+			}
+
+		}
+		return true;
+" />
+// 틱사이즈 검증  - 국내
+<action id="Act_StopLiimit_Tick_Verify_D"  scope="common"
+params="p_base,p_mdms, p_limit, p_stop, p_hoga"
+value="
+
+	$setvar(
+		tmp_up_prc 	= $getupdownvalue_array(arr_MasterData_sfile07, $g_itemFOKIND_d,$g_itemBASENAME_d,$g_itemDCODE_d,$p_base,true,5)
+		,tmp_dn_prc 	=$getupdownvalue_array(arr_MasterData_sfile07, $g_itemFOKIND_d,$g_itemBASENAME_d,$g_itemDCODE_d,$p_base,false,5)
+	);
+	$logvar(
+		tmp_up_prc 	
+		,tmp_dn_prc 	
+	);
+
+	
+	if($p_hoga == 1){	$setvar(errorStr = 현재가 대비 5틱 이상의 차이가 있어야 합니다.);	}
+	elseif($p_hoga == 2){	$setvar(errorStr = 주문가격 대비 5틱 이상의 차이가 있어야 합니다.);	}
+	elseif($p_hoga == 3){	$setvar(errorStr = STOP가격 대비 5틱 이상의 차이가 있어야 합니다.);	}
+	elseif($p_hoga == 4){	$setvar(errorStr = 주문가격 대비 5틱 이상의 차이가 있어야 합니다.);	}
+
+
+	
+	if($p_mdms == 1){ 	// 매수 
+		if($strlen($p_limit) > 0){
+			if($p_limit < $tmp_up_prc){
+				$logvar(p_limit, tmp_up_prc);
+				$log(여기1); 
+				//$alertaction(,,$errorStr,확인);	
+				$callaction(fnPopover_AlertAction,,$errorStr,,확인);
+				return false;
+			}
+		}
+		if($strlen($p_stop) > 0){
+			if($p_stop > $tmp_dn_prc){
+				$log(여기2); 
+				//$alertaction(,,$errorStr,확인);	
+				$callaction(fnPopover_AlertAction,,$errorStr,,확인);
+				return false;
+			}
+		}
+	}
+	else{ 			// 매도 
+		if($strlen($p_limit) > 0){
+			if($p_limit > $tmp_dn_prc){
+				$log(여기1); 
+				//$alertaction(,,$errorStr,확인);	
+				$callaction(fnPopover_AlertAction,,$errorStr,,확인);
+				return false;
+			}
+		}
+		if($strlen($p_stop) > 0){
+			if($p_stop < $tmp_up_prc){
+				$log(여기2); 
+				//$alertaction(,,$errorStr,확인);	
+				$callaction(fnPopover_AlertAction,,$errorStr,,확인);
+				return false;
+			}
+		}
+
+	}
+	return true;
+" />
+
+<action id="Act_GetIP_RealServer" scope="common"
+params="p_after_action"
+value="
+	$setvar(tmp_getip_realserver_after_action = $p_after_action);	
+	$delvar(strSendData,strTrHeader);
+	$setsocketaction($g_SiseSocketName_DOMESTIC,Act_GetIP_RealServer_RecvData,); 	// RecvAction 을 변경하여 보낸다. 
+	$setvar(
+		LEN_MYMQ_TH 		= $result($map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_TH)-4)
+		,MYMQ_TH_PKT_LEN 	= $result($LEN_MYMQ_TH)
+	);
+	$logvar(
+		,LEN_MYMQ_TH 	
+		,MYMQ_TH_PKT_LEN
+	);
+
+	// Packet Indicator OR 연산으로 추가 
+	$setbit(MYMQ_HEADER_PKTI_1,0x01);	// RHI Following RH
+	$setbit_or(MYMQ_HEADER_PKTI_1,0x04);	// Begin Packet Indicator
+	$setbit_or(MYMQ_HEADER_PKTI_1,0x08);	// End Packet Indicator
+	$setbit(MYMQ_HEADER_FUNC,0x01);
+	//$setvar(MYMQ_HEADER_FUNC=C); 		// A:Sign-on B:Notify signed user's id, C:General REquest for transactions
+	$map_getstructsenddata($g_SiseSocketName_DOMESTIC,MYMQ_TH,,strSendData); 	// TH 헤더 추가
+	//$logvar_binary(strSendData,strSendData);
+	$sendvardata($g_SiseSocketName_DOMESTIC,,strSendData,$MYMQ_RH_WKEY,,,TRUE);	
+	return $MYMQ_RH_WKEY;
+"/>
+// IP 받고난 후
+<action id="Act_GetIP_RealServer_RecvData"  scope="common"
+params="p_socket_name, p_varname_recv, p_err_no"
+value="
+	if($g_is_background){	return;	}
+	if(!$isequal_string($p_socket_name,$g_SiseSocketName_DOMESTIC)){
+		//$alertaction(fnExit_Timer,국내시세[$p_socket_name][$g_SiseSocketName],국내시세 아닌 것이 호출되었습니다..\n관리자에게 문의하세요,확인);
+		$callaction(fnPopover_AlertAction,fnExit_Timer,국내시세 아닌 것이 호출되었습니다..\n관리자에게 문의하세요,,확인);
+		return;
+	}
+
+	// 폴링: 길이가 0인경우 
+	if($isequal_string($p_err_no,400)){
+		$log(======== 폴링: 길이가 0인경우 );
+		$setvar_common(g_polling_fail_cnt = 0);
+		return;
+	}
+
+	if($isequal_string($p_err_no,200)){
+		$log(====================> 국내시세6 네트워크 접속이 원할하지 않습니다);
+		return;
+	}
+	if($strlen($p_varname_recv)<0){
+		$log(국내 시세 서버 - 데이터 없음);
+		return;
+	}
+	$setvar(
+		tmp_socketName = $p_socket_name
+		, strRecvVarName=$p_varname_recv
+		, iErrCode = $p_err_no
+
+		,LEN_PACKET_LENGTH 	= 4 									// 제일 앞단 헤더 길이 
+		,POS_MYMQ_TH 		= 0
+		,LEN_MYMQ_TH 		= $map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_TH) 
+		,POS_MYMQ_IP 		= $result($POS_MYMQ_TH + $LEN_MYMQ_TH)
+		,LEN_MYMQ_IP 		= $map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_IP)
+	);
+	$delvar(strHeaderData_MYMQ_TH, strHeaderData_MYMQ_IP, strRu_Data,strRecvData_RU,LEN_ZIP_OIR_DATA,strRecvData, strSiseRealData);
+
+	$memcpy(strHeaderData_MYMQ_TH,$strRecvVarName,$POS_MYMQ_TH,$LEN_MYMQ_TH);
+	$map_getfielddata($g_SiseSocketName_DOMESTIC,strPKT_LEN,MYMQ_TH,PKT_LEN,strHeaderData_MYMQ_TH); 	//받은데이터 패킷길이 
+	$map_getfielddata($g_SiseSocketName_DOMESTIC,strPKI_1,MYMQ_TH,PKI_1,strHeaderData_MYMQ_TH); 		//Packet Indicator 1
+	$map_getfielddata($g_SiseSocketName_DOMESTIC,strPKI_2,MYMQ_TH,PKI_2,strHeaderData_MYMQ_TH); 		//Packet Indicator 2 - 현재 사용 안함.
+	$map_getfielddata($g_SiseSocketName_DOMESTIC,strFUNC,MYMQ_TH,FUNC,strHeaderData_MYMQ_TH); 		//Function Code
+	$memcpy(strHeaderData_MYMQ_IP,$strRecvVarName,$POS_MYMQ_IP,$LEN_MYMQ_IP);
+	$map_getfielddata($g_SiseSocketName_DOMESTIC,strIP1,MYMQ_IP,IP_1,strHeaderData_MYMQ_IP);
+	$map_getfielddata($g_SiseSocketName_DOMESTIC,strIP2,MYMQ_IP,IP_2,strHeaderData_MYMQ_IP);
+	$map_getfielddata($g_SiseSocketName_DOMESTIC,strIP3,MYMQ_IP,IP_3,strHeaderData_MYMQ_IP);
+
+	$log(====================> 서버에서 받은 IP :$strIP1);
+	$logvar(strIP1,strIP2,strIP3);
+	// JPY 테스트인 경우 분기 처리 함.
+	if($g_is_test_server){
+		// 현재 테스트서버에서 주는 IP와 접속해야 하는 IP가 틀림
+		$logvar(g_RealServerIP_Order_real);
+		$setvar_common(g_RealServerIP_Order_real 	= 211.47.41.21); 
+		/*
+		if($g_OrderServerCheckSimulation){
+			$setvar_common(g_RealServerIP_Order_real 	= $strIP1);
+		}
+		else{
+			//$setvar_common(g_RealServerIP_Order_real 	= 183.111.94.53);
+			$setvar_common(g_RealServerIP_Order_real 	= $g_serverIP_DOMESTIC_real); 			//개발서버 IP로 체결서버가 붙게 한다. 
+		}
+		
+		*/
+		
+		$setvar_common(
+			,g_RealServerIP_Order 		= $g_RealServerIP_Order_real
+			,g_RealServerPort_Order 	= 9101
+		);
+	}
+	else
+	{
+		$setvar_common(
+			g_RealServerIP_Order_real 	= $strIP1
+			,g_RealServerIP_Order 		= $g_RealServerIP_Order_real
+		);
+	}
+	// 주문체결 서버 연결 
+	$callaction(Act_Network_Connect
+		, $g_RealSocketName_Order
+		, $g_RealServerIP_Order
+		, $g_RealServerPort_Order
+		, 256
+		, 511
+		, 0		
+		, Act_Network_RecvData_OrderReal 						// 주문체결만 분리함
+		, Act_Server_Connect_Order_connected 					// 연결 후 액션 
+	); 	
+	$setsocketaction($g_SiseSocketName_DOMESTIC,Act_Network_RecvData,); 		// RecvAction 을 변경하여 보낸다. 
+" />
+<action id="Act_Server_Connect_Order_connected" scope="common" 
+params="p_socket_name, p_socket_no"
+value="
+	if($p_socket_no<0){
+		$log(************* Act_Server_Connect_Order_connected 연결에러 );
+		return;
+	}
+	$log(====================> 실시간 체결서버 연결 확인 :$g_RealServerIP_Order, [$tmp_getip_realserver_after_action]);
+
+	$callaction(Act_MaploadNSetpath
+		, $g_RealSocketName_Order
+		, $g_path_map
+		, g_arrLoadmapFile
+		, g_arrMapPathFile
+		, xml
+	);
+	
+	$callaction(Act_Real_Login, , , );  		// 서버응답 없음.
+	$callaction($tmp_getip_realserver_after_action);
+
+" />
+<popscreen id="popscreen_withdrawal"
+	scope="common"
+	width="$g_lcdWidth" 
+	height="$g_lcdHeight"
+	modal="false"
+	>
+	<button width="$super.width" height="$super.height" backcolor="00000033" onclicked="$closescreen();"/>
+	<viewgroup 
+		width="$w($g_lcdWidth,88)" 
+		height="$h($g_lcdHeight,28)"
+		layout="center"
+		layout_vertical="center"
+		backcolor="none"
+	>
+		<viewgroup id="vg_orderConfirm_title" height="$h($g_lcdHeight,8)" margin_left="$w($g_lcdWidth,3)"
+			backcolor="ffffff">
+			<label id="lbl_orderConfirm_title" value="회원탈퇴" 
+				fontsize="$g_fontSize_big1"
+				fontname="$g_baseFontNameBold"
+				textcolor="000000"
+				/>
+		</viewgroup>
+		<br/><hr backcolor="3b3b3b"/><br/>
+		<viewgroup
+			width="$super.width"
+			height="$h($g_lcdHeight,10)"
+			backcolor="ffffff">
+			<br height="$h($g_lcdHeight,1)"/>
+		   <label 
+				width="$this.remain_right"
+				height="$this.remain_bottom"
+				value="회원탈퇴 하시겠습니까?" 
+				margin_left="$w($g_lcdWidth,6)"
+				fontsize="$g_fontSize_basic"
+				fontname="$g_baseFontName"
+				textcolor="000000"
+				/>
+			<br/>
+		</viewgroup>
+		<br/>
+		<viewgroup id="vg_orderConfirm_btn" height="$h($g_lcdHeight,10)"
+			backcolor="ffffff">
+			<button 
+				width="50%" 
+				height="$super.height"
+				backcolor="5f6263"
+				backcolor_active="595c5d"
+				fontsize="$g_fontsize_big1"
+				fontname="$g_baseFontNameBold"
+				textcolor="ffffff"
+				textcolor_active="ffffff"
+				value="예" 
+				onclicked="$closescreen();$callaction(Act_Withdrawal,1);"
+				/>
+			<button id="btn_popscreen_orderConfirm_confirm" 
+				width="$this.remain_right" 
+				height="$super.height"
+				backcolor="bd3135"
+				fontsize="$g_fontsize_big1"
+				fontname="$g_baseFontNameBold"
+				textcolor="ffffff"
+				textcolor_active="ffffff"
+				value="아니요" 
+				onclicked="$closescreen();"
+				/>
+		</viewgroup>
+	</viewgroup>
+</popscreen>
+
+<action id="Act_Withdrawal" scope="common" 
+params="p_PROC_TP"
+value="
+	$log(아이디 확인:$g_user_id, $g_login_id , $usrlogon_usid );
+	$log(종류 확인 1=탈퇴,2=해제 : $p_PROC_TP);
+	$setvar(
+		IN_PROC_TP = $p_PROC_TP
+		,IN_USER_ID = $g_login_id
+		,reqid_CSBA000801=$callaction(FNSEND_ORDERDATA,CSBA000801,Input,,,,fnSendTr_CSBA000801_After) //회원탈퇴 
+	);
+	
+	$log(IN_PROC_TP : $IN_PROC_TP, IN_USER_ID : $IN_USER_ID);
+" />
+
+
+
+
+
+<action id="fnSendTr_CSBA000801_After" scope="common"
+value="
+	if($isequal_string($recv_RCOD,49030)){
+		$log(*************회원탈퇴관련 정상 처리 경우 해당 영역************);
+		$callaction(fnPopover_AlertAction,fnGoLoginScreen,MTS iOS 탈퇴가 정상적으로 처리되었습니다.,,확인);
+		return;
+	}
+"/>
+
+
+<action id="fnFindMarketCode" 
+scope="common"
+params="p_item_code"
+value="
+	// 주간/야간 구분해야한다.
+	$delarrayvar(arr_fucode_search_tmp);
+	if($g_menuCode > 7000){ 			//야간
+		$setvar(,tmp_2 = night);
+	}
+	else{
+		$setvar(,tmp_2 = day);
+	}
+	$getmultisearcharray(arr_MasterData_sfile03,arr_fucode_search_tmp,tmp_2,local,5,,first);
+	//$logarrayvar(arr_fucode_search_tmp);         // 선물 배열
+	$setvar(
+		item_idx = $getarrayindex(arr_fucode_search_tmp,8,$p_item_code)
+		,item_market_code = $getarrayvar(arr_fucode_search_tmp,$item_idx,7)
+	);
+	$setvar_common(
+		find_item_market_code = $getarrayvar(arr_fucode_search_tmp,$item_idx,7)
+	);
+	if($item_idx < 0){  // 연결선물일 경우 찾을 수 없어서 종목 선택 시 셋팅되는 값으로 넣어준다. 20230628 양팀장
+
+		//기존 g_itemMCODE_n 으로 고정시 연결선물일때 야간실시간만 적용되는 문제수정.
+		if($g_menuCode > 7000){
+			$setvar_common(	find_item_market_code = $g_itemMCODE_n );	
+		}else{
+			$setvar_common(	find_item_market_code = $g_itemMCODE_d );	
+		}
+	}
+	$logvar(
+		find_item_market_code
+		,p_item_code
+	);
+	/*
+	$setvar(
+		item_idx = $getarrayindex(arr_MasterData_sfile03,8,$p_item_code)
+		,item_market_code = $getarrayvar(arr_MasterData_sfile03,$item_idx,7)
+	);
+	$setvar_common(
+		find_item_market_code = $getarrayvar(arr_MasterData_sfile03,$item_idx,7)
+	);
+
+	$log(**********fnFindMarketCode : $item_idx , $item_market_code , $find_item_market_code);
+	if(!$strlen($item_idx)>0){
+		$callaction(fnPopover_AlertAction,,마스터 배열에 [$p_item_code]가 존재하지 않습니다.,,확인);
+		return;
+	}elseif(!$strlen($item_market_code)>0){
+		$callaction(fnPopover_AlertAction,,마스터 배열에 [$p_item_code]의 마켓코드가 존재하지 않습니다.,,확인);
+		return;
+	}
+	*/
+"/>
+
+<action id="GSBA410001_TrSend" value="
+    $setvar(
+        ,reqid_GSBA410001 = $callaction(FNSEND_ORDERDATA,GSBA410001,Input,,,,fnSendTr_GSBA410001_After)
+    );
+"/>
+<action id="fnSendTr_GSBA410001_After" value="
+    $setvar_common(
+        recv_dst_yn = $recvmap_data(GSBA410001,PageBlock.dst_yn,$reqid_GSBA410001,trim)//DST유무
+        ,recv_ny_dt = $recvmap_data(GSBA410001,PageBlock.ny_dt,$reqid_GSBA410001,trim)//뉴욕현지날짜
+    );
+    $logvar(recv_dst_yn,recv_ny_dt,g_open_hour_stock_popup);
+
+
+    /* 20241028 제거.
+	if($int($now(yyyyMMdd)) >= $int($g_open_hour_stock_popup)
+	|| $strlen($g_open_hour_stock_popup) <= 0
+	){
+	
+		$log(********* NOW TIME [$now(HHmm)][$recv_dst_yn] *********);
+
+		if($isequal_string($recv_dst_yn,N)){
+			$setvar(
+				tmp_stock_pop_up_start_time = 0615
+				,tmp_stock_pop_up_end_time = 2330
+
+
+				,tmp_alert_text = $(“미국 주식옵션 개장시간 안내”\n[23:30 - 06:00]\n(일부 ETF옵션 종목 장마감시간 06:15))
+			);
+		}else{
+			$setvar(
+				tmp_stock_pop_up_start_time = 0515
+				,tmp_stock_pop_up_end_time = 2230
+
+
+				,tmp_alert_text = $(“미국 주식옵션 개장시간 안내”\n[22:30 - 05:00]\n(일부 ETF옵션 종목 장마감시간 05:15))
+			);
+		}
+
+		if( $int($now(HHmm)) > $int($tmp_stock_pop_up_start_time) 
+		&& $int($now(HHmm)) < $int($tmp_stock_pop_up_end_time) ){
+
+			$log(*********** POP UP TIME ***********);
+			$callaction(fnPopover_AlertAction,fnOpenHourPopupSelectAction,$tmp_alert_text,확인,하루동안 안보기);
+		}
+	}
+	*/
+"/>
+
+//개장시간 스톡 팝업
+//미주옵션 23:30 ~ 06:00 시간 제외하고 해당 팝업 띄워야합니다. 팝업은 베이스스크린에 작성할것.
+//23.03.08 시간 변경 22:30~05:15
+<action id="fnOpenHourStockPopup"
+scope="common"
+params=""
+value="
+	$callaction(GSBA410001_TrSend);
+"/>
+
+<action id="fnOpenHourPopupSelectAction"
+scope="common"
+params="p_select_idx"
+value="
+	$log(*******TEST*******);
+	if($isequal_string($p_select_idx,1)){
+		$log(하루동안안보기*****);
+		$setvar(pop_up_show_date = $adddate(day,1,$now(yyyyMMdd)) );
+		$callaction(fnConfig_SetValue,g_open_hour_stock_popup,$pop_up_show_date);
+	}else{
+		$log(확인******);
+	}
+
+"/>
+
+<action id="fnGoSiseScreen"
+params="p_select_idx"
+value="
+	$log(CME 그룹통합 미체크시 팝업창 확인,취소*******);
+	if($isequal_string($p_select_idx,1)){
+		$log(해외시세신청 화면 이동 *********);
+		$setvar(screen_item_search.hidden_all=true ,screen_item_search_open =false); 
+		$callaction(fnCallbackPopoverClose);
+		$callaction(fnGoScreen,2180);
+	}
+"/>
+//클라우드 관련 함수
+<!-- 클라우드 인증서 서비스 연결 안되어 있는상태 : 사용자 정보 x -->
+<action id="FnAcquireUserInfoAction"
+scope="common"
+value="
+	$callaction(fnPopover_AlertAction,fnCloudDisConnect,클라우드 인증 서비스에 연결되어 있지 않습니다.\n연결을 위해 화면을 이동하시겠습니까?,취소,확인);
+"/>
+
+<!-- 클라우드 인증서 서비스 연결 안되어 있는상태 : 약관 동의 정보 x -->
+<action id="FnAcknowledgeConditionsOfUse"
+scope="common"
+value="
+	$closescreen(popscreen_base);
+	$callaction(fnOpenPopScreen,plist/root/screen/p1244_100.xml,클라우드 인증서 회원가입,);
+"/>
+
+<!-- 클라우드 인증서 서비스 연결 안되어 있는상태 : 기기 등록 정보 x -->
+<action id="FnOnPhoneNumberProofTransactionStart"
+scope="common"
+params=
+"p_device_kind 	// 1:PC, 2:Mobile
+,p_auth_code
+"
+value="
+	$setvar(
+		tmp_device_kind = $p_device_kind
+		,tmp_auth_code = $p_auth_code
+	);
+	$callaction(fnOpenPopScreen,plist/root/screen/p1299_100.xml,클라우드 인증서 회원가입,);
+"/>
+<!-- 인증서 연결 팝업 '확인,취소' 관련 선택 action -->
+<action id="fnCloudDisConnect"
+scope="common"
+params="p_key"
+value="
+	if($p_key == 1){
+		$callaction(fnOpenPopScreen,plist/root/screen/p1242_100.xml,클라우드 인증서 회원가입,);
+	}
+"/>
+
+<!-- 
+기존 인증서는 이름만 존재하는 데이터가 존재하였지만 클라우드에는 없음. 
+클라우드에서는 [cn=최대근,ou=HTS,ou=유진,ou=선물,o=SignKorea,c=KR] 해당 값에서 이름만 빼와야 하기에 해당 함수 작성.
+
+p_is_arr = p_val가 array인지 아닌지
+p_val = 인증서 배열 및 [cn=최대근,ou=HTS,ou=유진,ou=선물,o=SignKorea,c=KR]
+p_idx = index 번호
+p_division = [cn=최대근,ou=HTS,ou=유진,ou=선물,o=SignKorea,c=KR] 에서 뽑아내고 싶은 내용 예) cn,o
+-->
+<action id="fnGetCertSubjectInfo"
+scope="common"
+params="p_is_arr,p_division,p_val,p_idx"
+value="
+	$delvar(tmp_cert_subject);
+	$delvar(tmp_find_division_idx);
+	$delvar(tmp_find_division_idx_to_all);
+	$delvar(tmp_find_2c_first_idx);
+	$delvar(tmp_find_division_text);
+	$delvar(tmp_replace_division);
+
+	$logvar(p_val);
+
+	if($p_is_arr){
+		$log(*********1);
+		$setvar(
+			tmp_cert_subject = $getarrayvar($p_val,$p_idx,4)
+		);
+		$log(*********2 : $tmp_cert_subject);
+	}else{
+		$log(*********3);
+		$setvar(
+			tmp_cert_subject = $p_val
+		);
+		$log(*********4 : $tmp_cert_subject);
+	}
+
+	$logvar(tmp_cert_subject);
+	$log($find($tmp_cert_subject,$p_division%3d));
+
+	$setvar(
+		,tmp_find_division_idx 			= $find($tmp_cert_subject,$p_division%3d)
+		,tmp_find_division_idx_to_all 	= $substring($tmp_cert_subject,$tmp_find_division_idx,-1)
+		,tmp_find_2c_first_idx 			= $find($tmp_find_division_idx_to_all,%2C)
+		,tmp_find_division_text 		= $substring($tmp_find_division_idx_to_all,0,$tmp_find_2c_first_idx)
+		,tmp_replace_division			= $replace($p_division%3d,,$tmp_find_division_text)
+	);
+
+
+	$logvar(
+		,tmp_find_division_idx
+		,tmp_find_division_idx_to_all
+		,tmp_find_2c_first_idx
+		,tmp_find_division_text
+		,tmp_replace_division
+	);
+
+	return $tmp_replace_division;
+"/>
+
+<!-- 
+클라우드 자동 로그인시 연결 끊겨있는지 확인 함수.
+
+!!해당 함수 위치를 common 에 둘지 intro_after에 둘지 생각..
+intro_after에서만 사용하니 옮겨둬야할지도..
+
+연결되어 있다면 저장되어있던 g_login_dn 값 존재하는지 확인 후 있다면 정상 진행 없다면 팝업 + 로그인 화면
+
+연결 안되어 있다면 팝업 + 로그인 화면
+-->
+<action id="fnAutoLoginCloudCheckConnect"
+scope="common"
+params="p_is_connect"
+value="
+	if($p_is_connect){
+		$delarrayvar(tmp_arr_cloud_cert);
+		$cloudnpki_getUserCertificateListCloud(fnAutoLoginCloudCheckDN,tmp_arr_cloud_cert);
+	}else{
+		$callaction(fnGoLoginScreen,1);
+		$callaction(fnPopover_AlertAction,,클라우드 인증 서비스 연결이 해제되어\n 로그아웃 됩니다.재연결 해주세요.,,확인);
+		return;
+	}
+"/>
+<!-- 
+상단 클라우드 서비스 연결 확인 후 연결되어 있다면 로그인했을 당시 dn이 클라우드 목록에 존재 하는지 확인 해야합니다
+존재,존재x 에 따라 결과표시
+-->
+<action id="fnAutoLoginCloudCheckDN"
+scope="common"
+params="p_arr_name"
+value="
+	$delvar(tmp_cloud_cert_dn_idx);
+	$delvar(tmp_cloud_cert_dn_idx2);
+
+	$logarrayvar($p_arr_name);
+	$logarrayvar(tmp_arr_cloud_cert);
+	$logvar(
+		var_dn_value
+		,var_name_cert
+		,var_name_id
+	);
+	$setvar(
+		tmp_cloud_cert_dn_idx = $cloudnpki_getdnindex($g_login_dn,$g_login_cloud_check_flag)
+		,tmp_cloud_cert_dn_idx2 = $cloudnpki_getdnindex(dasdmclasdmckscmskc,$g_login_cloud_check_flag) //테스트용
+	);
+	$logvar(
+		tmp_cloud_cert_dn_idx
+		,tmp_cloud_cert_dn_idx2
+	);
+
+	if($tmp_cloud_cert_dn_idx >= 0){
+		$callaction(Act_Id_Request, $g_login_dn, g_login_cert, Act_Auto_Login_Success, ,$g_login_id );
+	}else{
+		$callaction(fnGoLoginScreen,1);
+		$callaction(fnPopover_AlertAction,,로그인 시 사용한 클라우드 인증서가\n존재 하지 않아 로그아웃 됩니다.\n인증서를 등록 해주세요.,,확인);
+	}
+	return;
+"/>
+
+
+<!-- 
+연결확인
++
+유저 클라우드 인증서 목록
++
+비밀번호 체크
+연결 함수
+따로 따로 호출도 가능하다.
+
+params = 
+cloudnpki_getUserCertificateListCloud 사용(true/false),
+cloud_common_use_check_pin 사용(true/false),
+p_dn(필수값 dn),
+p_dn_idx(비밀번호 체크만 사용할때 필요한 dn index값)
+p_pin(확인할 비밀번호값)
+
+상단 autologin과 다른점은 autologin은 기존에서도 화면이동을 강제합니다.
+-->
+<action id="fnCloudCheckCertConnectCommonBefore" 
+scope="common"
+params="
+p_check_user_list
+,p_check_pin
+,p_dn
+,p_dn_idx
+,p_pin
+,p_after_action
+"
+value="
+	$delvar(cloud_common_use_check_user_list);
+	$delvar(cloud_common_use_check_pin);
+	$delvar(cloud_common_dn);
+	$delvar(cloud_common_dn_idx);
+	$delvar(cloud_common_pin);
+	$delvar(cloud_common_after_action);
+	$delvar(cloud_common_check_pin);
+	$delvar(cloud_common_check_pin_err_count);
+	$delarrayvar(cloud_arr_user_all_list);
+
+	$setvar(
+		,cloud_common_use_check_user_list 	= $p_check_user_list
+		,cloud_common_use_check_pin 		= $p_check_pin
+		,cloud_common_dn 				= $p_dn
+		,cloud_common_dn_idx 			= $p_dn_idx
+		,cloud_common_pin 				= $p_pin
+		,cloud_common_after_action 		= $p_after_action
+	);
+	$logvar(
+		,cloud_common_use_check_user_list
+		,cloud_common_use_check_pin 
+		,cloud_common_dn 
+		,cloud_common_dn_idx 
+		,cloud_common_pin 
+		,cloud_common_after_action
+	);
+	$cloudnpki_checkConnect(fnCloudCheckCertConnectCommon);
+"/>
+//fnCloudCheckCertConnectCommonBefore 함수와 연계로 사용하는 클라우드 연결확인 함수
+<action id="fnCloudCheckCertConnectCommon"
+scope="common"
+params="p_is_connect"
+value="
+	if($p_is_connect){
+		$log(fnCloudCheckCertConnectCommon**********1);
+		if( ($cloud_common_use_check_user_list && $cloud_common_use_check_pin) || $cloud_common_use_check_user_list){
+			$log(fnCloudCheckCertConnectCommon**********2);
+			$cloudnpki_getUserCertificateListCloud(fnCloudCheckUsetCertListCommon,cloud_arr_user_all_list);
+			return;
+		}else if($cloud_common_use_check_pin){
+			$log(fnCloudCheckCertConnectCommon**********3);
+			$cloudnpki_checkPwd(fnCloudCheckPINCommon,$cloud_common_dn_idx,$cloud_common_pin);
+			return;
+		}else{
+			$log(fnCloudCheckCertConnectCommon**********4);
+			$callaction($cloud_common_after_action);
+			return;
+		}	
+	}else{
+		$cloudnpki_getUserCertificateListCloud();
+		return;
+	}
+"/>
+//fnCloudCheckCertConnectCommonBefore 함수와 연계로 사용하는 유저클라우드인증서 목록 함수
+<action id="fnCloudCheckUsetCertListCommon"
+scope="common"
+params="p_arr_name"
+value="
+	$log($cloud_common_after_action);
+
+	$logvar(cloud_common_dn);
+
+	$setvar( cloud_common_dn_idx = $cloudnpki_getdnindex($cloud_common_dn,true)  );
+
+	if($cloud_common_dn_idx < 0 || $strlen($cloud_common_dn_idx) < 1){
+		$callaction(fnPopover_AlertAction,Act_GoScreen_GetCertificate,등록된 클라우드 인증서가 없습니다.\n인증서를 가져오세요.,,확인);
+		$closescreen(pop_host_msg);
+		return;
+	}else{
+		if($cloud_common_use_check_pin){
+
+			$cloudnpki_checkPwd(fnCloudCheckPINCommon,$cloud_common_dn_idx,$cloud_common_pin);
+			return;
+		}else{
+			$callaction($cloud_common_after_action);
+			return;
+		}
+	}
+"/>
+//fnCloudCheckCertConnectCommonBefore 함수와 연계로 사용하는 클라우드 PIN 번호 체크
+<action id="fnCloudCheckPINCommon"
+scope="common"
+params="p_is_check,p_err_message"
+value="
+	$setvar(
+		cloud_common_check_pin = $p_is_check
+		,cloud_common_check_pin_err_count = $result($getarrayvar(cloud_arr_user_all_list,$cloud_common_dn_idx,14) + 1)
+	);
+
+	$logvar(
+		cloud_common_check_pin
+		,cloud_common_check_pin_err_count
+	);
+	//A,B,C...등등 2개 이상 기기에서 하나의 클라우드 인증서를 사용하는데
+	//A에서 비밀번호 변경 후 B에서 자동 로그인시 비밀번호 변경으로 인한 로그아웃 시켜야한다.
+	if(!$p_is_check && $g_cert_login_status){
+		$callaction(fnGoLoginScreen,1);
+		$callaction(fnPopover_AlertAction,,다른 기기에서 pin 번호가 변경되어 로그아웃 됩니다.,,확인);
+		return;
+	}
+
+
+	//비밀번호 체크 결과 false 면서 비밀번호 실패 횟수가 5번 미만 , 0번이상일경우
+	if(!$p_is_check && $cloud_common_check_pin_err_count < 5 && $cloud_common_check_pin_err_count >=0){
+		$closescreen(pop_host_msg);	
+		$callaction(fnPopover_AlertAction,,pin 번호 $cloud_common_check_pin_err_count 회 오류 입니다.,,확인);
+		return;
+	}
+
+	//비밀번호 체크결과 false 이면서 비밀번호 횟수가 5회 이상일경우
+	if(!$p_is_check && $cloud_common_check_pin_err_count >= 5){
+		$closescreen(pop_host_msg);
+		$callaction(fnPopover_AlertAction,,pin 번호 5회 오류로 인증서가 잠겼습니다.,,확인);
+		return;
+	}
+
+	$callaction($cloud_common_after_action);
+"/>
+
+<popscreen scope="common"
+	id="pop_cdd_edd_ACCID_SECT_N_notice"
+	width="$g_lcdWidth" 
+	height="$g_lcdHeight"
+	backcolor="00000033"//반투명으로 바꿈.
+	scroll_hbar="false"
+	noscroll_width="true"
+	>
+	<viewgroup
+	width="$w($g_lcdWidth,92)"
+	height="$h($g_lcdHeight,36)"
+	layout="center"
+	layout_vertical="center"	
+	>
+
+		//상단 타이틀
+		<viewgroup 
+		width="$super.width"
+		height="$g_topHeight"	
+		width_ori="0"
+		height_ori="0"
+		backcolor="464b4e"
+		>
+			<label 
+			fontsize="$g_fontsize_big1"
+			fontname="$g_baseFontNameBold"
+			margin_left="$w($g_lcdWidth,6)"
+			align="left"
+			valign="center"
+			textcolor="ffffff"
+			value="휴면계좌(장기무거래계좌)해지 안내"
+			/>
+		</viewgroup>
+
+		<br/>
+
+		<viewgroup
+			width="$w($g_lcdWidth,92)"
+			height="$h($g_lcdHeight,19)"
+			layout="center"
+			backcolor="ffffff"
+			margin_left="$w($g_lcdWidth,2)"
+			margin_right="$w($g_lcdWidth,2)"
+		>	
+			<label
+			width="$this.remain_right"
+			height="$this.remain_bottom"
+			align="center"
+			multiline="true"
+			value="고객님께서는 장기간 거래를 하지 않아\n휴면계좌로 전환되었습니다.\n\nHTS로 접속하여 해지 해주시기 바랍니다."
+			/>
+		</viewgroup>
+
+		<br/>
+
+		//버튼관련
+		<viewgroup
+			width="$super.width"
+			height="$this.remain_bottom"
+			backcolor="ffffff"
+			layout="center"
+		>
+			<button 
+			width="$w($g_lcdWidth,80)"
+			height="$h($g_lcdHeight,7)"
+			textcolor="ffffff"
+			backcolor="bd3135"
+			fontname="$g_baseFontNameBold"
+			textcolor_active="ffffff"
+			layout="center"
+			layout_vertical="center"
+			value="확인"
+			onClicked="$closescreen(pop_cdd_edd_ACCID_SECT_N_notice);"
+			/>
+		</viewgroup>
+	</viewgroup>
+</popscreen>

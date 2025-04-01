@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+/////////////////////////////////////////
+//국내서버 접속
+/////////////////////////////////////////
+<action id="N_Download_xml_Start" scope="common" 
+params="p_is_background"
+value="
+	$setvar_common(g_is_download_background = $p_is_background);
+	$setvar(
+		vg_progress_out.hidden 	= false
+		,lbl_prcessing.hidden 	= false
+	);
+	$callaction(N_Server_Connect_D, N_Server_Connect_D_After);
+"/>
+// 서버연결 후 
+<action id="N_Server_Connect_D_After" scope="common"
+value="
+	// 맵파일 로드 
+	$callaction(Act_MaploadNSetpath
+		, $g_SiseSocketName_DOMESTIC
+		, $g_path_map
+		, g_arrLoadmapFile
+		, g_arrMapPathFile
+		, xml
+	);
+	$setvar(
+		lbl_prcessing.value 		= 앱버전을 체크합니다.
+		,tmp_progress_unit = $result($vg_progress_guide.width/7)
+		,tmp_progress_pos = $result($tmp_progress_unit*1)
+		,vg_progress_inner.width=$tmp_progress_pos
+	);
+
+	if($strlen($g_connected_server_ip_d) < 1){ 							// 서버에서 받아온 접속서버 IP가 없으면 
+		$callaction(N_Server_GetIP_D,N_Server_GetIP_D_After);	
+	}
+	else{
+		$callaction(N_Act_App_Update_Force_Check,  N_Act_App_Update_Force_Check_After); // 앱버전체크 
+	}
+" />
+<action id="N_Server_GetIP_D_After" scope="common"
+params="
+p_server_ip_1
+,p_server_ip_2
+,p_server_ip_3
+"
+value="
+	$setvar_common(g_connected_server_ip_d = $strIP1); 			// 현재접속 서버IP를 저장한다.
+	$callaction(N_Act_App_Update_Force_Check,  N_Act_App_Update_Force_Check_After); // 앱버전체크 
+"/>
+<action id="N_Act_App_Update_Force_Check_After" scope="common"
+value="
+
+	// N_Act_Network_RecvData_Master_xml 에서 
+	// elseif($isequal_string($strFile_path, down/appVersion.dat)){ 일때 호출된다.
+
+	// 버전에서 .빼고 int 형으로 변환하여 처리한다.
+	$setvar(	
+		tmp_app_version = $bundleinfo(VERSION)	
+		,cur_app_version = $int($replace(.,,$tmp_app_version))
+		,recv_and_version = $int($replace(.,,$recv_appVersion_android))
+		,recv_ios_version = $int($replace(.,,$recv_appVersion_ios))
+	);
+	$log(현재앱버전:[$cur_app_version], iOS:[$recv_ios_version], Android:[$recv_and_version]);
+	if($g_isAndroid){
+		$setvar(
+			AppVersion_Notice 		= 업데이트 알림[$bundleinfo(VERSION)]
+			,AppVersion_Notice_2 	= 앱[$recv_appVersion_android]으로 업데이트하세요
+		);
+		if($cur_app_version < $recv_and_version){
+		//if(true){
+			// 강제업데이트
+			$popscreen(popscreen_AppVersionDown_confirm_NEW);
+			return;
+		}
+	}
+	else{
+		$setvar(
+			AppVersion_Notice 		= 업데이트 알림 iOS[$bundleinfo(VERSION)]
+			,AppVersion_Notice_2 	= 앱[$recv_appVersion_ios]으로 업데이트하세요
+		);
+		if($cur_app_version < $recv_ios_version){
+		//if(true){
+			// 강제업데이트
+			$popscreen(popscreen_AppVersionDown_confirm_NEW);
+			return;
+		}
+	}
+	$callaction(N_Act_Download_XML_Start, N_ACT_Xml_Donwlod_Complete); 	// XML 다운로드
+"/>
+<action id="N_ACT_Xml_Donwlod_Complete" scope="common"
+value="
+	$callaction(N_Act_Download_Master_D_Start, N_ACT_Master_D_Donwlod_Complete); 	// 국내마스터 다운로드
+"/>
+<action id="N_ACT_Master_D_Donwlod_Complete" scope="common"
+value="
+	$disconnect($g_SiseSocketName_DOMESTIC); 		// 아래 프로세스 중간에 호출될 수 있음.
+	$callaction(N_Server_Connect,N_Server_Connect_After); // 해외서버 연결 
+"/>
+/////////////////////////////////////////
+//해외서버 접속
+/////////////////////////////////////////
+// 서버연결 후 
+<action id="N_Server_Connect_After" scope="common"
+value="
+	// 맵파일 로드 
+	$callaction(Act_MaploadNSetpath
+		, $g_SiseSocketName
+		, $g_path_map
+		, g_arrLoadmapFile
+		, g_arrMapPathFile
+		, xml
+	);
+	$setvar(
+		lbl_prcessing.value 		= 해외서버에 접속합니다.
+		,tmp_progress_unit = $result($vg_progress_guide.width/7)
+		,tmp_progress_pos = $result($tmp_progress_unit*2)
+		,vg_progress_inner.width=$tmp_progress_pos
+	);
+	
+	if($strlen($g_connected_server_ip) < 1){							// 서버에서 받아온 접속서버 IP가 없으면 
+		$callaction(N_Server_GetIP,N_Server_GetIP_After);				
+	}
+	else{
+		$callaction(N_Act_Download_Master_Start, N_ACT_Master_Donwlod_Complete); 	// 해외마스터 다운로드
+	}
+" />
+<action id="N_Server_GetIP_After" scope="common"
+params="
+p_server_ip_1
+,p_server_ip_2
+,p_server_ip_3
+"
+value="
+	$setvar_common(g_connected_server_ip = $strIP1); 			// 현재접속 서버IP를 저장한다.
+	$callaction(N_Act_Download_Master_Start, N_ACT_Master_Donwlod_Complete); 	// 해외마스터 다운로드
+"/>
+<action id="N_ACT_Master_Donwlod_Complete" scope="common"
+value="
+	$disconnect($g_SiseSocketName); 
+	$log(받은파일 ***********************************************************);
+	$log(XML  [$g_arr_xml_cnt] );
+	$log(국내 [$g_arr_mater_d_cnt] );
+	$log(해외 [$g_arr_mater_cnt] );
+	$log(********************************************************************);
+	if($g_arr_xml_cnt > 0 
+	|| $g_arr_mater_d_cnt > 0 
+	|| $g_arr_mater_cnt > 0 
+	){
+		$openfile(plist/root/intro.xml); 			// 받은파일이 있는경우 intro.xml 보낸다.
+		return;
+	}
+
+	$setnstimer(TIMER_N_ACT_Master_Donwlod_Complete,0.01,N_ACT_Master_Donwlod_Complete_Timer,FALSE);
+"/>
+<action id="N_ACT_Master_Donwlod_Complete_Timer" scope="common"
+value="
+	$setvar(
+		lbl_prcessing.value 		= 해외 Master 로딩중
+		,tmp_progress_unit = $result($vg_progress_guide.width/7)
+		,tmp_progress_pos = $result($tmp_progress_unit*3)
+		,vg_progress_inner.width=$tmp_progress_pos
+	);
+	$callaction(N_Act_LoadMaster_Start,N_Act_LoadMaster_After); 			//해외 마스터 로딩
+"/>
+<action id="N_Act_LoadMaster_After" scope="common"
+value="
+	$setnstimer(TIMER_N_Act_LoadMaster_After,0.01,N_Act_LoadMaster_After_Timer,FALSE);
+"/>
+<action id="N_Act_LoadMaster_After_Timer" scope="common"
+value="
+	$setvar(
+		lbl_prcessing.value 		= 해외 거래소 생성중
+		,tmp_progress_unit = $result($vg_progress_guide.width/7)
+		,tmp_progress_pos = $result($tmp_progress_unit*4)
+		,vg_progress_inner.width=$tmp_progress_pos
+	);
+	$callaction(N_Act_LoadMaster_Exch_Start, N_Act_LoadMaster_Exch_After); 			// 거래소 분리
+"/>
+<action id="N_Act_LoadMaster_Exch_After" scope="common"
+value="
+	$setnstimer(TIMER_N_Act_LoadMaster_Exch_After,0.01,N_Act_LoadMaster_Exch_After_Timer,FALSE);
+"/>
+<action id="N_Act_LoadMaster_Exch_After_Timer" scope="common"
+value="
+	$setvar(
+		lbl_prcessing.value 		= 국내 Master 로딩중
+		,tmp_progress_unit = $result($vg_progress_guide.width/7)
+		,tmp_progress_pos = $result($tmp_progress_unit*5)
+		,vg_progress_inner.width=$tmp_progress_pos
+	);
+	$callaction(N_Act_LoadMaster_d_Start, N_Act_LoadMaster_d_After); 			// 국내 마스터 로딩 
+"/>
+<action id="N_Act_LoadMaster_d_After" scope="common"
+value="
+	$setnstimer(TIMER_N_Act_LoadMaster_d_After,0.01,N_Act_LoadMaster_d_After_Timer,FALSE);
+"/>
+<action id="N_Act_LoadMaster_d_After_Timer" scope="common"
+value="
+	$setvar(
+		lbl_prcessing.value 		= 국내 Master 셋팅중
+		,tmp_progress_unit = $result($vg_progress_guide.width/7)
+		,tmp_progress_pos = $result($tmp_progress_unit*6)
+		,vg_progress_inner.width=$tmp_progress_pos
+	);
+	$callaction(N_Act_LoadMaster_d_Set, N_Act_LoadMaster_d_Set_After); 			// 국내 마스터 셋팅 
+"/>
+
+<action id="N_Act_LoadMaster_d_Set_After" scope="common"
+value="
+	$setnstimer(TIMER_N_Act_LoadMaster_d_Set_After,0.01,N_Act_LoadMaster_d_Set_After_Timer,FALSE);
+"/>
+<action id="N_Act_LoadMaster_d_Set_After_Timer" scope="common"
+value="
+	$setvar(
+		lbl_prcessing.value 		= 마스터 처리완료 
+		,tmp_progress_unit = $result($vg_progress_guide.width/7)
+		,tmp_progress_pos = $result($tmp_progress_unit*7)
+		,vg_progress_inner.width=$tmp_progress_pos
+	);
+
+	if($g_is_download_background){
+		$callaction(N_Act_BecomeActive_Connect, N_Act_BecomeActive_Connected_After);	 // 해외,국내 서버연결 및 키교환까지 함.
+	}
+	else{
+		$setsocketaction($g_SiseSocketName,Act_Network_RecvData,); 				// RecvAction 을 변경하여 보낸다. 
+		$setsocketaction($g_SiseSocketName_DOMESTIC,Act_Network_RecvData,); 	// RecvAction 을 변경하여 보낸다. 
+		$callaction(Act_LoadMaster_Complete); 			//intro_after.xml	
+	}
+"/>
+<action id="N_Act_BecomeActive_Connected_After" scope="common"
+value="
+	$setsocketaction($g_SiseSocketName,Act_Network_RecvData,); 			// RecvAction 을 변경하여 보낸다. 
+	$setsocketaction($g_SiseSocketName_DOMESTIC,Act_Network_RecvData,); 	// RecvAction 을 변경하여 보낸다. 
+
+	$callaction(N_Act_BecomeActive_Connected);
+"/>
+
+
+
+
+

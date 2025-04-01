@@ -1,0 +1,785 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<action id="screen_contents_onload" value="
+	$setvar(g_is_open_account = true); // 안드로이드 키맵에서 쓰인다. 
+	$setvar(
+		,vg_account_title_step.hidden=true
+		,popscreen_open_account_history.hidden=false
+	);
+"/>
+<action id="screen_contents_onunload" 
+value="
+	$setvar(
+		g_is_open_account =  // 안드로이드 키맵에서 쓰인다. 
+	); 
+	$ssl_close($g_SSLSocketName);
+" />
+<screen 
+	id="screen_1000_100"
+	class="cs_screen_contents"
+	backcolor="ffffff"
+	onload="screen_contents_onload"
+	onunload="screen_contents_onunload"
+	noscroll_height="true"
+	margin_bottom="$h($g_lcdHeight,2.5)"
+>
+	<viewgroup
+		width="$this.remain_right"
+		height="$h($g_lcdHeight,45.1)"
+		margin_top="$h($g_lcdHeight,1.9)"
+		margin_left="$w($g_lcdwidth,4.3)"
+		margin_right="$w($g_lcdwidth,4.3)"
+	>
+		<viewgroup
+			width="$this.remain_right"
+			height="$h($g_lcdHeight,13.1)"
+		>
+			<label
+				width="$this.remain_right"
+				height="$h($g_lcdHeight,4.2)"
+				valign="center"
+				fontsize="$h($g_lcdHeight,3.0)"
+				textcolor="060B11"
+				value="미국주식옵션 종목"
+			/>
+			<br/>
+			<label
+				width="$this.remain_right"
+				height="$h($g_lcdHeight,4.2)"
+				valign="center"
+				fontsize="$h($g_lcdHeight,3.0)"
+				textcolor="060B11"
+				value="5000+ 이상 거래가능."
+			/>
+			<br/>
+			<label
+				width="$this.remain_right"
+				height="$h($g_lcdHeight,3.5)"
+				valign="center"
+				layout_vertical="bottom"
+				fontsize="$h($g_lcdHeight,2.3)"
+				textcolor="060B11"
+				value="개설 시 아래 세가지가 필요해요."
+			/>
+		</viewgroup>
+		<br/>
+		<viewgroup
+			width="$this.remain_right"
+			height="$h($g_lcdHeight,25.9)"
+			layout_vertical="bottom"
+		>
+			<img 
+				src="$cs_icon_icon" 
+				width="$h($g_lcdHeight,6.2)" 
+				height="$h($g_lcdHeight,6.2)" 
+				imagesizefit="false" 
+			/>
+			<blank width="$w($g_lcdwidth,4)"/>
+			<label
+				width="$this.remain_right"
+				height="$h($g_lcdHeight,6.2)" 
+				fontsize="$h($g_lcdHeight,2.0)"
+				textcolor="060B11"
+				value="본인명의 휴대폰"
+			/>
+			<br height="$h($g_lcdHeight,3.7)"/>
+			<img 
+				src="$cs_icon_icon_1" 
+				width="$h($g_lcdHeight,6.2)" 
+				height="$h($g_lcdHeight,6.2)" 
+				imagesizefit="false" 
+			/>
+			<blank width="$w($g_lcdwidth,4)"/>
+			<label
+				width="$this.remain_right"
+				height="$h($g_lcdHeight,6.2)" 
+				fontsize="$h($g_lcdHeight,2.0)"
+				textcolor="060B11"
+				value="주민등록증 또는 운전면허증"
+			/>
+			<br height="$h($g_lcdHeight,3.7)"/>
+			<img 
+				src="$cs_icon_icon_2" 
+				width="$h($g_lcdHeight,6.2)" 
+				height="$h($g_lcdHeight,6.2)" 
+				imagesizefit="false" 
+			/>
+			<blank width="$w($g_lcdwidth,4)"/>
+			<label
+				width="$this.remain_right"
+				height="$h($g_lcdHeight,6.2)" 
+				fontsize="$h($g_lcdHeight,2.0)"
+				textcolor="060B11"
+				value="온라인에서 조회 가능한 금융계좌"
+			/>
+		</viewgroup>
+		
+	</viewgroup>
+	<br height="$h($g_lcdHeight,33.4)" />
+	<label
+	width="$this.remain_right"
+	height="$h($g_lcdHeight,2.3)"
+	textcolor="060B11"
+	fontsize="$h($g_lcdHeight,1.9)"
+	align="center"
+	value="비대면 계좌개설이 제한되는 경우는요?"
+	onClicked="$popscreen(pop_1000_1_4);"
+	/>
+	<br height="$h($g_lcdHeight,2.3)" />
+	<button id="btn_1000_account_open"
+		width="$w($g_lcdwidth,91.5)"
+		height="$h($g_lcdHeight,6.7)"
+		layout="center"
+		layout_vertical="bottom"
+		border_radius="$h($g_lcdHeight,6.2)"
+		backcolor_disable="E7E9EB"
+		backcolor="FFEB00"
+		enable="true"
+		fontsize="$h($g_lcdHeight,1.9)"
+		fontcolor="060B11"
+		value="해외파생상품 계좌 만들게요" 
+		onClicked="btn_1000_account_open_onClicked"
+	/>
+</screen>
+<action id="btn_1000_account_open_onClicked"
+value="
+	// 개설 가능 시간대가 아닌경우 개설불가안내 팝업띄움
+	$setvar(strTimeChackYN = );
+	if($getweekday($now(yyyyMMdd)) == 1){ 	// 일요일의 경우 리턴
+		$setvar(strTimeChackYN = N);
+	}
+	elseif($getweekday($now(yyyyMMdd)) == 2){	// 월요일 오전 8시 이전 리턴
+		if($now(HH) < 08){
+			$setvar(strTimeChackYN = N);
+		}
+	}
+	elseif($getweekday($now(yyyyMMdd)) == 7){		// 토요일 오전 6시 이후 리턴
+		if($now(HH) >= 06){
+			$setvar(strTimeChackYN = N);
+		}
+	}elseif($now(HH) == 23 || $now(HH) < 01){
+		$setvar(strTimeChackYN = N);
+	}
+
+	if($strlen($strTimeChackYN) > 0){
+		$popscreen(pop_1000_1_3);
+		return;
+	}
+
+	$popscreen(pop_1000_1_2);
+"/>
+
+//초기화면 1_2
+<popscreen id="pop_1000_1_2"
+	width="$p_lcdWidth"
+	height="$p_lcdHeight"
+	backcolor="00000060"
+>
+	<screen id="pop_1000_1_2_screen"
+		width="$this.remain_right"
+		layout="center"
+		layout_vertical="bottom"
+		margin_bottom="$h($g_lcdHeight,2.5)"
+		height="$h($g_lcdHeight,58.8)"
+		background_roundinfo="FFFFFF,FFFFFF,$h($g_lcdHeight,3.7),1,true,true,false,false"
+	>
+		<br height="$h($g_lcdHeight,3.7)" />
+		<viewgroup
+			width="$this.remain_right"
+			height="$h($g_lcdHeight,42.5)"
+			margin_left="$w($g_lcdwidth,6.2)"
+			margin_right="$w($g_lcdwidth,6.2)"
+		>
+			<label
+				width="$this.remain_right"
+				height="$h($g_lcdHeight,3.1)"
+				textcolor="060B11"
+				fontsize="$h($g_lcdHeight,2.3)"
+				value="금융거래 한도제한 안내"
+			/>
+			<br height="$h($g_lcdHeight,1.3)"/>
+			<viewgroup
+				width="$this.remain_right"
+				height="$h($g_lcdHeight,32.1)"
+				backcolor="F3F4F5"
+				border_width="1"
+				border_radius="$h($g_lcdHeight,1.3)"
+				margin_top="$h($g_lcdHeight,2)"
+				margin_bottom="$h($g_lcdHeight,2)"
+				margin_left="$h($g_lcdHeight,2)"
+				margin_right="$h($g_lcdHeight,2)"
+			>
+				<viewgroup
+					width="$w($g_lcdwidth,1.1)"
+					height="$h($g_lcdHeight,2.7)"
+				>
+					<img 
+						src="$cs_icon_rectangle_230" 
+						width="$h($g_lcdHeight,0.5)" 
+						height="$h($g_lcdHeight,0.5)" 
+						imagesizefit="false" 
+						layout_vertical="center"
+					/>
+				</viewgroup>
+				<blank width="$w($g_lcdwidth,1.4)"/>
+				<label
+					width="$this.remain_right"
+					height="$h($g_lcdHeight,8.2)"
+					margin_top="0"
+					multiline="true"
+					valign="top"
+					fontsize="$h($g_lcdHeight,1.8)"
+					textcolor="737679"
+					value="거래 없이 입금, 출금만 하는 경우, 금융거래 목적이 확인 되지 않은 경우,금융사기 방지를 위해’출금제한계좌’ 로 설정이 됩니다."
+				/>
+				<br height="$h($g_lcdHeight,1.3)"/>
+				<viewgroup
+					width="$w($g_lcdwidth,1.1)"
+					height="$h($g_lcdHeight,2.7)"
+				>
+					<img 
+						src="$cs_icon_rectangle_230" 
+						width="$h($g_lcdHeight,0.5)" 
+						height="$h($g_lcdHeight,0.5)" 
+						imagesizefit="false" 
+						layout_vertical="center"
+					/>
+				</viewgroup>
+				<blank width="$w($g_lcdwidth,1.4)"/>
+				<label
+					width="$this.remain_right"
+					height="$h($g_lcdHeight,2.7)"
+					fontsize="$h($g_lcdHeight,1.8)"
+					textcolor="737679"
+					value="거래발생시 출금제한은 해지됩니다."
+				/>
+				<br height="$h($g_lcdHeight,1.3)"/>
+				<viewgroup
+					width="$w($g_lcdwidth,1.1)"
+					height="$h($g_lcdHeight,2.7)"
+				>
+					<img 
+						src="$cs_icon_rectangle_230" 
+						width="$h($g_lcdHeight,0.5)" 
+						height="$h($g_lcdHeight,0.5)" 
+						imagesizefit="false" 
+						layout_vertical="center"
+					/>
+				</viewgroup>
+				<blank width="$w($g_lcdwidth,1.4)"/>
+				<label
+					width="$this.remain_right"
+					height="$h($g_lcdHeight,2.7)"
+					fontsize="$h($g_lcdHeight,1.8)"
+					textcolor="737679"
+					value="1일 최대 이체 한도"
+				/>
+				<br height="$h($g_lcdHeight,0.7)"/>
+				<viewgroup 
+					width="$w($g_lcdwidth,74.2)"
+					height="$h($g_lcdHeight,4.8)"
+					layout="center"
+					border_width="1"
+					border_color="E7E9EB"
+				>
+					<label
+						width="$w($g_lcdwidth,29.4)"
+						height="$this.remain_bottom"
+						align="center"
+						fontsize="$h($g_lcdHeight,1.8)"
+						backcolor="F3F4F5"
+						textcolor="737679"
+						value="온라인 매체"
+					/>
+					<label
+						width="$this.remain_right"
+						height="$this.remain_bottom"
+						align="left"
+						fontsize="$h($g_lcdHeight,1.8)"
+						backcolor="FFFFFF"
+						textcolor="737679"
+						margin_left="$w($g_lcdwidth,2.7)"
+						value="출금 100만원"
+					/>
+				</viewgroup>
+				<br height="$h($g_lcdHeight,1.3)"/>
+				<viewgroup
+					width="$w($g_lcdwidth,1.1)"
+					height="$h($g_lcdHeight,2.7)"
+				>
+					<img 
+						src="$cs_icon_rectangle_230" 
+						width="$h($g_lcdHeight,0.5)" 
+						height="$h($g_lcdHeight,0.5)" 
+						imagesizefit="false" 
+						layout_vertical="center"
+					/>
+				</viewgroup>
+				<blank width="$w($g_lcdwidth,1.4)"/>
+				<label
+					width="$this.remain_right"
+					height="$h($g_lcdHeight,5.5)"
+					fontsize="$h($g_lcdHeight,1.8)"
+					textcolor="737679"
+					valign="top"
+					multiline="true"
+					value="이체 한도 조정 관련 문의는 유선으로 연락 주시면 안내해 드리겠습니다."
+				/>
+			</viewgroup>
+			<br/>
+			<viewgroup
+				width="$this.remain_right"
+				height="$h($g_lcdHeight,3.7)"
+				layout_vertical="bottom"
+			>
+				<img 
+					src="$cs_icon_phone"
+					width="$h($g_lcdHeight,3.7)" 
+					height="$h($g_lcdHeight,3.7)" 
+					imagesizefit="false"
+				/>
+				<label
+					width="$this.remain_right"
+					height="$this.remain_bottom"
+					fontsize="$h($g_lcdHeight,1.8)"
+					textcolor="060B11"
+					margin_left="$w($g_lcdwidth,3.5)"
+					align="left"
+					value="문의 02-3771-8888 (평일 오전 9시~오후 5시)"
+				/>
+			</viewgroup>
+		</viewgroup>
+		<br/>
+		<viewgroup
+			width="$w($g_lcdwidth,91.5)"
+			height="$h($g_lcdHeight,6.7)"
+			layout="center"
+			layout_vertical="bottom"
+		>
+			<button id="btn_1000_1_2_cancel"
+				width="$w($g_lcdwidth,26.7)" 
+				height="$this.remain_bottom"
+				layout="left"
+				backcolor="E7E9EB"
+				border_width="1"
+				border_radius="$h($g_lcdHeight,6.2)"
+				fontsize="$h($g_lcdHeight,2.0)"
+				textcolor="060B11"
+				value="취소"
+				onClicked="$closescreen(pop_1000_1_2);"
+			/>
+			<button id="btn_pop_1000_1_2_confirm"
+				width="$w($g_lcdwidth,62.7)" 
+				height="$this.remain_bottom"
+				layout="right"
+				backcolor="FFEB00"
+				border_width="1"
+				border_radius="$h($g_lcdHeight,6.2)"
+				fontsize="$h($g_lcdHeight,2.0)"
+				textcolor="060B11"
+				value="확인"
+				onClicked="btn_pop_1000_1_2_confirm_onClicked"	
+			/>
+		</viewgroup>
+	</screen>
+</popscreen>
+<action id="btn_pop_1000_1_2_confirm_onClicked"
+value="
+	$setvar_common(
+		g_SSLSocketName = $callaction(Act_SSL_Connect,$g_serverIP_account,$g_serverPort_account_ssl,Act_SSL_Connected,Act_SSL_Closed,Act_SSL_RecvData)
+	);
+"/>
+<action id="Act_SSL_Connected"  scope="common"
+params="
+p_socket_name
+,p_result
+" 
+value="
+    $logvar(g_SSLSocketName,p_socket_name,p_result);
+
+    if($comparevar(g_SSLSocketName,p_socket_name) != 0) {
+        $alert(,ssl_connect_callaction 소켓명이 다르다.)
+        return;
+    }
+    if(!$p_result) {
+        $ssl_close($g_SSLSocketName);
+        $delvar(g_SSLSocketName);
+        $alert(,ssl_connect_callaction,접속 실패);
+        return;
+    }
+
+    $log(SSL 서버 접속 성공 [$g_SSLSocketName]);
+    if($bStringLength || $bNetLength) {
+        $setvar(bRecvServerMultiStart=false);
+    }
+    else {
+        $setvar(bRecvServerMultiStart=true);
+    }   
+
+    //추후 확인
+    if($tmp_account_menu!=4131){
+        $log(4131 아닐경우에만 탐);
+        $closescreen(pop_1000_1_2);
+        $callaction(Act_Open_Account_Move,1001);
+    }
+"/>
+
+//초기화면 1_3
+<action id="pop_1000_1_3_onload"
+value="
+	$setvar(
+		btn_1000_account_open.enable=false
+	);
+"/>
+<action id="pop_1000_1_3_onunload"
+value="
+	$setvar(
+		btn_1000_account_open.enable=true
+	);
+"/>
+<popscreen id="pop_1000_1_3"
+	width="$p_lcdWidth"
+	height="$p_lcdHeight"
+	backcolor="00000060"
+	onload="pop_1000_1_3_onload"
+	onunload="pop_1000_1_3_onunload"
+>
+	<br height="$h($g_lcdHeight,18.3)"/>
+	<screen id="pop_1000_1_3_screen"
+		width="$w($g_lcdwidth,80)"
+		height="$h($g_lcdHeight,45.6)"
+		layout="center"
+		backcolor="FFFFFF"
+		margin_top="$h($g_lcdHeight,3.7)"
+		margin_bottom="$h($g_lcdHeight,2.5)"
+		border_width="1"
+		border_radius="$h($g_lcdHeight,3.7)"
+	>
+		<viewgroup
+			width="$w($g_lcdwidth,72)"
+			height="$h($g_lcdHeight,29.7)"
+			layout="center"
+		>
+			<img
+				src="$cs_icon_image_210"
+				width="$h($g_lcdHeight,9.9)"
+				height="$h($g_lcdHeight,9.9)"
+				layout="center"
+				imagesizefit="false"
+			/>
+			<br height="$h($g_lcdHeight,2.5)" />
+			<viewgroup
+				width="$this.remain_right"
+				height="$h($g_lcdHeight,5.8)"
+			>
+				<label
+					width="$this.remain_right"
+					height="$h($g_lcdHeight,3.0)"
+					fontsize="$h($g_lcdHeight,2.0)"
+					textcolor="060B11"
+					layout_vertical="top"
+					align="center"
+					value="비대면 계좌개설 제한시간이에요"
+				/>
+				<br/>
+				<label
+					width="$this.remain_right"
+					height="$h($g_lcdHeight,2.3)"
+					fontsize="$h($g_lcdHeight,1.8)"
+					textcolor="737679"
+					layout_vertical="bottom"
+					align="center"
+					value="아래 시간대를 피하여 개설해주세요"
+				/>
+			</viewgroup>
+			<br height="$h($g_lcdHeight,2.5)" />
+			<viewgroup
+				width="$this.remain_right"
+				height="$h($g_lcdHeight,9.2)"
+				margin_top="$h($g_lcdHeight,1.9)"
+				margin_bottom="$h($g_lcdHeight,1.9)"
+				backcolor="F3F4F5"
+			>
+				<label
+					width="$this.remain_right"
+					height="$h($g_lcdHeight,2.7)"
+					fontsize="$h($g_lcdHeight,1.8)"
+					textcolor="060B11"
+					align="center"
+					value="토요일 6:00 ~ 월요일 8:00"
+				/>
+				<br/>
+				<label
+					width="$this.remain_right"
+					height="$h($g_lcdHeight,2.7)"
+					fontsize="$h($g_lcdHeight,1.8)"
+					textcolor="060B11"
+					align="center"
+					value="평일(월~금)23:00 ~ (익)01:00"
+				/>
+			</viewgroup>
+		</viewgroup>
+		<br/>
+		<button id="btn_pop_1000_1_3_confirm"
+			width="$w($g_lcdwidth,72)"
+			height="$h($g_lcdHeight,6.2)"
+			layout="center"
+			layout_vertical="bottom"
+			value="확인"
+			fontsize="$h($g_lcdHeight,1.8)"
+			border_width="1"
+			border_radius="$h($g_lcdHeight,6.2)"
+			backcolor="FFEB00"
+			onClicked="btn_pop_1000_1_3_confirm_onClicked"
+		/>
+	</screen>
+</popscreen>
+<action id="btn_pop_1000_1_3_confirm_onClicked"
+value="
+	$closescreen(pop_1000_1_3);
+"/>
+
+//초기화면 1_4
+<popscreen id="pop_1000_1_4"
+	width="$p_lcdWidth"
+	height="$p_lcdHeight"
+	backcolor="00000060"
+>
+	<screen id="pop_1000_1_4_screen"
+		width="$this.remain_right"
+		layout="center"
+		layout_vertical="bottom"
+		margin_bottom="$h($g_lcdHeight,2.5)"
+		height="$h($g_lcdHeight,58.8)"
+		background_roundinfo="FFFFFF,FFFFFF,$h($g_lcdHeight,3.7),1,true,true,false,false"
+	>
+		<br height="$h($g_lcdHeight,3.7)" />
+		<viewgroup
+			width="$this.remain_right"
+			height="$h($g_lcdHeight,42.5)"
+			margin_left="$w($g_lcdwidth,6.2)"
+			margin_right="$w($g_lcdwidth,6.2)"
+		>
+			<label
+				width="$this.remain_right"
+				height="$h($g_lcdHeight,3.1)"
+				textcolor="060B11"
+				fontsize="$h($g_lcdHeight,2.3)"
+				value="비대면 계좌개설 제한고객"
+			/>
+			<br height="$h($g_lcdHeight,1.3)"/>
+			<viewgroup
+				width="$this.remain_right"
+				height="$h($g_lcdHeight,16.0)"
+				backcolor="F3F4F5"
+				border_width="1"
+				border_radius="$h($g_lcdHeight,1.3)"
+				margin_top="$h($g_lcdHeight,2)"
+				margin_bottom="$h($g_lcdHeight,2)"
+				margin_left="$h($g_lcdHeight,2)"
+				margin_right="$h($g_lcdHeight,2)"
+			>
+				<viewgroup
+					width="$this.remain_right"
+					height="$h($g_lcdHeight,5.5)"
+					layout_vertical="top"
+				>
+					<viewgroup
+						width="$w($g_lcdwidth,1.1)"
+						height="$h($g_lcdHeight,2.7)"
+						layout_vertical="top"
+					>
+						<img 
+							src="$cs_icon_rectangle_230" 
+							width="$h($g_lcdHeight,0.5)" 
+							height="$h($g_lcdHeight,0.5)" 
+							imagesizefit="false" 
+							layout_vertical="center"
+						/>
+					</viewgroup>
+					<blank width="$w($g_lcdwidth,1.4)"/>
+					<viewgroup
+						width="$this.remain_right"
+						height="$this.remain_bottom"
+					>
+						<label
+							width="$this.remain_right"
+							height="$h($g_lcdHeight,2.7)"
+							fontsize="$h($g_lcdHeight,1.8)"
+							layout_vertical="top"
+							textcolor="737679"
+							value="계좌개설 불가 대상"
+						/>
+						<br/>
+						<label
+							width="$this.remain_right"
+							height="$h($g_lcdHeight,2.7)"
+							fontsize="$h($g_lcdHeight,1.8)"
+							layout_vertical="bottom"
+							textcolor="737679"
+							value="미성년자(만 19세 미만)"
+						/>
+					</viewgroup>
+				</viewgroup>
+				<br/>
+				<viewgroup
+					width="$this.remain_right"
+					height="$h($g_lcdHeight,5.5)"
+					layout_vertical="bottom"
+				>
+					<viewgroup
+						width="$w($g_lcdwidth,1.1)"
+						height="$h($g_lcdHeight,2.7)"
+						layout_vertical="top"
+					>
+						<img 
+							src="$cs_icon_rectangle_230" 
+							width="$h($g_lcdHeight,0.5)" 
+							height="$h($g_lcdHeight,0.5)" 
+							imagesizefit="false" 
+							layout_vertical="center"
+						/>
+					</viewgroup>
+					<blank width="$w($g_lcdwidth,1.4)"/>
+					<viewgroup
+						width="$this.remain_right"
+						height="$this.remain_bottom"
+					>
+						<label
+							width="$this.remain_right"
+							height="$h($g_lcdHeight,2.7)"
+							fontsize="$h($g_lcdHeight,1.8)"
+							layout_vertical="top"
+							textcolor="737679"
+							value="비대면 계좌개설 불가 대상"
+						/>
+						<br/>
+						<label
+							width="$this.remain_right"
+							height="$h($g_lcdHeight,2.7)"
+							fontsize="$h($g_lcdHeight,1.8)"
+							layout_vertical="bottom"
+							textcolor="737679"
+							value="법인, 외국인, 만 65세 이상, 신용불량자"
+						/>
+					</viewgroup>
+				</viewgroup>
+			</viewgroup>
+			<br height="$h($g_lcdHeight,2.4)" />
+			<label
+				width="$this.remain_right"
+				height="$h($g_lcdHeight,3.1)"
+				textcolor="060B11"
+				fontsize="$h($g_lcdHeight,2.3)"
+				value="비대면 계좌개설 제한시간"
+			/>
+			<br height="$h($g_lcdHeight,1.3)"/>
+			<viewgroup
+				width="$this.remain_right"
+				height="$h($g_lcdHeight,9.4)"
+				backcolor="F3F4F5"
+				border_width="1"
+				border_radius="$h($g_lcdHeight,1.3)"
+				margin_top="$h($g_lcdHeight,2)"
+				margin_bottom="$h($g_lcdHeight,2)"
+				margin_left="$h($g_lcdHeight,2)"
+				margin_right="$h($g_lcdHeight,2)"
+			>
+				<viewgroup
+					width="$this.remain_right"
+					height="$h($g_lcdHeight,2.7)"
+					layout_vertical="top"
+				>
+					<viewgroup
+						width="$w($g_lcdwidth,1.1)"
+						height="$h($g_lcdHeight,2.7)"
+						layout_vertical="top"
+					>
+						<img 
+							src="$cs_icon_rectangle_230" 
+							width="$h($g_lcdHeight,0.5)" 
+							height="$h($g_lcdHeight,0.5)" 
+							imagesizefit="false" 
+							layout_vertical="center"
+						/>
+					</viewgroup>
+					<blank width="$w($g_lcdwidth,1.4)"/>
+					<label
+						width="$this.remain_right"
+						height="$h($g_lcdHeight,2.7)"
+						fontsize="$h($g_lcdHeight,1.8)"
+						layout_vertical="top"
+						textcolor="737679"
+						value="토요일 6:00 ~ 월요일 8:00"
+					/>
+				</viewgroup>
+				<br/>
+				<viewgroup
+					width="$this.remain_right"
+					height="$h($g_lcdHeight,2.7)"
+					layout_vertical="bottom"
+				>
+					<viewgroup
+						width="$w($g_lcdwidth,1.1)"
+						height="$h($g_lcdHeight,2.7)"
+						layout_vertical="top"
+					>
+						<img 
+							src="$cs_icon_rectangle_230" 
+							width="$h($g_lcdHeight,0.5)" 
+							height="$h($g_lcdHeight,0.5)" 
+							imagesizefit="false" 
+							layout_vertical="center"
+						/>
+					</viewgroup>
+					<blank width="$w($g_lcdwidth,1.4)"/>
+					<label
+						width="$this.remain_right"
+						height="$h($g_lcdHeight,2.7)"
+						fontsize="$h($g_lcdHeight,1.8)"
+						layout_vertical="top"
+						textcolor="737679"
+						value="평일(월~금)23:00 ~ (익)01:00"
+					/>
+				</viewgroup>
+			</viewgroup>
+			<br height="$h($g_lcdHeight,2.4)" />
+			<viewgroup
+				width="$this.remain_right"
+				height="$h($g_lcdHeight,3.7)"
+				layout_vertical="bottom"
+			>
+				<img 
+					src="$cs_icon_phone"
+					width="$h($g_lcdHeight,3.7)" 
+					height="$h($g_lcdHeight,3.7)" 
+					imagesizefit="false"
+				/>
+				<label
+					width="$this.remain_right"
+					height="$this.remain_bottom"
+					fontsize="$h($g_lcdHeight,1.8)"
+					textcolor="060B11"
+					margin_left="$w($g_lcdwidth,3.5)"
+					align="left"
+					value="문의 02-3771-8888 (평일 오전 9시~오후 5시)"
+				/>
+			</viewgroup>
+		</viewgroup>
+		<br/>
+		<button 
+			width="$w($g_lcdwidth,91.5)"
+			height="$h($g_lcdHeight,6.7)"
+			layout="center"
+			layout_vertical="bottom"
+			border_radius="$h($g_lcdHeight,6.2)"
+			backcolor_disable="E7E9EB"
+			backcolor="FFEB00"
+			enable="true"
+			fontsize="$h($g_lcdHeight,1.9)"
+			fontcolor="060B11"
+			value="확인" 
+			onClicked="$closescreen(pop_1000_1_4);"
+		/>
+	</screen>
+</popscreen>

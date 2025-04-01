@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<import filename="plist/root/common/top_title.xml"/> 
+<br/>
+<!--
+ *********************************************************************************
+ **
+ ** 화면을 그린 후에 필요한 작업을 한다. 
+ ** - TR을 배열에 담는다. 전송은 특이한 경우가 아니면 basescreen에서 일괄적으로 전송한다.
+ **
+ *********************************************************************************
+ -->
+ <action id="screen_contents_onload" value="
+	$setvar(vg _popscreen_base.backcolor=e33433);
+"/>
+
+<screen id="screen_4128_100"
+	class="cs_screen_contents"
+	backcolor="ffffff"
+	onload="screen_contents_onload"
+	>
+	<viewgroup 
+		width="$this.remain_right"
+		height="$h($g_lcdHeight,8)"
+		backcolor="e33433"
+		>
+		<blank width="$w($g_lcdWidth,3)"/>
+		<label 
+			width="$w($g_lcdwidth,55)" 
+			height="$h($g_lcdHeight,8)"
+			value="영상통화 연결" 
+			textcolor="ffffff"
+			/>
+		<viewgroup 
+			width="$w($g_lcdwidth,7)"
+			height="$super.height"
+		>
+			<img src="$icon_step_finish" layout="center" layout_vertical="center"/>
+		</viewgroup>
+		<viewgroup 
+			width="$w($g_lcdwidth,7)"
+			height="$super.height"
+		>
+			<img src="$icon_step_finish" layout="center" layout_vertical="center"/>
+		</viewgroup>
+		<viewgroup 
+			width="$w($g_lcdwidth,7)"
+			height="$super.height"
+		>
+			<img src="$icon_step_finish" layout="center" layout_vertical="center"/>
+		</viewgroup>
+		<viewgroup 
+			width="$w($g_lcdwidth,7)"
+			height="$super.height"
+		>
+			<img src="$icon_step_finish" layout="center" layout_vertical="center"/>
+		</viewgroup>
+		<viewgroup 
+			width="$w($g_lcdwidth,7)"
+			height="$super.height"
+		>
+			<img src="$icon_step_finish" layout="center" layout_vertical="center"/>
+		</viewgroup>
+		<viewgroup 
+			width="$w($g_lcdwidth,7)"
+			height="$super.height"
+		>
+			<img src="$icon_step_6" layout="center" layout_vertical="center"/>
+		</viewgroup>
+	</viewgroup>	
+	<br />
+	<viewgroup 
+		width="$super.width"
+		height="$h($g_lcdHeight,10.7)"
+		layout="center" 
+		>
+		<br height="$h($g_lcdHeight,2.7)"/><blank width="$w($g_lcdWidth,6.3)"/>
+
+		<label  height="$h($g_lcdHeight,4)" fontname="$g_baseFontNameBold"  
+			value="영상통화 연결"/> 
+
+		<br /><blank width="$w($g_lcdWidth,4.8)"/>
+		<multitextfield 
+				height="$h($g_lcdHeight,4)" 
+				width="$result($this.remain_right-$w($g_lcdWidth,4.8))"
+				value="본인 확인을 위해 직원과의 영상통화를 시작합니다."
+				textcolor="666666" 
+				enable="false"
+				fontsize="$g_fontsize_basic"
+				/>
+	</viewgroup>
+	<br height="$h($g_lcdHeight,2.9)"/><hr width="$super.width" backcolor="e5e5e5"/>
+	<br height="$h($g_lcdHeight,4.2)"/>
+		<button 
+			id="btn_4128_confirm"
+			fontsize="$g_fontsize_big3" 
+			layout="center"
+			width="$w($g_lcdwidth,91.8)" 
+			height="$h($g_lcdHeight,9.4)" 
+			backcolor="e33433"
+			border_radius="$result($this.height/8)"
+			border_width="$g_roundHeight"
+			//border_color="505050"
+			backcolor_active="ffffff"
+			textcolor="ffffff"
+			textcolor_active="e33433"
+			value="영상통화" 
+			onclicked="fnStartVideo" 
+			//enable="false"
+			backcolor_disable="bfbfbf"
+			textcolor_disable="999999"
+			/>
+		<br height="$h($g_lcdHeight,2.5)"/>
+		<button 
+			id="btn_4128_confirm"
+			fontsize="$g_fontsize_big3" 
+			layout="center"
+			width="$w($g_lcdwidth,91.8)" 
+			height="$h($g_lcdHeight,9.4)" 
+			backcolor="e33433"
+			border_radius="$result($this.height/8)"
+			border_width="$g_roundHeight"
+			//border_color="505050"
+			backcolor_active="ffffff"
+			textcolor="ffffff"
+			textcolor_active="e33433"
+			value="통화예약" 
+			onclicked="$popscreen(4128_info_popscreen,,,,,)" 
+			//enable="false"
+			backcolor_disable="bfbfbf"
+			textcolor_disable="999999"
+			/>
+</screen>
+<popscreen id="4128_info_popscreen"
+	width="$g_lcdWidth" 
+	height="$p_lcdHeight"
+	backcolor="00000088"
+	layout="center"
+	layout_vertical="center"
+	onload=""
+	>
+	<screen 
+		width="$w($g_lcdWidth,90)"
+		height="$h($g_lcdHeight,30)"
+		backcolor="ffffff"
+		layout="center"
+		layout_vertical="center"
+		noscroll_width="true"
+		>
+		<viewgroup
+			height="$h($g_lcdHeight,20)"
+			>
+			<label
+				value="영상통화가 예약됩니다.\n예약하시겠습니까?"
+				align="center"
+				/>
+		</viewgroup>
+		<br />
+		<viewgroup height="$this.remain_bottom">
+			<button 
+				width="$w($g_lcdWidth,45)"
+				height="$super.height" 
+				value="아니요" 
+				backcolor="ebebeb"
+				backcolor_active="505050"
+				//fontsize="$g_fontsize_big1"
+				fontname="$g_baseFontNameBold"
+				textcolor="000000"
+				textcolor_active="000000"
+				onclicked="$closescreen(4128_info_popscreen);"
+				/>
+			<button 
+				width="$this.remain_right" 
+				height="$super.height" 
+				value="확인" 
+				backcolor="bd3135"
+				backcolor_active="b8240c"
+				//fontsize="$g_fontsize_big1"
+				fontname="$g_baseFontNameBold"
+				textcolor="ffffff"
+				textcolor_active="ffffff"
+				onclicked="$closescreen(4128_info_popscreen);"
+				/>
+		</viewgroup>
+	</screen>
+</popscreen>
+
+<action id="fnStartVideo" value="
+//    $saveBase64Image(파일명, 변수명);
+	$setvar(
+		strVideo_DeviceId=01049280386
+		, strVideo_RoomCode=1
+		, strVideo_RoomName=유진투자선물TEST
+		, strVideo_RoomMediaIP=183.111.94.13
+		, strVideo_RoomMediaPort=8101
+		, strVideo_RoomLocalPort=0
+		, strVideo_RoomVoiceIP=183.111.94.13
+		, strVideo_RoomVoicePort=8102
+		, strVideo_UserConsultCode=1
+		, strVideo_UserConsultName=1
+		, strVideo_UserPartCode=1
+		, strVideo_UserPartName=1
+		, strVideo_UserName=홍길동
+		, strVideo_UserPhone=010-8918-4444
+		, strVideo_ConsultPhotoName=photo.bmp
+	);
+	$startVideo(fnStartVideoResult);
+"/>
+
+
+ <!--
+<action id="screen_contents_onload" value="
+	
+"/>
+<screen id="screen_4128_100"
+	class="cs_screen_contents"
+	backcolor="ffffff"
+	>
+	<screen
+		height="$this.remain_bottom"
+		>
+		<label
+			height="$h($g_lcdHeight,4)"
+			value="영상통화 연결"
+			margin_left="$w($g_lcdWidth,3)"
+			fontname="$g_baseFontNameBold"
+			/>
+		<br height="$h($g_lcdHeight,2)" />
+		<viewgroup
+			height="$h($g_lcdHeight,40)"
+			>
+			<label
+				layout="center"
+				width="$w($g_lcdwidth,80)" 
+				value="화면"
+				align="center"
+				backcolor="ff000011"
+				/>
+
+		</viewgroup>
+		<br height="$h($g_lcdHeight,4)" />
+		<blank width="$w($g_lcdwidth,10)"  />
+		<button 
+			fontname="$g_baseFontNameBold"
+			fontsize="$g_fontsize_basic"
+				width="$w($g_lcdwidth,35)" 
+				height="$h($g_lcdHeight,4)" 
+				backcolor="ebebeb"
+				border_radius="$result($this.height/4)"
+				border_width="$g_roundHeight"
+				border_color="505050"
+				backcolor_active="505050"
+				textcolor_active="ffffff"
+			value="즉시통화" 
+			onclicked="
+			//$callaction(fnGoScreen,4129);
+			//$callaction(fnOpenPopScreen,plist/root/screen/p4129_100.xml,비대면 계좌계설,);
+			fnStartVideo
+			"
+
+			/>
+		<blank width="$w($g_lcdwidth,10)"  />
+		<button 
+			fontname="$g_baseFontNameBold"
+			fontsize="$g_fontsize_basic"
+				width="$w($g_lcdwidth,35)" 
+				height="$h($g_lcdHeight,4)" 
+				backcolor="ebebeb"
+				border_radius="$result($this.height/4)"
+				border_width="$g_roundHeight"
+				border_color="505050"
+				backcolor_active="505050"
+				textcolor_active="ffffff"
+			value="통화예약" 
+			onClicked="$popscreen(4128_info_popscreen,,,,,);"
+			/>
+		<br height="$h($g_lcdHeight,4)" />
+	</screen>
+</screen>
+
+<popscreen id="4128_info_popscreen"
+	width="$g_lcdWidth" 
+	height="$g_lcdHeight"
+	backcolor="00000088"
+	layout="center"
+	layout_vertical="center"
+	onload=""
+	>
+	<screen 
+		width="$w($g_lcdWidth,90)"
+		height="$h($g_lcdHeight,30)"
+		backcolor="ffffff"
+		layout="center"
+		layout_vertical="center"
+		noscroll_width="true"
+		>
+		<viewgroup
+			height="$h($g_lcdHeight,20)"
+			>
+			<label
+				value="영상통화가 예약됩니다.\n예약하시겠습니까?"
+				align="center"
+				fontsize="$g_fontsize_big3"
+				/>
+		</viewgroup>
+		<br />
+		<viewgroup height="$this.remain_bottom">
+			<button 
+				width="$w($g_lcdWidth,45)"
+				height="$super.height" 
+				value="아니요" 
+				backcolor="ebebeb"
+				backcolor_active="505050"
+				fontsize="$g_fontsize_big1"
+				fontname="$g_baseFontNameBold"
+				textcolor="000000"
+				textcolor_active="000000"
+				onclicked="$closescreen(4128_info_popscreen);"
+				/>
+			<button 
+				width="$this.remain_right" 
+				height="$super.height" 
+				value="확인" 
+				backcolor="bd3135"
+				backcolor_active="b8240c"
+				fontsize="$g_fontsize_big1"
+				fontname="$g_baseFontNameBold"
+				textcolor="ffffff"
+				textcolor_active="ffffff"
+				onclicked="$closescreen(4128_info_popscreen);"
+				/>
+		</viewgroup>
+	</screen>
+</popscreen>
+
+<action id="fnStartVideo" value="
+//    $saveBase64Image(파일명, 변수명);
+	$setvar(
+		strVideo_DeviceId=01049280386
+		, strVideo_RoomCode=1
+		, strVideo_RoomName=유진투자선물TEST
+		, strVideo_RoomMediaIP=183.111.94.13
+		, strVideo_RoomMediaPort=8101
+		, strVideo_RoomLocalPort=0
+		, strVideo_RoomVoiceIP=183.111.94.13
+		, strVideo_RoomVoicePort=8102
+		, strVideo_UserConsultCode=1
+		, strVideo_UserConsultName=1
+		, strVideo_UserPartCode=1
+		, strVideo_UserPartName=1
+		, strVideo_UserName=홍길동
+		, strVideo_UserPhone=010-8918-4444
+		, strVideo_ConsultPhotoName=photo.bmp
+	);
+	$startVideo(fnStartVideoResult);
+"/>
+
+<action id="fnStartVideoResult" params="result" value="
+"/>
+--!>

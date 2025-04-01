@@ -1,0 +1,2081 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+// 주의사항
+// _N으로 시작하는 액션은 호출하면 안됨
+
+//////////////////////////////////////////////////////
+// 서버IP 가져오는 액션
+//////////////////////////////////////////////////////
+<action id="N_Server_GetIP_D" scope="common" 
+params="p_after_action_getip_d" 
+value="
+	$log(*********** N_Server_GetIP_D);
+	$setvar_common(tmp_after_action_getip_d = $p_after_action_getip_d);
+	$setsocketaction($g_SiseSocketName_DOMESTIC,_N_Act_Network_RecvData_Master_xml,); 	// RecvAction 을 변경하여 보낸다. 
+
+	$setvar(
+		LEN_MYMQ_TH = $result($map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_TH)-4)
+		,LEN_MYMQ_RH = 0
+		,LEN_MYMQ_FILE = 0
+		,MYMQ_TH_PKT_LEN = 3
+		,tmp_MYMQ_RH_size = 0
+	);
+	$log(LEN_MYMQ_TH:[$LEN_MYMQ_TH], LEN_MYMQ_RH:[$LEN_MYMQ_RH], LEN_MYMQ_FILE:[$LEN_MYMQ_FILE], MYMQ_TH_PKT_LEN:[$MYMQ_TH_PKT_LEN], tmp_MYMQ_RH_size:[$tmp_MYMQ_RH_size]);
+		
+	// Packet Indicator OR 연산으로 추가 
+	$setbit(MYMQ_HEADER_PKTI_1,0x04);	// Begin Packet Indicator
+	$setbit_or(MYMQ_HEADER_PKTI_1,0x08);	// End Packet Indicator
+	$setbit(MYMQ_HEADER_FUNC,0x01);
+
+	$map_getstructsenddata($g_SiseSocketName_DOMESTIC,MYMQ_TH,,strSendData); 	// TH 헤더 추가
+	$logvar_binary(strSendData,strSendData);
+	
+	$sendvardata($g_SiseSocketName_DOMESTIC,$strTrCode,strSendData,$MYMQ_RH_WKEY,$strBeforeActionName,$strAfterActionName,TRUE);	
+	return $MYMQ_RH_WKEY;
+" />
+<action id="N_Server_GetIP" scope="common" 
+params="p_after_action_getip" 
+value="
+	$log(*********** N_Server_GetIP);
+	$setvar_common(tmp_after_action_getip = $p_after_action_getip);
+	$setsocketaction($g_SiseSocketName,_N_Act_Network_RecvData_Master,); 	// RecvAction 을 변경하여 보낸다. 
+
+	$setvar(
+		LEN_MYMQ_TH = $result($map_getstructsize($g_SiseSocketName,MYMQ_TH)-4)
+		,LEN_MYMQ_RH = 0
+		,LEN_MYMQ_FILE = 0
+		,MYMQ_TH_PKT_LEN = 3
+		,tmp_MYMQ_RH_size = 0
+	);
+	$log(LEN_MYMQ_TH:[$LEN_MYMQ_TH], LEN_MYMQ_RH:[$LEN_MYMQ_RH], LEN_MYMQ_FILE:[$LEN_MYMQ_FILE], MYMQ_TH_PKT_LEN:[$MYMQ_TH_PKT_LEN], tmp_MYMQ_RH_size:[$tmp_MYMQ_RH_size]);
+		
+	// Packet Indicator OR 연산으로 추가 
+	$setbit(MYMQ_HEADER_PKTI_1,0x04);	// Begin Packet Indicator
+	$setbit_or(MYMQ_HEADER_PKTI_1,0x08);	// End Packet Indicator
+	$setbit(MYMQ_HEADER_FUNC,0x01);
+
+	$map_getstructsenddata($g_SiseSocketName,MYMQ_TH,,strSendData); 	// TH 헤더 추가
+	$logvar_binary(strSendData,strSendData);
+	
+	$sendvardata($g_SiseSocketName,$strTrCode,strSendData,$MYMQ_RH_WKEY,$strBeforeActionName,$strAfterActionName,TRUE);	
+	return $MYMQ_RH_WKEY;
+" />
+//////////////////////////////////////////////////////
+// 국내서버 연결 
+//////////////////////////////////////////////////////
+<action id="N_Server_Connect_D" scope="common" 
+params="p_after_action_connected"
+value="
+	$log(*********** N_Server_Connect_D );
+	$setvar(tmp_after_action_connected = $p_after_action_connected);
+     
+    // 개발서버여부
+    $log(개발서버여부:[$g_is_test_server], 모의여부:[$g_OrderServerCheckSimulation]);
+    if($g_is_test_server){
+        if($g_OrderServerCheckSimulation){
+            $setvar_common(
+                g_serverIP_DOMESTIC     = $g_serverIP_DOMESTIC_simulation
+                ,g_serverPort_DOMESTIC  = $g_serverPort_DOMESTIC_simulation
+            );
+        }
+        else{
+            $setvar_common(
+                g_serverIP_DOMESTIC     = $g_serverIP_DOMESTIC_real
+                ,g_serverPort_DOMESTIC  = $g_serverPort_DOMESTIC_real
+            );
+        }
+    }
+    else{
+        if($g_OrderServerCheckSimulation){
+            $setvar_common(
+                g_serverIP_DOMESTIC     = $g_serverIP_DOMESTIC_simulation
+                ,g_serverPort_DOMESTIC  = $g_serverPort_DOMESTIC_simulation
+            );
+        }
+        else{
+            $setvar_common(
+                g_serverIP_DOMESTIC     = $g_serverIP_DOMESTIC_real
+                ,g_serverPort_DOMESTIC  = $g_serverPort_DOMESTIC_real
+            );
+            if($strlen($g_connected_server_ip_d) > 0){ 		// 받아온 서버IP가 있을경우 원래 접속했던 서버로 접속한다.
+            	$setvar_common(
+                	g_serverIP_DOMESTIC     = $g_connected_server_ip_d
+                );
+            }
+        }
+    }
+    
+	$callaction(Act_Network_Connect
+		, $g_SiseSocketName_DOMESTIC
+		, $g_serverIP_DOMESTIC 					// 모의투자로 붙을 수도 있음.
+		, $g_serverPort_DOMESTIC
+		, $g_strVersionReqStart_DOMESTIC
+		, $g_strVersionReqEnd_DOMESTIC
+		, 0
+		, _N_Act_Network_RecvData_Master_d
+		, _N_fn_Network_Connected_Sise_d
+	);
+" />
+// 연결 후 액션 
+<action id="_N_fn_Network_Connected_Sise_d" scope="common" 
+params="p_socket_name, p_socket_value"
+value="
+	$log(*********** _N_fn_Network_Connected_Sise_d);
+	if($_N_fn_Network_Connected_Sise_d_PARAMCOUNT > 0){
+		if($p_socket_value < 0){	
+			$callaction(Act_Connect_Alarm, intro_after[$p_socket_name], Act_Server_Disconnected);
+			return;		
+		}
+	}
+	if(!$isconnect($p_socket_name)){	
+		$callaction(Act_Connect_Alarm, 국내시세 intro_after, fnExit_Timer);
+		return;	
+	}
+	$callaction($tmp_after_action_connected);
+" />
+
+// 국내 XML 받았을 때
+<action id="_N_Act_Network_RecvData_Master_xml"  scope="common"
+params="p_socket_name, p_varname_recv, p_err_no"
+value="	
+	//$log(*********** _N_Act_Network_RecvData_Master_xml);
+	//$logvar_binary(RecvData All Master_xml,$p_varname_recv);
+
+	//if($g_is_background){	return;	}
+
+	if(!$isequal_string($p_socket_name,$g_SiseSocketName_DOMESTIC)){
+		//$alertaction(fnExit_Timer,국내시세[$p_socket_name][$g_SiseSocketName],국내시세 아닌 것이 호출되었습니다..\n관리자에게 문의하세요,확인);
+		$callaction(fnPopover_AlertAction,fnExit_Timer,국내시세 아닌 것이 호출되었습니다..\n관리자에게 문의하세요,,확인);
+		return;
+	}
+
+	// 폴링: 길이가 0인경우 
+	if($isequal_string($p_err_no,400)){
+		$log(======== 폴링: 길이가 0인경우 );
+		$setvar_common(g_polling_fail_cnt = 0);
+		return;
+	}
+
+	if($isequal_string($p_err_no,200)){
+		return;
+	}
+	if($strlen($p_varname_recv)<0){
+		$log(국내 시세 서버 - 데이터 없음);
+		return;
+	}
+	$setvar(
+		tmp_socketName = $p_socket_name
+		, strRecvVarName=$p_varname_recv
+		, iErrCode = $p_err_no
+
+		,LEN_PACKET_LENGTH 	= 4 									// 제일 앞단 헤더 길이 
+		,POS_MYMQ_TH 		= 0
+		,LEN_MYMQ_TH 		= $map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_TH) 
+		,POS_MYMQ_RH 		= $result($POS_MYMQ_TH + $LEN_MYMQ_TH)
+		,LEN_MYMQ_RH 		= $map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_RH)
+		,POS_MYMQ_RU 		= $result($POS_MYMQ_RH + $LEN_MYMQ_RH)
+		,LEN_MYMQ_FILE 		= $map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_FILE) 
+		,POS_MYMQ_FILE 		= $result($POS_MYMQ_RH + $LEN_MYMQ_RH)
+
+		,POS_MYMQ_IP 		= $result($POS_MYMQ_TH + $LEN_MYMQ_TH)
+		,LEN_MYMQ_IP 		= $map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_IP)
+	);
+
+	//$log(LEN_PACKET_LENGTH:[$LEN_PACKET_LENGTH], LEN_MYMQ_TH:[$LEN_MYMQ_TH], LEN_MYMQ_RH:[$LEN_MYMQ_RH], POS_MYMQ_RH:[$POS_MYMQ_RH], POS_MYMQ_RU:[$POS_MYMQ_RU]);
+	//$logvar_binary(RecvData All Master_xml,$strRecvVarName);
+	
+	$delvar(strHeaderData_MYMQ_TH, strHeaderData_MYMQ_RH, strRu_Data,strRecvData_RU,LEN_ZIP_OIR_DATA,strRecvData, strSiseRealData);
+
+	$memcpy(strHeaderData_MYMQ_TH,$strRecvVarName,$POS_MYMQ_TH,$LEN_MYMQ_TH);
+	$logvar_binary(RecvData MYMQ_TH ,strHeaderData_MYMQ_TH); 			// 패킷 길이포함 
+
+	$map_getfielddata($g_SiseSocketName_DOMESTIC,strPKT_LEN,MYMQ_TH,PKT_LEN,strHeaderData_MYMQ_TH); 	//받은데이터 패킷길이 
+	$map_getfielddata($g_SiseSocketName_DOMESTIC,strPKI_1,MYMQ_TH,PKI_1,strHeaderData_MYMQ_TH); 		//Packet Indicator 1
+	$map_getfielddata($g_SiseSocketName_DOMESTIC,strPKI_2,MYMQ_TH,PKI_2,strHeaderData_MYMQ_TH); 		//Packet Indicator 2 - 현재 사용 안함.
+	$map_getfielddata($g_SiseSocketName_DOMESTIC,strFUNC,MYMQ_TH,FUNC,strHeaderData_MYMQ_TH); 		//Function Code
+
+	//$log(MYMQ_TH.PKT_LEN:[$strPKT_LEN], MYMQ_TH.PKI_1:[$strPKI_1], MYMQ_TH.PKI_2:[$strPKI_2], MYMQ_TH.FUNC:[$strFUNC]);
+	//$logvar_binary(strFUNC ,strFUNC);
+
+	if($isbit(strFUNC,0x01) ) { 				//  RH 헤더가 있으면 
+		$log(********** 아이피받아옴);
+		$delvar(strHeaderData_MYMQ_IP);
+		$memcpy(strHeaderData_MYMQ_IP,$strRecvVarName,$POS_MYMQ_IP,$LEN_MYMQ_IP);
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strIP1,MYMQ_IP,IP_1,strHeaderData_MYMQ_IP);
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strIP2,MYMQ_IP,IP_2,strHeaderData_MYMQ_IP);
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strIP3,MYMQ_IP,IP_3,strHeaderData_MYMQ_IP);
+		//$logvar(strIP1,strIP2,strIP3);
+		$callaction($tmp_after_action_getip_d,$strIP1,$strIP2,$strIP3); 			// 서버의 아이피를 받아온다.
+		return;
+	}	
+
+	if($isbit_and(strPKI_1,0x01) ) { 				//  RH 헤더가 있으면 
+		//$log(**** RH 헤더가 있음. );
+		$memcpy(strHeaderData_MYMQ_RH,$strRecvVarName,$POS_MYMQ_RH,$LEN_MYMQ_RH);
+		//$logvar_binary(strHeaderData_MYMQ_RH ,strHeaderData_MYMQ_RH);
+
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strFLAG,MYMQ_RH,FLAG,strHeaderData_MYMQ_RH); 
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strWKEY,MYMQ_RH,WKEY,strHeaderData_MYMQ_RH); 	// reqid
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strSVCODE,MYMQ_RH,SVCODE,strHeaderData_MYMQ_RH); 
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strEXCODE,MYMQ_RH,EXCODE,strHeaderData_MYMQ_RH); 
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strRKEY,MYMQ_RH,RKEY,strHeaderData_MYMQ_RH); 		// TR Code
+
+		//$log(MYMQ_RH.FLAG:[$strFLAG], MYMQ_RH.WKEY:[$strWKEY], MYMQ_RH.SVCODE:[$strSVCODE], MYMQ_RH.EXCODE:[$strEXCODE], MYMQ_RH.RKEY:[$strRKEY]);
+	}
+
+
+	// 여기서부터 추가 
+	// strPKT_LEN = TH + RH + RU Length(Big endian integer) -> header.xml에서 INT_NET으로 정의 	
+	$setvar( 	LEN_MYMQ_RU = $result($strPKT_LEN - $POS_MYMQ_RU + $LEN_PACKET_LENGTH)  	);
+	$memcpy(strRecvData_RU,$strRecvVarName,$POS_MYMQ_RU,$LEN_MYMQ_RU);
+
+	//$logvar_binary(strRecvData_RU ,strRecvData_RU);
+
+	$setvar(POS_CUR_BODYDATA = $POS_MYMQ_RU);
+
+	if($isbit_and(strFLAG,0x02)) { 				//  이전키
+		//$log(이전키 있음);
+		$setvar(LEN_CUR_BODYDATA = 1);
+		$memcpy(strRHFlag_Pre,$strRecvVarName,$POS_CUR_BODYDATA,$LEN_CUR_BODYDATA);
+		$setvar(	LEN_PRENEXTKEY = $result($ascvar(strRHFlag_Pre) + + $LEN_CUR_BODYDATA)	);
+		// 이전키 복사함. - After에서 셋팅함.
+		$memcpy(PREKEY_HEADER_DATA,$strRecvVarName,$POS_CUR_BODYDATA,$LEN_PRENEXTKEY);		// 앞의 길이 1byte를 포함하여 복사
+		$setvar(	POS_CUR_BODYDATA = $result($POS_CUR_BODYDATA + $LEN_PRENEXTKEY)	);
+		//$logvar_binary(PREKEY_HEADER_DATA ,PREKEY_HEADER_DATA);
+		//$log(이전키:$PREKEY_HEADER_DATA);
+	}
+	else{
+		$delvar(PREKEY_HEADER_DATA);
+	}
+	if($isbit_and(strFLAG,0x04)){ 				//  다음키
+		//$log(다음키 있음);
+		$setvar(LEN_CUR_BODYDATA = 1);
+		$memcpy(strRHFlag_Next,$strRecvVarName,$POS_CUR_BODYDATA,$LEN_CUR_BODYDATA);
+		$setvar(	LEN_PRENEXTKEY = $result($ascvar(strRHFlag_Next) + $LEN_CUR_BODYDATA)	);
+		// 다음키 복사함. - After에서 셋팅함.
+		$memcpy(NEXTKEY_HEADER_DATA,$strRecvVarName,$POS_CUR_BODYDATA,$LEN_PRENEXTKEY);  	// 앞의 길이 1byte를 포함하여 복사
+		$setvar(	POS_CUR_BODYDATA = $result($POS_CUR_BODYDATA + $LEN_PRENEXTKEY)	);
+		//$logvar_binary(NEXTKEY_HEADER_DATA ,NEXTKEY_HEADER_DATA);
+		$log(다음키:$NEXTKEY_HEADER_DATA);
+	}
+	else{
+		//$log(다음키 없음);
+		$delvar(NEXTKEY_HEADER_DATA);
+	}
+
+	// 다음데이터가 있을 경우 연속패킷
+	if($isbit_and(strPKI_1,0x02) ) { 	
+		//$log(*********** 데이터 More 0x02);
+		// 타켓, 소스명, 소스시작, 소스길이,타켓스코프,타켓시작위치 
+		$memcpy(strTmpContinus,$strRecvVarName,$POS_CUR_BODYDATA,,FALSE,$getvarlen(strTmpContinus));
+		
+		//$delvar(strTmp_Unit);
+		//$memcpy(strTmp_Unit,$strRecvVarName,$POS_CUR_BODYDATA);
+		//$logvar_binary(strTmp_Unit, strTmp_Unit);l
+		//$logvar_binary(strTmpContinus, strTmpContinus);
+
+		return;
+	}
+	// 마지막 데이터일 경우 
+	if($isbit_and(strPKI_1,0x08) ) { 
+		//$log(*********** 데이터 End);
+		$delvar(strTmp_Unit);
+		$memcpy(strTmp_Unit,$strRecvVarName,$POS_CUR_BODYDATA);
+		//$logvar_binary(strTmp_Unit, strTmp_Unit);l
+
+		$memcpy(strTmpContinus,$strRecvVarName,$POS_CUR_BODYDATA,,FALSE,$getvarlen(strTmpContinus));
+		//$logvar_binary(strTmpContinus Last,strTmpContinus);
+	}
+	else{
+		//$log(*********** 데이터 더있다. 0x08이 없다.);
+		// 타켓, 소스명, 소스시작, 소스길이,타켓스코프,타켓시작위치 
+		$memcpy(strTmpContinus,$strRecvVarName,$POS_CUR_BODYDATA,,FALSE,$getvarlen(strTmpContinus));
+		//$logvar_binary(strTmpContinus More,strTmpContinus);
+
+		//$delvar(strTmp_Unit);
+		//$memcpy(strTmp_Unit,$strRecvVarName,$POS_CUR_BODYDATA);
+		//$logvar_binary(strTmp_Unit, strTmp_Unit);l
+		
+		return;
+	}
+
+	$delvar(strRecvData_Zip);
+	$memcpy(strRecvData_Zip,strTmpContinus);
+	$delvar(strTmpContinus);
+
+	if($isbit_and(strPKI_1,0x10) ) { 				//  압축되어있다.
+		// 압축해제 
+		//$log(압축되었다.);
+		//$logvar_binary(strRecvData_Zip,strRecvData_Zip);
+
+		// 4Byte:원본길이
+		$memcpy(LEN_ZIP_OIR_DATA,strRecvData_Zip,0,4);
+		$htonl(LEN_ZIP_OIR_DATA);
+		//$log(ZIP Data Ori Size:$LEN_ZIP_OIR_DATA);
+		$delvar(strRecvData);
+		// 타켓, 소스명, 소스시작, 소스길이,타켓스코프,타켓시작위치 
+		$memcpy(strRecvData,strRecvData_Zip,4,$getvarlen(strRecvData_Zip));
+
+		//$log(******* 4byte 땐거 );
+		//$logvar_binary(strRecvData, strRecvData);
+
+		$decompressvar(strRecvData,$LEN_ZIP_OIR_DATA);
+
+		//$logvar_binary(strRecvData UnZip,strRecvData);
+	}
+	else{
+		$memcpy(strRecvData,strRecvData_Zip);
+	}
+
+	// $logvar_binary(strRecvData XML,strRecvData);
+
+	if($isequal_string($strEXCODE,SYS) || $isequal_string($strEXCODE,SYSTEM)){
+		$memcpy(strHeaderData_MYMQ_FILE,strRecvData,0,$LEN_MYMQ_FILE);
+		//$logvar_binary(strHeaderData_MYMQ_FILE ,strHeaderData_MYMQ_FILE);
+
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strFile_path,MYMQ_FILE,PATH,strHeaderData_MYMQ_FILE); 
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strFile_seqn,MYMQ_FILE,SEQN,strHeaderData_MYMQ_FILE); 
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strFile_size,MYMQ_FILE,SIZE,strHeaderData_MYMQ_FILE); 
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strFile_sent,MYMQ_FILE,SENT,strHeaderData_MYMQ_FILE); 
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strFile_date,MYMQ_FILE,DATE,strHeaderData_MYMQ_FILE); 
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strFile_zipf,MYMQ_FILE,ZIPF,strHeaderData_MYMQ_FILE); 
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strFile_errf,MYMQ_FILE,ERRF,strHeaderData_MYMQ_FILE); 
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strFile_emsg,MYMQ_FILE,EMSG,strHeaderData_MYMQ_FILE); 
+
+		$log(*********** _N_Act_Network_RecvData_Master_xml- PATH:[$strFile_path], SEQN:[$strFile_seqn], SIZE:[$strFile_size], SENT:[$strFile_sent], DATE:[$strFile_date], ZIPF:[$strFile_zipf], ERRF:[$strFile_errf]);
+
+		if($strFile_errf==1){
+			$log(*********** ERRF:[$strFile_errf]);
+
+			//$alertaction(,appVersion.dat 다운로드 실패,$strFile_emsg,확인); 
+			$callaction(fnPopover_AlertAction,,$strFile_emsg,,확인);
+			return;
+		}
+		$setvar(
+			tmp_iFileSize 		= $int($strFile_size)
+			,tmp_iSentSize 		= $int($strFile_sent)
+			,POS_FILEDATA		= $result(0 + $LEN_MYMQ_FILE)
+			,LEN_FILEDATA 		= $tmp_iFileSize
+		);
+
+		$memcpy(strRecvData_1,$strRecvVarName,$POS_FILEDATA,$LEN_FILEDATA);
+		//$logvar_binary(strRecvData_1,strRecvData_1);
+
+		if($isequal_string($strFile_seqn,0001)){	$delvar(strRecv_FileData);	}
+
+		$delvar(strRecv_File_div);
+		$memcpy(strRecv_File_div,strRecvData,$POS_FILEDATA,$LEN_FILEDATA);
+
+		// 타켓, 소스명, 소스시작, 소스길이,타켓스코프,타켓시작위치 
+		$memcpy(strRecv_FileData,strRecv_File_div,,,TRUE,$getvarlen(strRecv_FileData));
+
+		//$logvar_binary(DivisionStauts ,strPKI_1);
+
+		if($tmp_iFileSize > $tmp_iSentSize ){		
+			return;
+		}
+
+		if($strFile_zipf==1){		// 압축되어있다.
+			$memcpy(LEN_ZIP_OIR_DATA,strRecv_FileData,0,4);
+			//$logvar_binary(LEN_ZIP_OIR_DATA,LEN_ZIP_OIR_DATA);
+
+			$setvar(
+				POS_FILEDATA = 4	
+				,LEN_FILEDATA = $result($getvarlen(strRecv_FileData) - 4)
+			); 
+			$logvar(
+				POS_FILEDATA 
+				,LEN_FILEDATA
+			); 
+			$logvar(LEN_ZIP_OIR_DATA);
+			$htonl(LEN_ZIP_OIR_DATA);
+			$logvar(LEN_ZIP_OIR_DATA);
+			$delvar(strRecv_File_ZIP);
+			$memcpy(strRecv_File_ZIP,strRecv_FileData,$POS_FILEDATA,$LEN_FILEDATA);
+			$decompressvar(strRecv_File_ZIP,$LEN_ZIP_OIR_DATA);	
+			//$logvar_binary(Zip strRecv_File_ZIP, strRecv_File_ZIP);
+			$delvar(strRecv_FileData);
+			$memcpy(strRecv_FileData,strRecv_File_ZIP,0,$getvarlen(strRecv_File_ZIP));
+			$log(======= 압축해제:$strFile_path);
+			//$logvar_binary(Zip strRecv_FileData, strRecv_FileData);
+		}
+
+		if($isequal_string($strFile_path, down/version.dat)){			
+			$setvar(
+				save_strFile_date_xml = $strFile_date
+				,save_strFile_size_xml = $strFile_size
+			);
+			
+			$memcpy(g_strVersion_dat,strRecv_FileData,0,$getvarlen(strRecv_FileData),true); 		//scope=common
+
+			$setNameToken(tknNewVersion_xml,strRecv_FileData,0x0A,0x3B,0);
+			$log(*********** RecvData XML파일 이전갯수:[$getNameTokenCount(tknOldVersion_xml)], 현재:[$getNameTokenCount(tknNewVersion_xml)]);
+			//$printNameToken(tknNewVersion_xml);
+			//$printNameToken(tknOldVersion_xml);
+
+			$setvar_common(g_iRecvTotalFileCount_xml=$setCompareVersionNameToken(tknOldVersion_xml,tknNewVersion_xml,_N_Act_VersionFile_Process_xml,0,1,2,true));  // 버전 대소비교로 받는다.
+			$log(******** XML 받아야하는 파일 갯수 XML : [$g_iRecvTotalFileCount_xml] ********************);
+			$callaction(_N_Act_VersionFile_Process_xml,3);
+
+		}
+		elseif($isequal_string($strFile_path, down/appVersion.dat)){		
+			$setvar(
+				save_strFile_date_xml = $strFile_date
+				,save_strFile_size_xml = $strFile_size
+			);
+			$delvar(strRecv_FileData);
+			$setNameToken(tknNewVersion_app,strRecv_FileData,0x0A,0x3B);
+			//$printNameToken(tknNewVersion_app);
+			$setvar_common(
+				recv_appVersion_ios 		= $getNameToken(tknNewVersion_app,0,1)
+				,recv_appVersion_android 	= $getNameToken(tknNewVersion_app,1,1)
+			);
+			$log(*********** RecvData :down/appVersion.dat iOS:[$recv_appVersion_ios], Android:[$recv_appVersion_android]);
+			$freeNameToken(tknNewVersion_app);
+			$callaction($tmp_app_update_force_check_after_action);
+		}
+		else{
+			//$settokenarray(strFile_path,arrFilePath,0x2F);
+			//$getfilepath(풀패스,패스변수명,파일변수명); 리턴값:파일변수명
+			$getfilepath($strFile_path,strPATH,strName);
+			$logarrayvar(arrFilePath);
+
+			$setvar(
+				,strFile_path 			= $replace(down/,,$strFile_path)
+				,tmp_save_file_path 	= $g_path_down/$strFile_path
+				,strPATH 				= $replace(down/,,$strPATH)
+			);
+			$log(*********** Recv XML :[$strFile_path],[$tmp_save_file_path],[$strPATH],[$strName]);
+			//$logvar_binary(Recv WriteFile, strRecv_FileData);			
+			//$printNameToken(tknNewVersion_xml);
+			//$printNameToken(tknOldVersion_xml);
+			
+			$setvar(tmp_is_write_success = $writefile($tmp_save_file_path,strRecv_FileData,false,false,false,false,false));
+			//$logvar(tmp_is_write_success);
+			if(!$tmp_is_write_success){
+				$setvar(tmp_msg = 다운로드 에러:$strFile_path);
+				$callaction(fnPopover_AlertAction,,$tmp_msg,,확인);
+				return;
+			}
+			$setvar_common(g_req_xml_idx = $result($g_req_xml_idx + 1));
+			$callaction(_N_Act_File_Req_XML);
+			
+
+			//$writefileVersion(tknNewVersion_xml,$tmp_save_file_path,strRecv_FileData,0:$strPATH,1:$strName,$g_path_down,0,Act_VersionFile_Process_xml);
+		}
+		$delvar_all(strRecv_FileData);
+		$delvar(LEN_ZIP_OIR_DATA, strRecv_FileData, strRecv_File_ZIP, strRecv_File_div);
+	}
+" />
+
+//////////////////////////////////////////////////////
+// 앱벼전 체크 
+//////////////////////////////////////////////////////
+<action id="N_Act_App_Update_Force_Check" scope="common" 
+params="p_after_action"
+value="
+	$log(*********** N_Act_App_Update_Force_Check : [$g_strVersionFilePath_App],[$g_strVersionFileName_App]);
+	$setvar(tmp_app_update_force_check_after_action = $p_after_action);
+	$callaction(_N_Act_App_Update_Force_Read,$g_strVersionFilePath_App,$g_strVersionFileName_App);
+"
+/>
+<action id="_N_Act_App_Update_Force_Read" scope="common" 
+params="p_path, p_file"
+value="
+	$log(*********** _N_Act_App_Update_Force_Read);
+	$setsocketaction($g_SiseSocketName_DOMESTIC,_N_Act_Network_RecvData_Master_xml,); 	// RecvAction 을 변경하여 보낸다. 
+
+	$setvar(	tmp_path = $addstring($p_path,/,$p_file)	);
+	$setvar(
+		LEN_MYMQ_TH = $result($map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_TH)-4)
+		,LEN_MYMQ_RH = $map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_RH)
+		,LEN_MYMQ_FILE = $map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_FILE)
+		,MYMQ_TH_PKT_LEN=$result($LEN_MYMQ_TH + $LEN_MYMQ_RH + $LEN_MYMQ_FILE)
+		,tmp_MYMQ_RH_size = $map_getstructsize($g_SiseSocketName,MYMQ_RH)
+	);
+	//$log(LEN_MYMQ_TH:[$LEN_MYMQ_TH], LEN_MYMQ_RH:[$LEN_MYMQ_RH], LEN_MYMQ_FILE:[$LEN_MYMQ_FILE], MYMQ_TH_PKT_LEN:[$MYMQ_TH_PKT_LEN], tmp_MYMQ_RH_size:[$tmp_MYMQ_RH_size]);
+		
+	// Packet Indicator OR 연산으로 추가 
+	$setbit(MYMQ_HEADER_PKTI_1,0x01);	// RHI Following RH
+	$setbit_or(MYMQ_HEADER_PKTI_1,0x04);	// Begin Packet Indicator
+	$setbit_or(MYMQ_HEADER_PKTI_1,0x08);	// End Packet Indicator
+	$setvar(MYMQ_HEADER_FUNC=C); 		// A:Sign-on B:Notify signed user's id, C:General REquest for transactions
+	$setbit(MYMQ_RH_FLAG,0x00);
+
+	$setvar(
+		MYMQ_RH_WKEY 		= $callaction(FNNETWORK_SISESOCKET_DOMESTIC_GETREQUESTID)
+		,MYMQ_RH_EXCODE 	= SYS
+		,MYMQ_RH_RKEY 		= GETF
+		,MYMQ_FILE_PATH 	= $tmp_path
+		,MYMQ_FILE_DATE 	= $g_versionFile_date_xml
+		,MYMQ_FILE_SIZE 	= $g_versionFile_size_xml
+	);
+	
+	$log(********************  down/appVersion.dat Request: MYMQ_FILE_PATH:[$MYMQ_FILE_PATH], MYMQ_FILE_DATE:[$MYMQ_FILE_DATE] MYMQ_FILE_SIZE:[$MYMQ_FILE_SIZE]);
+
+	$map_getstructsenddata($g_SiseSocketName_DOMESTIC,MYMQ_TH,,strSendData); 	// TH 헤더 추가
+	$map_getstructsenddata($g_SiseSocketName_DOMESTIC,MYMQ_RH,,strTrHeader); 	
+	$addvar(strSendData,strTrHeader); 							// TR 헤더 추가
+	$map_getstructsenddata($g_SiseSocketName_DOMESTIC,MYMQ_FILE,,strFileHeader); 	
+	$addvar(strSendData,strFileHeader); 							// FILE 헤더 추가
+	$sendvardata($g_SiseSocketName_DOMESTIC,$strTrCode,strSendData,$MYMQ_RH_WKEY,$strBeforeActionName,$strAfterActionName,TRUE);	
+	return $MYMQ_RH_WKEY;
+"/>
+//////////////////////////////////////////////////////
+// XML다운로드 
+//////////////////////////////////////////////////////
+<action id="N_Act_Download_XML_Start" scope="common" 
+params="p_completeAction"
+value="
+	$log(*********** N_Act_Download_XML_Start : [$p_completeAction]);
+	$setvar(
+		tmp_down_complete_action 	= $p_completeAction
+	);
+	$callaction(_N_Act_VersionFile_SendData_xml,$g_strVersionFilePath_XML,$g_strVersionFileName_XML);  
+" />
+<action id="_N_Act_VersionFile_SendData_xml" scope="common" 
+params="p_path, p_file"
+value="
+	$log(*********** _N_Act_VersionFile_SendData_xml [$p_path][$p_file]);
+	$setsocketaction($g_SiseSocketName_DOMESTIC,_N_Act_Network_RecvData_Master_xml,); 	// RecvAction 을 변경하여 보낸다. 
+	$setvar_common(
+		, g_iRecvTotalFileCount_xml 	= 0
+	);
+	$delarrayvar(g_arr_req_xml); 				// 요청할 xml 파일을 담는다.
+
+	$createfolder($g_path_down/$p_path);
+	$readfile($g_path_down/$p_path/$p_file,strVersionFileData_xml); 		// 기존에 있는 파일을 읽어온다.
+	// 서버경로중 down이 있음 - down/version.dat
+	$log(version.dat 경로 : $g_path_down/$p_path/$p_file);
+	$logvar(strVersionFileData_xml);
+
+	// 마스터와 인자값이 틀리다. 
+	$setNameToken(tknOldVersion_xml,strVersionFileData_xml,0x0A,0x3B,0); 		// 이전 버전파일로 등록 
+	//$printNameToken(tknOldVersion_xml);
+	
+	$setvar(	tmp_path = $addstring($p_path,/,$p_file)	);
+	$setvar(
+		LEN_MYMQ_TH 		= $result($map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_TH)-4)
+		,LEN_MYMQ_RH 		= $map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_RH)
+		,LEN_MYMQ_FILE 		= $map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_FILE)
+		,MYMQ_TH_PKT_LEN 	= $result($LEN_MYMQ_TH + $LEN_MYMQ_RH + $LEN_MYMQ_FILE)
+		,tmp_MYMQ_RH_size = $map_getstructsize($g_SiseSocketName,MYMQ_RH)
+	);
+	/*
+	$logvar(
+		LEN_MYMQ_TH 
+		,LEN_MYMQ_RH
+		,LEN_MYMQ_FILE
+		,MYMQ_TH_PKT_LEN
+		,tmp_MYMQ_RH_size
+	);
+	*/	
+	// Packet Indicator OR 연산으로 추가 
+	$setbit(MYMQ_HEADER_PKTI_1,0x01);	// RHI Following RH
+	$setbit_or(MYMQ_HEADER_PKTI_1,0x04);	// Begin Packet Indicator
+	$setbit_or(MYMQ_HEADER_PKTI_1,0x08);	// End Packet Indicator
+	
+	$setvar(MYMQ_HEADER_FUNC=C); 		// A:Sign-on B:Notify signed user's id, C:General REquest for transactions
+	$setbit(MYMQ_RH_FLAG,0x00);
+
+	$setvar(
+		MYMQ_RH_WKEY 		= $callaction(FNNETWORK_SISESOCKET_DOMESTIC_GETREQUESTID)
+		,MYMQ_RH_EXCODE 	= SYS
+		,MYMQ_RH_RKEY 		= GETF
+		,MYMQ_FILE_PATH 	= $tmp_path
+		,MYMQ_FILE_DATE 	= $g_versionFile_date_xml
+		,MYMQ_FILE_SIZE 	= $g_versionFile_size_xml
+	);
+	$log(*** XML Send $g_versionFile_date_xml,$g_versionFile_size_xml);
+
+	$map_getstructsenddata($g_SiseSocketName_DOMESTIC,MYMQ_TH,,strSendData); 	// TH 헤더 추가
+	$map_getstructsenddata($g_SiseSocketName_DOMESTIC,MYMQ_RH,,strTrHeader); 	
+	$addvar(strSendData,strTrHeader); 							// TR 헤더 추가
+	$map_getstructsenddata($g_SiseSocketName_DOMESTIC,MYMQ_FILE,,strFileHeader); 	
+	$addvar(strSendData,strFileHeader); 							// FILE 헤더 추가
+	$sendvardata($g_SiseSocketName_DOMESTIC,$strTrCode,strSendData,$MYMQ_RH_WKEY,$strBeforeActionName,$strAfterActionName,TRUE);	
+	return $MYMQ_RH_WKEY;
+"/>
+<action id="_N_Act_VersionFile_Process_xml" scope="common" 
+params="p_status, p_path, p_file, p_result"
+value="
+	$log(*********** _N_Act_VersionFile_Process_xml [$p_status],[$p_path],[$p_file],[$p_result] );
+
+	if($p_status == 2) {
+	}
+	else if($p_status == 1) {		
+		// 배열에 저장하여 순서대로 요청한다.
+		$setvar(tmp_add_idx = $getarrayvarcount(g_arr_req_xml));
+		$setsubarray_common(g_arr_req_xml,$tmp_add_idx,$down/$p_path,$p_file);
+	}
+
+	if($p_status == 3) {
+		$log(========= XML목록 저장 $p_file);
+		if($g_iRecvTotalFileCount_xml != $getarrayvarcount(g_arr_req_xml)){
+			$alertaction(,,XML파일 수 확인[$g_iRecvTotalFileCount_xml][$getarrayvarcount(g_arr_req_xml)],확인);
+			return;
+		}
+		$logarrayvar(g_arr_req_xml);
+		//$callaction(fnConfig_SetValue,g_versionFile_date_xml 	,$save_strFile_date_xml);
+		//$callaction(fnConfig_SetValue,g_versionFile_size_xml 	,$save_strFile_size_xml);
+
+		$setvar_common(
+			g_req_xml_idx 	= 0
+			,g_arr_xml_cnt 	= $getarrayvarcount(g_arr_req_xml)
+		);
+		$callaction(_N_Act_File_Req_XML);
+	}
+"/>
+<action id="_N_Act_File_Req_XML" scope="common" 
+params="p_idx"
+value="
+	$log(*********** _N_Act_File_Req_XML );
+
+	if(	$g_req_xml_idx >= $g_arr_xml_cnt ){
+		$log(*********** 요청끝 XML [$g_req_xml_idx/$g_arr_xml_cnt]);
+		if($g_arr_xml_cnt > 0){
+			$setvar(
+				tmp_progress_unit 			= $result($vg_progress_guide.width/$g_arr_xml_cnt)
+				,tmp_progress_pos 			= $result($tmp_progress_unit*$g_req_xml_idx)
+				,tmp_str 					= $addstring($tmp_xml_file,%20 다운로드 완료,%20%28,$g_req_xml_idx,/,$g_arr_xml_cnt,%29)
+				,lbl_prcessing.value 		= $tmp_str
+				,vg_progress_inner.width 	= $tmp_progress_pos
+			);
+		}
+		$callaction(_N_Act_VersionFile_XML_SAVE);
+		return;
+	}
+	$setvar(
+		tmp_xml_path 	= $addstring(down,$getarrayvar(g_arr_req_xml,$g_req_xml_idx,0)) 		//xml은 path에 down폴더 있음
+		,tmp_xml_file 	= $getarrayvar(g_arr_req_xml,$g_req_xml_idx,1)
+	);
+	
+	$setvar(
+		tmp_progress_unit 			= $result($vg_progress_guide.width/$g_arr_xml_cnt)
+		,tmp_progress_pos 			= $result($tmp_progress_unit*$g_req_xml_idx)
+		,tmp_str 					= $addstring($tmp_xml_file,%20 다운로드중,%20%28,$g_req_xml_idx,/,$g_arr_xml_cnt,%29)
+		,lbl_prcessing.value 		= $tmp_str
+		,vg_progress_inner.width 	= $tmp_progress_pos
+	);
+
+	$callaction(_N_Act_Request_File_Xml,$tmp_xml_path,$tmp_xml_file); 		// 파일요청
+	
+" />
+<action id="_N_Act_VersionFile_XML_SAVE" scope="common" 
+value="
+	$log(*********** _N_Act_VersionFile_XML_SAVE );
+	//$logvar_binary(g_strVersion_dat);
+
+	$setvar(,tmp_save_file_path 	= $g_path_down/$g_strVersionFilePath_XML/$g_strVersionFileName_XML);
+	$logvar(tmp_save_file_path);
+	$setvar(tmp_is_write_success = $writefile($tmp_save_file_path,g_strVersion_dat,false,false,false,false,false));
+	//$logvar(tmp_is_write_success);
+	if(!$tmp_is_write_success){
+		$setvar(tmp_msg = 버전파일 쓰기 에러:$tmp_save_file_path);
+		$callaction(fnPopover_AlertAction,,$tmp_msg,,확인);
+		return;
+	}
+
+	$callaction(fnConfig_SetValue,g_versionFile_date_xml 	,$save_strFile_date_xml);
+	$callaction(fnConfig_SetValue,g_versionFile_size_xml 	,$save_strFile_size_xml);
+	$callaction($tmp_down_complete_action);
+
+	
+" />
+// 서버에 xml 파일 요청 
+<action id="_N_Act_Request_File_Xml" scope="common" 
+params="p_path, p_file"
+value="
+	$log(*********** _N_Act_Request_File_Xml );
+	$setvar(	tmp_path = $addstring($p_path,/,$p_file)	);
+	$setvar(
+		LEN_MYMQ_TH 		= $result($map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_TH)-4)
+		,LEN_MYMQ_RH 		= $map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_RH)
+		,LEN_MYMQ_FILE 		= $map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_FILE)
+		,MYMQ_TH_PKT_LEN 	= $result($LEN_MYMQ_TH + $LEN_MYMQ_RH + $LEN_MYMQ_FILE)
+		,tmp_MYMQ_RH_size 	= $map_getstructsize($g_SiseSocketName,MYMQ_RH)
+	);
+	// Packet Indicator OR 연산으로 추가 
+	$setbit(MYMQ_HEADER_PKTI_1,0x01);	// RHI Following RH
+	$setbit_or(MYMQ_HEADER_PKTI_1,0x04);	// Begin Packet Indicator
+	$setbit_or(MYMQ_HEADER_PKTI_1,0x08);	// End Packet Indicator
+	
+	$setvar(MYMQ_HEADER_FUNC=C); 		// A:Sign-on B:Notify signed user's id, C:General REquest for transactions
+	$setbit(MYMQ_RH_FLAG,0x00);
+
+	$setvar(
+		MYMQ_RH_WKEY 		= $callaction(FNNETWORK_SISESOCKET_DOMESTIC_GETREQUESTID)
+		,MYMQ_RH_EXCODE 	= SYS
+		,MYMQ_RH_RKEY 		= GETF
+		,MYMQ_FILE_PATH 	= $tmp_path
+		,MYMQ_FILE_DATE 	= $g_versionFile_date_xml
+		,MYMQ_FILE_SIZE 	= $g_versionFile_size_xml
+	);
+	$log(*********** XML Request [$g_versionFile_date_xml],[$g_versionFile_size_xml][$tmp_path][$save_strFile_date_xml][$save_strFile_date_xml]);
+
+	$map_getstructsenddata($g_SiseSocketName_DOMESTIC,MYMQ_TH,,strSendData); 	// TH 헤더 추가
+	$map_getstructsenddata($g_SiseSocketName_DOMESTIC,MYMQ_RH,,strTrHeader); 	
+	$addvar(strSendData,strTrHeader); 							// TR 헤더 추가
+	$map_getstructsenddata($g_SiseSocketName_DOMESTIC,MYMQ_FILE,,strFileHeader); 	
+	$addvar(strSendData,strFileHeader); 							// FILE 헤더 추가
+	$sendvardata($g_SiseSocketName_DOMESTIC,$strTrCode,strSendData,$MYMQ_RH_WKEY,$strBeforeActionName,$strAfterActionName,TRUE);	
+	return $MYMQ_RH_WKEY;
+"/>
+
+//////////////////////////////////////////////////////
+// 국내 마스터파일 다운로드 
+//////////////////////////////////////////////////////
+// 국내 마스터 받았을 때
+<action id="_N_Act_Network_RecvData_Master_d"  scope="common"
+params="p_socket_name, p_varname_recv, p_err_no"
+value="
+	$log(*********** _N_Act_Network_RecvData_Master_d);
+	//if($g_is_background){	return;	}
+
+	if(!$isequal_string($p_socket_name,$g_SiseSocketName_DOMESTIC)){
+		//$alertaction(fnExit_Timer,국내시세[$p_socket_name][$g_SiseSocketName],국내시세 아닌 것이 호출되었습니다..\n관리자에게 문의하세요,확인);
+		$callaction(fnPopover_AlertAction,fnExit_Timer,국내시세 아닌 것이 호출되었습니다..\n관리자에게 문의하세요,,확인);
+		return;
+	}
+	// 폴링: 길이가 0인경우 
+	if($isequal_string($p_err_no,400)){
+		$log(======== 폴링: 길이가 0인경우 );
+		$setvar_common(g_polling_fail_cnt = 0);
+		return;
+	}
+
+	if($isequal_string($p_err_no,200)){
+		//$alertaction(,국내시세4,네트워크 접속이 원할하지 않습니다.\n인터넷 연결 후 이용하세요.,확인);
+		return;
+	}
+	if($strlen($p_varname_recv)<0){
+		$log(국내 시세 서버 - 데이터 없음);
+		return;
+	}
+	$setvar(
+		tmp_socketName = $p_socket_name
+		, strRecvVarName=$p_varname_recv
+		, iErrCode = $p_err_no
+
+		,LEN_PACKET_LENGTH 	= 4 									// 제일 앞단 헤더 길이 
+		,POS_MYMQ_TH 		= 0
+		,LEN_MYMQ_TH 		= $map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_TH) 
+		,POS_MYMQ_RH 		= $result($POS_MYMQ_TH + $LEN_MYMQ_TH)
+		,LEN_MYMQ_RH 		= $map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_RH)
+		,POS_MYMQ_RU 		= $result($POS_MYMQ_RH + $LEN_MYMQ_RH)
+		,LEN_MYMQ_FILE 		= $map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_FILE) 
+		,POS_MYMQ_FILE 		= $result($POS_MYMQ_RH + $LEN_MYMQ_RH)
+	);
+	$log(LEN_PACKET_LENGTH:[$LEN_PACKET_LENGTH], LEN_MYMQ_TH:[$LEN_MYMQ_TH], LEN_MYMQ_RH:[$LEN_MYMQ_RH], POS_MYMQ_TH:[$POS_MYMQ_TH], POS_MYMQ_RH:[$POS_MYMQ_RH], POS_MYMQ_RU:[$POS_MYMQ_RU]);
+	$logvar_binary(RecvData All Master_d,$strRecvVarName);
+	$delvar(strHeaderData_MYMQ_TH, strHeaderData_MYMQ_RH, strRu_Data,strRecvData_RU,LEN_ZIP_OIR_DATA,strRecvData, strSiseRealData);
+	$memcpy(strHeaderData_MYMQ_TH,$strRecvVarName,$POS_MYMQ_TH,$LEN_MYMQ_TH);
+	//$logvar_binary(RecvData MYMQ_TH ,strHeaderData_MYMQ_TH); 			// 패킷 길이포함 
+
+	$map_getfielddata($g_SiseSocketName_DOMESTIC,strPKT_LEN,MYMQ_TH,PKT_LEN,strHeaderData_MYMQ_TH); 	//받은데이터 패킷길이 
+	$map_getfielddata($g_SiseSocketName_DOMESTIC,strPKI_1,MYMQ_TH,PKI_1,strHeaderData_MYMQ_TH); 		//Packet Indicator 1
+	$map_getfielddata($g_SiseSocketName_DOMESTIC,strPKI_2,MYMQ_TH,PKI_2,strHeaderData_MYMQ_TH); 		//Packet Indicator 2 - 현재 사용 안함.
+	$map_getfielddata($g_SiseSocketName_DOMESTIC,strFUNC,MYMQ_TH,FUNC,strHeaderData_MYMQ_TH); 		//Function Code
+
+	$log(MYMQ_TH.PKT_LEN:[$strPKT_LEN],MYMQ_TH.FUNC:[$strFUNC]);
+	$logvar_binary(strPKI_1 ,strPKI_1);
+
+	if($isbit_and(strPKI_1,0x01) ) { 				//  RH 헤더가 있으면 
+		$log(**** RH 헤더가 있음. );
+		$memcpy(strHeaderData_MYMQ_RH,$strRecvVarName,$POS_MYMQ_RH,$LEN_MYMQ_RH);
+		//$logvar_binary(strHeaderData_MYMQ_RH ,strHeaderData_MYMQ_RH);
+
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strFLAG,MYMQ_RH,FLAG,strHeaderData_MYMQ_RH); 
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strWKEY,MYMQ_RH,WKEY,strHeaderData_MYMQ_RH); 	// reqid
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strSVCODE,MYMQ_RH,SVCODE,strHeaderData_MYMQ_RH); 
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strEXCODE,MYMQ_RH,EXCODE,strHeaderData_MYMQ_RH); 
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strRKEY,MYMQ_RH,RKEY,strHeaderData_MYMQ_RH); 		// TR Code
+
+		$log(MYMQ_RH.FLAG:[$strFLAG], MYMQ_RH.WKEY:[$strWKEY], MYMQ_RH.SVCODE:[$strSVCODE], MYMQ_RH.EXCODE:[$strEXCODE], MYMQ_RH.RKEY:[$strRKEY]);		
+	}
+
+	// 여기서부터 추가 
+	// strPKT_LEN = TH + RH + RU Length(Big endian integer) -> header.xml에서 INT_NET으로 정의 	
+	$setvar( 	LEN_MYMQ_RU = $result($strPKT_LEN - $POS_MYMQ_RU + $LEN_PACKET_LENGTH)  	);
+	$memcpy(strRecvData_RU,$strRecvVarName,$POS_MYMQ_RU,$LEN_MYMQ_RU);
+	//$logvar_binary(strRecvData_RU ,strRecvData_RU);
+	$setvar(POS_CUR_BODYDATA = $POS_MYMQ_RU);
+
+	if($isbit_and(strFLAG,0x02)) { 				//  이전키
+		$log(이전키 있음);
+		$setvar(LEN_CUR_BODYDATA = 1);
+		$memcpy(strRHFlag_Pre,$strRecvVarName,$POS_CUR_BODYDATA,$LEN_CUR_BODYDATA);
+		$setvar(	LEN_PRENEXTKEY = $result($ascvar(strRHFlag_Pre) + + $LEN_CUR_BODYDATA)	);
+		// 이전키 복사함. - After에서 셋팅함.
+		$memcpy(PREKEY_HEADER_DATA,$strRecvVarName,$POS_CUR_BODYDATA,$LEN_PRENEXTKEY);		// 앞의 길이 1byte를 포함하여 복사
+		$setvar(	POS_CUR_BODYDATA = $result($POS_CUR_BODYDATA + $LEN_PRENEXTKEY)	);
+		//$logvar_binary(PREKEY_HEADER_DATA ,PREKEY_HEADER_DATA);
+		//$log(이전키:$PREKEY_HEADER_DATA);
+	}
+	else{
+		$delvar(PREKEY_HEADER_DATA);
+	}
+	if($isbit_and(strFLAG,0x04)){ 				//  다음키
+		$log(다음키 있음);
+		$setvar(LEN_CUR_BODYDATA = 1);
+		$memcpy(strRHFlag_Next,$strRecvVarName,$POS_CUR_BODYDATA,$LEN_CUR_BODYDATA);
+		$setvar(	LEN_PRENEXTKEY = $result($ascvar(strRHFlag_Next) + $LEN_CUR_BODYDATA)	);
+		// 다음키 복사함. - After에서 셋팅함.
+		$memcpy(NEXTKEY_HEADER_DATA,$strRecvVarName,$POS_CUR_BODYDATA,$LEN_PRENEXTKEY);  	// 앞의 길이 1byte를 포함하여 복사
+		$setvar(	POS_CUR_BODYDATA = $result($POS_CUR_BODYDATA + $LEN_PRENEXTKEY)	);
+		//$logvar_binary(NEXTKEY_HEADER_DATA ,NEXTKEY_HEADER_DATA);
+		$log(다음키:$NEXTKEY_HEADER_DATA);
+	}
+	else{
+		$log(다음키 없음);
+		$delvar(NEXTKEY_HEADER_DATA);
+	}
+
+	// 다음데이터가 있을 경우 연속패킷
+	if($isbit_and(strPKI_1,0x02) ) { 	
+		$log(*********** 데이터 More 0x02);
+		// 타켓, 소스명, 소스시작, 소스길이,타켓스코프,타켓시작위치 
+		$memcpy(strTmpContinus,$strRecvVarName,$POS_CUR_BODYDATA,,FALSE,$getvarlen(strTmpContinus));
+		
+		//$delvar(strTmp_Unit);
+		//$memcpy(strTmp_Unit,$strRecvVarName,$POS_CUR_BODYDATA);
+		//$logvar_binary(strTmp_Unit, strTmp_Unit);l
+		//$logvar_binary(strTmpContinus, strTmpContinus);
+
+		return;
+	}
+	// 마지막 데이터일 경우 
+	if($isbit_and(strPKI_1,0x08) ) { 
+		$log(*********** 데이터 End);
+		$delvar(strTmp_Unit);
+		$memcpy(strTmp_Unit,$strRecvVarName,$POS_CUR_BODYDATA);
+		//$logvar_binary(strTmp_Unit, strTmp_Unit);l
+
+		$memcpy(strTmpContinus,$strRecvVarName,$POS_CUR_BODYDATA,,FALSE,$getvarlen(strTmpContinus));
+		//$logvar_binary(strTmpContinus Last,strTmpContinus);
+	}
+	else{
+		$log(*********** 데이터 더있다. 0x08이 없다.);
+		// 타켓, 소스명, 소스시작, 소스길이,타켓스코프,타켓시작위치 
+		$memcpy(strTmpContinus,$strRecvVarName,$POS_CUR_BODYDATA,,FALSE,$getvarlen(strTmpContinus));
+		//$logvar_binary(strTmpContinus More,strTmpContinus);
+
+		//$delvar(strTmp_Unit);
+		//$memcpy(strTmp_Unit,$strRecvVarName,$POS_CUR_BODYDATA);
+		//$logvar_binary(strTmp_Unit, strTmp_Unit);l
+		
+		return;
+	}
+
+	$delvar(strRecvData_Zip);
+	$memcpy(strRecvData_Zip,strTmpContinus);
+	$delvar(strTmpContinus);
+
+	if($isbit_and(strPKI_1,0x10) ) { 				//  압축되어있다.
+		// 압축해제 
+		$log(압축되었다.);
+		//$logvar_binary(strRecvData_Zip,strRecvData_Zip);
+
+		// 4Byte:원본길이
+		$memcpy(LEN_ZIP_OIR_DATA,strRecvData_Zip,0,4);
+		$htonl(LEN_ZIP_OIR_DATA);
+		$log(ZIP Data Ori Size:$LEN_ZIP_OIR_DATA);
+		$delvar(strRecvData);
+		// 타켓, 소스명, 소스시작, 소스길이,타켓스코프,타켓시작위치 
+		$memcpy(strRecvData,strRecvData_Zip,4,$getvarlen(strRecvData_Zip));
+
+		$log(******* 4byte 땐거 );
+		//$logvar_binary(strRecvData, strRecvData);
+
+		$decompressvar(strRecvData,$LEN_ZIP_OIR_DATA);
+
+		//$logvar_binary(strRecvData UnZip,strRecvData);
+	}
+	else{
+		$memcpy(strRecvData,strRecvData_Zip);
+	}
+
+	//$logvar_binary(strRecvData,strRecvData);
+
+	if($isequal_string($strEXCODE,SYS) || $isequal_string($strEXCODE,SYSTEM)){
+		$memcpy(strHeaderData_MYMQ_FILE,strRecvData,0,$LEN_MYMQ_FILE);
+
+		//$logvar_binary(strHeaderData_MYMQ_FILE ,strHeaderData_MYMQ_FILE);
+
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strFile_path,MYMQ_FILE,PATH,strHeaderData_MYMQ_FILE); 
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strFile_seqn,MYMQ_FILE,SEQN,strHeaderData_MYMQ_FILE); 
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strFile_size,MYMQ_FILE,SIZE,strHeaderData_MYMQ_FILE); 
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strFile_sent,MYMQ_FILE,SENT,strHeaderData_MYMQ_FILE); 
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strFile_date,MYMQ_FILE,DATE,strHeaderData_MYMQ_FILE); 
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strFile_zipf,MYMQ_FILE,ZIPF,strHeaderData_MYMQ_FILE); 
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strFile_errf,MYMQ_FILE,ERRF,strHeaderData_MYMQ_FILE); 
+		$map_getfielddata($g_SiseSocketName_DOMESTIC,strFile_emsg,MYMQ_FILE,EMSG,strHeaderData_MYMQ_FILE); 
+
+		$log(strFile_path:[$strFile_path],  strFile_seqn:[$strFile_seqn], strFile_size:[$strFile_size], strFile_sent[$strFile_sent], strFile_date:[$strFile_date], strFile_zipf:[$strFile_zipf], strFile_errf:[$strFile_errf]);
+		$log($strFile_emsg);
+
+		if($strFile_errf==1){
+			//$alertaction(,마스터다운로드 실패,$strFile_emsg,확인); 
+			$callaction(fnPopover_AlertAction,,$strFile_emsg,,확인);
+			return;
+		}
+		if($isequal_string($strFile_errf,=)){
+			$log(***** 국내 받았다.);
+			$setvar(
+				save_strFile_date_d = $g_versionFile_date_d
+				,save_strFile_size_d = $g_versionFile_size_d
+			);
+			//$callaction(Act_VersionFile_Process_d,3); 		//확인필요
+			$callaction(_N_Act_VersionFile_Process_D,3);
+			return;
+		}
+		$logvar(POS_MYMQ_FILE, LEN_MYMQ_FILE);
+		$setvar(
+			tmp_iFileSize 		= $int($strFile_size)
+			,tmp_iSentSize 		= $int($strFile_sent)
+			,POS_FILEDATA		= $result(0 + $LEN_MYMQ_FILE)
+			,LEN_FILEDATA 		= $tmp_iFileSize
+		);
+		
+		$memcpy(strRecvData_1,strRecvData ,$POS_FILEDATA,$LEN_FILEDATA);
+		//$logvar_binary(strRecvData_1,strRecvData_1);
+
+		if($isequal_string($strFile_seqn,0001)){	$delvar(strRecv_FileData);	}
+
+		$delvar(strRecv_File_div);
+		$memcpy(strRecv_File_div,strRecvData,$POS_FILEDATA,$LEN_FILEDATA);
+
+		//$logvar_binary(strRecv_File_div,strRecv_File_div);
+
+		// 타켓, 소스명, 소스시작, 소스길이,타켓스코프,타켓시작위치 
+		$memcpy(strRecv_FileData,strRecv_File_div,,,TRUE,$getvarlen(strRecv_FileData));
+
+		//$logvar_binary(DivisionStauts ,strPKI_1);
+
+		if($tmp_iFileSize > $tmp_iSentSize ){		
+			return;
+		}
+
+		if($isequal_string($strFile_path, mstr/versfile.dat)){				
+			$setvar(
+				save_strFile_date_d 	= $strFile_date
+				,save_strFile_size_d 	= $strFile_size
+			);
+			$memcpy(g_strVersion_master_d,strRecv_FileData,0,$getvarlen(strRecv_FileData),true); 		//scope=common
+			$setNameToken(tknNewVersion_d,strRecv_FileData,0x0A,0x3B); 		// xml요청시와 틀림
+			//$logvar(strRecv_FileData);
+			$log(*********** RecvData 국내마스터:이전갯수:[$getNameTokenCount(tknOldVersion_d)] 현재갯수:[$getNameTokenCount(tknNewVersion_d)]);
+			//$printNameToken(tknNewVersion_d);
+			//$printNameToken(tknOldVersion_d);
+
+			// 다운받을 파일을 호출한다. 
+			$setvar_common(g_iRecvTotalFileCount_d = $setCompareVersionNameToken(tknOldVersion_d,tknNewVersion_d,_N_Act_VersionFile_Process_D,2,1,0));
+			$log(***** 받아야하는 파일 갯수 국내마스터: [$g_iRecvTotalFileCount_d] ********************);
+			$callaction(_N_Act_VersionFile_Process_D,3);
+		}
+		else{
+			$settokenarray(strFile_path,arrFilePath,0x2F);
+			$logarrayvar(arrFilePath);
+			$setvar(
+				//tmp_save_file_path 	= $g_path_down/$strFile_path
+				,strPATH 				= $getarrayvar(arrFilePath,0,0)
+				,strName 				= $getarrayvar(arrFilePath,1,0)
+				,tmp_save_file_path 	= $g_path_down/dat/$strName
+			);
+			$logvar(
+				tmp_save_file_path
+				,strPATH
+				,strName
+			);
+			//$logvar(strRecv_FileData);
+			$setvar(tmp_is_write_success = $writefile($tmp_save_file_path,strRecv_FileData,false,false,false,false,false));
+			$logvar(tmp_is_write_success);
+			if(!$tmp_is_write_success){
+				$setvar(tmp_msg = 다운로드 에러:$strFile_path);
+				$callaction(fnPopover_AlertAction,,$tmp_msg,,확인);
+				return;
+			}
+			$setvar_common(g_req_master_d_idx = $result($g_req_master_d_idx + 1));
+			$callaction(_N_Act_File_Req_Master_D);
+
+
+			// 저장이 안된다. 
+			//$writefileVersion(tknNewVersion_d,$tmp_save_file_path,strRecv_FileData,2:$strPATH,1:$strName,$g_path_down,3,Act_VersionFile_Process_d);
+		}
+		$delvar_all(strRecv_FileData);
+		$delvar(LEN_ZIP_OIR_DATA, strRecv_FileData, strRecv_File_ZIP, strRecv_File_div);
+	}
+" />
+<action id="N_Act_Download_Master_D_Start" scope="common" 
+params="p_completeAction"
+value="
+	$log(*********** N_Act_Download_Master_D_Start : [$p_completeAction]);
+	$setvar(
+		tmp_down_master_d_complete_action 	= $p_completeAction
+	);
+	$callaction(_N_Act_VersionFile_SendData_Master_D,$g_strVersionFilePath_DOMESTIC,$g_strVersionFileName_DOMESTIC);  
+" />
+
+<action id="_N_Act_VersionFile_SendData_Master_D" scope="common" 
+params="p_path, p_file"
+value="
+	$log(*********** _N_Act_VersionFile_SendData_Master_D [$p_path][$p_file]);
+	$setsocketaction($g_SiseSocketName_DOMESTIC,_N_Act_Network_RecvData_Master_d,); 	// RecvAction 을 변경하여 보낸다. 
+	$setvar_common(
+		, g_iRecvTotalFileCount_d 	= 0
+	);
+	$delarrayvar(g_arr_req_master_d); 				// 요청할 국내마스터 파일을 담는다.
+
+	$createfolder($g_path_down/$p_path);
+	$readfile($g_path_down/$p_path/$p_file,strVersionFileData_d); 		// 기존에 있는 파일을 읽어온다.
+	//$logvar(strVersionFileData_d);
+	$setNameToken(tknOldVersion_d,strVersionFileData_d,0x0A,0x3B); 		// 이전 버전파일로 등록 
+	//$printNameToken(tknOldVersion_d);
+
+	$setvar(	tmp_path = $addstring($p_path,/,$p_file)	);
+	$setvar(
+		LEN_MYMQ_TH 		= $result($map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_TH)-4)
+		,LEN_MYMQ_RH 		= $map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_RH)
+		,LEN_MYMQ_FILE 		= $map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_FILE)
+		,MYMQ_TH_PKT_LEN 	= $result($LEN_MYMQ_TH + $LEN_MYMQ_RH + $LEN_MYMQ_FILE)
+		,tmp_MYMQ_RH_size 	= $map_getstructsize($g_SiseSocketName,MYMQ_RH)
+	);
+	//$log(LEN_MYMQ_TH:[$LEN_MYMQ_TH], LEN_MYMQ_RH:[$LEN_MYMQ_RH], LEN_MYMQ_FILE:[$LEN_MYMQ_FILE], MYMQ_TH_PKT_LEN:[$MYMQ_TH_PKT_LEN], tmp_MYMQ_RH_size:[$tmp_MYMQ_RH_size])
+		
+	// Packet Indicator OR 연산으로 추가 
+	$setbit(MYMQ_HEADER_PKTI_1,0x01);	// RHI Following RH
+	$setbit_or(MYMQ_HEADER_PKTI_1,0x04);	// Begin Packet Indicator
+	$setbit_or(MYMQ_HEADER_PKTI_1,0x08);	// End Packet Indicator
+	
+	$setvar(MYMQ_HEADER_FUNC=C); 		// A:Sign-on B:Notify signed user's id, C:General REquest for transactions
+	$setbit(MYMQ_RH_FLAG,0x00);
+
+	$setvar(
+		MYMQ_RH_WKEY 	= $callaction(FNNETWORK_SISESOCKET_DOMESTIC_GETREQUESTID)
+		,MYMQ_RH_EXCODE = SYS
+		,MYMQ_RH_RKEY 	= GETF
+		,MYMQ_FILE_PATH = $tmp_path
+		,MYMQ_FILE_DATE = $g_versionFile_date_d 
+		,MYMQ_FILE_SIZE = $g_versionFile_size_d
+	);
+	$log(*** XML Send 국내 MYMQ_FILE_PATH:[$MYMQ_FILE_PATH], MYMQ_FILE_DATE:[$MYMQ_FILE_DATE] MYMQ_FILE_SIZE:[$MYMQ_FILE_SIZE]);
+
+	$map_getstructsenddata($g_SiseSocketName_DOMESTIC,MYMQ_TH,,strSendData); 	// TH 헤더 추가
+	$map_getstructsenddata($g_SiseSocketName_DOMESTIC,MYMQ_RH,,strTrHeader); 	
+	$addvar(strSendData,strTrHeader); 							// TR 헤더 추가
+	$map_getstructsenddata($g_SiseSocketName_DOMESTIC,MYMQ_FILE,,strFileHeader); 	
+	$addvar(strSendData,strFileHeader); 							// FILE 헤더 추가
+	$sendvardata($g_SiseSocketName_DOMESTIC,$strTrCode,strSendData,$MYMQ_RH_WKEY,$strBeforeActionName,$strAfterActionName,TRUE);	
+	return $MYMQ_RH_WKEY;
+"/>
+<action id="_N_Act_VersionFile_Process_D" scope="common" 
+params="p_status, p_path, p_file, p_result"
+value="
+	$log(*********** _N_Act_VersionFile_Process_D [$p_status],[$p_path],[$p_file],[$p_result] );
+	if($p_status == 2) {
+	}
+	else if($p_status == 1) {		
+		// 배열에 저장하여 순서대로 요청한다.
+		$setvar(tmp_add_idx = $getarrayvarcount(g_arr_req_master_d));
+		$setsubarray_common(g_arr_req_master_d,$tmp_add_idx,$p_path,$p_file);
+	}
+
+	if($p_status == 3) {
+		$log(========= 국내마스터 저장 $p_file);
+		if($g_iRecvTotalFileCount_d != $getarrayvarcount(g_arr_req_master_d)){
+			$alertaction(,,국내마스터 파일 수 확인[$g_iRecvTotalFileCount_d][$getarrayvarcount(g_arr_req_master_d)],확인);
+			return;
+		}
+		$logarrayvar(g_arr_req_master_d);
+		$setvar_common(
+			g_req_master_d_idx 	= 0
+			,g_arr_mater_d_cnt 	= $getarrayvarcount(g_arr_req_master_d)
+		);
+		if($g_arr_mater_d_cnt > 0){
+			
+		}
+		$callaction(_N_Act_File_Req_Master_D);
+	}
+"/>
+<action id="_N_Act_File_Req_Master_D" scope="common" 
+params="p_idx"
+value="
+	$log(*********** _N_Act_File_Req_Master_D );
+	if(	$g_req_master_d_idx >= $g_arr_mater_d_cnt ){
+		$log(*********** 요청끝 국내 [$g_req_master_d_idx/$g_arr_mater_d_cnt]);
+		if($g_arr_mater_d_cnt > 0){
+			$setvar(
+				tmp_progress_unit 			= $result($vg_progress_guide.width/$g_arr_mater_d_cnt)
+				,tmp_progress_pos 			= $result($tmp_progress_unit*$g_req_master_d_idx)
+				,tmp_str 					= $addstring($tmp_master_d_file,%20 다운로드 완료,%20%28,$g_req_master_d_idx,/,$g_arr_mater_d_cnt,%29)
+				,lbl_prcessing.value 		= $tmp_str
+				,vg_progress_inner.width 	= $tmp_progress_pos
+			);
+		}
+		$callaction(_N_Act_VersionFile_Master_D_SAVE);
+		return;
+	}
+	$setvar(
+		tmp_master_d_path 	= $getarrayvar(g_arr_req_master_d,$g_req_master_d_idx,0)
+		,tmp_master_d_file 	= $getarrayvar(g_arr_req_master_d,$g_req_master_d_idx,1)
+	);
+	
+	$setvar(
+		tmp_progress_unit 			= $result($vg_progress_guide.width/$g_arr_mater_d_cnt)
+		,tmp_progress_pos 			= $result($tmp_progress_unit*$g_req_master_d_idx)
+		,tmp_str 					= $addstring($tmp_master_d_file,%20 다운로드중,%20%28,$g_req_master_d_idx,/,$g_arr_mater_d_cnt,%29)
+		,lbl_prcessing.value 		= $tmp_str
+		,vg_progress_inner.width 	= $tmp_progress_pos
+	);
+
+	$callaction(_N_Act_Request_File_Mater_D,$tmp_master_d_path,$tmp_master_d_file); 		// 파일요청
+	
+" />
+<action id="_N_Act_VersionFile_Master_D_SAVE" scope="common" 
+value="
+	$log(*********** _N_Act_VersionFile_Master_D_SAVE );
+	//$logvar_binary(g_strVersion_master_d);
+	$setvar(,tmp_save_file_path 	= $g_path_down/$g_strVersionFilePath_DOMESTIC/$g_strVersionFileName_DOMESTIC);
+	//$logvar(tmp_save_file_path);
+	$setvar(tmp_is_write_success = $writefile($tmp_save_file_path,g_strVersion_master_d,false,false,false,false,false));
+	//$logvar(tmp_is_write_success);
+	if(!$tmp_is_write_success){
+		$setvar(tmp_msg = 버전파일 쓰기 에러:$tmp_save_file_path);
+		$callaction(fnPopover_AlertAction,,$tmp_msg,,확인);
+		return;
+	}
+
+	$callaction(fnConfig_SetValue,g_versionFile_date_d 	,$save_strFile_date_xml);
+	$callaction(fnConfig_SetValue,g_versionFile_size_d 	,$save_strFile_size_xml);
+	$callaction($tmp_down_master_d_complete_action);
+" />
+// 서버에 국내마스터 파일 요청 
+<action id="_N_Act_Request_File_Mater_D" scope="common" 
+params="p_path, p_file"
+value="
+	$log(*********** _N_Act_Request_File_Mater_D );
+	$setvar(	tmp_path = $addstring($p_path,/,$p_file)	);
+	$setvar(
+		LEN_MYMQ_TH 		= $result($map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_TH)-4)
+		,LEN_MYMQ_RH 		= $map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_RH)
+		,LEN_MYMQ_FILE 		= $map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_FILE)
+		,MYMQ_TH_PKT_LEN 	= $result($LEN_MYMQ_TH + $LEN_MYMQ_RH + $LEN_MYMQ_FILE)
+		,tmp_MYMQ_RH_size 	= $map_getstructsize($g_SiseSocketName,MYMQ_RH)
+	);
+	// Packet Indicator OR 연산으로 추가 
+	$setbit(MYMQ_HEADER_PKTI_1,0x01);	// RHI Following RH
+	$setbit_or(MYMQ_HEADER_PKTI_1,0x04);	// Begin Packet Indicator
+	$setbit_or(MYMQ_HEADER_PKTI_1,0x08);	// End Packet Indicator
+	
+	$setvar(MYMQ_HEADER_FUNC=C); 		// A:Sign-on B:Notify signed user's id, C:General REquest for transactions
+	$setbit(MYMQ_RH_FLAG,0x00);
+
+	$setvar(
+		MYMQ_RH_WKEY 		= $callaction(FNNETWORK_SISESOCKET_DOMESTIC_GETREQUESTID)
+		,MYMQ_RH_EXCODE 	= SYS
+		,MYMQ_RH_RKEY 		= GETF
+		,MYMQ_FILE_PATH 	= $tmp_path
+		,MYMQ_FILE_DATE 	= $g_versionFile_date_d 
+		,MYMQ_FILE_SIZE	 	= $g_versionFile_size_d
+	);
+	$log(*********** Mater_D Request [$g_versionFile_date_d],[$g_versionFile_size_d][$tmp_path][$save_strFile_date_d][$save_strFile_date_d]);
+
+	$map_getstructsenddata($g_SiseSocketName_DOMESTIC,MYMQ_TH,,strSendData); 	// TH 헤더 추가
+	$map_getstructsenddata($g_SiseSocketName_DOMESTIC,MYMQ_RH,,strTrHeader); 	
+	$addvar(strSendData,strTrHeader); 							// TR 헤더 추가
+	$map_getstructsenddata($g_SiseSocketName_DOMESTIC,MYMQ_FILE,,strFileHeader); 	
+	$addvar(strSendData,strFileHeader); 							// FILE 헤더 추가
+	$sendvardata($g_SiseSocketName_DOMESTIC,$strTrCode,strSendData,$MYMQ_RH_WKEY,$strBeforeActionName,$strAfterActionName,TRUE);	
+	return $MYMQ_RH_WKEY;
+"/>
+
+//////////////////////////////////////////////////////
+// 해외서버 연결 
+//////////////////////////////////////////////////////
+<action id="N_Server_Connect" scope="common" 
+params="p_after_action_connected"
+value="
+	$log(*********** N_Server_Connect);
+	$setvar(tmp_after_action_connected = $p_after_action_connected);
+
+    // 개발서버여부
+    $log(개발서버여부:[$g_is_test_server], 모의여부:[$g_OrderServerCheckSimulation]);
+    if($g_is_test_server){
+        if($g_OrderServerCheckSimulation){
+            $setvar_common(
+                g_SiseServerIP     = $g_SiseServerIP_simulation
+                ,g_SiseServerPort  = $g_SiseServerPort_simulation
+            );
+        }
+        else{
+            $setvar_common(
+                g_SiseServerIP     = $g_SiseServerIP_real
+                ,g_SiseServerPort  = $g_SiseServerPort_real
+            );
+        }
+    }
+    else{
+        if($g_OrderServerCheckSimulation){
+            $setvar_common(
+                g_SiseServerIP     = $g_SiseServerIP_simulation
+                ,g_SiseServerPort  = $g_SiseServerPort_simulation
+            );
+        }
+        else{
+            $setvar_common(
+                g_SiseServerIP     = $g_SiseServerIP_real
+                ,g_SiseServerPort  = $g_SiseServerPort_real
+            );
+
+            if($strlen($g_connected_server_ip) > 0){ 		// 받아온 서버IP가 있을경우 원래 접속했던 서버로 접속한다.
+            	$setvar_common(
+                	g_SiseServerIP     = $g_connected_server_ip
+                );
+            }
+        }
+    }
+
+	$callaction(Act_Network_Connect
+		, $g_SiseSocketName
+		, $g_SiseServerIP 					// 모의투자로 붙을 수도 있음.
+		, $g_SiseServerPort
+		, $g_strVersionReqStart
+		, $g_strVersionReqEnd
+		, 0
+		, _N_Act_Network_RecvData_Master
+		, _N_fn_Network_Connected_Sise
+	);
+" />
+// 연결 후 액션 
+<action id="_N_fn_Network_Connected_Sise" scope="common" 
+params="p_socket_name, p_socket_value"
+value="
+	$log(*********** _N_fn_Network_Connected_Sise :[$tmp_after_action_connected]);
+	if($_N_fn_Network_Connected_Sise_PARAMCOUNT > 0){
+		if($p_socket_value < 0){	
+			$callaction(Act_Connect_Alarm, intro_after[$p_socket_name], Act_Server_Disconnected);
+			return;		
+		}
+	}
+	if(!$isconnect($p_socket_name)){	
+		$callaction(Act_Connect_Alarm, 해외시세 intro_after, fnExit_Timer);
+		return;	
+	}
+	$callaction($tmp_after_action_connected);
+" />
+
+<action id="N_Act_Download_Master_Start" scope="common" 
+params="p_completeAction"
+value="
+	$log(*********** N_Act_Download_Master_Start : [$p_completeAction]);
+	$setvar(
+		tmp_down_master_complete_action 	= $p_completeAction
+	);
+	$callaction(_N_Act_VersionFile_SendData_Master,$g_strVersionFilePath,$g_strVersionFileName);  
+" />
+<action id="_N_Act_VersionFile_SendData_Master" scope="common" 
+params="p_path, p_file"
+value="
+	$log(*********** _N_Act_VersionFile_SendData_Master [$p_path][$p_file]);
+	$setsocketaction($g_SiseSocketName,_N_Act_Network_RecvData_Master,); 	// RecvAction 을 변경하여 보낸다. 
+	$setvar_common(
+		,g_iRecvTotalFileCount 	= 0
+	);
+	$delarrayvar(g_arr_req_master); 				// 요청할 국내마스터 파일을 담는다.
+
+	$createfolder($g_path_down/$p_path);
+	$readfile($g_path_down/$p_path/$p_file,strVersionFileData); 		// 기존에 있는 파일을 읽어온다.
+	$logvar(strVersionFileData);
+	$setNameToken(tknOldVersion,strVersionFileData,0x0A,0x3B); 		// 이전 버전파일로 등록 
+	$printNameToken(tknOldVersion);
+
+	$setvar(	tmp_path = $addstring($p_path,/,$p_file)	);
+	$setvar(
+		LEN_MYMQ_TH 		= $result($map_getstructsize($g_SiseSocketName,MYMQ_TH)-4)
+		,LEN_MYMQ_RH 		= $map_getstructsize($g_SiseSocketName,MYMQ_RH)
+		,LEN_MYMQ_FILE 		= $map_getstructsize($g_SiseSocketName,MYMQ_FILE)
+		,MYMQ_TH_PKT_LEN 	= $result($LEN_MYMQ_TH + $LEN_MYMQ_RH + $LEN_MYMQ_FILE)
+		,tmp_MYMQ_RH_size 	= $map_getstructsize($g_SiseSocketName,MYMQ_RH)
+	);
+	//$log(LEN_MYMQ_TH:[$LEN_MYMQ_TH], LEN_MYMQ_RH:[$LEN_MYMQ_RH], LEN_MYMQ_FILE:[$LEN_MYMQ_FILE], MYMQ_TH_PKT_LEN:[$MYMQ_TH_PKT_LEN], tmp_MYMQ_RH_size:[$tmp_MYMQ_RH_size])
+		
+	// Packet Indicator OR 연산으로 추가 
+	$setbit(MYMQ_HEADER_PKTI_1,0x01);	// RHI Following RH
+	$setbit_or(MYMQ_HEADER_PKTI_1,0x04);	// Begin Packet Indicator
+	$setbit_or(MYMQ_HEADER_PKTI_1,0x08);	// End Packet Indicator
+	
+	$setvar(MYMQ_HEADER_FUNC=C); 		// A:Sign-on B:Notify signed user's id, C:General REquest for transactions
+	$setbit(MYMQ_RH_FLAG,0x00);
+
+	$setvar(
+		MYMQ_RH_WKEY 	= $callaction(FNNETWORK_SISESOCKET_GETREQUESTID)
+		,MYMQ_RH_EXCODE = SYS
+		,MYMQ_RH_RKEY 	= GETF
+		,MYMQ_FILE_PATH = $tmp_path
+		,MYMQ_FILE_DATE = $g_versionFile_date 
+		,MYMQ_FILE_SIZE = $g_versionFile_size
+	);
+	$log(*** Master Send 해외 MYMQ_FILE_PATH:[$MYMQ_FILE_PATH], MYMQ_FILE_DATE:[$MYMQ_FILE_DATE] MYMQ_FILE_SIZE:[$MYMQ_FILE_SIZE]);
+
+	$map_getstructsenddata($g_SiseSocketName,MYMQ_TH,,strSendData); 	// TH 헤더 추가
+	$map_getstructsenddata($g_SiseSocketName,MYMQ_RH,,strTrHeader); 	
+	$addvar(strSendData,strTrHeader); 							// TR 헤더 추가
+	$map_getstructsenddata($g_SiseSocketName,MYMQ_FILE,,strFileHeader); 	
+	$addvar(strSendData,strFileHeader); 							// FILE 헤더 추가
+	$sendvardata($g_SiseSocketName,$strTrCode,strSendData,$MYMQ_RH_WKEY,$strBeforeActionName,$strAfterActionName,TRUE);	
+	return $MYMQ_RH_WKEY;
+"/>
+<action id="_N_Act_VersionFile_Process" scope="common" 
+params="p_status, p_path, p_file, p_result"
+value="
+	$log(*********** _N_Act_VersionFile_Process [$p_status],[$p_path],[$p_file],[$p_result] );
+	if($p_status == 2) {
+	}
+	else if($p_status == 1) {		
+		// 배열에 저장하여 순서대로 요청한다.
+		$setvar(tmp_add_idx = $getarrayvarcount(g_arr_req_master));
+		$setsubarray_common(g_arr_req_master,$tmp_add_idx,$p_path,$p_file);
+	}
+
+	if($p_status == 3) {
+		$log(========= 해외마스터 저장 $p_file);
+		if($g_iRecvTotalFileCount != $getarrayvarcount(g_arr_req_master)){
+			$alertaction(,,해외마스터 파일 수 확인[$g_iRecvTotalFileCount][$getarrayvarcount(g_arr_req_master)],확인);
+			return;
+		}
+		$logarrayvar(g_arr_req_master);
+		$setvar_common(
+			g_req_master_idx 	= 0
+			,g_arr_mater_cnt 	= $getarrayvarcount(g_arr_req_master)
+		);
+		$callaction(_N_Act_File_Req_Master);
+	}
+"/>
+<action id="_N_Act_File_Req_Master" scope="common" 
+params="p_idx"
+value="
+	$log(*********** _N_Act_File_Req_Master [$g_req_master_idx][$g_arr_mater_cnt] );
+	if(	$g_req_master_idx >= $g_arr_mater_cnt ){
+		$log(*********** 요청끝 해외 [$g_req_master_idx/$g_arr_mater_cnt]);
+		if($g_arr_mater_cnt > 0){
+			$setvar(
+				tmp_progress_unit 			= $result($vg_progress_guide.width/$g_arr_mater_cnt)
+				,tmp_progress_pos 			= $result($tmp_progress_unit*$g_req_master_idx)
+				,tmp_str 					= $addstring($tmp_master_file,%20 다운로드 완료,%20%28,$g_req_master_idx,/,$g_arr_mater_cnt,%29)
+				,lbl_prcessing.value 		= $tmp_str
+				,vg_progress_inner.width 	= $tmp_progress_pos
+			);
+		}
+		$callaction(_N_Act_VersionFile_Master_SAVE);
+		return;
+	}
+	$setvar(
+		tmp_master_path 	= $getarrayvar(g_arr_req_master,$g_req_master_idx,0)
+		,tmp_master_file 	= $getarrayvar(g_arr_req_master,$g_req_master_idx,1)
+	);
+	
+	$setvar(
+		tmp_progress_unit 			= $result($vg_progress_guide.width/$g_arr_mater_cnt)
+		,tmp_progress_pos 			= $result($tmp_progress_unit*$g_req_master_idx)
+		,tmp_str 					= $addstring($tmp_master_file,%20 다운로드중,%20%28,$g_req_master_idx,/,$g_arr_mater_cnt,%29)
+		,lbl_prcessing.value 		= $tmp_str
+		,vg_progress_inner.width 	= $tmp_progress_pos
+	);
+
+	$callaction(_N_Act_Request_File_Mater,$tmp_master_path,$tmp_master_file); 		// 파일요청
+" />
+<action id="_N_Act_VersionFile_Master_SAVE" scope="common" 
+value="
+	$log(*********** _N_Act_VersionFile_Master_SAVE );
+	//$logvar_binary(g_strVersion_master);
+	$setvar(,tmp_save_file_path 	= $g_path_down/$g_strVersionFilePath/$g_strVersionFileName);
+	$logvar(tmp_save_file_path);
+	$setvar(tmp_is_write_success = $writefile($tmp_save_file_path,g_strVersion_master,false,false,false,false,false));
+	$logvar(tmp_is_write_success);
+	if(!$tmp_is_write_success){
+		$setvar(tmp_msg = 버전파일 쓰기 에러:$tmp_save_file_path);
+		$callaction(fnPopover_AlertAction,,$tmp_msg,,확인);
+		return;
+	}
+
+	$callaction(fnConfig_SetValue,g_versionFile_date 	,$save_strFile_date_xml);
+	$callaction(fnConfig_SetValue,g_versionFile_size 	,$save_strFile_size_xml);
+	$callaction($tmp_down_master_complete_action);
+" />
+// 서버에 해외마스터 파일 요청 
+<action id="_N_Act_Request_File_Mater" scope="common" 
+params="p_path, p_file"
+value="
+	$log(*********** _N_Act_Request_File_Mater [$g_SiseSocketName]);
+	$setvar(	tmp_path = $addstring($p_path,/,$p_file)	);
+	$setvar(
+		LEN_MYMQ_TH 		= $result($map_getstructsize($g_SiseSocketName,MYMQ_TH)-4)
+		,LEN_MYMQ_RH 		= $map_getstructsize($g_SiseSocketName,MYMQ_RH)
+		,LEN_MYMQ_FILE 		= $map_getstructsize($g_SiseSocketName,MYMQ_FILE)
+		,MYMQ_TH_PKT_LEN 	= $result($LEN_MYMQ_TH + $LEN_MYMQ_RH + $LEN_MYMQ_FILE)
+		,tmp_MYMQ_RH_size 	= $map_getstructsize($g_SiseSocketName,MYMQ_RH)
+	);
+	// Packet Indicator OR 연산으로 추가 
+	$setbit(MYMQ_HEADER_PKTI_1,0x01);	// RHI Following RH
+	$setbit_or(MYMQ_HEADER_PKTI_1,0x04);	// Begin Packet Indicator
+	$setbit_or(MYMQ_HEADER_PKTI_1,0x08);	// End Packet Indicator
+	
+	$setvar(MYMQ_HEADER_FUNC=C); 		// A:Sign-on B:Notify signed user's id, C:General REquest for transactions
+	$setbit(MYMQ_RH_FLAG,0x00);
+
+	$setvar(
+		MYMQ_RH_WKEY 		= $callaction(FNNETWORK_SISESOCKET_GETREQUESTID)
+		,MYMQ_RH_EXCODE 	= SYS
+		,MYMQ_RH_RKEY 		= GETF
+		,MYMQ_FILE_PATH 	= $tmp_path
+		,MYMQ_FILE_DATE 	= $g_versionFile_date
+		,MYMQ_FILE_SIZE	 	= $g_versionFile_size
+	);
+	$log(*********** Mater Request [$g_versionFile_date],[$g_versionFile_size][$tmp_path][$save_strFile_date][$save_strFile_date]);
+
+	$map_getstructsenddata($g_SiseSocketName,MYMQ_TH,,strSendData); 	// TH 헤더 추가
+	$map_getstructsenddata($g_SiseSocketName,MYMQ_RH,,strTrHeader); 	
+	$addvar(strSendData,strTrHeader); 							// TR 헤더 추가
+	$map_getstructsenddata($g_SiseSocketName,MYMQ_FILE,,strFileHeader); 	
+	$addvar(strSendData,strFileHeader); 							// FILE 헤더 추가
+	$sendvardata($g_SiseSocketName,$strTrCode,strSendData,$MYMQ_RH_WKEY,$strBeforeActionName,$strAfterActionName,TRUE);	
+	return $MYMQ_RH_WKEY;
+"/>
+// 해외 마스터 받았을 때
+<action id="_N_Act_Network_RecvData_Master" scope="common"
+params="p_socket_name, p_varname_recv, p_err_no"
+value="
+	$log(*********** _N_Act_Network_RecvData_Master);
+	if(!$isequal_string($p_socket_name,$g_SiseSocketName)){
+		$callaction(fnPopover_AlertAction,fnExit_Timer,해외시세 아닌 것이 호출되었습니다..\n관리자에게 문의하세요,,확인);
+		return;
+	}
+	// 폴링: 길이가 0인경우 
+	if($isequal_string($p_err_no,400)){
+		$log(======== 폴링: 길이가 0인경우 );
+		$setvar_common(g_polling_fail_cnt = 0);
+		return;
+	}
+
+	if($isequal_string($p_err_no,200)){
+		return;
+	}
+	if($strlen($p_varname_recv)<0){
+		$log(해외 시세서버 - 데이터 없음);
+		return;
+	}
+	$setvar(
+		tmp_socketName = $p_socket_name
+		, strRecvVarName=$p_varname_recv
+		, iErrCode = $p_err_no
+
+		,LEN_PACKET_LENGTH = 4 									// 제일 앞단 헤더 길이 
+		,POS_MYMQ_TH = 0
+		,LEN_MYMQ_TH = $map_getstructsize($g_SiseSocketName,MYMQ_TH) 
+		,POS_MYMQ_RH = $result($POS_MYMQ_TH + $LEN_MYMQ_TH)
+		,LEN_MYMQ_RH = $map_getstructsize($g_SiseSocketName,MYMQ_RH)
+		,POS_MYMQ_RU = $result($POS_MYMQ_RH + $LEN_MYMQ_RH)
+		,LEN_MYMQ_FILE = $map_getstructsize($g_SiseSocketName,MYMQ_FILE) 
+		,POS_MYMQ_FILE = $result($POS_MYMQ_RH + $LEN_MYMQ_RH)
+
+		,POS_MYMQ_IP 		= $result($POS_MYMQ_TH + $LEN_MYMQ_TH)
+		,LEN_MYMQ_IP 		= $map_getstructsize($g_SiseSocketName,MYMQ_IP)
+	);
+
+	//$logvar(LEN_PACKET_LENGTH, LEN_MYMQ_TH,LEN_MYMQ_RH,POS_MYMQ_TH,POS_MYMQ_RH,POS_MYMQ_RU);
+	//$logvar_binary(RecvData All Master ,$strRecvVarName);
+	$delvar(strHeaderData_MYMQ_TH, strHeaderData_MYMQ_RH, strRu_Data,strRecvData_RU,LEN_ZIP_OIR_DATA,strRecvData, strSiseRealData);
+	$memcpy(strHeaderData_MYMQ_TH,$strRecvVarName,$POS_MYMQ_TH,$LEN_MYMQ_TH);
+	//$logvar_binary(RecvData MYMQ_TH ,strHeaderData_MYMQ_TH); 			// 패킷 길이포함 
+
+	$map_getfielddata($g_SiseSocketName,strPKT_LEN,MYMQ_TH,PKT_LEN,strHeaderData_MYMQ_TH); //받은데이터 패킷길이 
+	$map_getfielddata($g_SiseSocketName,strPKI_1,MYMQ_TH,PKI_1,strHeaderData_MYMQ_TH); //  Packet Indicator 1
+	$map_getfielddata($g_SiseSocketName,strPKI_2,MYMQ_TH,PKI_2,strHeaderData_MYMQ_TH); //  Packet Indicator 2 - 현재 사용 안함.
+	$map_getfielddata($g_SiseSocketName,strFUNC,MYMQ_TH,FUNC,strHeaderData_MYMQ_TH); //  Function Code
+	
+	//$log(MYMQ_TH.PKT_LEN:[$strPKT_LEN], MYMQ_TH.PKI_1:[$strPKI_1], MYMQ_TH.PKI_2:[$strPKI_2], MYMQ_TH.FUNC:[$strFUNC]);
+
+	//$logvar_binary(strPKI_1 ,strPKI_1);
+	if($isbit(strFUNC,0x01) ) { 				//  RH 헤더가 있으면 
+		$log(********** 아이피받아옴);
+		$delvar(strHeaderData_MYMQ_IP);
+		$memcpy(strHeaderData_MYMQ_IP,$strRecvVarName,$POS_MYMQ_IP,$LEN_MYMQ_IP);
+		$map_getfielddata($g_SiseSocketName,strIP1,MYMQ_IP,IP_1,strHeaderData_MYMQ_IP);
+		$map_getfielddata($g_SiseSocketName,strIP2,MYMQ_IP,IP_2,strHeaderData_MYMQ_IP);
+		$map_getfielddata($g_SiseSocketName,strIP3,MYMQ_IP,IP_3,strHeaderData_MYMQ_IP);
+		//$logvar(strIP1,strIP2,strIP3);
+		$callaction($tmp_after_action_getip,$strIP1,$strIP2,$strIP3); 			// 서버의 아이피를 받아온다.
+		return;
+	}	
+
+	if($isbit_and(strPKI_1,0x01) ) { 				//  RH 헤더가 있으면 
+		$memcpy(strHeaderData_MYMQ_RH,$strRecvVarName,$POS_MYMQ_RH,$LEN_MYMQ_RH);
+		//$logvar_binary(strHeaderData_MYMQ_RH ,strHeaderData_MYMQ_RH);
+		$map_getfielddata($g_SiseSocketName,strFLAG,MYMQ_RH,FLAG,strHeaderData_MYMQ_RH); 
+		$map_getfielddata($g_SiseSocketName,strWKEY,MYMQ_RH,WKEY,strHeaderData_MYMQ_RH); 	// reqid
+		$map_getfielddata($g_SiseSocketName,strSVCODE,MYMQ_RH,SVCODE,strHeaderData_MYMQ_RH); 
+		$map_getfielddata($g_SiseSocketName,strEXCODE,MYMQ_RH,EXCODE,strHeaderData_MYMQ_RH); 
+		$map_getfielddata($g_SiseSocketName,strRKEY,MYMQ_RH,RKEY,strHeaderData_MYMQ_RH); 		// TR Code
+		$log(MYMQ_RH.FLAG:[$strFLAG], MYMQ_RH.WKEY:[$strWKEY], MYMQ_RH.SVCODE:[$strSVCODE], MYMQ_RH.EXCODE:[$strEXCODE], MYMQ_RH.RKEY:[$strRKEY]);
+	}
+
+	// 여기서부터 추가 
+	// strPKT_LEN = TH + RH + RU Length(Big endian integer) -> header.xml에서 INT_NET으로 정의 	
+	$setvar( 	LEN_MYMQ_RU = $result($strPKT_LEN - $POS_MYMQ_RU + $LEN_PACKET_LENGTH)  	);
+	$memcpy(strRecvData_RU,$strRecvVarName,$POS_MYMQ_RU,$LEN_MYMQ_RU);
+	//$logvar_binary(strRecvData_RU ,strRecvData_RU);
+	$setvar(POS_CUR_BODYDATA = $POS_MYMQ_RU);
+	if($isbit_and(strFLAG,0x02)) { 				//  이전키
+		//$log(이전키 있음);
+		$setvar(LEN_CUR_BODYDATA = 1);
+		$memcpy(strRHFlag_Pre,$strRecvVarName,$POS_CUR_BODYDATA,$LEN_CUR_BODYDATA);
+		$setvar(	LEN_PRENEXTKEY = $result($ascvar(strRHFlag_Pre) + + $LEN_CUR_BODYDATA)	);
+		// 이전키 복사함. - After에서 셋팅함.
+		$memcpy(PREKEY_HEADER_DATA,$strRecvVarName,$POS_CUR_BODYDATA,$LEN_PRENEXTKEY);		// 앞의 길이 1byte를 포함하여 복사
+		$setvar(	POS_CUR_BODYDATA = $result($POS_CUR_BODYDATA + $LEN_PRENEXTKEY)	);
+		//$logvar_binary(PREKEY_HEADER_DATA ,PREKEY_HEADER_DATA);
+		//$log(이전키:$PREKEY_HEADER_DATA);
+	}
+	else{
+		$delvar(PREKEY_HEADER_DATA);
+	}
+	if($isbit_and(strFLAG,0x04)){ 				//  다음키
+		//$log(다음키 있음);
+		$setvar(LEN_CUR_BODYDATA = 1);
+		$memcpy(strRHFlag_Next,$strRecvVarName,$POS_CUR_BODYDATA,$LEN_CUR_BODYDATA);
+		$setvar(	LEN_PRENEXTKEY = $result($ascvar(strRHFlag_Next) + $LEN_CUR_BODYDATA)	);
+		// 다음키 복사함. - After에서 셋팅함.
+		$memcpy(NEXTKEY_HEADER_DATA,$strRecvVarName,$POS_CUR_BODYDATA,$LEN_PRENEXTKEY);  	// 앞의 길이 1byte를 포함하여 복사
+		$setvar(	POS_CUR_BODYDATA = $result($POS_CUR_BODYDATA + $LEN_PRENEXTKEY)	);
+		//$logvar_binary(NEXTKEY_HEADER_DATA ,NEXTKEY_HEADER_DATA);
+		//$log(다음키:$NEXTKEY_HEADER_DATA);
+	}
+	else{
+		$log(다음키 없음);
+		$delvar(NEXTKEY_HEADER_DATA);
+	}
+
+	// 다음데이터가 있을 경우 연속패킷
+	if($isbit_and(strPKI_1,0x02) ) { 	
+		$log(*********** 데이터 More 0x02);
+		// 타켓, 소스명, 소스시작, 소스길이,타켓스코프,타켓시작위치 
+		$memcpy(strTmpContinus,$strRecvVarName,$POS_CUR_BODYDATA,,FALSE,$getvarlen(strTmpContinus));
+		//$delvar(strTmp_Unit);
+		//$memcpy(strTmp_Unit,$strRecvVarName,$POS_CUR_BODYDATA);
+		//$logvar_binary(strTmp_Unit, strTmp_Unit);l
+		//$logvar_binary(strTmpContinus, strTmpContinus);
+		return;
+	}
+	// 마지막 데이터일 경우 
+	if($isbit_and(strPKI_1,0x08) ) { 
+		//$log(*********** 데이터 End);
+		$delvar(strTmp_Unit);
+		$memcpy(strTmp_Unit,$strRecvVarName,$POS_CUR_BODYDATA);
+		//$logvar_binary(strTmp_Unit, strTmp_Unit);l
+
+		$memcpy(strTmpContinus,$strRecvVarName,$POS_CUR_BODYDATA,,FALSE,$getvarlen(strTmpContinus));
+		//$logvar_binary(strTmpContinus Last,strTmpContinus);
+	}
+	else{
+		//$log(*********** 데이터 더있다. 0x08이 없다.);
+		// 타켓, 소스명, 소스시작, 소스길이,타켓스코프,타켓시작위치 
+		$memcpy(strTmpContinus,$strRecvVarName,$POS_CUR_BODYDATA,,FALSE,$getvarlen(strTmpContinus));
+		//$logvar_binary(strTmpContinus More,strTmpContinus);
+
+		//$delvar(strTmp_Unit);
+		//$memcpy(strTmp_Unit,$strRecvVarName,$POS_CUR_BODYDATA);
+		//$logvar_binary(strTmp_Unit, strTmp_Unit);l
+		
+		return;
+	}
+
+	$delvar(strRecvData_Zip);
+	$memcpy(strRecvData_Zip,strTmpContinus);
+	$delvar(strTmpContinus);
+
+	if($isbit_and(strPKI_1,0x10) ) { 				//  압축되어있다.
+		// 압축해제 
+		//$log(압축되었다.);
+		//$logvar_binary(strRecvData_Zip,strRecvData_Zip);
+
+		// 4Byte:원본길이
+		$memcpy(LEN_ZIP_OIR_DATA,strRecvData_Zip,0,4);
+		$htonl(LEN_ZIP_OIR_DATA);
+		$log(ZIP Data Ori Size:$LEN_ZIP_OIR_DATA);
+		$delvar(strRecvData);
+		// 타켓, 소스명, 소스시작, 소스길이,타켓스코프,타켓시작위치 
+		$memcpy(strRecvData,strRecvData_Zip,4,$getvarlen(strRecvData_Zip));
+
+		//$log(******* 4byte 땐거 );
+		//$logvar_binary(strRecvData, strRecvData);
+		$decompressvar(strRecvData,$LEN_ZIP_OIR_DATA);
+		//$logvar_binary(strRecvData UnZip,strRecvData);
+	}
+	else{
+		$memcpy(strRecvData,strRecvData_Zip);
+	}
+	//$logvar_binary(RecvData All Master ,$strRecvVarName);
+	//$logvar_binary(strRecvData,strRecvData);
+	// 끝
+	
+	if($isequal_string($strEXCODE,SYS) || $isequal_string($strEXCODE,SYSTEM)){
+		//$memcpy(strHeaderData_MYMQ_FILE,$strRecvData,$POS_MYMQ_FILE,$LEN_MYMQ_FILE);
+		$memcpy(strHeaderData_MYMQ_FILE,strRecvData,0,$LEN_MYMQ_FILE);
+
+		//$logvar_binary(strHeaderData_MYMQ_FILE ,strHeaderData_MYMQ_FILE);
+
+		$map_getfielddata($g_SiseSocketName,strFile_path,MYMQ_FILE,PATH,strHeaderData_MYMQ_FILE); 
+		$map_getfielddata($g_SiseSocketName,strFile_seqn,MYMQ_FILE,SEQN,strHeaderData_MYMQ_FILE); 
+		$map_getfielddata($g_SiseSocketName,strFile_size,MYMQ_FILE,SIZE,strHeaderData_MYMQ_FILE); 
+		$map_getfielddata($g_SiseSocketName,strFile_sent,MYMQ_FILE,SENT,strHeaderData_MYMQ_FILE); 
+		$map_getfielddata($g_SiseSocketName,strFile_date,MYMQ_FILE,DATE,strHeaderData_MYMQ_FILE); 
+		$map_getfielddata($g_SiseSocketName,strFile_zipf,MYMQ_FILE,ZIPF,strHeaderData_MYMQ_FILE); 
+		$map_getfielddata($g_SiseSocketName,strFile_errf,MYMQ_FILE,ERRF,strHeaderData_MYMQ_FILE); 
+		$map_getfielddata($g_SiseSocketName,strFile_emsg,MYMQ_FILE,EMSG,strHeaderData_MYMQ_FILE); 
+
+		$log(strFile_path:[$strFile_path],  strFile_seqn:[$strFile_seqn], strFile_size:[$strFile_size], strFile_sent[$strFile_sent], strFile_date:[$strFile_date], strFile_zipf:[$strFile_zipf], strFile_errf:[$strFile_errf]);
+		$log($strFile_emsg);
+
+		if($strFile_errf==1){
+			//$alertaction(,마스터다운로드 실패,$strFile_emsg,확인); 
+			$callaction(fnPopover_AlertAction,,$strFile_emsg,,확인);
+			return;
+		}
+		if($isequal_string($strFile_errf,=)){ 		//확인필요
+			$log(***** 해외 받았다.);
+			$setvar(
+				save_strFile_date = $g_versionFile_date
+				,save_strFile_size = $g_versionFile_size
+			);
+			//$callaction(Act_VersionFile_Process,3); 		//확인필요
+			//$callaction(_N_Act_VersionFile_Process,3);
+			return;
+		}
+		$setvar(
+			tmp_iFileSize = $int($strFile_size)
+			,tmp_iSentSize = $int($strFile_sent)
+			,POS_FILEDATA	= $result(0 + $LEN_MYMQ_FILE)
+			,LEN_FILEDATA 	= $tmp_iFileSize
+		);
+		
+		$memcpy(strRecvData_1,$strRecvData,$POS_FILEDATA,$LEN_FILEDATA);
+		//$logvar_binary(strRecvData_1,strRecvData_1);
+
+		if($isequal_string($strFile_seqn,0001)){	$delvar(strRecv_FileData);	}
+
+		$delvar(strRecv_File_div);
+		$memcpy(strRecv_File_div,strRecvData,$POS_FILEDATA,$LEN_FILEDATA);
+
+		//$logvar_binary(strRecv_File_div,strRecv_File_div);
+
+		// 타켓, 소스명, 소스시작, 소스길이,타켓스코프,타켓시작위치 
+		$memcpy(strRecv_FileData,strRecv_File_div,,,TRUE,$getvarlen(strRecv_FileData));
+
+		//$logvar_binary(DivisionStauts ,strPKI_1);
+
+		if($tmp_iFileSize > $tmp_iSentSize ){		
+			return;
+		}
+
+		
+		if($isequal_string($strFile_path, mstr/NewWyVerfile.dat)){				
+			$setvar(
+				save_strFile_date 	= $strFile_date
+				,save_strFile_size 	= $strFile_size
+			);
+			$memcpy(g_strVersion_master,strRecv_FileData,0,$getvarlen(strRecv_FileData),true); 		//scope=common
+			$setNameToken(tknNewVersion,strRecv_FileData,0x0A,0x3B); 		// xml요청시와 틀림
+			$logvar(strRecv_FileData);
+			$log(*********** RecvData 해외마스터:이전갯수:[$getNameTokenCount(tknOldVersion)] 현재갯수:[$getNameTokenCount(tknNewVersion)]);
+			$printNameToken(tknNewVersion);
+			$printNameToken(tknOldVersion);
+
+			// 다운받을 파일을 호출한다. 
+			// 2:pathidx,1:filename,0:versionidx 
+			/*
+			char *pOldTokenName = pParam1;
+			char *pNewTokenName = pParam2;
+			char *pVersionActionName = pParam3;
+			char *pPathIndex = pParam4;
+			char *pNameIndex = pParam5;
+			char *pVersionIndex = pParam6;
+			char *pCompareFlag = pParam7;
+			*/
+			$setvar_common(g_iRecvTotalFileCount = $setCompareVersionNameToken(tknOldVersion,tknNewVersion,_N_Act_VersionFile_Process,2,1,0));
+			
+			$log(***** 받아야하는 파일 갯수 해외마스터: [$g_iRecvTotalFileCount] ********************);
+			// 받아야 하는 파일이 없을 경우 
+			$callaction(_N_Act_VersionFile_Process,3);
+		}
+		else{
+			$settokenarray(strFile_path,arrFilePath,0x2F);
+			$logarrayvar(arrFilePath);
+			$setvar(
+				//tmp_save_file_path 	= $g_path_down/$strFile_path
+				,strPATH 				= $getarrayvar(arrFilePath,0,0)
+				,strName 				= $getarrayvar(arrFilePath,1,0)
+				,tmp_save_file_path 	= $g_path_down/dat/$strName
+			);
+			
+			$logvar(
+				tmp_save_file_path
+				,strPATH
+				,strName
+			);
+			//$logvar(strRecv_FileData);
+			$setvar(tmp_is_write_success = $writefile($tmp_save_file_path,strRecv_FileData,false,false,false,false,false));
+			$logvar(tmp_is_write_success);
+			if(!$tmp_is_write_success){
+				$setvar(tmp_msg = 다운로드 에러:$strFile_path);
+				$callaction(fnPopover_AlertAction,,$tmp_msg,,확인);
+				return;
+			}
+			$setvar_common(g_req_master_idx = $result($g_req_master_idx + 1));
+			$callaction(_N_Act_File_Req_Master);
+			
+			
+
+			// 저장이 안된다. 
+			//$writefileVersion(tknNewVersion,$tmp_save_file_path,strRecv_FileData,2:$strPATH,1:$strName,$g_path_down,3,Act_VersionFile_Process);
+
+			// 해당 마스터 배열은 초기화 하여 Act_LoadMaster_Dat 에서 읽어옴.
+			$setvar(
+				tmp_dat_file_pos	= $find($strName,.)
+				,tmp_dat_file_name	= $substring($strName,0,$tmp_dat_file_pos)
+				,tmp_dat_arrName 	= $addstring(arr_MasterData,_,$tmp_dat_file_name) 	
+			);
+			$delarrayvar($tmp_dat_arrName);
+			$log(******* 배열삭제 [$tmp_dat_arrName] 길이:[$getarrayvarcount($tmp_dat_arrName)]);
+		}
+		$delvar_all(strRecv_FileData);
+		$delvar(LEN_ZIP_OIR_DATA, strRecv_FileData, strRecv_File_ZIP, strRecv_File_div);
+	}
+" />
+//////////////////////////////////////////////////////
+// 해외 마스터 로딩
+//////////////////////////////////////////////////////
+<action id="N_Act_LoadMaster_Start" scope="common"
+params="p_after_action"
+value="
+	$setvar(tmp_loadmaster_after_action = $p_after_action);
+	$log(*********** N_Act_LoadMaster_Start :[$tmp_loadmaster_after_action]);
+	//$logarrayvar(g_arr_datFile);
+	$setvar(
+		tmp_dat_path 		= $g_path_down/dat/ 			// dat경로 
+		,tmp_read_cnt 		= 0
+		,tmp_arr_name 		= g_arr_datFile
+		,tmp_arr_cnt 		= $result($getarrayvarcount($tmp_arr_name) - 1)
+		,tmp_ctrl_id 		= lbl_prcessing
+		,tmp_after_action 	= Act_LoadMaster_Exch_Start
+	);
+	$setvar(
+		//,$($tmp_ctrl_id).value = 해외선물 dat 로딩 준비중입니다.
+	);
+	$setvar_common( g_isLoadMaster = false ); 		// 파일을 하나라도 읽으면 true 마스터 작업을 하기 위해 쓰인다.
+	//$setnstimer(TIMER_LoadMaster_Dat,0.01,Act_LoadMaster_Dat,FALSE);
+	$callaction(_N_Act_LoadMaster_Dat);
+" />
+<action id="_N_Act_LoadMaster_Dat" scope="common" 
+value="
+	$log(*********** _N_Act_LoadMaster_Dat :[$tmp_loadmaster_after_action]);
+
+	//$logvar(tmp_arr_cnt, tmp_read_cnt);
+	//$log(처리 배열[$tmp_arr_name]:[$tmp_read_cnt/$tmp_arr_cnt][$tmp_after_action]);
+	//$logarrayvar($tmp_arr_name);
+	$setvar(
+		tmp_dat_file 		= $addstring($tmp_dat_path,$getarrayvar($tmp_arr_name,$tmp_read_cnt,0),.dat)	//  파일
+		,tmp_dat_arrName 	= $addstring(arr_MasterData,_,$getarrayvar($tmp_arr_name,$tmp_read_cnt,0)) 	// 생성될 배열명
+		,tmp_dat_arr_cnt 	= $getarrayvarcount($tmp_dat_arrName)
+	);
+	$log(파일명:[$tmp_dat_file], 배열명:[$tmp_dat_arrName][$tmp_dat_arr_cnt]);
+
+	$log(확인 : $isequal_string($tmp_dat_arrName,arr_MasterData_opitem));
+	/*
+	20230831 최대근.
+	$isequal_string($tmp_dat_arrName,arr_MasterData_opitem) 로직 추가.
+	해당 영역은 서버와의 연결이 끊기고 백에서 포그라운드로 이동시 서버 재연결을 하며 마스터 파일을 다시 로드하는 부분입니다.
+	arr_MasterData_opitem은 서버와의 연결이 끊겨 재연결할때에 무조건 재 로드를 해야만 합니다.
+	재로드하여 가공전 arr_MasterData_opitem을 사용하여 arr_MasterData_opitem_99 배열을 작성해야합니다.
+	*/
+	if($tmp_dat_arr_cnt < 1 || $isequal_string($tmp_dat_arrName,arr_MasterData_opitem)){ //보
+		$delarrayvar($tmp_dat_arrName);
+		$addTokenArrayFile($tmp_dat_file,$tmp_dat_arrName);	
+		//$logarrayvar($tmp_dat_arrName);
+		$log(********** 마스터 로드 해외 O [$tmp_dat_arrName][$getarrayvarcount($tmp_dat_arrName)]);
+		//$logarrayvar($tmp_dat_arrName);
+		$setvar_common( g_isLoadMaster = true );
+		if($isequal_string($tmp_dat_file,arr_MasterData_opitem)){
+			$delarrayvar(g_arr_oprcode_underCode);
+		}
+	}
+	else{
+		$log(********** 마스터 로드 해외 X [$tmp_dat_arrName]);
+	}
+	$setvar(tmp_read_cnt = $result($tmp_read_cnt + 1));
+
+	$setvar(
+		tmp_dat_file_next 	= $addstring($getarrayvar($tmp_arr_name,$tmp_read_cnt,0),.dat)	//  파일
+		//,$($tmp_ctrl_id).value = $addstring($tmp_dat_file_next,  로딩중입니다.)
+	);
+
+	if( $tmp_arr_cnt < $tmp_read_cnt ){
+		$setvar(
+			//,$($tmp_ctrl_id).value = 해외선물 dat 로딩완료 
+		);
+		$log(해외선물 dat 로딩완료 ******************* call[$tmp_loadmaster_after_action]);
+		//$setnstimer(TIMER_LoadMaster_Dat,0.01,$tmp_after_action,FALSE);
+		$callaction($tmp_loadmaster_after_action);	
+		return;
+	}
+	//$setnstimer(TIMER_LoadMaster_Dat,0.01,Act_LoadMaster_Dat,FALSE);	
+	$callaction(_N_Act_LoadMaster_Dat);
+" />
+<action id="N_Act_LoadMaster_Exch_Start" scope="common"
+params="p_after_action"
+value="
+	$setvar(tmp_loadmaster_exch_after_action = $p_after_action);
+	$log(*********** N_Act_LoadMaster_Start :[$tmp_loadmaster_exch_after_action], isMasterLoad:[$g_isLoadMaster]);
+	if($g_isLoadMaster){
+		//  배열에 담는다. 
+		$delarrayvar(g_ArrFuturesExch);
+		// 거래소 코드를 가져오기 위해 중복제거
+		$arraycopy(arr_MasterData_fucode,g_ArrFuturesExch,true,true,false,true,2,2,common); 
+		$log(********** 거래소 코드 );
+		$logarrayvar(arr_MasterData_fucode);
+		$logarrayvar(g_ArrFuturesExch);
+
+		$setvar(
+			tmp_arr_name_exch	= g_ArrFuturesExch
+			,tmp_arr_cnt 		= $getarrayvarcount($tmp_arr_name_exch) 
+			,tmp_read_cnt 		= 0
+			,tmp_ctrl_id 		= lbl_prcessing
+			,tmp_after_action 	= Act_LoadMaster_d_Start
+		);
+		$logvar(tmp_arr_cnt);
+		//$callaction(Act_LoadMaster_Exch);
+		$callaction(_N_Act_LoadMaster_Exch);
+	}
+	else{
+		//$callaction(Act_LoadMaster_d_Start);
+		$callaction($tmp_loadmaster_exch_after_action);
+	}
+" />
+<action id="_N_Act_LoadMaster_Exch" scope="common" 
+value="
+	$log(*********** _N_Act_LoadMaster_Exch: $tmp_arr_name_exch [$tmp_read_cnt/$tmp_arr_cnt]);
+	//$logvar(tmp_arr_cnt,tmp_read_cnt, tmp_arr_name_exch);
+
+	if($tmp_arr_cnt <= 0){
+		$log(******* 마스터 확인 );
+		return;
+	}
+
+	$setvar(	tmp_exch 		= $getarrayvar($tmp_arr_name_exch, $tmp_read_cnt, 2)	);
+
+	// changeCMEAuthority_20191128
+	$log(call Act_LoadMaster_Exch_Process param  [$tmp_exch]); // g_ArrFuturesExch_$tmp_exch 배열 생성..
+	$callaction(Act_LoadMaster_Exch_Process,$tmp_exch);
+
+	$setvar(
+		tmp_read_cnt = $result($tmp_read_cnt + 1)
+	);
+
+	$setvar(
+		tmp_exch_next 	= $getarrayvar($tmp_arr_name_exch,$tmp_read_cnt,2)	//  파일
+		//,$($tmp_ctrl_id).value 	= $addstring($tmp_exch_next,  생성중입니다.)
+	);
+	$logvar(tmp_arr_cnt,tmp_read_cnt,tmp_after_action);
+	if( $tmp_arr_cnt == $tmp_read_cnt ){
+		$arraysort(arr_MasterData_fucode,,,0);		// 선물-해외 
+		$arraysort(arr_MasterData_opcode,,,0);	// 옵션-해외  
+		//$log(************ OPITEM);
+		
+		$arraysort(arr_MasterData_optick,,,0);		// 옵션-해외
+		
+	    // 배열명,원본인덱스,타켓인덱스,앞에서부터 자를길이
+
+	    /* !!!!주의
+	    현재 개발 서버 접속하려할때 마스터파일 내용이 무엇인가 달라졌는지
+	    해당 부분 주석처리 안하면 해당 부분에서 걸려서 안넘어가짐.
+	    */
+	    $log(********* Time CHECK 1);
+		$getarrayaddsubstring(arr_MasterData_oprcode,7,14,1);
+		$log(********* Time CHECK 2);
+		//$logarrayvar(arr_MasterData_oprcode);
+		$arraysort(arr_MasterData_oprcode,,,3);		// 해외주식옵션 
+		$log(********* Time CHECK 3);
+		//$arraysort(arr_MasterData_bqtcode,,,1);		// 해외주식옵션 
+		$getarrayaddupper(arr_MasterData_BQTCODE,1,14);
+		$log(********* Time CHECK 4);
+		//$arraycopy(arr_MasterData_oprcode,g_arr_oprcode_underCode,true,true,false,true,3,3,common); // 속도 때문에 화면에서 처리한다.
+		$log(********* Time CHECK 5);
+		$arraysort(arr_MasterData_bqtcode,,,14);		// 해외주식옵션 
+		$log(********* Time CHECK 6);
+
+
+		//$logarrayvar(arr_MasterData_opitem);
+		//$logarrayvar(arr_MasterData_bqtcode);
+		// 미주옵션 
+		$getsearcharray(arr_MasterData_opitem, arr_MasterData_opitem_99, 99, common, 2,true, EQUAL);  	// 미주옵션
+		$getarrayaddsubstring(arr_MasterData_opitem_99,0,18,1);
+		//$logarrayvar(arr_MasterData_opitem_99);
+		// 해외-옵션에 미주옵션이 섞여 있어 다시 셋팅함.
+		$getsearcharray(arr_MasterData_opitem, arr_MasterData_opitem_99_not, 99, common, 2,true, NOTEQUAL);  	
+		//$logarrayvar(arr_MasterData_opitem_99_not);
+		$delarrayvar(arr_MasterData_opitem);
+		$arraycopy_common(arr_MasterData_opitem_99_not,arr_MasterData_opitem); 			// 옵션-해외 다시 셋팅 
+		//$logarrayvar(arr_MasterData_opitem);		
+		$arraysort(arr_MasterData_opitem,,,0);	// 옵션-해외 주의: pind_key 적용되려면 소팅이 되어야 한다.
+
+		//$logarrayvar(arr_MasterData_fucode);
+		//$logarrayvar(arr_MasterData_opcode);
+		//$logarrayvar(arr_MasterData_oprcode);
+		$log(해외선물 마스터 생성완료 call[$tmp_loadmaster_exch_after_action]);
+		//$setnstimer(TIMER_LoadMaster_Exch,0.01,$tmp_after_action,FALSE);
+
+		$callaction($tmp_loadmaster_exch_after_action);
+		return;
+	}
+	//$setnstimer(TIMER_LoadMaster_Exch,0.01,Act_LoadMaster_Exch,FALSE);
+	$callaction(_N_Act_LoadMaster_Exch);
+" />
+//////////////////////////////////////////////////////
+// 국내 마스터 로딩
+//////////////////////////////////////////////////////
+<action id="N_Act_LoadMaster_d_Start"  scope="common"
+params="p_after_action"
+value="
+	$setvar(tmp_loadmaster_d_after_action = $p_after_action);
+	$setvar(
+		tmp_dat_path = $g_path_down/dat/ 			// dat경로 
+	);
+	$setvar_common(
+		g_arrd_datFile = [
+			,[sfile01] 		// 기초자산정보 - 마켓구분,선물/옵션구분,기초자산명,기초자산코드,기초자산설명(한글),기초자산설며(영문)
+			,[sfile02]		// 만기월물정보 - 마켓타입,선물/옵션구분,기초자산명,만기년월
+			,[sfile03]		// 종목정보 - 거래소구분,선물/옵션구분,옵션구분,기초자산명,만기년월,주야간구분,분류,거래소코드,종목코드,상위종목(KTB에서만사용),한글종목명,영문종목명,상한가,하한가,행사가격,파생상품코드,소수점정보,계약크기,잔존일수,실시간상한가적용여부,실시간상한가,실시간하한가,실시간종목코드
+								//주야간구분 => day, night
+								//거래소구분 => 1:KOFEX, 2:KOSPI 5:MINI KOSPI
+								//선물옵션구분 => F:선물 O:옵션
+			,[sfile05]		// 스프레드정보 - 기초자산명,종목코드,구성종목,구성일련번호,구성비율,매수시매매구분,매도시매매구분
+			,[sfile07]		// 틱사이즈테이블 - 선물옵션구분,기초자산명,파생상품코드,하한,상한,틱사지즈(소수점미포함),소수점정보
+			,[sfile09]		// 연속월물정보 - 거래소구분,연속월물종목,종목코드,기초자산명
+			,[sfile11]		// 옵션ATM - 기초자산명,만기년월,행사가격
+			,[sfile12]		// 연도코드 - 연도코드,연도
+			,[sfile14]		// 국내종목 종료,운영 시간 - 7월31일 국내 제도변경관련하여 장운영시간, 종료시간을 제공하게 됩니다.
+		]
+	);
+	//$logarrayvar(g_arrd_datFile);
+
+	$setvar(
+		tmp_dat_path 		= $g_path_down/dat/ 			// dat경로 
+		,tmp_read_cnt 		= 0
+		,tmp_arr_name 		= g_arrd_datFile
+		,tmp_arr_cnt 		= $result($getarrayvarcount($tmp_arr_name) - 1)
+		,tmp_ctrl_id 		= lbl_prcessing
+		,tmp_after_action 	= Act_LoadMaster_d_Set
+	);
+
+	$setvar(
+		//,$($tmp_ctrl_id).value = 국내선물 dat 로딩 준비중입니다.
+	);
+	$setvar_common( g_isLoadMaster_d = false ); 		// 파일을 하나라도 읽으면 true 마스터 작업을 하기 위해 쓰인다.
+	//$setnstimer(TIMER_LoadMaster_Dat_d,0.01,Act_LoadMaster_Dat_d,FALSE);
+	$callaction(_N_Act_LoadMaster_Dat_d);
+" />
+<action id="_N_Act_LoadMaster_Dat_d" scope="common" 
+value="	
+	$logvar(tmp_arr_cnt, tmp_read_cnt);
+	
+	$setvar(
+		tmp_dat_file 		= $addstring($tmp_dat_path,$getarrayvar($tmp_arr_name,$tmp_read_cnt,0),.dat)	//  파일
+		,tmp_dat_arrName 	= $addstring(arr_MasterData,_,$getarrayvar($tmp_arr_name,$tmp_read_cnt,0)) 	// 생성될 배열명
+		,tmp_dat_arr_cnt 	= $getarrayvarcount($tmp_dat_arrName)
+	);
+	$log(_N_Act_LoadMaster_Dat_d ==========================================);
+	$log(파일명:[$tmp_dat_file], 배열명:[$tmp_dat_arrName][$tmp_dat_arr_cnt]);
+	// 배열이 없을 경우에만 로드한다. - 배열삭제는 파일을 다운받았을때 함.
+	if($tmp_dat_arr_cnt < 1){
+		$delarrayvar($tmp_dat_arrName);
+		$addTokenArrayFile($tmp_dat_file,$tmp_dat_arrName);	
+		//$logarrayvar($tmp_dat_arrName);
+		$log(********** 마스터 로드 국내 O [$tmp_dat_arrName][$getarrayvarcount($tmp_dat_arrName)]);
+		$setvar_common( g_isLoadMaster_d = true );
+	}
+	else{
+		$log(********** 마스터 로드 국내 X [$tmp_dat_arrName]);
+	}
+
+	$setvar(	tmp_read_cnt = $result($tmp_read_cnt + 1)	);
+	$setvar(
+		tmp_dat_file_next 	= $addstring($getarrayvar($tmp_arr_name,$tmp_read_cnt,0),.dat)	//  파일
+		//,$($tmp_ctrl_id).value = $addstring($tmp_dat_file_next,  로딩중입니다.)
+	);
+
+	if( $tmp_arr_cnt < $tmp_read_cnt ){
+		$setvar(
+			//,$($tmp_ctrl_id).value = 국내선물 dat 로딩완료 
+		);
+		$log(국내선물 dat 로딩완료 ******************* call[$tmp_after_action]);
+		//$setnstimer(TIMER_LoadMaster_Dat_d,0.01,$tmp_after_action,FALSE);
+		$callaction($tmp_loadmaster_d_after_action);
+		return;
+	}
+	//$setnstimer(TIMER_LoadMaster_Dat_d,0.01,Act_LoadMaster_Dat_d,FALSE);
+	$callaction(_N_Act_LoadMaster_Dat_d);
+"/>
+<action id="N_Act_LoadMaster_d_Set"  scope="common"
+params="p_after_action"
+value="
+	$setvar(tmp_loadmaster_d_set_after_action = $p_after_action);
+	//1. 주식선물인것을 골라낸다.(0번째 6인거는 주식선물 )
+	$getsearcharray(arr_MasterData_sfile01,g_arrMaster_base_sf_d,6,common,0,,first);
+	//$logarrayvar(g_arrMaster_base_sf_d,120);
+
+	//2. 선물옵션을 골라낸다.
+	$setcomparearray(g_arrMaster_base_fo_d,arr_MasterData_sfile01,g_arrMaster_base_sf_d,0,0,local,NE);
+	//$logarrayvar(g_arrMaster_base_fo_d);
+
+	// 3.선물을 골라낸다.
+	$getsearcharray(g_arrMaster_base_fo_d,g_arrMaster_base_fu_d,F,common,1,,first);
+	$logarrayvar(g_arrMaster_base_fu_d);
+	
+	// 4.옵션을 골라낸다.
+	$delarrayvar(tmp_arrMaster_base_op_d);
+	$getsearcharray(g_arrMaster_base_fo_d,tmp_arrMaster_base_op_d,O,local,1,,first);
+	$getsearcharray(tmp_arrMaster_base_op_d,g_arrMaster_base_op_d,USD,common,2,,NOTEQUAL);
+	//$logarrayvar(g_arrMaster_base_op_d);
+
+	// 해외선물을 골라낸다. - 미체결, 순미결제에서 사용
+	//$logarrayvar(arr_MasterData_sfile03);
+	$delarrayvar(g_arrMaster_day, g_arrMaster_night);
+	$getsearcharray(arr_MasterData_sfile03,g_arrMaster_day,day,common,5,,first); 		// 주간 
+	$arraysort(g_arrMaster_day,,,8); 		// 이함수 때문에 serverdata=pibo7031:OutBlock:code:value:arraydata:g_arrMaster_day,1 동작함
+
+	$getsearcharray(arr_MasterData_sfile03,g_arrMaster_night,night,common,5,,first); 		// 야간
+	$arraysort(g_arrMaster_night,,,8); 		// 이함수 때문에 serverdata=pibo7031:OutBlock:code:value:arraydata:g_arrMaster_night,1 동작함
+	//$logarrayvar(g_arrMaster_day);
+	//$logarrayvar(g_arrMaster_night);
+
+
+	//국내야간옵션을 골라낸다. -야간 옵션종합 사용
+	$setvar(
+		tmp_1 = O
+		,tmp_2 = night
+	);
+	$getmultisearcharray(g_arrMaster_night,arr_op_code_n,tmp_1|tmp_2,local,1|5,,first);
+	$arraycopy(arr_op_code_n,g_arrMaster_base_op_n,true,true,false,true,7,7,common); 
+	$arraysort(g_arrMaster_base_op_n,true,true,0);
+	//$logarrayvar(g_arrMaster_base_op_n);
+
+	// 마스터 로딩 후로 위치 변경한다. - 여기까지 
+	$copyfile(master.sqlite,$g_path_down/dat/master.sqlite);
+	$copyfile(config.sqlite,$g_path_down/dat/config.sqlite);
+
+	$setvar(
+		,$($tmp_ctrl_id).value = 국내 마스터 셋팅완료
+	);
+
+	//$setnstimer(TIMER_LoadMaster_Dat_d,0.01,$tmp_loadmaster_d_set_after_action,FALSE);
+	$callaction($tmp_loadmaster_d_set_after_action);
+" />

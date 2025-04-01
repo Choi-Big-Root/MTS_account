@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<STRUCT CODE="O1" SERVICECODE="O1" NAME="실시간 주문/체결" COMMENT="실시간 주문/체결">	
+	<BLOCK CODE="PageBlock" NAME="PageBlock" SEND="NO" ATTR="NO" OCCURS="NO">
+		<FIELD CODE="header" TYPE="CHAR" SIZE="57" NAME="공통헤더"/>
+		<FIELD CODE="count" TYPE="CHAR" SIZE="3" NAME="건수"/>
+		<FIELD CODE="type_tp" TYPE="CHAR" SIZE="2" NAME="업무구분"/>
+		<FIELD CODE="acct_no" TYPE="CHAR" SIZE="11" NAME="계좌번호"/>
+		<FIELD CODE="mkt_tp" TYPE="CHAR" SIZE="1" NAME="시장구분"/>
+		<FIELD CODE="ord_dt" TYPE="CHAR" SIZE="8" NAME="주문일자"/>
+		<FIELD CODE="ord_no" TYPE="CHAR" SIZE="12" NAME="주문번호"/>
+		<FIELD CODE="orig_ord_dt" TYPE="CHAR" SIZE="8" NAME="원주문일자"/>
+		<FIELD CODE="orig_ord_no" TYPE="CHAR" SIZE="12" NAME="원주문번호"/>
+		<FIELD CODE="fo_tp" TYPE="CHAR" SIZE="1" NAME="종목구분"/>
+		<FIELD CODE="series" TYPE="CHAR" SIZE="32" NAME="종목"/>
+		<FIELD CODE="proc_tp" TYPE="CHAR" SIZE="1" NAME="처리구분"/>
+		<FIELD CODE="bysl_tp" TYPE="CHAR" SIZE="1" NAME="매매구분"/>
+		<FIELD CODE="edit_tp" TYPE="CHAR" SIZE="1" NAME="정취구분"/>
+		<FIELD CODE="prce_tp" TYPE="CHAR" SIZE="1" NAME="가격조건"/>
+		<FIELD CODE="eff_tp" TYPE="CHAR" SIZE="1" NAME="유효구분"/>
+		<FIELD CODE="ord_q" TYPE="CHAR" SIZE="7" NAME="주문수량"/>
+		<FIELD CODE="trd_q" TYPE="CHAR" SIZE="7" NAME="체결수량"/>
+		<FIELD CODE="mdfy_q" TYPE="CHAR" SIZE="7" NAME="정정수량"/>
+		<FIELD CODE="cncl_q" TYPE="CHAR" SIZE="7" NAME="취소수량"/>
+		<FIELD CODE="ord_p" TYPE="CHAR" SIZE="15" NAME="주문가격"/> 		//작업 13
+		<FIELD CODE="trd_p" TYPE="CHAR" SIZE="15" NAME="체결가격"/> 		//작업 13
+		<FIELD CODE="ord_avg_q" TYPE="CHAR" SIZE="15" NAME="체결평균가"/> 		//작업 13
+		<FIELD CODE="limit_p" TYPE="CHAR" SIZE="15" NAME="익절가격"/> 		//작업 13
+		<FIELD CODE="stop_p" TYPE="CHAR" SIZE="15" NAME="손절가격"/> 		//작업 13
+		<FIELD CODE="t_size" TYPE="CHAR" SIZE="5" NAME="손절T.S"/>
+		<FIELD CODE="acpt_tm" TYPE="CHAR" SIZE="14" NAME="접수시간"/>
+		<FIELD CODE="trd_tm" TYPE="CHAR" SIZE="14" NAME="체결시간"/>
+		<FIELD CODE="work_empl" TYPE="CHAR" SIZE="10" NAME="작업사원"/>
+		<FIELD CODE="bat_no" TYPE="CHAR" SIZE="12" NAME="일괄번호"/>
+		<!-- <FIELD CODE="str_tp" TYPE="CHAR" SIZE="6" NAME="전략구분"/>  -->
+		
+		<FIELD CODE="str_tp" TYPE="CHAR" SIZE="1" NAME="전략구분"/>
+		<FIELD CODE="tr_tp" TYPE="CHAR" SIZE="2" NAME="주문원천 (주문:01, 체결:02)"/>
+		<FIELD CODE="filler" TYPE="CHAR" SIZE="1" NAME="filler"/>
+		<FIELD CODE="cme_tp" TYPE="CHAR" SIZE="1" NAME="주야간구분"/>
+		<FIELD CODE="sp_tp" TYPE="CHAR" SIZE="1" NAME="스프레드처리구분 (G:일반, S:스프레드)"/>
+
+		<FIELD CODE="mediat_ype" TYPE="CHAR" SIZE="1" NAME="주문매체구분"/> 
+		<FIELD CODE="err_cd" TYPE="CHAR" SIZE="5" NAME="에러코드"/>
+		//<FIELD CODE="err_msg" TYPE="CHAR" SIZE="50" NAME="에러명"/> 		// 없었음.-확인필요  //170928 에러명 없는것으로 확인
+		<FIELD CODE="curr_cd" TYPE="CHAR" SIZE="3" NAME="통화코드"/>
+		<FIELD CODE="trd_no" TYPE="CHAR" SIZE="12" NAME="체결번호"/>
+		<FIELD CODE="unit_trd_q" TYPE="CHAR" SIZE="7" NAME="건별체결량"/>
+		<FIELD CODE="hedge_tp" TYPE="CHAR" SIZE="1" NAME="햇지구분"/>		
+		<FIELD CODE="ord_stop_p" TYPE="CHAR" SIZE="15" NAME="STOP주문가격"/>	 		//작업 13
+		<FIELD CODE="reg_yn" TYPE="CHAR" SIZE="1" NAME="옵션매수행사예약여부(Y,N)"/>		
+		<FIELD CODE="EndDate" TYPE="CHAR" SIZE="8" NAME="주문종료일자"/>
+		<FIELD CODE="OptOrdAmount" TYPE="CHAR" SIZE="15" NAME="옵션주문금액"/> 		
+		<FIELD CODE="remain_q" TYPE="CHAR" SIZE="7" NAME="주문잔량"/>
+		<FIELD CODE="ref_ord_no" TYPE="CHAR" SIZE="12" NAME=" 참조 주문 번호"/>
+		<FIELD CODE="trd_che" TYPE="CHAR" SIZE="1" NAME="체결조건1:FAS,2:FOK,3:FAK"/>
+		<FIELD CODE="clr_posno" TYPE="CHAR" SIZE="13" NAME="청산포지션번호"/>
+	</BLOCK> 
+</STRUCT>
+
+
+
+

@@ -1,0 +1,602 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *********************************************************************************
+ **
+ ** 화면을 그린 후에 필요한 작업을 한다. 
+ ** - TR을 배열에 담는다. 전송은 특이한 경우가 아니면 basescreen에서 일괄적으로 전송한다.
+ **
+ *********************************************************************************
+ -->
+<actiondata value="
+$readfile(plist/root/html/4101_100_1.html,4101_htmldata_1);
+$readfile(plist/root/html/4101_100_7.html,4101_htmldata_7);
+$readfile(plist/root/html/4101_100_9.html,4101_htmldata_9);
+$readfile(plist/root/html/4101_100_10.html,4101_htmldata_10);
+
+// 요약동의서 
+$readfile(plist/root/html/4101_100_1_1_n.html,4101_100_1_1_n_htmldata); 		// 1-1 수집/이용에 관한 사항
+$readfile(plist/root/html/4101_100_2_1_n.html,4101_100_2_1_n_htmldata);			// 2-1 제공에 관한 사항[미수/파생상품 거래용]
+$readfile(plist/root/html/4101_100_2_2_n.html,4101_100_2_2_n_htmldata);			// 2-2 제공에 관한 사항[해외파생상품 거래용]
+$readfile(plist/root/html/4101_100_3_1_n.html,4101_100_3_1_n_htmldata); 		// 3-1 조회에 관한 사항[미수/파생상품 거래용]
+$readfile(plist/root/html/4101_100_4_1_n.html,4101_100_4_1_n_htmldata); 		// 개인(신용)정보 수집/이용에 관한사항
+// 전체동의서
+$readfile(plist/root/html/4101_100_1_1_n_d.html,4101_100_1_1_n_htmldata_d); 		// 1-1 수집/이용에 관한 사항
+$readfile(plist/root/html/4101_100_2_1_n_d.html,4101_100_2_1_n_htmldata_d);			// 2-1 제공에 관한 사항[미수/파생상품 거래용]
+$readfile(plist/root/html/4101_100_2_2_n_d.html,4101_100_2_2_n_htmldata_d);			// 2-2 제공에 관한 사항[해외파생상품 거래용]
+$readfile(plist/root/html/4101_100_3_1_n_d.html,4101_100_3_1_n_htmldata_d); 		// 3-1 조회에 관한 사항[미수/파생상품 거래용]
+$readfile(plist/root/html/4101_100_4_1_n_d.html,4101_100_4_1_n_htmldata_d); 		// 개인(신용)정보 수집/이용에 관한사항
+
+
+if($isequal_string($tmpDeviceKind,iPhone OS)){                      //320:480 - 20
+	$setvar(tmp_baseFontSize = 12);
+}
+elseif($isequal_string($tmpDeviceKind,iPhone5 OS)){                 //320:568 - 20
+	$setvar(tmp_baseFontSize = 12);
+}
+elseif($isequal_string($tmpDeviceKind,iPhone6 OS)){                 //375:667 - 20
+	$setvar(tmp_baseFontSize = 15);
+}
+elseif($isequal_string($tmpDeviceKind,iPhone6Plus OS)){             //414:736 - 20
+	$setvar(tmp_baseFontSize = 15);
+}
+elseif($isequal_string($tmpDeviceKind,iPad OS)){             
+	$setvar(tmp_baseFontSize = 22);
+}
+elseif($isequal_string($tmpDeviceKind,HD)){
+	$setvar(tmp_baseFontSize = 27);
+}
+elseif($isequal_string($tmpDeviceKind,FULLHD)){
+	$setvar(tmp_baseFontSize = 44);
+}
+elseif($isequal_string($tmpDeviceKind,QHD)){
+	$setvar(tmp_baseFontSize = 55);
+}
+elseif($isequal_string($tmpDeviceKind,WVGA)){
+	$setvar(tmp_baseFontSize = 20);
+}
+
+$setvar(
+	ft_fontsize_basic = $result($tmp_baseFontSize + 1)
+	,ft_fontsize_basic_p = $result($tmp_baseFontSize + 2)
+	,ft_fontsize_basic_pp = $result($tmp_baseFontSize + 3)
+);
+
+"/>
+
+<action id="screen_contents_onload" value="
+	$setvar(
+		,vg_open_account_title.backcolor=464b4e
+		,lbl_open_account_title.align=left
+		
+		,img_step_1.hidden=true
+		,img_step_2.hidden=true
+		,img_step_3.hidden=true
+		,img_step_4.hidden=true
+		,img_step_5.hidden=true
+		,img_step_6.hidden=true
+		,img_step_7.hidden=true
+		,img_step_8.hidden=true
+		,lbl_open_account_title.x = $w($g_lcdwidth,4.6) // 순서대로 오지 않을경우에 치우친다.
+		,lbl_account_title_step_1.hidden=false
+		,lbl_account_title_step_2.hidden=false
+		,lbl_account_title_step_3.hidden=false
+		,lbl_account_title_step_4.hidden=false
+		,lbl_account_title_step_5.hidden=false
+		,lbl_account_title_step_6.hidden=false
+		,lbl_account_title_step_7.hidden=false
+		,lbl_account_title_step_8.hidden=false
+		,lbl_account_title_step_1.textcolor=ffffff
+		,lbl_account_title_step_2.textcolor=777777
+		,lbl_account_title_step_3.textcolor=777777
+		,lbl_account_title_step_4.textcolor=777777
+		,lbl_account_title_step_5.textcolor=777777
+		,lbl_account_title_step_6.textcolor=777777
+		,lbl_account_title_step_7.textcolor=777777
+		,lbl_account_title_step_8.textcolor=777777
+		,vg_account_title_step.hidden=false
+
+		,popscreen_open_account_history.hidden=true
+		,popscreen_open_account_history_2.hidden=true
+		,popscreen_open_account_confirm.hidden=false
+		,popscreen_open_account_confirm.x=$w($g_lcdwidth,23)
+		,menu_num=4101
+	);
+	//초기화 
+	$callaction(fnConfig_SetValue,g_MO_F1 	,); 		// 개인정보선택동의
+
+"/>
+
+<action id="screen_4101_100_onunload" 
+value="
+	$logvar(4101_htmldata_10);
+	$delvar(
+		4101_htmldata_1
+		,4101_htmldata_7
+		,4101_htmldata_9
+		,4101_htmldata_10
+		,4101_htmldata_1_1_1
+		,4101_htmldata_1_1_2
+		,4101_htmldata_1_1_3
+		,4101_htmldata_1_1_4
+		,4101_htmldata_1_2_1
+		,4101_htmldata_1_2_2
+		,4101_htmldata_1_2_3
+		,4101_htmldata_1_2_4
+		,4101_htmldata_2_1_1
+		,4101_htmldata_2_2_1
+	);
+	$logvar(4101_htmldata_10);
+" />
+
+
+<class id="cs_btn_4101_100_agree_kind" 
+groupid="gr_4101_100_agree_kind"
+width="$w($g_lcdwidth,38)" 
+height="$this.remain_bottom"
+textcolor="3a3a3a"
+textcolor_active="3a3a3a"
+fontsize="$ft_fontsize_basic"
+fontname="$g_baseFontName"
+backgroundimage_align="left"
+backgroundimage_align_vertical="center"
+backgroundfull="false"
+backgroundrepeat="false"
+imagesizefit="false"
+backgroundimage="$icon_radio_off"
+backgroundimage_highlight="$icon_radio_on"
+/>
+<class id="cs_vg_4101_100_contents" 
+width="$w($g_lcdwidth,92)" 
+height="$h($g_lcdHeight,7)"
+layout="center"
+backcolor="ffffff"
+border_color="d8d8d8"
+border_width="$g_roundHeight"
+/>
+<class id="cs_lbl_tit_4101_100" 
+width="$w($g_lcdwidth,92)" 
+height="$h($g_lcdHeight,5)" 
+layout="center"
+backcolor="f1f1f1"  
+fontname="$g_baseFontNameBold"    
+fontsize="$g_fontSize_big1"
+/>
+<class id="cs_btn_essential_4101_100" 
+width="$this.remain_right" 
+height="$h($g_lcdHeight,6)" 
+fontsize="$g_fontSize_basic"
+backcolor="f9f9f9"
+textcolor="666666"
+textcolor_active="222222"
+margin_left="$w($g_lcdWidth,3)"
+align="left"
+checked="false"
+checkimage="$icon_choice2_on" 
+uncheckimage="$icon_choice2_off"
+checkimage_leftmargin="$w($g_lcdWidth,4)"
+onclicked="$callaction(btn_essential_4101_100_onClicked,$this.key)"
+/>
+<class id="cs_lbl_select_img" 
+width="$result($w($g_lcdWidth,92)/5)" 
+height="$h($g_lcdHeight,3)" 
+align="center"
+valign="bottom"
+/>
+<class id="cs_lbl_select_img2" 
+width="$result($w($g_lcdWidth,92)/5)" 
+height="$h($g_lcdHeight,3)" 
+align="center"
+/>
+
+<screen id="screen_4101_100"
+class="cs_screen_contents"
+backcolor="ffffff"
+onload="screen_contents_onload"
+onunload="screen_4101_100_onunload"
+>
+	<screen id="screen_4101_scroll"
+	height="$this.remain_bottom"
+	backcolor="f1f1f1"
+	>
+		<viewgroup 
+		margin_left="$w($g_lcdWidth,6.3)"
+		width="$this.remain_right"
+		height="$h($g_lcdHeight,7)" 
+		backcolor="ffffff"			
+		>	
+			<label 
+			height="$h($g_lcdHeight,7)" 
+			fontname="$g_baseFontNameBold" 
+			fontsize="$g_fontsize_big1" 
+			value="개인신용정보 수집/이용/제공/조회 동의"
+			layout="center"
+			textcolor="222222"
+			/>
+		</viewgroup>
+		<br/><hr backcolor="cccccc" /><br /><hr height="$h($g_lcdHeight,2)" backcolor="f1f1f1"/><br />
+		<viewgroup id="vg_4101_100_agree_kind" class="cs_vg_4101_100_contents">
+			<blank width="$w($g_lcdWidth,10)"/>
+			<button class="cs_btn_4101_100_agree_kind"
+			key="1"
+			value="상세동의서"
+			/>
+			<blank width="$w($g_lcdWidth,0)"/>
+			<button class="cs_btn_4101_100_agree_kind"
+			key="2"
+			value="요약동의서"
+			select="true"
+			/>
+		</viewgroup>
+		<br height="$h($g_lcdHeight,2)"/>
+		<label class="cs_lbl_tit_4101_100" value="개인(신용)정보의 필수동의서" />
+		<br/>
+		<viewgroup class="cs_vg_4101_100_contents"
+		height="$h($g_lcdHeight,25)"
+		margin_left="$w($g_lcdWidth,2)"
+		>
+			<br height="$h($g_lcdHeight,1.5)"/>
+			<label
+			margin_left="$w($g_lcdWidth,2.5)"
+			width="$super.width" 
+			height="$h($g_lcdHeight,3)"
+			value="고객권리에 대한 안내"
+			backcolor="ffffff"
+			textcolor="3a3a3a"
+			fontname="$g_baseFontNameBold" 
+			/>
+			<br/>
+			<htmlview 
+			id="html1"
+			width="$w($g_lcdWidth,88)" 
+			height="$result($this.remain_bottom-$h($g_lcdHeight,2))"
+			value_html_var="4101_htmldata_1"
+			fontsize="$ft_fontsize_basic"
+			textcolor="666666"
+			backcolor="ffffff"
+			lineheight="$h($g_lcdHeight,3)"
+			margin_left="$w($g_lcdWidth,2)"
+			margin_right="$w($g_lcdWidth,2)"
+			margin_top="$h($g_lcdHeight,1.2)"
+			margin_bottom="$h($g_lcdHeight,3)"
+			noscroll_height="true"
+			/>
+		</viewgroup>
+		<br height="$h($g_lcdHeight,1)"/>
+		<viewgroup class="cs_vg_4101_100_contents"
+		height="$h($g_lcdHeight,24)"
+		>
+			<checkbox id="btn_1_1" class="cs_btn_essential_4101_100" key="1_1" value="1-1 수집/이용에 관한 사항" /><br/>
+			<checkbox id="btn_2_1" class="cs_btn_essential_4101_100" key="2_1" value="2-1 제공에 관한 사항 [미수/파생상품 거래용]"/><br/>
+			<checkbox id="btn_2_2" class="cs_btn_essential_4101_100" key="2_2" value="2-2 제공에 관한 사항 [해외파생상품 거래용]"/><br/>
+			<checkbox id="btn_3_1" class="cs_btn_essential_4101_100" key="3_1" value="3-1 조회에 관한 사항 [미수/파생상품 거래용]"/><br/>
+		</viewgroup>
+
+		<br height="$h($g_lcdHeight,4)"/>
+		
+		<blank width="$w($g_lcdWidth,4)"/>
+		<viewgroup height="$h($g_lcdHeight,9.4)" >
+			<button 
+			id="btn_4101_bf"
+			fontsize="$g_fontsize_big3" 
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,9.4)" 
+			backcolor="ffffff"
+			border_width="$g_roundHeight"
+			border_color="e33433"
+			backcolor_active="e5e5e5"
+			textcolor="e33433"
+			textcolor_active="e33433"
+			value="이전" 
+			onclicked="btn_open_account_history_onClicked"
+			/>
+			<blank width="$w($g_lcdWidth,1.8)"/>
+			<button 
+			id="btn_4101_af"
+			fontsize="$g_fontsize_big3" 
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,9.4)" 
+			border_width="$g_roundHeight"
+			backcolor="e33433"
+			backcolor_active="cc2f2e"
+			backcolor_disable="cccccc"
+			textcolor="ffffff"
+			textcolor_active="ffffff"
+			textcolor_disable="ffffff"
+			value="약관보기" 
+			enable="true"
+			onclicked="btn_4101_confirm_onclicked"
+			/>
+		</viewgroup>		
+	</screen>
+</screen>
+
+<action id="btn_essential_4101_100_onClicked"
+params="p_key"
+value="
+	//4101_100_4_1_n_htmldata
+	$log(선택키:$p_key);
+	$log(선택동의서 : $vg_4101_100_agree_kind.selectkey );
+	$setvar(
+		,tmp_btn_id			= $addstring(btn_,$p_key)
+		,popscreen_title 	= $tmp_btn_id.value
+		,popscreen_key 		= $p_key
+	);
+	if($vg_4101_100_agree_kind.selectkey == 1){ 		//상세동의서
+		$setvar( 	popscreen_html = $addstring(4101_100_,$p_key,_n_htmldata,_d)	);
+		if($isequal_string($p_key,1_1)){
+			$setvar( 	html_pop_height = $h($g_lcdHeight,210)	);
+		}
+		elseif($isequal_string($p_key,2_1)){
+			$setvar( 	html_pop_height = $h($g_lcdHeight,135)	);
+		}
+		elseif($isequal_string($p_key,2_2)){
+			$setvar( 	html_pop_height = $h($g_lcdHeight,160)	);
+		}
+		elseif($isequal_string($p_key,3_1)){
+			$setvar( 	html_pop_height = $h($g_lcdHeight,185)	);
+		}
+		elseif($isequal_string($p_key,4_1)){
+			$setvar( 	html_pop_height = $h($g_lcdHeight,110)	);
+		}
+	}
+	else{												//요약동의서 
+		$setvar(	popscreen_html = $addstring(4101_100_,$p_key,_n_htmldata)	);
+		// htmlview height 지정해야 함.
+		if($isequal_string($p_key,1_1)){
+			$setvar( 	html_pop_height = $h($g_lcdHeight,140)	);
+		}
+		elseif($isequal_string($p_key,2_1)){
+			$setvar( 	html_pop_height = $h($g_lcdHeight,135)	);
+		}
+		elseif($isequal_string($p_key,2_2)){
+			$setvar( 	html_pop_height = $h($g_lcdHeight,130)	);
+		}
+		elseif($isequal_string($p_key,3_1)){
+			$setvar( 	html_pop_height = $h($g_lcdHeight,160)	);
+		}
+		elseif($isequal_string($p_key,4_1)){
+			$setvar( 	html_pop_height = $h($g_lcdHeight,110)	);
+		}
+	}	
+	$popscreen(popscreen_4101_100);
+"/>
+<class id="cs_btn_close" 
+width="$w($g_lcdWidth,12.4)" 
+height="$this.remain_bottom" 
+fontsize="$g_fontSize_basic"
+backcolor="none"
+textcolor="666666"
+textcolor_active="222222"
+backgroundimage_align="center"
+backgroundimage_x="0"
+backgroundimage_align_vertical="center"
+backgroundfull="false"
+backgroundrepeat="false"
+imagesizefit="false"
+backgroundimage="$icon_ic_close"
+backgroundimage_highlight="$icon_ic_close"
+/>
+<action id="ppopscreen_4101_100_onload" 
+value="
+	//최대근 추가 : 빠르게 pos_y 값이 변경되면 화면이 새로 열려도 0부터 시작이 아닌 이전값이 계속해서 들어옴.
+	$setvar( tmp_pop_4101_100_flag = true, tmp_this_pos_y_4101 = );
+" >
+<action id="SCREEN_4101_100_SCROLLOFFSET_ACTION" 
+params="
+p_ctrl_id
+,p_pos_x
+,p_pos_y
+"
+value="
+	// 스크롤이 제일 끝에 위치하면 활성화 
+	$setvar(
+		tmp_scroll_gap 		= $result($screen_html.SCROLL_HEIGHT - ($p_pos_y + $screen_html.HEIGHT))
+		,tmp_this_pos_y_4101 = $p_pos_y
+	);	
+	$logvar(tmp_scroll_gap);
+	if($tmp_scroll_gap <= 0	){
+		$setvar(
+			btn_4101_100_agree_bottom.hidden = true
+			,btn_4101_100_agree.hidden = false 
+		);			
+
+	}
+	return;
+
+" />
+<action id="fnPopScreen_Close" 
+value="
+	// 그냥 닫을 때는 동의 체크를 해제한다.
+	$setvar(
+		tmp_btn_id_agree 	= $addstring(btn_,$this.key)
+		,$($tmp_btn_id_agree).checked = false
+	);
+	$closescreen(popscreen_4101_100);
+" />
+<popscreen id="popscreen_4101_100"
+width="$g_lcdWidth" 
+height="$p_lcdHeight"
+noscroll_height="true"
+onload="ppopscreen_4101_100_onload"
+backcolor="f1f1f1"
+>
+	<screen 
+	width="$this.remain_right"
+	height="$this.remain_bottom"
+	backcolor="f1f1f1"
+	//ONTOUCHMOVE_X="screen_4101_100_swipe_1"
+	>
+		<viewgroup 
+		width="$super.width" 
+		height="$g_topHeight"	
+		backcolor="464b4e" 
+		>
+			<label width="$w($g_lcdWidth,87.6)"
+			fontsize="$g_fontsize_big1" 
+			fontname="$g_baseFontNameBold" 
+			align="left"
+			margin_left="$w($g_lcdWidth,2)" 
+			valign="center" 
+			textcolor="ffffff"
+			value="$popscreen_title"
+			/>
+			<button class="cs_btn_close" layout="right" key="$popscreen_key" onClicked="fnPopScreen_Close"/>
+		</viewgroup>
+		<br/>
+		<screen id="screen_html"
+		width="$this.remain_right"
+		height="$result($this.remain_bottom - $h($g_lcdHeight,10))"
+		backcolor="ffffff"
+		SCROLLOFFSET_ACTION="screen_4101_100_SCROLLOFFSET_ACTION"
+		>
+			<htmlview 
+			id="html_pop"
+			width="$this.remain_right" 
+			layout="center"
+			height="$this.remain_bottom"
+			value_html_var="$popscreen_html"
+			fontsize="$ft_fontsize_basic"
+			textcolor="666666"
+			backcolor="ffffff"
+			lineheight="$h($g_lcdHeight,3)"
+			margin_left="$w($g_lcdWidth,4)"
+			margin_right="$w($g_lcdWidth,4)"
+			margin_top="$h($g_lcdHeight,1.2)"
+			margin_bottom="$h($g_lcdHeight,3)"
+			noscroll_height="true"
+			height="$html_pop_height"
+			/>
+			<label x="$html_pop.x" width="$this.remain_right"  height="$html_pop_height" backcolor="none"/>
+		</screen>
+		<br/>
+		<button id="btn_4101_100_agree"
+		fontsize="$g_fontsize_big3" 
+		width="$this.remain_right" 
+		height="$h($g_lcdHeight,9.4)" 
+		backcolor="e33433"
+		backcolor_disable="cccccc"
+		border_width="$g_roundHeight"
+		backcolor_active="cc2f2e"
+		textcolor="ffffff"
+		textcolor_disable="ffffff"
+		textcolor_active="ffffff"
+		hidden="true"
+		value="동의" 
+		onclicked="btn_4101_100_agree_onClicked" 
+		/>
+		<button id="btn_4101_100_agree_bottom"
+		x="$btn_4101_100_agree.x"
+		fontsize="$g_fontsize_big3" 
+		width="$this.remain_right" 
+		height="$h($g_lcdHeight,9.4)" 
+		backcolor="e33433"
+		backcolor_disable="cccccc"
+		border_width="$g_roundHeight"
+		backcolor_active="cc2f2e"
+		textcolor="ffffff"
+		textcolor_disable="ffffff"
+		textcolor_active="ffffff"
+		hidden="false"
+		value="아래로 내려보기" 
+		onclicked="btn_4101_100_agree_bottom_onClicked" 
+		/>
+	</screen>
+</popscreen>
+<action id="btn_4101_100_agree_onClicked" 
+value="
+	$closescreen(popscreen_4101_100);
+	$callaction(btn_4101_confirm_onclicked); 		// 필수동의서는 자동으로 띄운다.
+"/>
+
+<!-- <action id="btn_4101_100_agree_bottom_onClicked"
+value="
+	$setvar(
+		tmp_scroll_count = $result($tmp_scroll_count + 1)
+		,tmp_call_scroll_h = $result_double($screen_html.height * $tmp_scroll_count)
+		,tmp_end_of_scroll_y = $result_double($html_pop_height - $screen_html.height)
+	);
+	$logvar(
+		tmp_scroll_count
+		,tmp_call_scroll_h
+		,tmp_end_of_scroll_y
+	);
+
+	if($tmp_end_of_scroll_y > $tmp_call_scroll_h){
+		$setvar(screen_html.scrolloffset_y= $tmp_call_scroll_h);
+	}else{
+		$setvar(screen_html.scrolloffset_y= $tmp_end_of_scroll_y);
+	}
+"/> -->
+<action id="btn_4101_100_agree_bottom_onClicked"
+value="
+	if($tmp_pop_4101_100_flag){
+		$setvar(tmp_this_pos_y_4101 = $screen_html.height , tmp_pop_4101_100_flag = false);
+	}
+	$setvar(
+		,tmp_html_h_4101 = $screen_html.height
+		,tmp_end_of_scroll_y_4101 = $result_double($html_pop.height - $screen_html.height)
+		,tmp_h_share_4101 = $result_floor($tmp_end_of_scroll_y_4101 / $tmp_html_h_4101,0)
+	);
+	
+	if($tmp_h_share_4101 == 0){
+		$setvar(screen_html.scrolloffset_y= $tmp_end_of_scroll_y_4101);
+		return;
+	}
+	for($i = 1; $i <= $tmp_h_share_4101; $i++){
+		$setvar(tmp_cal_h_4101 = $result_double($i * $tmp_html_h_4101));
+		if($tmp_this_pos_y_4101 < $tmp_cal_h_4101){
+			$setvar(screen_html.scrolloffset_y= $tmp_cal_h_4101);
+			return;
+		}
+
+		if($i == $tmp_h_share_4101){
+			$setvar(screen_html.scrolloffset_y= $tmp_end_of_scroll_y_4101);
+			return;
+		}
+	}
+"/>
+<action id="fnAgree_Check_4101_100" 
+value="
+	if(!$btn_1_1.checked){
+		$setvar(btn_1_1.checked = true);
+		$callaction(btn_essential_4101_100_onClicked,1_1);
+		return false;
+	}
+	elseif(!$btn_2_1.checked){
+		$setvar(btn_2_1.checked = true);
+		$callaction(btn_essential_4101_100_onClicked,2_1);
+		return false;
+	}
+	elseif(!$btn_2_2.checked){
+		$setvar(btn_2_2.checked = true);
+		$callaction(btn_essential_4101_100_onClicked,2_2);
+		return false;
+	}
+	elseif(!$btn_3_1.checked){
+		$setvar(btn_3_1.checked = true);
+		$callaction(btn_essential_4101_100_onClicked,3_1);
+		return false;
+	}
+	$setvar(btn_4101_af.enable = true); 			// 다음버튼 활성화 
+	return true;
+" />
+
+// 다음버튼
+<action id="btn_4101_confirm_onclicked" 
+value="
+	// 필수동의서는 자동으로 띄운다.
+	$setvar(	tmp_isAgree = $callaction(fnAgree_Check_4101_100)	);
+	if(!$tmp_isAgree){	return false;	}
+
+	if($vg_4101_100_agree_kind.selectkey == 2){										// 필수동의서 - 요약동의서
+		$callaction(fnConfig_SetValue,g_IN_AGREE_ITEM1 	,NY); 			// 요약동의서
+	}
+	else{																// 필수동의서 - 전체동의서
+		$callaction(fnConfig_SetValue,g_IN_AGREE_ITEM1 	,YY); 			// 전체동의서
+	}
+
+	$log(확인용 : g_IN_AGREE_ITEM1[$g_IN_AGREE_ITEM1]);
+	
+	$callaction(Act_Open_Account_Move,4142);
+"/>
+

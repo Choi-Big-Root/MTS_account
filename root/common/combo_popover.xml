@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+//<import filename="plist/root/common/combo_group.xml"/>
+
+<action scope="common" id="fnOpenDatePopover" value="
+
+	$setvar_common(
+		tmp_sel_ctrl_key = $FNOPENDATEPOPOVER_PARAM3.key
+	);
+	$log(fnOpenDatePopover:$tmp_sel_ctrl :$tmp_sel_ctrl_key);
+	$setvar(
+		popoverTitHeightRate=8.0
+		, popoveTitCloseMarginRate=4.2
+		, popoverWidth=$result($g_lcdWidth/100*$fnOpenDatePopover_param1)
+		, popoverHeight=$result($g_lcdHeight/100*($fnOpenDatePopover_param2+$popoverTitHeightRate))
+		, comboSetCtrl=$fnOpenDatePopover_param3
+		, afterCloseCallback=$fnOpenDatePopover_param4
+		, popoverTitHeight=$result($g_lcdHeight/100*$popoverTitHeightRate)
+		, popoverTitCloseMargin=$result($g_lcdWidth/100*$popoveTitCloseMarginRate)
+		, picker_year=$result($popoverWidth/100*40)
+		, picker_month=$result($popoverWidth/100*25)
+		, picker_day=$result($popoverWidth/100*25)
+		, picker_thiskey= $fnOpenDatePopover_param5
+	);
+	$popscreen(datePopover,,,,,);
+"/>
+<class id="cs_btn_basic1" 
+	fontsize="$g_fontSize_basic"
+	fontname="$g_baseFontNameBold"
+	textcolor="a0a0a0"
+	textcolor_active="ffffff"
+	backcolor="ebebeb"
+	backcolor_active="464b4d"
+	border_radius="$result($this.height/2)"
+	//border_width="1"
+	//border_color="cccccc"
+/>
+<class id="cs_btn_basic2" 
+	fontsize="$g_fontSize_basic"
+	fontname="$g_baseFontNameBold"
+	textcolor="ffffff"
+	textcolor_active="ffffff"
+	backcolor="bd3135"
+	backcolor_active="b8240c"
+	border_radius="$result($this.height/2)"
+	//border_width="1"
+	//border_color="cccccc"
+/>
+
+<popscreen scope="common" id="datePopover"
+			width="$popoverWidth" height="$popoverHeight"
+			//backcolor="ff00ff"
+			backcolor="ffffff"
+			modal="false"
+			border_width="1"
+			//modalbackcolor="#00000080"
+			//modalbackcolor="#ffffff"
+			layout="center"
+			layout_vertical="bottom"
+			onload="datePopover_onload"
+			noscroll_width="true"
+			noscroll_height="true"
+	>
+	
+	<calendar
+			id="id_calendar"
+			width="$super.width"
+			height="$super.height"
+			border_color="eeeeee"
+			fontsize="$g_fontsize_big2"
+			titleheight="$result($super.height/100 * 12.3)"
+			weekheight="$result($super.height/100 * 7.7)"
+			fontsize_month="$g_fontsize_big4"
+			fontsize_weekday="$g_fontsize_basic"
+			wideimage="false"
+			textcolor_weekday="000000"
+			backcolor="eeeeee"
+			backcolor_content="f6f6f6"
+			backcolor_sunday="eeeeee"
+			backcolor_saturday="eeeeee"
+			linecolor_sunday="c3c3c3"
+			linecolor_saturday="c3c3c3"
+			//background_image="$g_path_image_icon+icon_marking_press@2x.png"
+			linecolor="c3c3c3"
+			textcolor="#000000"
+			textcolor_prev="#888888"
+			textcolor_prevdate="#AAAAAA"
+			backcolor_now="e2e2e2"
+			textcolor_now="fa7e32"
+			checkcolor_view="false"
+			backcolor_select="fa7e32"
+			textcolor_select="ffffff"
+			linecolor_now="c3c3c3"
+			//arrow_image="$g_path_image_icon+icon_list_arrow2@2x.png,$g_path_image_icon+icon_list_arrow@2x.png"
+			arrow_image="$icon_calendar_prv,$icon_calendar_nxt"
+			//check_image="$g_path_image_icon+cal_point_nomal@2x.png"
+			//check_image_select="$g_path_image_icon+cal_point_focus@2x.png"
+			dataview_index="2"
+			textcolor_dataview="$gray"
+			fontname_dataview="$g_baseFontName"
+			fontsize_dataview="$g_fontSize_small2"
+//                minfontsize_dataview="$g_fontSize_small1"
+			margin_top_unit="$result($g_lcdHeight/100 * 0.8)"
+			margin_bottom_dataview="$result($g_lcdHeight/100 * 2.2)"
+			margin_bottom_check="5"
+			onDateSelected="calendar_onDateSelected"
+			selectdate_arrayname="calendarData"
+			onDateMoved="calendar_onDateMoved"
+			onload=""
+			date="$tmp_sel_ctrl_key"
+			/>
+</popscreen>
+<action id="calendar_onDateSelected" value="
+	$log(선택날짜:$this.key ,$g_menuCode);
+	//CALENDAR_ONDATESELECTED_PARAM4
+	if($g_menuCode==2250 || $g_menuCode==1150 || $g_menuCode==1155 || $g_menuCode==1156
+    || $g_menuCode==2350 ||  $g_menuCode==5250 ||  $g_menuCode==7250
+	||  $g_menuCode==1151 || $g_menuCode==1185
+	||  $g_menuCode==1220 
+	||  $g_menuCode==9999
+	||  $g_menuCode==2251 ||  $g_menuCode==2270 ||  $g_menuCode==2271 || $g_menuCode==2280 || $g_menuCode==2281 
+	||  $g_menuCode==8250 ||  $g_menuCode==8251
+	||  $g_menuCode==8160
+	){
+
+	}
+	else{
+		if($CALENDAR_ONDATESELECTED_PARAM4<$now(yyyyMMdd)){
+			//$alertaction(,,이전 날짜는 선택할 수 없습니다.,취소,확인);
+			$callaction(fnPopover_AlertAction,,이전 날짜는 선택할 수 없습니다.,,확인);
+			return;
+
+		}
+	}
+	$setvar($($comboSetCtrl).key=$CALENDAR_ONDATESELECTED_PARAM4);
+	$setvar($($comboSetCtrl).value=$formatstring(####-##-##,$CALENDAR_ONDATESELECTED_PARAM4));
+	$closescreen();
+	$log(콜백:$afterCloseCallback);
+	$callaction($afterCloseCallback);
+" />
+<action id="calendar_onDateMoved" value="
+" />
+
+<action scope="common" id="btn_datePover_confirm" value=">
+	$setvar($($comboSetCtrl).key=$picker_date.key);
+	$setvar($($comboSetCtrl).value=$formatstring(####-##-##,$picker_date.key));
+	$closescreen();
+	$callaction($afterCloseCallback);
+"/>

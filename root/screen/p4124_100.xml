@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<br/>
+<!--
+ *********************************************************************************
+ **
+ ** 화면을 그린 후에 필요한 작업을 한다. 
+ ** - TR을 배열에 담는다. 전송은 특이한 경우가 아니면 basescreen에서 일괄적으로 전송한다.
+ **
+ *********************************************************************************
+ -->
+ <action id="screen_contents_onload" value="
+	$setvar(
+		,popscreen_open_account_history.hidden=true
+		,popscreen_open_account_history_2.hidden=true
+		,popscreen_open_account_confirm.hidden=false
+		,popscreen_open_account_confirm.x=$w($g_lcdwidth,23)
+		,menu_num=4124
+		);
+		//$setControlHidden(popscreen_open_account_history,true);
+		//$setControlHidden(popscreen_open_account_history_2,true);
+		//$setControlHidden(popscreen_open_account_confirm,false);
+
+	// 애드브릭스 테스트
+	$setvar(
+		tmp_arr_custom_data = [
+			[menucode, $tmp_account_menu]
+			,[acntname, $g_save_acnt_name]
+		]
+	);
+	// 배열명(키,밸류), 이벤트명
+	$adbrixCustom(tmp_arr_custom_data,screen);	// 화면별 데이터
+	
+"/>
+<action id="textFieldBegin" value="
+	if($isequal_string($textFieldBegin_param1,tf_4124_name)){
+		$setvar(tf_4124_name.border_color=e33433);
+	}
+	elseif($isequal_string($textFieldBegin_param1,tf_4124_jumin)){
+		$setvar(tf_4124_jumin.border_color=e33433);	
+	}
+	elseif($isequal_string($textFieldBegin_param1,tf_4124_jumin_02)){
+		$setvar(tf_4124_jumin_02.border_color=e33433);
+	}
+" />
+<action id="textFieldEnd_local" value="
+	$setvar(
+		tf_4124_name.border_color=dcdcdc
+		,tf_4124_jumin.border_color=dcdcdc
+		,tf_4124_jumin_02.border_color=dcdcdc
+		);	
+" />
+<action id="btn_4124_confirm_onclicked" value="
+	if($strlen($tf_4124_name.value)<1){
+		$alert(,,이름을 입력해 주세요.);
+		return;
+	}
+	if($strlen($tf_4124_jumin.value)<6){
+		$alert(,,주민등록번호를 입력해 주세요..);
+		return;
+	}
+	if($strlen($tf_4124_jumin_02.value)<7){
+		$alert(,,주민등록번호를 입력해 주세요.);
+		return;
+	}
+	$setvar(
+		,tf_4124_name_val=$tf_4124_name.value
+		,tf_4124_jumin_val=$tf_4124_jumin.value
+		,tf_4124_jumin_02_val=$tf_4124_jumin_02.value
+	);
+	//$alertaction(,,진행 중인 계좌개설 신청 내역이 있습니다.\n계좌개설 신청하시겠습니까?,취소,이어하기);
+	$callaction(fnPopover_AlertAction,,진행 중인 계좌개설 신청 내역이 있습니다.\n계좌개설 신청하시겠습니까?,취소,이어하기);
+"/>
+<action id="btn_4124_confirm_after" value="
+	$callaction(Act_Open_Account_Move,4124); 
+"/>
+
+<action id="tf_4124_jumin_onchanged" value="
+	if($strlen($tf_4124_jumin.value)>5){
+		$setvar(tf_4124_jumin_02.focus=true);
+	}
+"/>
+
+<screen id="screen_4124_100"
+	class="cs_screen_contents"
+	backcolor="f1f1f1"
+	onload="screen_contents_onload"
+	>
+	<screen id="screen_4124_100"
+		backcolor="f5f5f5"
+		>
+		<viewgroup 
+			margin_left="$w($g_lcdWidth,4)"
+			width="$super.width"
+			height="$this.remain_bottom"
+			>
+			<br height="$h($g_lcdHeight,3)"/>
+			<label 
+				height="$h($g_lcdHeight,4.5)" 
+				fontname="$g_baseFontNameBold" 
+				value="이름" 
+				/>
+			<br/>
+			<textfield 
+				id="tf_4124_name"
+				width="$w($g_lcdWidth,92)"
+				height="$h($g_lcdHeight,7.3)"
+				input_type="text"
+				border_color="dcdcdc"
+				border_width="1"
+				margin_left="$w($g_lcdWidth,4.5)"
+				margin_right="$w($g_lcdWidth,2)"
+				textcolor="000000"
+				fontsize="$g_fontSize_basic"
+				backcolor="ffffff"
+				maxlength="20"
+				value=""
+				/>
+			<br height="$h($g_lcdHeight,1.4)"/>
+			<label 
+				height="$h($g_lcdHeight,4.5)" 
+				fontname="$g_baseFontNameBold" 
+				//fontsize="$g_fontsize_big1" 
+				value="주민등록번호" 
+				/>
+			<br/>
+			<textfield 
+				id="tf_4124_jumin"
+				width="$w($g_lcdWidth,43.5)"
+				height="$h($g_lcdHeight,7.3)"
+				input_type="password"
+				keyboard_type="number"
+				border_color="dcdcdc"
+				border_width="1"
+				margin_left="$w($g_lcdWidth,4.5)"
+				margin_right="$w($g_lcdWidth,2)"
+				textcolor="000000"
+				fontsize="$g_fontSize_basic"
+				backcolor="ffffff"
+				maxlength="6"
+				value=""
+				onchanged="tf_4124_jumin_onchanged"
+				/>
+			<label
+				width="$w($g_lcdWidth,5)"
+				height="$h($g_lcdHeight,7.3)"
+				textcolor="000000"
+				fontsize="$g_fontSize_basic"
+				value="-"
+				align="center"
+				/>
+			<textfield 
+				id="tf_4124_jumin_02"
+				width="$w($g_lcdWidth,43.5)"
+				height="$h($g_lcdHeight,7.3)"
+				input_type="password"
+				keyboard_type="number"
+				border_color="dcdcdc"
+				border_width="1"
+				margin_left="$w($g_lcdWidth,4.5)"
+				margin_right="$w($g_lcdWidth,2)"
+				textcolor="000000"
+				fontsize="$g_fontSize_basic"
+				backcolor="ffffff"
+				maxlength="7"
+				value=""
+				/>
+		</viewgroup>
+		<br/>
+		<blank width="$w($g_lcdWidth,4.4)" />
+		<button 
+			id="btn_4124_bf"
+			fontsize="$g_fontsize_big3" 
+			y="$result($this.remain_bottom-$h($g_lcdHeight,13.4))"
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,9.4)" 
+			backcolor="ffffff"
+			border_width="$g_roundHeight"
+			border_color="e33433"
+			backcolor_active="e5e5e5"
+			textcolor="e33433"
+			textcolor_active="e33433"
+			value="이전" 
+			onclicked="btn_open_account_history_onClicked"
+			//$callaction(Act_Open_Account_Move,4123);
+			//$callaction(Act_Open_Account_Move,4100);
+			//$callaction(fnOpenPopScreen,plist/root/screen/p4100_100.xml,비대면 계좌계썰,);
+			//enable="false"
+			//backcolor_disable="bfbfbf"
+			//textcolor_disable="999999"
+			/>
+		<blank width="$w($g_lcdWidth,1.8)"/>
+		<button 
+			id="btn_4124_af"
+			y="$result($this.remain_bottom-$h($g_lcdHeight,13.4))"
+			fontsize="$g_fontsize_big3" 
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,9.4)" 
+			backcolor="e33433"
+			border_width="$g_roundHeight"
+			backcolor_active="cc2f2e"
+			textcolor="ffffff"
+			textcolor_active="ffffff"
+			value="확인" 
+			onclicked="btn_4124_confirm_onclicked"
+			//backcolor_disable="bfbfbf"
+			//textcolor_disable="999999"
+			/>
+		<br height="$h($g_lcdHeight,4)"/>
+	</screen>
+</screen>

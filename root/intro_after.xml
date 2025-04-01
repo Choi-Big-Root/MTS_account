@@ -1,0 +1,1575 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<import filename="plist/root/common/device_info.xml"/>   // 하드웨어 정보
+<import filename="plist/root/common/network.xml"/>       // 네트워크관련 액션
+<import filename="plist/root/tr/header.xml"/>
+<import filename="plist/root/common/action_common.xml"/>
+<import filename="plist/root/common/action_account_open_common.xml"/>
+<import filename="plist/root/common/action_dxfeed.xml"/> //dxFeed 전용 함수.
+<import filename="plist/root/common/action_dxfeed_real.xml"/> //dxFeed 실시간전용 함수.
+<import filename="plist/root/common/action_chart.xml"/>
+<import filename="plist/root/common/icon_path.xml"/>
+// 로직변경으로 추가함. 
+<actiondata value="
+	$callaction(fnSetDeviceInfo);       // Device 정보 및 장치별 변수 셋팅
+" />
+<import filename="plist/root/common/css.xml"/>
+<import filename="plist/root/common/action_intro_after.xml"/>
+<import filename="plist/root/common/action_login.xml"/>
+<import filename="plist/root/common/popover_cert_password.xml"/>
+// 새로제작 - XML,국내마스터,해외마스터 다운로드순으로 다운로드 로직변경
+<import filename="plist/root/common/action_download.xml"/>
+<import filename="plist/root/common/action_download_process.xml"/>
+
+<actiondata value="
+	//231005 dxFeed 초기 종목명,옵션명 설정 : TEST
+	//$callaction(fnSet_DxFeed_Item_TEST); 
+
+	//230608 클라우드 콜백 액션
+	$cloudnpki_init(FnAcquireUserInfoAction, FnAcknowledgeConditionsOfUse, FnOnPhoneNumberProofTransactionStart);
+
+	$checkPushData(fn_push_receive);
+
+	$logvar(p_APNS_RegKey);
+
+	$setvar_common(
+		g_is_prescreen_login = 
+		,g_file_name = intro_after
+		,g_reconnect_processing = 
+	);
+	$setvar(l_intro_after = true ); // 백그라운드에서 확인. - intro.xml로 보내기 위해 사용 
+
+	$setvar_common(
+		g_is_master_relading = 
+		,g_is_not_connect_DOMESTIC = false
+		,g_is_not_connect = false
+	); //  마스터 리로딩시 사용 - 초기화 
+
+	$setvar_common(g_recv_account_intro_after = true);
+	
+	$log(인트로이미지:p_introimage:[$p_introimage],p_lcdheight[$p_lcdheight]);
+
+	$setvar_common(
+		arr_item_product = [
+			,[00,전   체] 	
+			,[10,통   화] 	
+			,[20,금   리] 	
+			,[30,지   수] 	
+			,[50,금   속] 	
+			//,[51,비철금속] 	
+			,[60,에너지] 	
+			,[40,농산물] 				
+		]
+	);
+	// 해외 마스터 파일 추가시 추가되어야 함.
+	$setvar_common(
+		g_arr_datFile = [
+			[fucode] 	
+			,[opcode]	
+			,[opitem]
+			,[optick]
+			,[oprcode]
+			,[bqtcode]	
+		]
+	);
+	$setvar_common(g_is_background = false);
+" />
+
+<screen id="screen_intro_after"
+	backcolor="ffffff"
+	//    imagesizefit="true"
+	//    wideimage="false"
+	backgroundimage="$p_introimage"
+	width="$p_lcdWidth"
+	height="$p_lcdHeight"
+	onLoad="screen_intro_after_onload"
+	>
+	<br height="$h($p_lcdheight,2)" />
+	<viewgroup  width="$w($p_lcdWidth,97)" height="$h($p_lcdheight,5)">
+		<label id="lbl_version" 
+		width="$super.width" 
+		height="$h($p_lcdheight,5)"  
+		align="right" 
+		value="$versionStr" 
+		fontsize="$p_fontSize_basic"
+		textcolor="b8240c"  />
+	</viewgroup>
+	<br height="$h($p_lcdheight,53)" />
+	<viewgroup id="vg_progress_out"
+		width="$w($p_lcdWidth,50)"
+		height="$h($p_lcdheight,2)"
+		layout="center"
+		backcolor="dcdcdc"
+		//border_color="464b4d"
+		border_width="1"
+		border_radius="$result($this.height/2)"
+		hidden="true"
+		>
+		<viewgroup id="vg_progress_guide"
+			width="$super.width"
+			height="$super.height"
+			layout_vertical="center"
+			layout="left"
+			//backcolor="b8240c"
+			>
+			<viewgroup id="vg_progress_inner"
+				width="$w($super.width,0)" 
+				//width="$w($super.width,50)" 
+				height="$super.height"
+				layout_vertical="center" 
+				backcolor="b8240c" 
+				>
+			</viewgroup>
+		</viewgroup>
+	</viewgroup>
+	<br height="$h($p_lcdheight,2)"/>
+	<label id="lbl_prcessing" width="$super.width" height="$h($p_lcdheight,5)"  align="center" value="" textcolor="000000" 
+		hidden="true"
+		fontsize="$p_fontSize_basic"
+		/>
+
+	<br height="$h($p_lcdheight,10)" />
+
+	<viewgroup
+		width="$super.width"
+		height="$h($p_lcdheight,8)">
+		<img src="$p_icon_logo" layout="center" layout_vertical="center"/>
+	</viewgroup>
+
+	<br />
+</screen>
+
+<action id="fnAppVersionDown_confirm_NEW"  scope="common"
+value="
+	
+	if($fnAppVersionDown_confirm_NEW_param1 == 1){
+		if($g_isAndroid){
+			$setvar(
+				tmp_open = $open_app($g_appdown_android_new)
+			);
+		}else{
+			// 한글이 들어가서 open_browser가 동작하지 않음.
+			$setvar(
+				,g_appdown_ios_new  = https://apps.apple.com/kr/app/id1306570650?l=ko&ls=1
+			);
+			//$exit();
+			$logvar(g_appdown_ios_new);
+			$open_browser($g_appdown_ios_new);
+		}
+	}
+	else{
+		$exit();
+	}
+" />
+<action id="fnExit_Timer" value="
+	$exit();
+" />
+
+<action id="screen_intro_after_onload" value="
+	$log(여기서 호출);
+	//$openfile(plist/root/main.xml);
+	//return;
+	//$openfile(plist/root/cloud_sample.xml);
+	//return;
+	//$openfile(plist/root/dxfeed_sample.xml);
+	//return;
+
+	// 1. 백신체크 
+	//$setvar(strPermission=RECORD_AUDIO);
+	//$setvar(strPermission=CAMERA);
+	//$setvar(strPermission=WRITE_EXTERNAL_STORAGE|CAMERA|RECORD_AUDIO|READ_PHONE_STATE|GET_ACCOUNTS);
+	//$setvar(strPermission=WRITE_EXTERNAL_STORAGE|CAMERA|RECORD_AUDIO|READ_PHONE_STATE|GET_ACCOUNTS|READ_SMS|RECEIVE_SMS|READ_CALL_LOG);
+	//$setvar(strPermission=WRITE_EXTERNAL_STORAGE|CAMERA|RECORD_AUDIO|GET_ACCOUNTS);
+	
+	//$setvar(strPermission=WRITE_EXTERNAL_STORAGE|CAMERA|GET_ACCOUNTS|PROCESS_OUTGOING_CALLS|RECORD_AUDIO);
+	//$setvar(strPermission=WRITE_EXTERNAL_STORAGE|CAMERA|GET_ACCOUNTS|RECORD_AUDIO|READ_PHONE_STATE|READ_PHONE_NUMBERS);
+
+	$setvar_common(g_os_version = $getSDKInt());
+	//$setvar(strPermission=WRITE_EXTERNAL_STORAGE|GET_ACCOUNTS|CAMERA|RECORD_AUDIO);
+
+	//2022년 12월 12일 주석처리 POST_NOTIFICATIONS는 Android버전 13일때부터 적용가능이기에 13이 아닌 기기들은 계속 권한관련 팝업이 뜬다.
+	//$setvar(strPermission=GET_ACCOUNTS|CAMERA|RECORD_AUDIO|POST_NOTIFICATIONS);
+
+	//2022년 12월 12일 추가.
+	if(!$g_isAndroid){ //아이폰은 상관없다.
+		$log(****** IOS ***********);
+		$setvar(strPermission=GET_ACCOUNTS|CAMERA|RECORD_AUDIO|POST_NOTIFICATIONS);
+
+	}elseif($g_isAndroid && $int($deviceinfo(SYSTEMNAME)) >= 13){ //Android버전이 13이상 일때 
+		$log(******Android Version 13 이상 ***********);
+		$setvar(strPermission=GET_ACCOUNTS|CAMERA|RECORD_AUDIO|POST_NOTIFICATIONS);
+
+	}else{	//Android버전이 13미만일때
+		$log(******Android Version 13 미만 ***********);
+		$setvar(strPermission=GET_ACCOUNTS|CAMERA|RECORD_AUDIO);
+	}
+
+
+	/*
+	if($g_os_version > 29){
+		//$setvar(strPermission=WRITE_EXTERNAL_STORAGE|CAMERA|GET_ACCOUNTS|RECORD_AUDIO|READ_PHONE_NUMBERS);
+		//$setvar(strPermission=WRITE_EXTERNAL_STORAGE|CAMERA|GET_ACCOUNTS|PROCESS_OUTGOING_CALLS|RECORD_AUDIO|READ_PHONE_NUMBERS);
+	}
+	else{
+		//$setvar(strPermission=WRITE_EXTERNAL_STORAGE|CAMERA|GET_ACCOUNTS|RECORD_AUDIO|READ_PHONE_STATE);
+		$setvar(strPermission=WRITE_EXTERNAL_STORAGE|CAMERA|GET_ACCOUNTS|PROCESS_OUTGOING_CALLS|RECORD_AUDIO|READ_PHONE_STATE);
+	}
+	*/
+	$log(OSVERSION = g_os_version);	
+	if(!$isPermission($strPermission)) {
+		$log(**** 퍼미션 없는거 있음. );
+		$requestPermission($strPermission,Act_Permission_Check_After);
+	}
+	else {
+		$callaction(Act_VaccineCheck,fn_VaccineCheck_AfterAction);
+	}
+
+" />
+<action id="Act_Permission_Check_After" 
+params="p_result,p_count,p_success_cnt, p_fail_cnt"
+value="
+	$log(파미션 승인 결과 [$p_result][$p_count]);
+	if($p_result){
+		$callaction(Act_VaccineCheck,fn_VaccineCheck_AfterAction);	
+	}
+	else{
+		//$exit();
+		//$alertaction(Act_Permission_Check_Confirm,권한체크 확인,설정 - 사용권한을 확인하세요,취소,확인); 
+		$callaction(fnPopover_AlertAction,Act_Permission_Check_Confirm,마이크%2C카메라%2C동영상녹화 중\n필요한 권한이 부족합니다.설정화면으로 이동하셔서\n변경 후 실행하시기 바랍니다. \n설정화면으로 이동하시겠습니까?,취소,확인);
+	}
+" />
+<action id="Act_Permission_Check_Confirm" 
+value="
+	if($Act_Permission_Check_Confirm_param1 == 1){
+		// 권한 설정창으로 이동 
+		$setvar(strSetting=ACTION_APPLICATION_SETTINGS);
+		$goPhoneSetting($strSetting);
+	}
+	else{
+		$callaction(Act_VaccineCheck,fn_VaccineCheck_AfterAction);
+	}
+" />
+
+<popscreen id="popscreen_AppVersionDown_confirm_NEW"
+	scope="common"
+	width="$g_lcdWidth" 
+	height="$g_lcdHeight"
+	modal="false"
+	backcolor="00000033"
+	>
+	//<button width="$super.width" height="$super.height" backcolor="00000033" onclicked="$closescreen();"/>
+	<viewgroup 
+		width="$w($g_lcdWidth,88)" 
+		height="$h($g_lcdHeight,34)"
+		layout="center"
+		layout_vertical="center"
+		backcolor="none"
+	>
+		<viewgroup 
+			width="$super.width"  
+			height="$h($g_lcdHeight,8)" 
+			margin_left="$w($g_lcdWidth,3)"
+			backcolor="ffffff">
+			<label 
+				width="$this.remain_right"
+				height="$h($g_lcdHeight,8)" 
+				value="$AppVersion_Notice" 
+				fontsize="$result($g_baseFontSize+$g_baseFontUnitSize)"
+				fontname="$g_baseFontNameBold"
+				textcolor="000000"
+				/>
+		</viewgroup>
+		<br/><hr backcolor="3b3b3b" height="$g_hrHeight"/><br/>
+		<viewgroup
+			width="$super.width"
+			height="$h($g_lcdHeight,16)"
+			backcolor="ffffff">
+			<br height="$h($g_lcdHeight,1)"/>
+		   	<label 
+				width="$this.remain_right"
+				height="$h($g_lcdHeight,4)"
+				value="$AppVersion_Notice_2" 
+				margin_left="$w($g_lcdWidth,6)"
+				fontsize="$g_baseFontSize"
+				fontname="$g_baseFontName"
+				textcolor="000000"
+				/>
+			<br/>
+			<label 
+				width="$this.remain_right"
+				height="$h($g_lcdHeight,8)"
+				margin_left="$w($g_lcdWidth,6)"
+				value="확인버튼을 눌렀을 때 앱이 종료되면\n직접 스토어에서 업데이트 해주시기 바랍니다." 
+				fontsize="$g_baseFontSize"
+				fontname="$g_baseFontName"
+				textcolor="000000"
+				/>
+			<br/>
+		</viewgroup>
+		<br/>
+		<viewgroup 
+			width="$super.width" 
+			height="$h($g_lcdHeight,10)"
+			backcolor="ffffff">
+			<button 
+				width="50%" 
+				height="$super.height"
+				backcolor="5f6263"
+				backcolor_active="595c5d"
+				fontsize="$result($g_baseFontSize+$g_baseFontUnitSize)"
+				fontname="$g_baseFontNameBold"
+				textcolor="ffffff"
+				textcolor_active="ffffff"
+				value="종료" 
+				onclicked="$closescreen();$exit();"
+				/>
+			<button 
+				width="$this.remain_right" 
+				height="$super.height"
+				backcolor="bd3135"
+				//backcolor_active="b8240c"
+				fontsize="$result($g_baseFontSize+$g_baseFontUnitSize)"
+				fontname="$g_baseFontNameBold"
+				textcolor="ffffff"
+				textcolor_active="ffffff"
+				value="확인" 
+				onclicked="$closescreen();$callaction(fnAppVersionDown_confirm_NEW,1);"
+				/>
+		</viewgroup>
+	</viewgroup>
+</popscreen>
+
+// 1. 백신 체크 후 액션 
+<action id="fn_VaccineCheck_AfterAction" value="
+	//$setvar_common(p_is_running_vaccine = FALSE); 	// 백신체크 후 
+
+	$setvar_common(g_is_vaccine_ing = false);
+
+	$callaction(fnConfig_Load_All);        // 새버젼 
+
+	$lcdallopen($lcd_open); 	
+	
+	//$callaction(fnConfig_Log);        // 새버젼 
+
+	// 오류메세지를 읽어온다.
+	//$getcsvarray(g_arr_rcod,plist/root/error.txt,0x09,2,common);
+	$getcsvarray(g_arr_rcod,$g_path_down/dat/ErrorCode.ini,0x3D,1,common);
+	//$logarrayvar(g_arr_rcod);
+	
+	$map_clearstruct(); 			// TR 맵파일 메모리 초기화 
+
+
+	//새로 제작 반영
+	$callaction(N_Download_xml_Start,false); 		//intro_after는 false, becomeactive:true
+	return;
+
+
+
+
+
+	$logvar(g_OrderServerCheckSimulation);
+	if($g_OrderServerCheckSimulation){
+		$setvar_common(
+			g_SiseServerIP           = $g_SiseServerIP_simulation
+			,g_SiseServerPort        = $g_SiseServerPort_simulation
+			,g_serverIP_DOMESTIC 	 = $g_serverIP_DOMESTIC_simulation
+			,g_serverPort_DOMESTIC 	 = $g_serverPort_DOMESTIC_simulation
+			,g_RealServerIP_Order 	 = 
+		);
+	}
+	else{
+		$setvar_common(
+			g_SiseServerIP           = $g_SiseServerIP_real
+			,g_SiseServerPort        = $g_SiseServerPort_real
+			,g_serverIP_DOMESTIC 	 = $g_serverIP_DOMESTIC_real
+			,g_serverPort_DOMESTIC 	 = $g_serverPort_DOMESTIC_real
+			,g_RealServerIP_Order 	 = 
+		);
+	}
+
+	// 해외시세 연결 
+	$callaction(Act_Network_Connect
+		, $g_SiseSocketName
+		, $g_SiseServerIP
+		, $g_SiseServerPort
+		, $g_strVersionReqStart
+		, $g_strVersionReqEnd
+		, 0
+		, Act_Network_RecvData_Sise
+		, fn_Network_Connected_Sise
+	);
+" />
+<action id="Timer_fnOpenIntro" 
+value="
+	$openfile(plist/root/intro.xml);
+" />
+// 2. 해외시세 네트워크 연결 후 액션 
+<action id="fn_Network_Connected_Sise" 
+params="p_socket_name, p_socket_value"
+value="
+	
+	$log(해외시세연결후이다:$p_socket_name,$p_socket_value,$FN_NETWORK_CONNECTED_SISE_PARAMCOUNT);
+
+	if($strlen($p_socket_name)<1){
+		$setvar_common(g_is_master_relading = true);
+		$log(여기1);
+		$callaction(Act_Network_Disconnect_All); 	// intro.xml 로 보냄. 
+		$setnstimer(TIMER_OPEN_INTRO,1.0,Timer_fnOpenIntro,FALSE);
+		return;
+	}
+	
+	if($FN_NETWORK_CONNECTED_SISE_PARAMCOUNT > 0){
+		if($p_socket_value < 0){	$log(여기2); return;		}
+	}
+	if(!$isconnect($p_socket_name)){	
+		$log(여기3);
+		return;	
+	}
+
+	$callaction(Act_MaploadNSetpath
+		, $g_SiseSocketName
+		, $g_path_map
+		, g_arrLoadmapFile
+		, g_arrMapPathFile
+		, xml
+	);
+
+	$callaction(Act_Download_MasterNXml_Start, $g_strVersionFilePath, $g_strVersionFileName, fnMasterNXmlDownloading, fnMasterNXmlDownloadComplete);
+" />
+
+<action id="Act_Connect_Alarm" scope="common"
+params="p_title,p_after_action"
+value="
+	if($g_is_open_ConnectAlarm){ 		return;		}
+
+	$stopnstimer(TIMER_POLLING);  $log(***** 폴링중지 2); // 폴링 멈춤  
+
+	$setvar(
+		tmp_alarm_title = $p_title
+		,tmp_alarm_after_action = $p_after_action
+	);
+	$popscreen(pop_Connect_Alarm);
+" />
+<action id="pop_Connect_Alarm_onload" scope="common"
+value="
+	$setvar_common(g_is_open_ConnectAlarm = true);
+" />
+<action id="pop_Connect_Alarm_onunload" scope="common"
+value="
+	$setvar_common(g_is_open_ConnectAlarm = );
+" />
+<popscreen id="pop_Connect_Alarm"
+	scope="common"
+	width="$g_lcdWidth" 
+	height="$g_lcdHeight"
+	modal="false"
+	onload="pop_Connect_Alarm_onload"
+	onunload="pop_Connect_Alarm_onunload"
+	>
+	<button width="$super.width" height="$super.height" backcolor="00000033" />
+	<viewgroup 
+		width="$w($g_lcdWidth,80)" 
+		height="$h($g_lcdHeight,32)"
+		layout="center"
+		layout_vertical="center"
+		backcolor="ffffff"
+		>
+		<viewgroup width="$super.width" height="$h($g_lcdHeight,8.6)" margin_left="$w($g_lcdWidth,3)"
+			backcolor="ffffff">
+			<label id="lbl_orderConfirm_title" value="$tmp_alarm_title" 
+				width="$super.width" 
+				height="$super.height"
+				fontsize="$result($g_baseFontSize+($g_baseFontUnitSize*2))"
+				fontname="$g_baseFontNameBold"
+				textcolor="000000"
+				/>
+		</viewgroup>
+		<br/><hr backcolor="3b3b3b"/><br height="$h($g_lcdHeight,2)"/>
+		
+		<label width="$this.remain_right" height="$h($g_lcdHeight,5)" 
+		value="네트워크 접속이 원할하지 않습니다" 
+		fontsize="$result($g_baseFontSize+($g_baseFontUnitSize*1))"
+		fontname="$g_baseFontNameBold"
+		margin_left="$w($g_lcdWidth,3)"
+		/>			
+		<br/>
+		<label width="$this.remain_right" height="$h($g_lcdHeight,5)" 
+		//value="인터넷 연결 후 이용하세요." 
+		value="인터넷 연결 후 이용하세요.\n재접속하시겠습니까?" 
+		fontsize="$result($g_baseFontSize+($g_baseFontUnitSize*1))"
+		fontname="$g_baseFontNameBold"
+		margin_left="$w($g_lcdWidth,3)"
+		/>			
+		
+		<br height="$h($g_lcdHeight,2)"/>
+		<viewgroup id="vg_orderConfirm_btn" height="$this.remain_bottom"
+			backcolor="00ff00">
+			<button id="btn_popscreen_orderConfirm_confirm" 
+				width="$this.remain_right" 
+				height="$super.height"
+				backcolor="bd3135"
+				//backcolor_active="b8240c"
+				fontsize="$result($g_baseFontSize+($g_baseFontUnitSize*1))"
+				fontname="$g_baseFontNameBold"
+				textcolor="ffffff"
+				textcolor_active="ffffff"
+				value="확인" 
+				onclicked="
+				$closescreen(pop_Connect_Alarm);
+				//$callaction($tmp_alarm_after_action);
+				$callaction(Act_Server_Reconnect);
+				"
+				/>
+		</viewgroup>
+	</viewgroup>
+</popscreen>
+<action id="Act_Server_Reconnect"  scope="common"
+value="
+	
+	$callaction(EnterBackGround);
+	$callaction(BecomeActive);
+" />
+<!--
+ *********************************************************************************
+ **
+ ** fnMasterNXmlDownload: 마스터파일 및 XML 파일 다운로드 
+ **
+ *********************************************************************************
+-->
+// 3 파일 다운로드 진행 표시 
+<action id="fnMasterNXmlDownloading" 
+params="p_success_cnt, p_error_cnt, p_total_cnt" 
+value="
+	$setvar(
+		vg_progress_out.hidden=false
+		,lbl_prcessing.hidden=false
+	);
+	$setvar(
+		tmp_progress_unit = $result($vg_progress_guide.width/$p_total_cnt)
+		,tmp_progress_pos = $result($tmp_progress_unit*$p_success_cnt)
+		,tmp_str = $addstring(해외 파일다운로드 중입니다.,%20%28,$p_success_cnt,/,$p_total_cnt,%29)
+		,lbl_prcessing.value=$tmp_str
+		,vg_progress_inner.width=$tmp_progress_pos
+	);
+	$setvar_common(g_isDownload = true);
+" />
+// 3.해외서버 마스터 파일 다운로드 완료 
+<action id="fnMasterNXmlDownloadComplete" 
+params="p_success_cnt, p_error_cnt, p_total_cnt" 
+value="
+	
+	$setvar(
+		vg_progress_out.hidden=false
+		,lbl_prcessing.hidden=false
+	);
+	$setvar(
+		lbl_prcessing.value=파일 다운로드가 완료되었습니다. 
+		,vg_progress_inner.width= $vg_progress_guide.width
+	);
+	$log(실패갯수:$p_error_cnt, $g_isDownload);
+
+	if($p_error_cnt>0){
+		$alertaction(fnMasterNXmlDownloadFail,해외선물 마스터,다운로드가 실패하였습니다.\n다시 시도하시겠습니까?,다시시도);
+		return;
+	}
+	else{       
+		// 파일 날짜 저장 - 보낼때 사용한다. 
+		$log(***** 여기서 저장 해외 값 저장 :$save_strFile_date,$save_strFile_size);
+		$callaction(fnConfig_SetValue,g_versionFile_date 	,$save_strFile_date);
+		$callaction(fnConfig_SetValue,g_versionFile_size 	,$save_strFile_size);
+
+		$log(******* 국내서버 연결 : SVR:[$g_serverIP_DOMESTIC], 모의여부:[$g_OrderServerCheckSimulation]);
+		// 국내선물 서버 연결 
+		$callaction(Act_Network_Connect
+			, $g_SiseSocketName_DOMESTIC
+			, $g_serverIP_DOMESTIC 					// 모의투자로 붙을 수도 있음.
+			, $g_serverPort_DOMESTIC
+			, $g_strVersionReqStart_DOMESTIC
+			, $g_strVersionReqEnd_DOMESTIC
+			, 0
+			, Act_Network_RecvData_Master_d
+			, fn_Network_Connected_Sise_d
+		);
+	 }
+" />
+
+<action id="fnMasterNXmlDownloadFail" scope="common"
+value="
+	$callaction(Act_Network_Disconnect_All);
+	$openfile(plist/root/intro.xml);
+	return;
+
+	if($fnMasterNXmlDownloadFail_param1==0){    $openfile(plist/root/intro.xml);     }
+	else{						
+		$callaction(Act_Network_Connect
+			, $g_SiseSocketName_DOMESTIC
+			, $g_serverIP_DOMESTIC
+			, $g_serverPort_DOMESTIC
+			, $g_strVersionReqStart_DOMESTIC
+			, $g_strVersionReqEnd_DOMESTIC
+			, 0
+			, Act_Network_RecvData_Sise_d
+			, fn_Network_Connected_Sise_d
+		);
+	}
+" />
+// 4. 국내시세 네트워크 연결 후 액션 
+<action id="fn_Network_Connected_Sise_d" 
+params="p_socket_name, p_socket_value"
+value="
+	if($fn_Network_Connected_Sise_d_PARAMCOUNT > 0){
+		if($p_socket_value < 0){	
+			$callaction(Act_Connect_Alarm, intro_after[$p_socket_name], Act_Server_Disconnected);
+			return;		
+		}
+	}
+	
+	if(!$isconnect($p_socket_name)){	
+		$callaction(Act_Connect_Alarm, 국내시세 intro_after, fnExit_Timer);
+		return;	
+	}
+
+	$callaction(Act_MaploadNSetpath
+		, $g_SiseSocketName_DOMESTIC
+		, $g_path_map
+		, g_arrLoadmapFile
+		, g_arrMapPathFile
+		, xml
+	);
+	
+	$setvar(
+		lbl_prcessing.value 		= 국내 파일다운로드 준비중입니다.
+		,vg_progress_inner.width 	= 0
+	);
+
+	// 강제 업데이트 체크해야 한다.
+	$callaction(Act_App_Update_Force_Check,  Act_Download_Master_Start_d);
+" />
+
+<action id="Act_App_Update_Force_Check" 
+params="p_after_action"
+value="
+	$setvar(tmp_check_after_action = $p_after_action);
+	$callaction(Act_App_Update_Force_Read,$g_strVersionFilePath_App,$g_strVersionFileName_App);
+"
+/>
+<action id="Act_App_Update_Force_Read" scope="common" 
+params="p_path, p_file"
+value="
+	$createfolder($g_path_down/$p_path);
+	$readfile($g_path_down/$p_path/$p_file,strVersionFileData_app); 		// 기존에 있는 파일을 읽어온다.
+	$logvar(strVersionFileData_app);
+	$setNameToken(tknOldVersion_app,strVersionFileData_app,0x0A,0x3B); 		// 이전 버전파일로 등록 
+	$printNameToken(tknOldVersion_app);
+
+	$setsocketaction($g_SiseSocketName_DOMESTIC,Act_Network_RecvData_Master_xml,); 	// RecvAction 을 변경하여 보낸다. 
+
+	$setvar(	tmp_path = $addstring($p_path,/,$p_file)	);
+	$setvar(
+		LEN_MYMQ_TH = $result($map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_TH)-4)
+		,LEN_MYMQ_RH = $map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_RH)
+		,LEN_MYMQ_FILE = $map_getstructsize($g_SiseSocketName_DOMESTIC,MYMQ_FILE)
+		,MYMQ_TH_PKT_LEN=$result($LEN_MYMQ_TH + $LEN_MYMQ_RH + $LEN_MYMQ_FILE)
+		,tmp_MYMQ_RH_size = $map_getstructsize($g_SiseSocketName,MYMQ_RH)
+	);
+	$log(LEN_MYMQ_TH:[$LEN_MYMQ_TH], LEN_MYMQ_RH:[$LEN_MYMQ_RH], LEN_MYMQ_FILE:[$LEN_MYMQ_FILE], MYMQ_TH_PKT_LEN:[$MYMQ_TH_PKT_LEN], tmp_MYMQ_RH_size:[$tmp_MYMQ_RH_size]);
+		
+	// Packet Indicator OR 연산으로 추가 
+	$setbit(MYMQ_HEADER_PKTI_1,0x01);	// RHI Following RH
+	$setbit_or(MYMQ_HEADER_PKTI_1,0x04);	// Begin Packet Indicator
+	$setbit_or(MYMQ_HEADER_PKTI_1,0x08);	// End Packet Indicator
+	$setvar(MYMQ_HEADER_FUNC=C); 		// A:Sign-on B:Notify signed user's id, C:General REquest for transactions
+	$setbit(MYMQ_RH_FLAG,0x00);
+
+	$setvar(
+		MYMQ_RH_WKEY 		= $callaction(FNNETWORK_SISESOCKET_DOMESTIC_GETREQUESTID)
+		,MYMQ_RH_EXCODE 	= SYS
+		,MYMQ_RH_RKEY 		= GETF
+		,MYMQ_FILE_PATH 	= $tmp_path
+		,MYMQ_FILE_DATE 	= $g_versionFile_date_xml
+		,MYMQ_FILE_SIZE 	= $g_versionFile_size_xml
+	);
+	
+	$log(*** XML Send MYMQ_FILE_PATH:[$MYMQ_FILE_PATH], MYMQ_FILE_DATE:[$MYMQ_FILE_DATE] MYMQ_FILE_SIZE:[$MYMQ_FILE_SIZE]);
+
+	$map_getstructsenddata($g_SiseSocketName_DOMESTIC,MYMQ_TH,,strSendData); 	// TH 헤더 추가
+	$map_getstructsenddata($g_SiseSocketName_DOMESTIC,MYMQ_RH,,strTrHeader); 	
+	$addvar(strSendData,strTrHeader); 							// TR 헤더 추가
+	$map_getstructsenddata($g_SiseSocketName_DOMESTIC,MYMQ_FILE,,strFileHeader); 	
+	$addvar(strSendData,strFileHeader); 							// FILE 헤더 추가
+	$sendvardata($g_SiseSocketName_DOMESTIC,$strTrCode,strSendData,$MYMQ_RH_WKEY,$strBeforeActionName,$strAfterActionName,TRUE);	
+	return $MYMQ_RH_WKEY;
+"/>
+<action id="Act_App_Update_Force_Read_Complete" scope="common" 
+value="
+	// 버전에서 .빼고 int 형으로 변환하여 처리한다.
+	$setvar(	
+		tmp_app_version = $bundleinfo(VERSION)	
+		,cur_app_version = $int($replace(.,,$tmp_app_version))
+		,recv_and_version = $int($replace(.,,$recv_appVersion_android))
+		,recv_ios_version = $int($replace(.,,$recv_appVersion_ios))
+	);
+	$log(현재앱버전:[$cur_app_version], iOS:[$recv_ios_version], Android:[$recv_and_version]);
+	if($g_isAndroid){
+		$setvar(
+			AppVersion_Notice 		= 업데이트 알림[$bundleinfo(VERSION)]
+			,AppVersion_Notice_2 	= 앱[$recv_appVersion_android]으로 업데이트하세요
+		);
+		if($cur_app_version < $recv_and_version){
+			// 강제업데이트
+			$popscreen(popscreen_AppVersionDown_confirm_NEW);
+			return;
+		}
+	}
+	else{
+		$setvar(
+			AppVersion_Notice 		= 업데이트 알림 iOS[$bundleinfo(VERSION)]
+			,AppVersion_Notice_2 	= 앱[$recv_appVersion_ios]으로 업데이트하세요
+		);
+		if($cur_app_version < $recv_ios_version){
+			// 강제업데이트
+			$popscreen(popscreen_AppVersionDown_confirm_NEW);
+			return;
+		}
+	}
+	$callaction(Act_Download_Master_Start_d, fnMasterDownloading_d, fnMasterDownloadComplete_d);
+" />
+
+<action id="fnMasterDownloading_d" 
+params="p_success_cnt, p_error_cnt, p_total_cnt" 
+value="
+	$setvar(
+		vg_progress_out.hidden=false
+		,lbl_prcessing.hidden=false
+	);
+	$setvar(
+		tmp_progress_unit = $result($vg_progress_guide.width/$p_total_cnt)
+		,tmp_progress_pos = $result($tmp_progress_unit*$p_success_cnt)
+		,tmp_str = $addstring(국내 파일다운로드 중입니다.,%20%28,$p_success_cnt,/,$p_total_cnt,%29)
+		,lbl_prcessing.value=$tmp_str
+		,vg_progress_inner.width=$tmp_progress_pos
+	);
+	$setvar_common(g_isDownload_d = true);
+
+" />
+<action id="fnMasterDownloadComplete_d" 
+params="p_success_cnt, p_error_cnt, p_total_cnt" 
+value="
+	$log(실패갯수:$p_error_cnt, $g_isDownload_d);
+
+	if($p_error_cnt>0){
+		$alertaction(fnMasterNXmlDownloadFail,국내선물 마스터,다운로드가 실패하였습니다.\n다시 시도하시겠습니까?,다시시도);
+		return;
+	}
+	else{       
+		$setvar(
+			vg_progress_out.hidden 	= false
+			,lbl_prcessing.hidden 	= false
+		);
+		$setvar(
+			lbl_prcessing.value 		= 마스터파일 로딩중입니다. 
+			,vg_progress_inner.width 	= $vg_progress_guide.width
+		);
+		
+		// 파일 날짜 저장 - 보낼때 사용한다. 
+		$log(***** 여기서 저장 국내 값 저장 :$save_strFile_date_d,$save_strFile_size_d);
+		$callaction(fnConfig_SetValue,g_versionFile_date_d 	,$save_strFile_date_d);
+		$callaction(fnConfig_SetValue,g_versionFile_size_d 	,$save_strFile_size_d);
+
+		//$setnstimer(TIMER_VERSION_INIT,0.01,fnMasterNXmlDownloadAfter,FALSE); 		// 왜 타이머를 사용했는지 확인필요 20220914
+		$callaction(fnMasterNXmlDownloadAfter);
+	 }
+" />
+
+<action id="fnMasterNXmlDownloadAfter" 
+value="
+	$callaction(Act_Download_XML_Start, fnXMLDownloading, fnXMLDownloadComplete);
+	
+" />
+<action id="fnXMLDownloading" 
+params="p_success_cnt, p_error_cnt, p_total_cnt" 
+value="
+	$setvar(
+		vg_progress_out.hidden=false
+		,lbl_prcessing.hidden=false
+	);
+	$setvar(
+		tmp_progress_unit = $result($vg_progress_guide.width/$p_total_cnt)
+		,tmp_progress_pos = $result($tmp_progress_unit*$p_success_cnt)
+		,tmp_str = $addstring(XML 파일다운로드 중입니다.,%20%28,$p_success_cnt,/,$p_total_cnt,%29)
+		,lbl_prcessing.value=$tmp_str
+		,vg_progress_inner.width=$tmp_progress_pos
+	);
+	$setvar_common(g_isDownload_xml = true);
+" />
+<action id="fnXMLDownloadComplete" 
+params="p_success_cnt, p_error_cnt, p_total_cnt" 
+value="
+	// 마스터를 받은 후 모든 네트워크 연결을 끊는다. 
+	$callaction(Act_Network_Disconnect_All);
+
+	$log(다운로드여부 XML:[$g_isDownload_xml], 해외마스터:[$g_isDownload], 국내마스터:[$g_isDownload_d]);
+	if($g_isDownload_xml){		// XML 다운로드가 있으면 
+		$log(****** 인트로로 보낸다.);
+		$openfile(plist/root/intro.xml);
+		return;
+	}
+	$setvar(
+		vg_progress_out.hidden=false
+		,lbl_prcessing.hidden=false
+	);
+	
+	$setvar(
+		lbl_prcessing.value=마스터로딩 중... 잠시만 기다리세요.
+	);
+
+	// XML 다운로드 진행 
+
+	$setvar(tmp_loadmaster_afteraction = Act_LoadMaster_Complete);
+	$setnstimer(TIMER_LoadMaster,0.01,Act_LoadMaster_Start,FALSE);
+	return;	
+" />
+
+<action id="Act_LoadMaster_Start" scope="common"
+value="
+	//$logarrayvar(g_arr_datFile);
+	$setvar(
+		tmp_dat_path 		= $g_path_down/dat/ 			// dat경로 
+		,tmp_read_cnt 		= 0
+		,tmp_arr_name 		= g_arr_datFile
+		,tmp_arr_cnt 		= $result($getarrayvarcount($tmp_arr_name) - 1)
+		,tmp_ctrl_id 		= lbl_prcessing
+		,tmp_after_action 	= Act_LoadMaster_Exch_Start
+	);
+	$setvar(
+		,$($tmp_ctrl_id).value = 해외선물 dat 로딩 준비중입니다.
+	);
+	$setvar_common( g_isLoadMaster = false ); 		// 파일을 하나라도 읽으면 true 마스터 작업을 하기 위해 쓰인다.
+	$setnstimer(TIMER_LoadMaster_Dat,0.01,Act_LoadMaster_Dat,FALSE);
+" />
+<action id="Act_LoadMaster_Exch_Start" scope="common"
+value="
+	$log(****** 마스터파일 읽어왔는지 여부:[$g_isLoadMaster]);
+	if($g_isLoadMaster){
+		/*
+		// 임시사용 - 로그인시 TR에서 받아와서 사용해야 함. 
+		$setvar_common(
+			arr_EXCH = [
+				[FCME,CME] 	
+				,[FERX,EUREX] 	
+				,[FSGX,SGX] 	
+				,[FHKE,HKE] 	
+			]
+		);
+		*/
+		//  배열에 담는다. 
+		$delarrayvar(g_ArrFuturesExch);
+		// 거래소 코드를 가져오기 위해 중복제거
+		$arraycopy(arr_MasterData_fucode,g_ArrFuturesExch,true,true,false,true,2,2,common); 
+		$log(********** 거래소 코드 );
+		//$logarrayvar(arr_MasterData_fucode);
+		//$logarrayvar(g_ArrFuturesExch);
+
+		$setvar(
+			tmp_arr_name_exch	= g_ArrFuturesExch
+			,tmp_arr_cnt 		= $getarrayvarcount($tmp_arr_name_exch) 
+			,tmp_read_cnt 		= 0
+			,tmp_ctrl_id 		= lbl_prcessing
+			,tmp_after_action 	= Act_LoadMaster_d_Start
+		);
+	//	$logvar(tmp_arr_cnt);
+		$callaction(Act_LoadMaster_Exch);
+	}
+	else{
+		$callaction(Act_LoadMaster_d_Start);
+	}
+
+" />
+
+<action id="Act_LoadMaster_d_Start"  scope="common"
+value="
+	$setvar(
+		tmp_dat_path = $g_path_down/dat/ 			// dat경로 
+	);
+	$setvar_common(
+		g_arrd_datFile = [
+			//[fogjcd]			// 	- 종목구분,기초자산,옵션승수,선물승수,국내이자율,국외이자율,배당액지수,역사적변동성(X 179개),옵션구분
+								//종목구분=> 1:KOFEX, 2:KOSPI
+								//옵션구분=> 1:현물, 2: 선물, 3:지수
+			//,[fojmcd]   		// 	- 종목구분,종목,기조자산명,만기년월,근월물순서,선물코드,행사가,옵션구분,파생상품코드,잔존일수,계약당기준증거금,전일최대이론가,옵션매도이론가,5%이론가,전일종가,기조자산구분
+								//종목구분 => 1:KOFEX, 2:KOSPI
+								//선물코드 => 선물만사용
+								//옵션구분 => 1:현물옵션, 2,선물옵션, 3:지수옵션
+								//파생상품코드 => 001:유럽형콜 002:유럽형풋 004:선물 006:미국형콜 007:미국형풋
+								//기초자산구분 => 1:채권 2:통화 3:지수
+			,[sfile01] 		// 기초자산정보 - 마켓구분,선물/옵션구분,기초자산명,기초자산코드,기초자산설명(한글),기초자산설며(영문)
+			,[sfile02]		// 만기월물정보 - 마켓타입,선물/옵션구분,기초자산명,만기년월
+			,[sfile03]		// 종목정보 - 거래소구분,선물/옵션구분,옵션구분,기초자산명,만기년월,주야간구분,분류,거래소코드,종목코드,상위종목(KTB에서만사용),한글종목명,영문종목명,상한가,하한가,행사가격,파생상품코드,소수점정보,계약크기,잔존일수,실시간상한가적용여부,실시간상한가,실시간하한가,실시간종목코드
+								//주야간구분 => day, night
+								//거래소구분 => 1:KOFEX, 2:KOSPI 5:MINI KOSPI
+								//선물옵션구분 => F:선물 O:옵션
+			,[sfile05]		// 스프레드정보 - 기초자산명,종목코드,구성종목,구성일련번호,구성비율,매수시매매구분,매도시매매구분
+			,[sfile07]		// 틱사이즈테이블 - 선물옵션구분,기초자산명,파생상품코드,하한,상한,틱사지즈(소수점미포함),소수점정보
+			,[sfile09]		// 연속월물정보 - 거래소구분,연속월물종목,종목코드,기초자산명
+			,[sfile11]		// 옵션ATM - 기초자산명,만기년월,행사가격
+			,[sfile12]		// 연도코드 - 연도코드,연도
+		]
+	);
+	//$logarrayvar(g_arrd_datFile);
+
+	$setvar(
+		tmp_dat_path 		= $g_path_down/dat/ 			// dat경로 
+		,tmp_read_cnt 		= 0
+		,tmp_arr_name 	= g_arrd_datFile
+		,tmp_arr_cnt 		= $result($getarrayvarcount($tmp_arr_name) - 1)
+		,tmp_ctrl_id 		= lbl_prcessing
+		,tmp_after_action 	= Act_LoadMaster_d_Set
+	);
+
+	$setvar(
+		,$($tmp_ctrl_id).value = 국내선물 dat 로딩 준비중입니다.
+	);
+	$setvar_common( g_isLoadMaster_d = false ); 		// 파일을 하나라도 읽으면 true 마스터 작업을 하기 위해 쓰인다.
+	$setnstimer(TIMER_LoadMaster_Dat_d,0.01,Act_LoadMaster_Dat_d,FALSE);
+" />
+<action id="Act_LoadMaster_d_Set"  scope="common"
+value="
+
+	//1. 주식선물인것을 골라낸다.(0번째 6인거는 주식선물 )
+	$getsearcharray(arr_MasterData_sfile01,g_arrMaster_base_sf_d,6,common,0,,first);
+	//$logarrayvar(g_arrMaster_base_sf_d,120);
+
+	//2. 선물옵션을 골라낸다.
+	$setcomparearray(g_arrMaster_base_fo_d,arr_MasterData_sfile01,g_arrMaster_base_sf_d,0,0,local,NE);
+	//$logarrayvar(g_arrMaster_base_fo_d);
+
+	// 3.선물을 골라낸다.
+	$getsearcharray(g_arrMaster_base_fo_d,g_arrMaster_base_fu_d,F,common,1,,first);
+	//$logarrayvar(g_arrMaster_base_fu_d);
+	
+	// 4.옵션을 골라낸다.
+	$delarrayvar(tmp_arrMaster_base_op_d);
+	$getsearcharray(g_arrMaster_base_fo_d,tmp_arrMaster_base_op_d,O,local,1,,first);
+	$getsearcharray(tmp_arrMaster_base_op_d,g_arrMaster_base_op_d,USD,common,2,,NOTEQUAL);
+	//$logarrayvar(g_arrMaster_base_op_d);
+
+	// 해외선물을 골라낸다. - 미체결, 순미결제에서 사용
+	//$logarrayvar(arr_MasterData_sfile03);
+	$delarrayvar(g_arrMaster_day, g_arrMaster_night);
+	$getsearcharray(arr_MasterData_sfile03,g_arrMaster_day,day,common,5,,first); 		// 주간 
+	$arraysort(g_arrMaster_day,,,8); 		// 이함수 때문에 serverdata=pibo7031:OutBlock:code:value:arraydata:g_arrMaster_day,1 동작함
+
+	$getsearcharray(arr_MasterData_sfile03,g_arrMaster_night,night,common,5,,first); 		// 야간
+	$arraysort(g_arrMaster_night,,,8); 		// 이함수 때문에 serverdata=pibo7031:OutBlock:code:value:arraydata:g_arrMaster_night,1 동작함
+	//$logarrayvar(g_arrMaster_day);
+	//$logarrayvar(g_arrMaster_night);
+
+
+	//국내야간옵션을 골라낸다. -야간 옵션종합 사용
+	$setvar(
+		tmp_1 = O
+		,tmp_2 = night
+	);
+	$getmultisearcharray(g_arrMaster_night,arr_op_code_n,tmp_1|tmp_2,local,1|5,,first);
+	$arraycopy(arr_op_code_n,g_arrMaster_base_op_n,true,true,false,true,7,7,common); 
+	$arraysort(g_arrMaster_base_op_n,true,true,0);
+	//$logarrayvar(g_arrMaster_base_op_n);
+
+
+
+	
+
+	// 마스터 로딩 후로 위치 변경한다. - 여기까지 
+	$copyfile(master.sqlite,$g_path_down/dat/master.sqlite);
+	$copyfile(config.sqlite,$g_path_down/dat/config.sqlite);
+
+	$setvar(
+		,$($tmp_ctrl_id).value = 환경설정중입니다.
+	);
+
+	
+	//$setnstimer(TIMER_LoadMaster_Dat_d,0.01,Act_LoadMaster_Complete,FALSE);
+	$setnstimer(TIMER_LoadMaster_Dat_d,0.01,$tmp_loadmaster_afteraction,FALSE);
+" />
+
+<action id="Act_LoadMaster_Complete"  scope="common"
+value="
+
+	// 메뉴데이터를 읽어온다.
+	// 소켓연결이 되어야지만 $loadxml 이 제대로 동작한다.
+	$clearxml(MENUDATA);
+	$loadxml(MENUDATA,plist/root/sys/tabmenu.xml);	
+
+	// 관심종목
+	$callaction(fnCreateDBInterestItem);    // 관심종목 테이블 생성 
+	$callaction(fnCreateDBInterestItem_dxFeed);    // 관심종목 테이블 생성 - dxFeed
+	$callaction(fnLoadDBInterestItemCode);  // 관심종목 읽어오기  - 저장은 백그라운드 내려갔을 때 한다.
+	$callaction(fnLoadDBInterestItemCode_d);  // 관심종목 읽어오기  - 저장은 백그라운드 내려갔을 때 한다.
+	$callaction(fnLoadDBInterestItemCode_a_stock);  // 관심종목 읽어오기  - 미주옵션 - 주식
+	$callaction(fnLoadDBInterestItemCode_a_option);  // 관심종목 읽어오기  - 미주옵션 - 옵션
+	$callaction(fnLoadDBInterestItemCode_dxfeed_stock);  // 관심종목 읽어오기  - 미주옵션 dxfeed - 주식
+	$callaction(fnLoadDBInterestItemCode_dxfeed_option);  // 관심종목 읽어오기  - 미주옵션  dxfeed - 옵션
+
+	// 검색종목
+	$callaction(fnCreateDBInterestSearchItem); //검색종목 테이블 생성
+	$callaction(fnLoadDBInterest_Search_ItemCode_a_stock);  // 검색종목 읽어오기  - 미주옵션 - 주식
+	// 검색종목 - dxFeed
+	$callaction(fnCreateDBInterestSearchItem_dxFeed); //검색종목 테이블 생성
+	$callaction(fnLoadDBInterest_Search_ItemCode_dxfeed_stock);  // 검색종목 읽어오기  - 미주옵션 - 주식
+
+	// 퀵메뉴
+	$callaction(fnCreateDBQuickMenu);       // 퀵메뉴 테이블 생성 
+	$callaction(fnLoadDBQuickMenu);         // 퀵메뉴 읽어오기
+
+	// 차트설정 불러오기
+	//$callaction(chart_setting_Load);
+
+
+	/*
+	// 앱 강제업데이트 체크 
+	// 버전체크를 여기서 하는 걸로 변경한다. 
+	$setvar(
+		tmp_app_version_android = 2.0.0
+		,tmp_app_version_ios = 2.0.0
+		,tmp_appdown_android  = https://play.google.com/store/apps/details?id=com.eugenefn.futures
+		,tmp_appdown_ios  = https://itunes.apple.com/kr/app/smart-jeillo/id1115600077?mt=8
+	);
+
+	if($g_isAndroid){
+		$setvar(
+			AppVersion_Notice=업데이트 알림[$bundleinfo(VERSION)]
+			,AppVersion_Notice_2=앱[$tmp_app_version_android]으로 업데이트하세요
+		);
+		if(!$isequal_string($bundleinfo(VERSION),$tmp_app_version_android)){
+			$popscreen(popscreen_AppVersionDown_confirm_NEW);
+			return;
+		}
+	}
+	else{
+		$setvar(
+			AppVersion_Notice=업데이트 알림 iOS[$bundleinfo(VERSION)]
+			,AppVersion_Notice_2=앱[$tmp_app_version_ios]으로 업데이트하세요
+		);
+		if(!$isequal_string($bundleinfo(VERSION),$tmp_app_version_ios)){
+			$popscreen(popscreen_AppVersionDown_confirm_NEW);
+			return;
+		}
+	}
+	*/
+
+	$log(+++++++  서버연결  g_login_id:[$g_login_id], g_bLoginStatus:[$g_bLoginStatus], g_sise_auto_login:[$g_sise_auto_login],g_OrderServerCheckSimulation:[$g_OrderServerCheckSimulation]);
+	if($strlen($g_login_id) < 1){	 	 	// 로그인 아이디가 없을 경우 로그인화면으로 이동(최초접속시)
+		//$callaction(fnGoLoginScreen);
+		$log(***** 로그인 아이디 없음.);
+		//$callaction(Act_Server_Connect, fnGoLoginScreen, true);
+		$callaction(Act_Server_Connect, fnGoLoginScreen_ConnectAfter, true);
+		return;
+	}
+
+	if(!$g_cert_login_keep){
+		$callaction(Act_Server_Connect, fnGoLoginScreen_ConnectAfter, true);
+		return;
+	}
+
+	if($g_bLoginStatus || $g_sise_auto_login || $g_cert_login_keep){				// 파일업데이를 받은 경우 
+		if($isequal_string($g_menuCode,1920)){
+			$log(******* 자동로그인1);
+			$callaction(Act_Server_Connect, Act_intro_after_Complete, true);		
+		}
+		else{
+			$log(******* 자동로그인2 );
+			$callaction(Act_Server_Connect, Act_intro_after_Complete);		
+		}
+	} 		
+	else{						
+		//$callaction(fnGoLoginScreen); 						
+		//$callaction(Act_Server_Connect, fnGoLoginScreen, true);
+		$callaction(Act_Server_Connect, fnGoLoginScreen_ConnectAfter, true);
+	}							
+" />
+<action id="fnGoLoginScreen_ConnectAfter"  scope="common"
+value="
+	$openfile(plist/root/main.xml);
+" />
+// 로그인 또는 저장된 화면으로 이동 
+//확인
+<action id="Act_intro_after_Complete"  scope="common"
+value="
+	$openfile(plist/root/main.xml);
+	return;
+	
+	$log(************** Act_intro_after_Complete);
+	$setvar_common(
+		g_polling_fail_cnt = 0
+		,g_polling_d_fail_cnt = 0
+		,g_polling_r_fail_cnt = 0
+	);
+	$setnstimer(TIMER_POLLING,$g_polling_time,Act_Polling,TRUE);
+
+	if($isequal_string($g_menuCode,1920)){
+		$log(************** Act_intro_after_Complete OpenFile login.xml g_user_id:[$g_user_id]);
+		$openfile(plist/root/login.xml);
+		return;
+	}
+
+	$log(********************** Act_intro_after_Complete 자동로그인 **************);
+	$log(로그인상태:$g_bLoginStatus);
+	$log(조회전용 자동로그인 g_sise_auto_login:$g_sise_auto_login);
+	$log(공동인증 접속유지 g_cert_login_keep :$g_cert_login_keep);
+	$log(공동인증서 로그인 여부 g_cert_login_status:$g_cert_login_status);
+	$log(로그인타입 g_login_type:[$g_login_type] - 1:ID로그인 2:인증서로그인 3:지문로그인);  			
+	$log(로그인 종류 g_login_kind:[$g_login_kind] - 0:시세전용 1:모의투자 2:공동인증로그인 3:직원용);  			
+	$log(지난시간 tmp_past_login_time:  $tmp_past_login_time);  			// 백그라운드에서 나오고 난 다음 지난 시간 
+	$logvar(g_login_id, g_login_pwd, g_login_cert, g_login_type, g_login_kind, g_login_id_save,g_login_dn);
+
+	$setvar(tmp_now_check = $now(yyyyMMddHHmm));
+	$logvar(g_login_expiry, tmp_now_check);
+	
+	if($strlen($g_login_expiry) < 12){		$callaction(Act_Login_Expiry_Set);		}
+
+	$logvar(g_login_expiry, tmp_now_check);
+
+	if($int64($g_login_expiry) <= $int64($tmp_now_check)) 	// 만료시간이 지나면  
+	{
+		if($g_login_type == 1){ 				// ID로그인 
+			if($g_login_kind == 0){ 			//시세전용 
+				$setvar(
+					var_name_id 		= g_login_id 		// 아이디  변수명 
+					,var_name_pwd 		= g_login_pwd 		// 비밀번호  변수명 
+					,var_name_cert 		=  					// 공동인증서 변수명 
+					,var_login_type 	= 1 				// 로그인타입 - 1:ID로그인, 2:인증서로그인, 3:지문로그인
+					,var_login_kind 	= 0 				// 로그인 종류 : 0:시세전용, 1:모의투자, 2:공동인증로그인, 3:직원용
+					,var_is_id_save 	= $g_login_id_save 	// 아이디 저장여부 
+					,var_dn_value  		= 		 			// dn값 
+				); 	
+				$log(로그인 상태 - 1,[$var_login_type],[$var_login_kind]);
+				$callaction(Act_Sise_Login_d, $var_name_id, $var_name_pwd, Act_Auto_Login_Success);
+				return;
+			}
+			elseif($g_login_kind == 1){ 		//모의투자 
+				$setvar(
+					var_name_id 		= g_login_id 		// 아이디  변수명 
+					,var_name_pwd 		= g_login_pwd 		// 비밀번호  변수명 
+					,var_name_cert 		=  					// 공동인증서 변수명 
+					,var_login_type 	= 1			 		// 로그인타입 - 1:ID로그인, 2:인증서로그인, 3:지문로그인
+					,var_login_kind 	= 1 				//로그인 종류 : 0:시세전용, 1:모의투자, 2:공동인증로그인, 3:직원용
+					,var_is_id_save 	= $g_login_id_save 	// 아이디 저장여부 
+					,var_dn_value  		= 		 		// dn값 
+				); 	
+				$log(로그인 상태 - 2,[$var_login_type],[$var_login_kind]);
+				$callaction(Act_Sise_Login_d, $var_name_id, $var_name_pwd,Act_Auto_Login_Success);
+				return;
+			}
+			elseif($g_login_kind == 2){ 		//공동인증로그인
+				$setvar(
+					var_name_id 		= g_login_id 		// 아이디  변수명 
+					,var_name_pwd 		= g_login_pwd 		// 비밀번호  변수명 
+					,var_name_cert 		=  					// 공동인증서 변수명 
+					,var_login_type 	= 1 				// 로그인타입 - 1:ID로그인, 2:인증서로그인, 3:지문로그인
+					,var_login_kind 	= 0 				// 로그인 종류 : 0:시세전용, 1:모의투자, 2:공동인증로그인, 3:직원용
+					,var_is_id_save 	= $g_login_id_save 	// 아이디 저장여부 
+					,var_dn_value  		= 		 			// dn값 
+				); 	
+				$log(로그인 상태 - 3,[$var_login_type],[$var_login_kind]);
+				$callaction(Act_Sise_Login_d, $var_name_id, $var_name_pwd, Act_Auto_Login_Success);
+				return;
+			}
+		}
+		elseif($g_login_type == 2){ 				// dn로그인 
+			$setvar(
+				var_name_id 			= $g_login_id 			// 아이디  변수명 
+				,var_name_pwd 			=  						// 비밀번호  변수명 
+				,var_name_cert 			= g_login_cert			// 공동인증서 변수명 	// 시세전용으로 로그인 하기 때문에 빈값이다.
+				,var_login_type 		= $g_login_type			// 로그인타입 - 1:ID로그인, 2:인증서로그인, 3:지문로그인
+				,var_login_kind 		= 0						//로그인 종류 : 0:시세전용, 1:모의투자, 2:공동인증로그인, 3:직원용
+				,var_is_id_save 		= $g_login_id_save 		// 아이디 저장여부 
+				,var_dn_value  			= $g_login_dn 			// dn값 
+			); 	
+			$log(로그인 상태 - 4,[$var_login_type],[$var_login_kind]);
+			$callaction(Act_Id_Request, $var_dn_value, $var_name_cert ,Act_Auto_Login_Success,,$var_name_id);
+			return;
+		}
+		elseif($g_login_type == 3){ 				// 지문로그인 
+			$setvar(
+				var_name_id 			= $g_login_id 							// 아이디  변수명 
+				,var_name_pwd 			=  										// 비밀번호  변수명 
+				,var_name_cert 			= g_fingerprint_login_cert_pwd_enc		// 공동인증서 변수명  	// 시세전용으로 로그인 하기 때문에 빈값이다.
+				,var_login_type 		= $g_login_type 						// 로그인타입 - 1:ID로그인, 2:인증서로그인, 3:지문로그인
+				,var_login_kind 		= 0 									//로그인 종류 : 0:시세전용, 1:모의투자, 2:공동인증로그인, 3:직원용
+				,var_is_id_save 		= $g_login_id_save 						// 아이디 저장여부 
+				,var_dn_value  			= $g_fingerprint_login_dn 				// dn값 
+			); 	
+			$log(로그인 상태 - 5,[$var_login_type],[$var_login_kind]);
+			$callaction(Act_Id_Request, $var_dn_value, $var_name_cert ,Act_Auto_Login_Success,,$var_name_id);
+			return;
+		}
+		$callaction(fnGoLoginScreen,1); 				// 로그인 화면으로 보낸다. 
+		return;
+	}
+
+
+	if($g_login_type == 1){ 				// ID로그인 
+		if($g_login_kind == 0){ 			//시세전용 
+			$setvar(
+				var_name_id 		= g_login_id 		// 아이디  변수명 
+				,var_name_pwd 		= g_login_pwd 		// 비밀번호  변수명 
+				,var_name_cert 		=  					// 공동인증서 변수명 
+				,var_login_type 	= 1 				// 로그인타입 - 1:ID로그인, 2:인증서로그인, 3:지문로그인
+				,var_login_kind 	= $g_login_kind 	//로그인 종류 : 0:시세전용, 1:모의투자, 2:공동인증로그인, 3:직원용
+				,var_is_id_save 	= $g_login_id_save 	// 아이디 저장여부 
+				,var_dn_value  		= 		 			// dn값 
+			); 	
+			$log(로그인 상태 - 6,[$var_login_type],[$var_login_kind]);
+			$callaction(Act_Sise_Login_d, $var_name_id, $var_name_pwd, Act_Auto_Login_Success);
+		}
+		elseif($g_login_kind == 1){ 		//모의투자 
+			$setvar(
+				var_name_id 		= g_login_id 		// 아이디  변수명 
+				,var_name_pwd 		= g_login_pwd 		// 비밀번호  변수명 
+				,var_name_cert 		=  					// 공동인증서 변수명 
+				,var_login_type 	= 1			 		// 로그인타입 - 1:ID로그인, 2:인증서로그인, 3:지문로그인
+				,var_login_kind 	= $g_login_kind 	//로그인 종류 : 0:시세전용, 1:모의투자, 2:공동인증로그인, 3:직원용
+				,var_is_id_save 	= $g_login_id_save 	// 아이디 저장여부 
+				,var_dn_value  		= 		 		// dn값 
+			); 	
+			$log(로그인 상태 - 7,[$var_login_type],[$var_login_kind]);
+			$callaction(Act_Sise_Login_d, $var_name_id, $var_name_pwd,Act_Auto_Login_Success);
+		}
+		elseif($g_login_kind == 2){ 		//공동인증로그인 - 키교환 후 로그인 진행 
+			$setvar(
+				var_name_id 		= g_login_id 		// 아이디  변수명 
+				,var_name_pwd 		= g_login_pwd 		// 비밀번호  변수명 
+				,var_name_cert 		= g_login_cert 		// 공동인증서 변수명 
+				,var_login_type 	= 1					// 로그인타입 - 1:ID로그인, 2:인증서로그인, 3:지문로그인
+				,var_login_kind 	= $g_login_kind 	//로그인 종류 : 0:시세전용, 1:모의투자, 2:공동인증로그인, 3:직원용
+				,var_is_id_save 	= $g_login_id_save 	// 아이디 저장여부 
+				,var_dn_value  		= 		 			// dn값 
+			); 	
+			$log(로그인 상태 - 8,[$var_login_type],[$var_login_kind]);
+			$callaction(Act_Dn_Request,  $var_name_id, $var_name_pwd, $var_name_cert ,Act_Auto_Login_Success);
+		}			
+	}
+	elseif($g_login_type == 2){ 				// dn로그인 
+		$log(dn로그인 인증서:$g_login_cert);
+		$log(dn로그인 타입:$g_login_type);
+		$log(dn로그인 종류:$g_login_kind);
+		$log(dn로그인 아이디 저장여부:$g_login_id_save);
+		$log(dn로그인 dn값:$g_login_dn);
+		$setvar(
+			var_name_id 			= $g_login_id 		// 아이디  변수명 
+			,var_name_pwd 			=  					// 비밀번호  변수명 
+			,var_name_cert 			= g_login_cert		// 공동인증서 변수명 	// 시세전용으로 로그인 하기 때문에 빈값이다.
+			,var_login_type 		= $g_login_type		// 로그인타입 - 1:ID로그인, 2:인증서로그인, 3:지문로그인
+			,var_login_kind 		= $g_login_kind		//로그인 종류 : 0:시세전용, 1:모의투자, 2:공동인증로그인, 3:직원용
+			,var_is_id_save 		= $g_login_id_save 	// 아이디 저장여부 
+			,var_dn_value  			= $g_login_dn 		// dn값 
+		); 	
+		$log(로그인 상태 - 9,[$var_login_type],[$var_login_kind]);
+		//클라우드라면 연결서비스 먼저 확인 후 저장되어있는 dn 값으로 비교해서 인증서 있는지 확인 
+		//인증서 없거나 연결서비스 연결 안되어 있으면 로그인 화면 + 상황에 맞는 팝업 띄우기.
+		//클라우드 분기
+		if($g_login_cloud_check_flag){
+			$cloudnpki_checkConnect(fnAutoLoginCloudCheckConnect);
+		}else{
+			$callaction(Act_Id_Request, $var_dn_value, $var_name_cert, Act_Auto_Login_Success, ,$var_name_id );
+		}
+	}
+	elseif($g_login_type == 3){ 				// 지문로그인 
+		$setvar(
+			var_name_id 			= $g_login_id 							// 아이디  변수명 
+			,var_name_pwd 			=  										// 비밀번호  변수명 
+			,var_name_cert 			= g_fingerprint_login_cert_pwd_enc		// 공동인증서 변수명  	// 시세전용으로 로그인 하기 때문에 빈값이다.
+			,var_login_type 		= $g_login_type 						// 로그인타입 - 1:ID로그인, 2:인증서로그인, 3:지문로그인
+			,var_login_kind 		= $g_login_kind 						//로그인 종류 : 0:시세전용, 1:모의투자, 2:공동인증로그인, 3:직원용
+			,var_is_id_save 		= $g_login_id_save 						// 아이디 저장여부 
+			,var_dn_value  			= $g_fingerprint_login_dn 				// dn값 
+		); 	
+		$log(로그인 상태 - 10,[$var_login_type],[$var_login_kind]);
+		$callaction(Act_Id_Request, $var_dn_value, $var_name_cert ,Act_Auto_Login_Success,,$var_name_id);
+	}
+	else{
+		$callaction(fnGoLoginScreen,1); 				// 로그인 화면으로 보낸다. 
+	}
+	
+" />
+// 자동로그인 성공 
+<action id="Act_Auto_Login_Success"  scope="common"
+value="
+	$log(************** Act_Auto_Login_Success);
+	// 로그인 시 설정파일 저장 
+	$callaction(fnConfig_SetValue,g_login_id 	,$getvar($var_name_id));
+	$callaction(fnConfig_SetValue,g_login_pwd 	,$getvar($var_name_pwd));
+	//$callaction(fnConfig_SetValue,g_login_cert 	,$getvar($var_name_cert)); 		// 인증서 비밀번호는 하면 안됨.
+	$callaction(fnConfig_SetValue,g_login_type 	,$var_login_type);
+	$callaction(fnConfig_SetValue,g_login_kind 	,$var_login_kind);
+	$callaction(fnConfig_SetValue,g_login_id_save ,$var_is_id_save);
+	//$callaction(fnConfig_SetValue,g_login_dn 	,$var_dn_value);
+	$logvar(g_login_id, g_login_pwd, g_login_cert, g_login_type, g_login_kind, g_login_id_save,g_login_dn);
+
+	if($g_login_type == 1){ 				// ID로그인 
+		if($g_login_kind == 0){ 			//시세전용 
+			$callaction(fnConfig_SetValue,g_cert_login_status, false); 
+		}
+		elseif($g_login_kind == 1){ 			//모의투자 
+			$callaction(fnConfig_SetValue,g_cert_login_status, false); 
+		}
+		elseif($g_login_kind == 2){ 			//공동인증 
+			$callaction(fnConfig_SetValue,g_cert_login_status, true); 
+		}
+	}
+	elseif($g_login_type == 2){ 				// dn로그인 
+		if($g_login_kind == 0){ 			//시세전용 
+			$callaction(fnConfig_SetValue,g_cert_login_status, false); 
+		}
+		else{
+			$callaction(fnConfig_SetValue,g_cert_login_status, true); 		// 공동인증서 로그인 여부
+		}
+	}
+	elseif($g_login_type == 3){ 				// 지문 로그인 
+		$callaction(fnConfig_SetValue,g_cert_login_status, true); 		// 공동인증서 로그인 여부
+	}
+	$setvar_common(
+		g_user_id  		= $g_login_id
+		,g_bLoginStatus	= true  
+	);
+	$callaction(Act_GetIP_RealServer, Fn_Auto_Login_Account_Get_Success);
+" />
+<action id="Fn_Auto_Login_Account_Get_Success" 
+value="
+	$log(************** Fn_Auto_Login_Account_Get_Success);
+	$callaction(Act_Account_Get, $g_login_id, Act_Auto_Login_Account_Get_Success );  		// 시세전용 로그인을 하더라도 계좌번호를 핫딜에서 사용하기 위해 계좌번호를 가져와야 한다. 
+"/>
+<action id="Act_Auto_Login_Account_Get_Success" 
+value="
+	if($g_login_kind == 1){
+		$callaction(fnGoScreen_Base,$g_menuCode);
+		return;
+	}
+	// AML 체크해야함. 
+	$callaction(fnSendTr_CSBC730201,fnSendTr_CSBC730201_Success);
+	return;
+
+" />
+
+<action id="fnSendTr_CSBC730201_Success" 
+params="
+p_fpercor 		////(개인:1, 법인:2)
+,p_rtn1 		//KYC수행대상YN(Y:대상,N:미대상)
+,p_rtn2 		//고객KYC상태 (000:미수행,100:수행시작,200:WL결재대기,300:EDD미수행,301:EDD미수행(PEP대상),400:거절(결재),700:CDD완료,800:EDD완료,900:KYE완료)
+,p_warn_sect
+,p_warn_msg
+,p_accid_sect
+"
+value="
+	$setvar_common(g_fpercor = $p_fpercor);
+	$setvar_common(
+		g_warn_sect = $p_warn_sect
+		,g_warn_msg = $p_warn_msg
+	);
+	//20231031 CDDEDD 변경관련
+	$setvar_common(g_CDD_EDD_flag = $p_rtn1);
+	$logvar(g_CDD_EDD_flag);
+	// 여기 수정되어야 함.
+	if($isequal_string($p_rtn1,Y)){ 			//AML대상
+		$callaction(fnGoScreen_Base,9999);
+	}elseif($isequal_string($g_warn_sect,Y)){ 	
+		$callaction(fnGoScreen_Base,8900);
+	}else{
+		if($g_cert_login_status){
+			$callaction(fnGoScreen_Base,$g_menuCode);
+		}
+		else{
+			if($g_login_kind == 0){ 	 		// 시세전용 
+				$setvar(
+					tmp_certlogin 		= $getxmlvalue(MENUDATA,menu,certlogin,^|id == '$g_menuCode')
+					,tmp_simulation 	= $getxmlvalue(MENUDATA,menu,simulation,^|id == '$g_menuCode')
+					,tmp_s_login 		= $getxmlvalue(MENUDATA,menu,s_login,^|id == '$g_menuCode')              // 직원용 메뉴설정 
+				);
+				if($tmp_certlogin){
+					$callaction(fnConfig_SetValue,g_menuCode 	,1220);
+				}
+				$callaction(fnGoScreen_Base,$g_menuCode);	
+			}
+			else{
+				$callaction(fnGoScreen_Base,$g_menuCode);	
+			}
+		}
+	}
+
+	if(!$isequal_string($p_accid_sect,N) && $p_fpercor == 1){
+		//$callaction(fnPopover_AlertAction,,[안내]\n\n고객님께서는 장기간 거래를 하지 않아\n휴면계좌로 전환되었습니다.\n\nHTS로 접속하여 해지 해주시기 바랍니다.,,확인);
+		$popscreen(pop_cdd_edd_ACCID_SECT_N_notice);
+	}
+" />
+<action id="EnterBackGround_Local"
+value="
+	$log(=============== EnterBackGround_Local intro_after.xml  ===============);
+	// 서버연결을 끊는다.
+	//$callaction(Act_Network_Disconnect_All);
+" />
+
+<action id="fn_push_receive_intro_after"  scope="common"
+value="
+
+    $setvar(
+        iVarCount = $fn_push_receive_intro_after_paramcount
+        , kindMessage=$getvar($fn_push_receive_intro_after_param1)
+    );
+    // 임시로 로그남김..
+    for($i = 1; $i <= $iVarCount; $i++) {
+                $logvar($getvar(fn_push_receive_intro_after_param$i));
+    }
+    $logvar(apns_gcm.notification.body);
+    $logvar(apns_state,apns_category,apns_push_id,apns_push_type,apns_aps_alert);
+    $setvar_common(g_push_noextc=false);
+
+    if($kindMessage == 0) {
+                $log(여기서 걸리나?);
+                $setvar(strPushToken=$getvar($fn_push_receive_intro_after_param2));
+                $log(FN_PUSH_RECEIVE  - Intor_after.xml   token receive [$strPushToken]);
+                if($strlen($strPushToken) > 0){
+                            $setvar_common(p_APNS_RegKey = $strPushToken);
+                }
+    }
+    else if($kindMessage == 1) {
+                $log(FN_PUSH_RECEIVE - Intor_after.xml  미실행중인 상태에서 푸시데이터 수신..);
+                $setvar_common(g_push_noextc=true);
+                
+                $setvar_common(g_apns_push_id = $apns_push_id);
+                 if($g_isAndroid) {
+                    $setvar_common(
+                                        g_apns_push_id = $apns_ips_push_id
+                                        ,g_apns_push_type = $apns_ips_push_type
+                                        ,g_apns_aps_alert = $apns_ips_ips_alert
+                            );
+                    }
+                    else{
+                            $setvar_common(
+                                    g_apns_push_id = $apns_push_id
+                                    ,g_apns_push_type = $apns_push_type
+                                    ,g_apns_aps_alert = $apns_aps_alert
+                        );
+                    }
+
+                //$openfile(plist/base_screen.xml);
+    }
+    else if($kindMessage == 2) {
+                $log(FN_PUSH_RECEIVE  - Intor_after.xml 백그라운드 상태에서 푸시데이터 수신..);
+    }
+    else if($kindMessage == 3) {
+                $log(FN_PUSH_RECEIVE   - Intor_after.xml 포그라운드 상태에서 푸시데이터 수신..);
+    }
+    else if($kindMessage == 5) {
+                $log(FN_PUSH_RECEIVE   - Intor_after.xml  메세지클릭..);
+                $setvar_common(g_push_noextc=true);
+                
+                $setvar_common(g_apns_push_id = $apns_push_id);
+                 if($g_isAndroid) {
+                    $setvar_common(
+                                        g_apns_push_id = $apns_ips_push_id
+                                        ,g_apns_push_type = $apns_ips_push_type
+                                        ,g_apns_aps_alert = $apns_ips_ips_alert
+                            );
+                    }
+                    else{
+                            $setvar_common(
+                                    g_apns_push_id = $apns_push_id
+                                    ,g_apns_push_type = $apns_push_type
+                                    ,g_apns_aps_alert = $apns_aps_alert
+                        );
+                    }
+
+    }
+    else if($kindMessage == 4) {
+                $log(FN_PUSH_RECEIVE   - Intor_after.xml  푸시 체크했는데 없는경우..);
+    }
+    
+    else {
+                $log(=============>PUSH_RECEIVE ELSE문 );
+                
+    }
+" />
+<!--
+<action id="fn_push_receive"  scope="common"
+value="
+
+    $setvar(
+        iVarCount = $fn_push_receive_intro_after_paramcount
+        , kindMessage=$getvar($fn_push_receive_intro_after_param1)
+    );
+    // 임시로 로그남김..
+    for($i = 1; $i <= $iVarCount; $i++) {
+                $logvar($getvar(fn_push_receive_intro_after_param$i));
+    }
+    $logvar(apns_gcm.notification.body);
+    $logvar(apns_state,apns_category,apns_push_id,apns_push_type,apns_aps_alert);
+    $setvar_common(g_push_noextc=false);
+
+    if($kindMessage == 0) {
+                $log(여기서 걸리나?);
+                $setvar(strPushToken=$getvar($fn_push_receive_intro_after_param2));
+                $log(FN_PUSH_RECEIVE  - Intor_after.xml   token receive [$strPushToken]);
+                if($strlen($strPushToken) > 0){
+                            $setvar_common(p_APNS_RegKey = $strPushToken);
+                }
+    }
+    else if($kindMessage == 1) {
+                $log(FN_PUSH_RECEIVE - Intor_after.xml  미실행중인 상태에서 푸시데이터 수신..);
+                //$alertaction(,,푸쉬왔다.[$kindMessage],); 
+                $setvar_common(g_push_noextc=true);
+                
+                $setvar_common(g_apns_push_id = $apns_push_id);
+                 if($g_isAndroid) {
+                    $setvar_common(
+                                        g_apns_push_id = $apns_ips_push_id
+                                        ,g_apns_push_type = $apns_ips_push_type
+                                        ,g_apns_aps_alert = $apns_ips_ips_alert
+                            );
+                    }
+                    else{
+                            $setvar_common(
+                                    g_apns_push_id = $apns_push_id
+                                    ,g_apns_push_type = $apns_push_type
+                                    ,g_apns_aps_alert = $apns_aps_alert
+                        );
+                    }
+
+                //$alertaction(,,푸쉬왔다.[$g_apns_push_id],); 
+                //$openfile(plist/base_screen.xml);
+    }
+    else if($kindMessage == 2) {
+                $log(FN_PUSH_RECEIVE  - Intor_after.xml 백그라운드 상태에서 푸시데이터 수신..);
+    }
+    else if($kindMessage == 3) {
+                $log(FN_PUSH_RECEIVE   - Intor_after.xml 포그라운드 상태에서 푸시데이터 수신..);
+    }
+    else if($kindMessage == 5) {
+                $log(FN_PUSH_RECEIVE   - Intor_after.xml  메세지클릭..);
+                $setvar_common(g_push_noextc=true);
+                
+                $setvar_common(g_apns_push_id = $apns_push_id);
+                 if($g_isAndroid) {
+                    $setvar_common(
+                                        g_apns_push_id = $apns_ips_push_id
+                                        ,g_apns_push_type = $apns_ips_push_type
+                                        ,g_apns_aps_alert = $apns_ips_ips_alert
+                            );
+                    }
+                    else{
+                            $setvar_common(
+                                    g_apns_push_id = $apns_push_id
+                                    ,g_apns_push_type = $apns_push_type
+                                    ,g_apns_aps_alert = $apns_aps_alert
+                        );
+                    }
+
+    }
+    else if($kindMessage == 4) {
+                $log(FN_PUSH_RECEIVE   - Intor_after.xml  푸시 체크했는데 없는경우..);
+    }
+    
+    else {
+                $log(=============>PUSH_RECEIVE ELSE문 );
+                
+    }
+" />
+-->

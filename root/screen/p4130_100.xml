@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<import filename="plist/root/common/top_title.xml"/> 
+<br/>
+<!--
+ *********************************************************************************
+ **
+ ** 화면을 그린 후에 필요한 작업을 한다. 
+ ** - TR을 배열에 담는다. 전송은 특이한 경우가 아니면 basescreen에서 일괄적으로 전송한다.
+ **
+ *********************************************************************************
+ -->
+  <action id="screen_contents_onload" value="
+	$setvar(vg_popscreen_base.backcolor=ffffff);
+"/>
+<action id="4130_info_open" value="
+	if($4130_info_check){
+		$setvar(
+		4130_info_check			= false
+		,vg_4130_info.height 	= $h($g_lcdHeight,7.9)
+		,vg_4130_info_2.height 	= $h($g_lcdHeight,7.9)
+		,img_4130_1.src 		= $icon_down
+		);
+	}else{
+		$setvar(
+		4130_info_check			= true
+		,vg_4130_info.height 	= $h($g_lcdHeight,30)
+		,vg_4130_info_2.height 	= $h($g_lcdHeight,30)
+		,img_4130_1.src 		= $icon_up
+		,screen_4130_100_bottom.scrolloffset_y=$result($vg_4130_info_2.y_abs-$h($g_lcdHeight,30))
+		);
+	}
+
+"/>
+<screen id="screen_4100_100_bottom"
+	class="cs_screen_contents"
+	backcolor="ffffff"
+	onload="screen_contents_onload"
+	>
+	<screen
+		height="$this.remain_bottom"
+		backcolor="f5f5f5"
+		>
+		<viewgroup 
+			width="$super.width"
+			height="$h($g_lcdHeight,31)" 
+			backcolor="ffffff"
+			align="center"
+			>
+			<viewgroup
+				width="$super.width"
+				height="$h($g_lcdHeight,18)"
+				//backcolor="00ff00"
+				>
+				<img src="$icon_choice_on" layout="center" layout_vertical="center"/>
+			</viewgroup>
+				<br/>
+				<label width="$super.width" height="$h($g_lcdHeight,4.5)" fontsize="$g_fontsize_big3" align="center" value="계좌개설 신청 완료" layout="center"  />
+				<br/>
+				<label height="$h($g_lcdHeight,3.5)" textcolor="999999" fontsize="$g_fontSize_basic"  value="등록하신 계좌정보는 SMS를 통해 발송됩니다."/>
+		</viewgroup>
+		<br/><hr backcolor="cccccc" /><br/>
+		<viewgroup 
+			margin_left="$w($g_lcdWidth,4.4)"
+			width="$super.width"
+			height="$h($g_lcdHeight,32)" 
+			backcolor="f5f5f5"
+			
+			>
+			<viewgroup 
+				width="$w($g_lcdWidth,30)"
+				height="$h($g_lcdHeight,20)" 
+				//backcolor="00ff00"
+				>
+				<img src="$icon_certificate" layout="center" layout_vertical="center"/>
+			</viewgroup>
+			<viewgroup 
+				width="$this.remain_right"
+				height="$h($g_lcdHeight,20)" 
+				backcolor="f5f5f5"
+				>
+				<label width="$super.width" height="$h($g_lcdHeight,20)" fontsize="$g_fontSize_basic"  value="실거래를 하시려면 공동인증서 발급\n혹은 등록이 필요합니다."  />
+	
+			</viewgroup>
+			<br />
+			<viewgroup 
+				width="$w($g_lcdWidth,91.8)"
+				height="$h($g_lcdHeight,6)" 
+				backcolor="ffffff"
+				border_color="5b5d68"
+				>
+				<button groupid="gr_item_01"
+     				width="$result($super.width/3)"
+     				height="$h($g_lcdHeight,6)"
+     				backcolor="ffffff"
+     				backcolor_active="5b5d68" 
+     				textcolor="999999"
+     				textcolor_active="ffffff"
+     				value="바로등록/발급"
+     				align="center"
+   					onClicked=""
+     				/>
+     			<hr width="1" height="$super.height" backcolor="5b5d68" />
+     			<button groupid="gr_item_02"
+     				width="$result($super.width/3)"
+     				height="$h($g_lcdHeight,6)"
+     				backcolor="ffffff"
+     				backcolor_active="5b5d68" 
+     				textcolor="999999"
+     				textcolor_active="ffffff"
+     				value="추후등록"
+     				align="center"
+   					onClicked=""
+     				/>
+     			<hr width="1" height="$super.height" backcolor="5b5d68" />
+        		<button groupid="gr_item_03"
+     				width="$result($super.width/3)"
+     				height="$h($g_lcdHeight,6)"
+     				backcolor="ffffff"
+     				backcolor_active="5b5d68" 
+     				textcolor="999999"
+     				textcolor_active="ffffff"
+     				value="이미등록"
+     				align="center"
+   					onClicked=""
+     				/>
+     		</viewgroup>
+     	</viewgroup>
+			<br/><hr backcolor="cccccc" /><br /><hr height="$h($g_lcdHeight,2)" backcolor="f5f5f5"/><br />
+			<br height="$h($g_lcdHeight,1)"/>
+		<viewgroup 
+			id="vg_4130_info"
+			width="$super.width"
+			height="$h($g_lcdHeight,7.9)"
+			//backcolor="ededed" 
+			resize_parent_height="true"
+			>
+			<blank width="$w($g_lcdWidth,4)" />
+			<viewgroup
+				id="vg_4130_info_2"
+				width="$w($g_lcdwidth,92)" 
+				height="$h($g_lcdHeight,7.9)"
+				backcolor="ededed"      
+				border_color="d8d8d8"
+				border_width_active="$g_roundHeight"
+				border_radius="$h($g_lcdHeight,0.5)"
+				>
+				<viewgroup
+					margin_left="$w($g_lcdWidth,2)"
+					width="$w($g_lcdwidth,92)" 
+					height="$h($g_lcdHeight,7.9)"
+					>
+					<label
+						width="$w($g_lcdwidth,80)" 
+						height="$h($g_lcdHeight,7.9)"
+						value="유의사항"
+						fontsize="$g_fontSize_basic"
+						fontname="$g_baseFontNameBold"
+						textcolor="e33433" 
+						margin_left="$w($g_lcdWidth,3)"
+						/>
+					<viewgroup 
+						width="$this.remain_right"
+						height="$h($g_lcdHeight,7.9)"
+						>
+						<img id="img_4130_1" src="$icon_down" layout="center" y="$h($g_lcdHeight,3.2)"/>
+					</viewgroup>
+					<button class="cs_button_none" onclicked="4130_info_open"/>
+				</viewgroup>
+				<br/><blank width="$w($g_lcdWidth,4.4)" />
+				<web 
+					id="web1"
+					width="$w($g_lcdWidth,83.2)" 
+					height="$h($g_lcdHeight,30)"
+					//httpvarname="4130_webdata_1" 
+					htmllog="true"  
+					//onload="$setvar(web1.web_refresh=);"
+					//border_color="464b4d"
+					//border_width="1"
+					maxexpand="1"
+					minexpand="1"
+					DisplayZoomControl="false"
+					local="plist/root/html/4130_100_1.html"
+					browser_bounce="false"
+					/>	
+			</viewgroup>
+		</viewgroup>
+			<br />
+			<button 
+				id="btn_4130_confirm"
+				y="$result($this.remain_bottom-$h($g_lcdHeight,13.4))"
+				fontsize="$g_fontsize_big3" 
+				layout="center"
+				width="$w($g_lcdwidth,91.8)" 
+				height="$h($g_lcdHeight,9.4)" 
+				backcolor="e33433"
+				border_radius="$result($this.height/8)"
+				border_width="$g_roundHeight"
+				//border_color="505050"
+				backcolor_active="494a53"
+				textcolor="ffffff"
+				textcolor_active="ffffff"
+				value="처음으로" 
+				onclicked="$callaction(fnOpenPopScreen,plist/root/screen/p4130_100.xml,비대면 계좌계설,);"
+				backcolor_disable="bfbfbf"
+				textcolor_disable="999999"
+				/>	
+	</screen>
+</screen>
+
+<actiondata value="
+$readfile(plist/root/html/4130_100_1.html,4130_webdata_1);
+"/>
+ <!--
+<class id="4130_lb_txt"
+width="$super.width" 
+height="$super.height"
+fontsize="$g_fontSize_basic"
+textcolor="000000"
+enable="false"
+/>
+<action id="screen_contents_onload" value="
+	
+"/>
+<screen id="screen_4130_100"
+	class="cs_screen_contents"
+	backcolor="ffffff"
+	>
+	<screen
+		height="$this.remain_bottom"
+		>
+		<label
+			height="$h($g_lcdHeight,8)"
+			value="신분증 제출 및 영상통화가 완료되었습니다.\n등록하신 계좌정보는 SMS를 통해 발송됩니다"
+			margin_left="$w($g_lcdWidth,3)"
+			fontname="$g_baseFontNameBold"
+			/>
+		<br height="$h($g_lcdHeight,2)" />
+		<blank width="$w($g_lcdwidth,10)"  />
+		<button 
+			fontname="$g_baseFontNameBold"
+			fontsize="$g_fontsize_basic"
+    			width="$w($g_lcdwidth,35)" 
+    			height="$h($g_lcdHeight,4)" 
+    			backcolor="ebebeb"
+    			border_radius="$result($this.height/4)"
+    			border_width="$g_roundHeight"
+    			border_color="505050"
+    			backcolor_active="505050"
+    			textcolor_active="ffffff"
+			value="개설신청완료계좌" 
+			onclicked="" 
+			/>
+		<blank width="$w($g_lcdwidth,10)"  />
+		<button 
+			fontname="$g_baseFontNameBold"
+			fontsize="$g_fontsize_basic"
+    			width="$w($g_lcdwidth,35)" 
+    			height="$h($g_lcdHeight,4)" 
+    			backcolor="ebebeb"
+    			border_radius="$result($this.height/4)"
+    			border_width="$g_roundHeight"
+    			border_color="505050"
+    			backcolor_active="505050"
+    			textcolor_active="ffffff"
+			value="국내선물/해외선물" 
+			onClicked=""
+			/>
+		<br height="$h($g_lcdHeight,2)" />
+		<label
+			height="$h($g_lcdHeight,8)"
+			value="잠깐! 실거래를 하시려면 공동인증서\n발급 혹은 등록이 필요합니다."
+			margin_left="$w($g_lcdWidth,3)"
+			fontname="$g_baseFontNameBold"
+			textcolor="b8240c"
+			/>
+		<br height="$h($g_lcdHeight,2)" />
+		<button 
+			fontname="$g_baseFontNameBold"
+			fontsize="$g_fontsize_basic"
+    			width="$w($g_lcdwidth,60)" 
+    			height="$h($g_lcdHeight,4)" 
+    			backcolor="ebebeb"
+    			border_radius="$result($this.height/4)"
+    			border_width="$g_roundHeight"
+    			border_color="505050"
+    			backcolor_active="505050"
+    			textcolor_active="ffffff"
+			value="바로 등록 및 발급" 
+			onclicked="" 
+			layout="center"
+			/>
+		<br height="$h($g_lcdHeight,2)" />
+		<blank width="$w($g_lcdwidth,20)"  />
+		<button 
+			fontname="$g_baseFontNameBold"
+			fontsize="$g_fontsize_basic"
+    			width="$w($g_lcdwidth,28)" 
+    			height="$h($g_lcdHeight,4)" 
+    			backcolor="ebebeb"
+    			border_radius="$result($this.height/4)"
+    			border_width="$g_roundHeight"
+    			border_color="505050"
+    			backcolor_active="505050"
+    			textcolor_active="ffffff"
+			value="추후등록" 
+			onclicked="" 
+			/>
+		<blank width="$w($g_lcdwidth,4)"  />
+		<button 
+			fontname="$g_baseFontNameBold"
+			fontsize="$g_fontsize_basic"
+    			width="$w($g_lcdwidth,28)" 
+    			height="$h($g_lcdHeight,4)" 
+    			backcolor="ebebeb"
+    			border_radius="$result($this.height/4)"
+    			border_width="$g_roundHeight"
+    			border_color="505050"
+    			backcolor_active="505050"
+    			textcolor_active="ffffff"
+			value="이미등록" 
+			onClicked=""
+			/>
+		<br height="$h($g_lcdHeight,2)" />
+		<blank width="$w($g_lcdwidth,10)"  />
+		<viewgroup
+			border_width="$g_roundHeight"
+			border_color="cccccc"
+			width="$w($g_lcdwidth,80)" 
+			height="$h($g_lcdHeight,40)"
+			>
+			<label
+				height="$h($g_lcdHeight,4)"
+				value="유의사항"
+				margin_left="$w($g_lcdWidth,3)"
+				fontname="$g_baseFontNameBold"
+				/>
+			<br />
+			<viewgroup 
+	  			height="$h($g_lcdHeight,17)" 
+	  			>
+	  			<blank width="$w($g_lcdWidth,1)" />
+				<multitextfield 
+					class="4130_lb_txt"
+					width="$w($g_lcdWidth,79)" 
+					value="타 금융기관 계좌번호를 입력하신 고객분은 직원확인이 완료되면 입금전용 계좌가 안내됩니다. 아래 문구로 안내 메시지가 발송되며, 이외 다른 문자는 유진증권에서 발송한 메세지가 아니오니 주의하세요." 
+					/>
+			</viewgroup>
+			<br />
+			<viewgroup
+				>
+				<label
+					value="이미지"
+					align="center"
+					/>
+			</viewgroup>
+		</viewgroup>
+	</screen>
+</screen>
+--!>

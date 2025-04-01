@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actiondata value="
+	$setvar(    title=$replace(%0A,,$getxmlvalue(MENUDATA,,name,^|id == $g_menuCode))    );
+" />
+<action id="vg_top_title_onload" value="
+	$setvar(tmp_isPreScreen = $callaction(fnIsPreScreen));
+	$logvar(tmp_isPreScreen);
+	
+	if($tmp_isPreScreen){			$setvar(btn_history.hidden=false);		}
+	else{							$setvar(btn_history.hidden=true);		}
+
+	if($g_menuCode==5250){
+		$setvar(
+			vg_top_title_info.hidden=false
+			,btn_top_title_info.hidden=false
+		);
+	}
+	else{
+		$setvar(
+			vg_top_title_info.hidden=true
+			,btn_top_title_info.hidden=true
+		);
+	}
+" />
+<viewgroup id="vg_top_title" width="$super.width" height="$g_topHeight"	
+	width_ori="0"
+	height_ori="0"
+	backcolor="464b4e" onload="vg_top_title_onload">
+	<label id="lbl_title" fontsize="$g_fontsize_big1" fontname="$g_baseFontNameBold" align="center" valign="center" textcolor="ffffff" key="$title" value="$title" />
+	<viewgroup id="vg_top_title_info"
+	width="$w($g_lcdWidth,8.5)"
+	height="$h($g_lcdHeight,3.5)"
+	x="$w($g_lcdWidth,60)"
+	layout_vertical="center"
+	hidden="true"
+	>
+		<img src="$icon_note" layout="center" layout_vertical="center"/>
+	</viewgroup>
+	<button id="btn_top_title_info" class="cs_button_none" onclicked="$popscreen(pop_5250_info);"  hidden="true"/>
+	<viewgroup id="btn_history" x="0" width="$w($g_lcdWidth,12.4)" height="$this.remain_bottom" hidden="true">
+        		<img src="$icon_back" x="$w($g_lcdWidth,2.6)" layout_vertical="center" />
+        		<button class="cs_button_none" onClicked="btn_history_onclicked" />
+    	</viewgroup>
+    // 테스트용 - 추후삭제 
+    <!-- <button id="btn_top_title_reload" width="$g_topHeight" height="$g_topHeight" backcolor="00ff0022" layout="right" onclicked="$reopenfile();"  /> -->
+</viewgroup>
+
+<action id="btn_history_onclicked" value="
+	// 임시로 
+	//$openfile(plist/root/basescreen.xml);
+
+	$callaction(fnGoPreScreen);
+"/>
+<popscreen id="pop_5250_info"
+	x="$result($vg_top_title_info.x + $vg_top_title_info.width)"
+	y="0"
+	width="$w($g_lcdWidth,40)" 
+	height="$vg_top_title.height"
+	backcolor="464b4e"
+	//backcolor="00ff00"
+	onload="pop_5250_info_onload"
+	>
+	<screen id="screen_pop_5250_info"
+		width="$super.width"
+		height="$super.height"
+		margin_right="$w($g_lcdWidth,2)"
+		margin_left="$w($g_lcdWidth,2)"
+		//border_width="1"
+		//border_color="cccccc"
+		onClicked="$closescreen(pop_5250_info)"
+		>
+		<label  height="$h($g_lcdHeight,3.5)" textcolor="ffffff" fontsize="$g_fontSize_small1"   valign="bottom" value="과거 데이터만 "/>
+		<br/>
+		<label height="$h($g_lcdHeight,3.5)" textcolor="ffffff" fontsize="$g_fontSize_small1"  valign="top" value="조회가능합니다."/>
+
+		<button class="cs_button_none" onClicked="$closescreen(pop_5250_info)" />
+		
+	</screen>
+</popscreen>
+

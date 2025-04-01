@@ -1,0 +1,1015 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+********************************************************
+**
+**  비대면 신규 색상.
+**
+********************************************************
+ -->
+<actiondata value="
+	$setvar_common(
+		cs_color_main = FEEB00,
+		cs_color_black = 060B11,
+		cs_color_gray_dark = 545454,
+		cs_color_white = FFFFFF,
+		cs_color_line = E7E9EB,
+		cs_color_bg = F3F4F5,
+		cs_color_gray_light = F1F6FC,
+		cs_color_gray_deep = 3E3A39,
+		cs_color_text = 73767A,
+		cs_color_gray_box_light = DFE4E8,
+		cs_color_box = F8F9FB,
+		cs_color_box2 = F5F6F8,
+		cs_color_sky_blue = 208DFF,
+
+		//icon 및 이미 일단 대기
+		cs_icon_arrow_left = $g_path_image_common_figma+arrow_left.png,
+		cs_icon_icon = $g_path_image_common_figma+icon.png,
+		cs_icon_icon_1 = $g_path_image_common_figma+icon_1.png,
+		cs_icon_icon_2 = $g_path_image_common_figma+icon_2.png,
+		cs_icon_rectangle_230 = $g_path_image_common_figma+rectangle_230.png ,
+		cs_icon_phone = $g_path_image_common_figma+phone.png,
+		cs_icon_image_210= $g_path_image_common_figma+image_210.png,
+		cs_icon_checkbox_2 = $g_path_image_common_figma+checkbox_2.png ,
+		cs_icon_q_mark = $g_path_image_common_figma+q_mark.png,
+		cs_icon_x_mark = $g_path_image_common_figma+x_mark.png ,
+		cs_icon_polygon_5 = $g_path_image_common_figma+polygon_5.png ,
+
+		/*
+		cs_icon_ = $g_path_image_common_figma+ ,
+		*/
+	);
+	/* black 테마.
+	$setvar_common(
+		cs_color_main = FEEB00,
+		cs_color_black = FFFFFF,
+		cs_color_gray_dark = BCC0C3,
+		cs_color_white = 0B0C10,
+		cs_color_line = 27282C,
+		cs_color_bg = 1B1C20,
+		cs_color_gray_light = 1B1C20,
+		cs_color_gray_deep = BCC0C3,
+		cs_color_text = 97989A,
+		cs_color_gray_box_light = 37383E,
+		cs_color_box = 1B1C20,
+		cs_color_box2 = 27282C,
+		cs_color_sky_blue = 239AFD,
+	);
+	*/
+"/>
+
+
+<!--
+********************************************************
+**
+**  화면에서 사용할 폰트 크기 정의 device_info.xml에서 셋팅된 값을 참조한다.
+**
+********************************************************
+ -->
+<actiondata value="
+	$setvar_common(
+		g_fontSize_big1     = $result($g_baseFontSize+$g_baseFontUnitSize)
+		,g_fontSize_big2    = $result($g_baseFontSize+($g_baseFontUnitSize*2))
+		,g_fontSize_big3    = $result($g_baseFontSize+($g_baseFontUnitSize*3))
+		,g_fontSize_big4    = $result($g_baseFontSize+($g_baseFontUnitSize*4))
+		,g_fontSize_big5    = $result($g_baseFontSize+($g_baseFontUnitSize*5))
+		,g_fontSize_big6    = $result($g_baseFontSize+($g_baseFontUnitSize*6))
+		,g_fontSize_big7    = $result($g_baseFontSize+($g_baseFontUnitSize*7))
+		,g_fontSize_big8    = $result($g_baseFontSize+($g_baseFontUnitSize*8))
+		,g_fontSize_big9    = $result($g_baseFontSize+($g_baseFontUnitSize*9))
+		,g_fontSize_big10   = $result($g_baseFontSize+($g_baseFontUnitSize*10))
+		,g_fontSize_big11   = $result($g_baseFontSize+($g_baseFontUnitSize*11))
+		,g_fontSize_basic   = $g_baseFontSize
+		,g_fontSize_small1  = $result($g_baseFontSize-$g_baseFontUnitSize)
+		,g_fontSize_small2  = $result($g_baseFontSize-($g_baseFontUnitSize*2))
+		,g_fontSize_small3  = $result($g_baseFontSize-($g_baseFontUnitSize*3))
+		,g_fontSize_small4  = $result($g_baseFontSize-($g_baseFontUnitSize*4))
+		,g_fontSize_small5  = $result($g_baseFontSize-($g_baseFontUnitSize*5))
+		,g_fontSize_small6  = $result($g_baseFontSize-($g_baseFontUnitSize*6))
+	);
+"/>
+<!--
+********************************************************
+**
+**  간격정의 
+**
+********************************************************
+ -->
+<actiondata value="
+	$setvar_common(
+		 g_width_margin         =$result_double(10 * $g_widthRatio)         // 픽셀값에서 비율을 곱한다.
+		,g_height_margin        =$result_double(10 * $g_heightRatio)
+		,g_width_textfield      =$result_double(240 * $g_widthRatio)
+		,g_height_textfield     =$result_double(46 * $g_heightRatio)
+		,g_height_th            =$result_double(39 * $g_heightRatio)
+		,g_height_combo         =$result_double(37 * $g_heightRatio)
+		,g_height_tabnavi       =$result_double(50 * $g_heightRatio)
+		,g_def_btn_width        =$result_double(60 * $g_widthRatio)
+		,g_def_btn_height       =$result_double(38 * $g_heightRatio)
+		,g_btn_height_big1      =$result_double(48 * $g_heightRatio)
+		,g_height_th_search     =$result_double(30 * $g_heightRatio)
+		,g_height_row_search    =$result_double(52 * $g_heightRatio)
+	);
+"/>
+<actiondata value="
+	$setvar_common(
+		color_red=b8240c
+		,color_blue=2370b8
+		,color_black=000000
+	);
+" />
+<var name="g_signcase_color_a" scope="common" value="
+	,2:$color_red
+	,3:$color_black
+	,5:$color_blue
+	,*:$color_black
+	" />
+<var name="g_signcase_color_f" scope="common" value="
+	,2:$color_red
+	,4:$color_blue
+	,5:$color_blue
+	,*:$color_black
+	" />
+<var name="g_signcase_color_d" scope="common" value="
+	,2:$color_red
+	,4:$color_blue
+	,5:$color_blue
+	,*:$color_black
+	" />
+<var name="g_signcase_color" scope="common" value="
+	+:$color_red   
+	,-:$color_blue
+	,*:$color_black
+	" />
+<var name="g_signcase_color_reverse_f" scope="common" value="
+	,2:$color_blue
+	,4:$color_red
+	,5:$color_red
+	,*:$color_black
+	" />
+<var name="g_signcase_color_reverse_d" scope="common" value="
+	,2:$color_blue
+	,4:$color_red
+	,5:$color_red
+	,*:$color_black
+	" />
+<var name="g_signcase_color_reverse" scope="common" value="
+	+:$color_blue   
+	,-:$color_red
+	,*:$color_black
+	" />
+<!--
+<var name="g_signcase_color" scope="common" value="
+	+:bd3135   
+	,-:2370b8
+	,*:000000
+	" />
+-->
+<var name="g_signcase" scope="common" value="
+	+:▲
+	,-:▼
+	,*:
+	" />
+
+<var name="g_signcase_sign" scope="common" value="
+	+:+
+	,-:-
+	,*:
+	" />
+<var name="g_signcase_sign_f" scope="common" value="
+	2:+
+	,5:-
+	,*:
+	" />
+<var name="g_signcase_chartcolor_f" scope="common" value="
+	2:$color_red   
+	,5:$color_blue
+	,*:$color_black
+	" />
+<var name="g_signcase_chartcolor_d" scope="common" value="
+	2:$color_red   
+	,5:$color_blue
+	,*:$color_black
+	" />
+<var name="g_signcase_chartcolor" scope="common" value="
+	+:$color_red   
+	,-:$color_blue
+	,*:$color_black
+	" />
+<var name="g_signcase_image_f" scope="common" value="
+	2:$icon_buy
+	,5:$icon_sell
+	,*:
+	" />
+<var name="g_signcase_image_d" scope="common" value="
+	2:$icon_buy
+	,5:$icon_sell
+	,*:
+	" />
+<var name="g_signcase_image" scope="common" value="
+	+:$icon_buy
+	,-:$icon_sell
+	,*:
+	" />
+<var name="g_signcase_image_small_f" scope="common" value="
+	2:$icon_buy_small
+	,5:$icon_sell_small
+	,*:
+	" />
+<var name="g_signcase_image_small_d" scope="common" value="
+	2:$icon_buy_small
+	,5:$icon_sell_small
+	,*:
+	" />
+<var name="g_signcase_image_small" scope="common" value="
+	+:$icon_buy_small
+	,-:$icon_sell_small
+	,*:
+	" />
+<var name="g_signcase_add_mgn_tp" scope="common" value="
+	0:미발생
+	,1:발생
+	,*:##
+	" />
+<var name="g_signcase_flag" scope="common" value="
+	0:해소
+	,1:미해소
+	,*:##
+	" />
+<var name="g_signcase_bysl_tp" scope="common" value="
+	1:매도
+	,2:매수
+	//1:매수
+	//,2:매도
+	,*:##
+	" />
+<var name="g_signcase_bysl_tp_re" scope="common" value="
+	1:매수
+	,2:매도
+	,*:##
+	" />
+
+
+<var name="g_signcase_proc_tp_5220" scope="common" value="
+	1:접수
+	,2:확인
+	,3:거부
+	,4:체결
+	,*:
+	" />
+
+
+<var name="g_signcase_bysl_tp_color_re" scope="common" value="
+	1:$color_red
+	,2:$color_blue
+	,*:$color_black
+	" />
+
+<var name="g_signcase_bysl_tp_color_str" scope="common" value="
+	매수:$color_red
+	,매도:$color_blue
+	,*:$color_black
+	" />
+
+<var name="g_signcase_bysl_tp_color" scope="common" value="
+	1:$color_blue
+	,2:$color_red
+	//1:$color_red
+	//,2:$color_blue
+	,*:$color_black
+	" />
+<var name="g_signcase_prce_tp" scope="common" value="
+	//1:지정가
+	//,2:시장가
+	1:시장가
+	,2:지정가
+	,3:STOP-MARKET
+	,4:STOP-LIMIT
+	,5:OCO
+	,*:
+	" />
+<var name="g_signcase_oms_ord_tp" scope="common" value="
+	0:참조대기
+	,5:OCO
+	,6:IFDOCO
+	,7:MIT
+	,8:OCO
+	,*:
+	" />
+<var name="g_signcase_prce_tp_5220" scope="common" value="
+	1:지정가 
+	,2:시장가
+	,3:조건부
+	,4:최유리
+	,*:
+	" />
+<var name="g_signcase_eff_tp" scope="common" value="
+	0:DAY
+	,1:GTC
+	,6:GTD
+	//1:DAY
+	//,2:GTC
+	//,3:GTD
+	,*:
+	" />
+<var name="g_signcase_sign_cmpr" scope="common" value="
+	1:%3E%3d
+	,2:%3C%3d
+	,*:
+	" />
+<var name="g_signcase_ref_ord_op" scope="common" value="
+	2:매수1호가
+	,3:매도1호가
+	,*:
+	" />
+<var name="g_signcase_ref_ord_op_color" scope="common" value="
+	2:$color_red
+	,3:$color_blue
+	,*:
+	" />
+
+	
+//참조주문 하나더만듦
+<var name="g_signcase_ord_tp" scope="common" value="
+	0:DAY
+	,1:GTC
+	,6:GTD
+	,*:
+	" />
+<var name="g_signcase_str_tp" scope="common" value="
+	1:사용자주문
+	,2:OCO
+	,*:구분없음
+	" />
+<var name="g_signcase_str_tp_n" scope="common" value="
+	G:일반
+	,R:서버관리주문
+	,M:사용자관리주문
+	,0:
+	,1:사용자주문
+	,2:Stop Order
+	,3:OCO ORDER
+	,4:GTC Order
+	,5:예약주문
+	,6:예비호가
+	,7:SYSTEM TRADING
+	,8:CSFB ORDER
+	,9:대기주문
+	,X:FIX주문
+	,S:OCO
+	,*:스프레드
+	" />
+
+<var name="g_signcase_trd_che" scope="common" value="
+	1:FAS
+	,2:FOK
+	,3:FAK
+	,*:구분없음
+	" />
+
+<var name="g_signcase_event" scope="common" value="
+	Y:예약
+	,N:미예약
+	,*:
+	" />
+<var name="g_signcase_ctyp" scope="common" value="
+	1:현금결제
+	,2:실물인수도결제
+	" />
+<var name="g_signcase_stcd_d" scope="common" value="
+	C:현금결제
+	,D:실물인수도
+	,A:현금+실물인수도
+	" />
+<var name="g_cert_image_check" scope="common" value="
+	0:$icon_certificate 		//유호
+	,1:$icon_certificate_end 	//만료
+	,2:$icon_certificate 		//만료예정
+	,*:$icon_certificate
+	" />
+
+<var name="g_impor_lv" scope="common" value="
+	하:$icon_impor3
+	,중:$icon_impor2
+	,상:$icon_impor1
+	" />
+<var name="g_signcase_bysl_s_io_tp" scope="common" value="
+	1:출금
+	,2:입금
+	" />
+
+
+//클라우드 관련
+<var name="g_cert_cloud_check" 
+scope="common" 
+value="
+	0:로컬
+	,1:클라우드
+	,*:
+"/>
+
+<!--
+********************************************************
+**
+**  기본 컨트롤의 스타일을 정의한다. - id가 대문자이어야 함.
+**
+********************************************************
+ -->
+  <class scope="common" id="POPSCREEN"
+	//width="$this.remain_right"
+	//height="$this.remain_bottom"
+	//noscroll_width="true"
+	//border_radius="0.1"
+	//backcolor="00ff0022"
+	/>
+ <class scope="common" id="SCREEN"
+	width="$this.remain_right"
+	height="$this.remain_bottom"
+	noscroll_width="true"
+	//border_radius="0.1"
+	//backcolor="00ff0022"
+	/>
+ <class scope="common" id="VIEWGROUP"
+	width="$this.remain_right"
+	height="$this.remain_bottom"
+	noscroll_width="true"
+	//border_radius="0.1"
+	border_newflag="$g_bNewAndroidBorderFlag"
+	/>
+<class scope="common" id="CHECKBOX"
+	checkimage="$icon_check_on" 
+	uncheckimage="$icon_check_off"
+	margin_left="0"
+	margin_top="0"
+	backcolor="none"
+	fontsize="$g_fontSize_basic"
+	border_radius="0.1"
+	/>
+
+<class scope="common" id="TEXTFIELD"
+	textcolor="$graylight"
+	fontsize="$g_baseFontSize"
+	fontname="$g_baseFontName"
+	border_radius="0.1"
+	inputAccessaryView="id_inputAccessaryView"  //아이폰인경우취소확인버튼
+	/>
+
+<class scope="common" id="TEXTFIELD_SECURITY"
+	hintfontsize="15"
+	border_radius="0.1"
+	/>
+
+<class scope="common" id="BUTTON"
+	width="$g_def_btn_width"
+	height="$g_def_btn_height"
+	fontname="$g_baseFontName"
+	fontsize="$g_fontSize_basic"
+	round="false"
+	border_width="0"
+	border_radius="0.1"
+	border_newflag="$g_bNewAndroidBorderFlag"
+/>
+<class scope="common" id="LABEL"
+	width="$this.remain_right"
+	height="$this.remain_bottom"
+	fontsize="$g_fontsize_basic"
+	textcolor="000000"
+	border_radius="0.1"
+	border_newflag="$g_bNewAndroidBorderFlag"
+/>
+
+<class  id="COMBOBOX"
+scope="common"
+margin_left="$g_width_margin"
+fontsize="$g_fontSize_basic"
+border_radius="0.1"
+/>
+
+<class scope="common" id="CHARTSINGLE"
+	width="$super.width"
+	height="$super.height"
+	width_ori="$super.width_ori"
+	height_ori="$super.height_ori"
+	backcolor="none"
+	linewidth="1"
+	viewcount="5"
+	unitgap="2.0"
+	rightdatawidth="30"
+	upcolor="$red"
+	downcolor="$blue"
+	samecolor="#000000"
+	chartbackcolor="none"
+	baselinecolor="#AAAAAA"
+	chartcolor1="#440000"
+	chartcolor2="#004400"
+	chartcolor3="#000044"
+	rightdatacnt="2"
+	datapointlen="0"
+	rightdata_fontsize="10"
+	/>
+<!--
+<class scope="common" id="CHARTTABLE"
+	width="$super.width"
+	height="$super.height"
+	backcolor="none"
+	initviewcount="40"
+	minviewcount="5"
+	maxviewcount="300"
+	rightdatawidth="$result($super.width/100 *16)"
+	rightdatawidth_ori="$result($super.width_ori/100 *11)"
+	rightdatamargin="$result($super.width/100 *1.3)"                        // 차트 오른쪽 마진 주는것
+	nextrequestcount="10"
+	unitgap="2.0"
+	dateheight="$result($g_lcdHeight/100 *5.2)"
+
+	dateheight_ori="$result($g_lcdHeight_ori/100 *10.2)"
+	fontsize="$g_fontsize_small1"
+	datelinecolor="dcdcdc"
+	mindatelinecolor="000000"
+	scroll_hbar="false"
+	scroll_hbar_ori="false"
+/>
+-->
+<!--
+<class scope="common" id="CHART"
+	width="$super.width"
+	height="$super.height"
+	width_ori="$super.width_ori"
+	height_ori="$super.height_ori"
+	backcolor="none"
+	linewidth="1"
+	upcolor="$color_red"
+	downcolor="$color_blue"
+	samecolor="#008800"
+	chartbackcolor="none"
+	baselinecolor="#dcdcdc"
+	rightdatacnt="4"
+	datapointlen="0"
+	rightdata_fontsize="$g_fontsize_small1"
+	titlearea_height="$result($g_lcdHeight/100 * 3.0)"
+	margin_top="$result($g_lcdHeight/100 * 5.3)"
+	margin_bottom="$result($g_lcdHeight/100 * 3.3)"
+	title_leftmargin="$result($g_lcdWidth/100 *1.3)"
+	title_topmargin="$result($g_lcdHeight/100 *0.3)"
+	title_fontsize="$g_fontsize_basic"
+	title_backcolor="ffffff"
+/>
+-->
+<class scope="common" id="IMG"
+/>
+
+<class scope="common" id="TD"
+	SOCKETNAME_REAL="$g_SiseSocketName"
+/>
+
+<class scope="common" id="HOGATABLE"
+SOCKETNAME_REAL="$g_SiseSocketName"
+/>
+
+<class scope="common" id="HR"
+	width="$super.width" 
+	height="$g_hrHeight" 
+	backcolor="cccccc"
+/>
+
+<class scope="common" id="HTMLVIEW"
+	fontname_bold="$g_htmlFontNameBold"
+	fontname="$g_htmlFontName"
+/>
+
+<!--
+********************************************************
+**
+**  테이블 스타일 정의 - 리스트형 
+**
+********************************************************
+ -->
+<class scope="common" id="TABLE"
+table_bounce="false"
+/>
+<class scope="common" id="cs_grid"
+	width="$this.remain_right"
+	width_ori="$this.remain_right_ori"
+	height="$this.remain_bottom"
+	height_ori="$this.remain_bottom_ori"
+	rowheight="$h($g_lcdHeight,5.3)"
+	fontsize="$g_fontSize_basic"
+	minfontsize="$g_fontSize_small2"
+	//backcolor_rowoddeven="true"
+	//backcolor_rowodd="ffffff"
+	//backcolor_roweven="ffffff"
+	backcolor_active="$grayselect"
+	nsrowline="true"
+	nsrowlinecolor="cccccc"
+	scroll_hbar="false"
+	vertical_line="false"
+	vertical_linecolor="d8d8d8"
+	vertical_line_fixed="false"
+	vertical_linecolor_fixed="ffffff"
+	backcolor="ffffff"
+	table_bounce="false"
+	autonext="true"
+	/>
+<class scope="common" id="cs_grid_title"
+	height="$this.remain_bottom"
+	fontname="$g_baseFontNameBold"
+	fontsize="$g_fontSize_basic"
+	align="center"
+	backcolor="ffffff"
+	textcolor="000000"
+	/>
+<class scope="common" id="cs_grid.TH"
+	height="$h($g_lcdHeight,4.5)"
+	fontname="$g_baseFontName"
+	backcolor="ffffff"
+	fontsize="$g_fontSize_small1"
+	/>
+<class scope="common" id="cs_grid.TH.TD"
+	align="center"
+	backcolor="ffffff"
+	textcolor="000000"
+	/>
+<class scope="common" id="cs_grid.TR"
+	blank="true"
+	backcolor="none"
+	/>
+<class scope="common" id="cs_grid.TR.TD"
+	textcolor="000000"
+	align="right"
+	backcolor="ffffff"
+	margin_left="$g_width_margin"
+	margin_right="$g_width_margin"
+	fontsize="$g_fontSize_basic"
+	/>
+<class id="cs_static_table"
+	scope="common"
+	width="$this.remain_right"
+	height="$this.remain_bottom"
+	fontname="$g_baseFontName"
+	fontsize="$g_fontSize_basic"
+	minfontsize="$g_fontSize_small4"
+	tablebounce="false"
+	nsrowline="true"
+	nsrowlinecolor="cccccc"
+	vertical_line="true"
+	vertical_linecolor="cccccc"
+	vertical_line_fixed="true"
+	vertical_linecolor_fixed="cccccc"
+	noscroll_height="true"
+	
+	/>
+<class id="cs_static_table.TR"
+	scope="common"
+	height="$h($g_lcdHeight,5)"
+	/>
+<class id="cs_static_table.TR.TD"
+	scope="common"
+	width="$w($g_lcdWidth,24)"
+	align="right"
+	margin_left="$g_width_margin"
+	margin_right="$g_width_margin"
+	fontsize="$g_fontSize_small1"
+	minfontsize="1"
+	textcolor="000000"
+	backcolor="ffffff"
+	/>
+<class id="cs_static_tit"
+	scope="common"
+	width="$w($g_lcdWidth,26)"
+	align="center"
+	fontname="$g_baseFontNameBold"
+	fontsize="$g_fontSize_basic"
+	minfontsize="1"
+	textcolor="000000"
+	backcolor="f5f5f5"
+	/>
+
+<actiondata value="
+	$setvar_common(
+		h_tbl_rowheight 		= $h($g_lcdHeight,10)
+		,h_tbl_title_height 	= $h_tbl_rowheight
+		,h_row_1 				= $result($h_tbl_rowheight/10*5)
+		,h_row_2 				= $result($h_tbl_rowheight - $h_row_1)
+	);
+" />	
+<class id="cs_grid_cont_row1" scope="common"
+height="$h_row_1" 
+valign="bottom"
+margin_bottom="$h($g_lcdHeight,0)"
+/>  
+<class id="cs_grid_cont_row2" scope="common"
+height="$h_row_2" 
+valign="top"
+margin_top="$h($g_lcdHeight,1)"
+/>  
+<!--
+********************************************************
+**
+**  호가테이블 스타일 정의 
+**
+********************************************************
+ -->
+ <!--
+<class scope="common" id="hoga_5"
+	onload="hoga_5_onload"
+
+	simple_hoga="false"
+
+	width="$super.width"
+	height="$var_hogaHeight"
+
+	fullgraphview="true"
+
+	//backcolor="ffffff"
+	linecolor="#ffffff"
+	currprclinecolor="$red"                         // 현재가 박스 색상
+	hogafontsize="$g_fontSize_big3"                  // 기본 font
+	hogafontname_1="$g_baseFontNameBold"            // 매도,매수 1호가
+	hogafontsize_1="$g_fontSize_big3"               // 기본 font
+	align_hoga="center"                             // 가운데 호가 정렬
+	fluctqtyfontsize="$g_baseFontSize"              // right-1
+	qtyfontsize="$g_baseFontSize"                   // left-1
+	textcolor="353535"
+	sametextcolor="353535"                          // 보합색설정:까만색
+	sellbackcolor1="#ffffff"                        // 매도호가 왼쪽
+	sellbackcolor2="#dcebff"                        // 매도호가 배경색
+	sellbackcolor2_1="#dcebff"                      // 매도 1호가
+	sellbarcolor="edf5ff"
+	buybackcolor1="#ffdce8"                         // 매수호가 배경색
+	buybackcolor1_1="#ffdce8"                       // 매수 1호가
+	buybackcolor2="#ffffff"                         // 매수호가 오른쪽
+	buybarcolor="ffedf4"
+	sellTextColor="$blue"
+	buyTextColor="$red"
+
+	linecolor_center="none"                         // 라인 그리기
+//    hogacount="10"
+//    hoga_height="-1"
+//    bar_height="1"
+
+	timeout_height="0"
+	total_height="0"
+
+	hogamargin="19"
+	qtymargin="10"
+	fluctqtymargin="20"
+	align_qty_sell="right"              // 잔량정렬
+	align_qty_buy="right"               // 잔량정렬
+
+//    middlelinecolor="#CFCFCF"
+//    attrcolor="true"
+
+	ydaycparrtmargin="1"
+	ydaycparrt_view="true"                         // 2 전일가가 나옴
+
+	rtfontname="$g_baseFontName"
+	rtfontsize="$g_baseFontSize"
+
+	ydaycparrtmargin="4"
+	width_qtymargin="4"
+
+	qtygraph_view="true"                            // 옆에 나오는 애들 그래프임
+	fluctqty_view="true"                            // 총잔량 왼쪽으로 보낼때...
+
+	width_hoga="26.4%"                            //가운데값
+	width_ydaycparrt="10%"
+
+	width_qty="16.5%"                           //left
+	width_fluctqty="16.5%"                      //right
+
+
+	onPriceClicked="100_hogatable_onPriceClicked"   // 누르고 놓을때 처리
+	/>
+-->
+<class scope="common" id="hoga_simple"          //심플호가 (주문).
+	onload="hoga_simple_onload"
+	//backcolor="ffffff"
+	linecolor="none" 
+	currprclinecolor="$color_red"           //현재가 박스 색상
+	
+	hogafontsize="$g_baseFontSize"          //기본 font
+	hogafontname_1="$g_baseFontNameBold"    // 매도,매수 1호가
+	hogafontsize_1="$g_baseFontSize"            //기본 font
+	align_hoga="center"                     // 가운데 호가 정렬
+	fluctqtyfontsize="$g_fontSize_small1"  //left_1_2
+	qtyfontsize="$g_fontSize_small1"           //left-1
+
+	textcolor="3c3c3c"
+	
+	sellbackcolor2="#ffffff"    //매도호가 왼쪽
+	sellbackcolor1="#e4f3f3"    //매도호가 배경색
+	sellbackcolor1_1="#fafdfd"  //매도 1호가
+	sellbackcolor1_2="#f4fafa"  //매도 1호가
+	sellbackcolor1_3="#ebf5f5"  //매도 1호가
+	sellbackcolor1_4="#e4f2f2"  //매도 1호가
+	sellbackcolor1_5="#d6ebeb"  //매도 1호가
+	sellbarcolor="ebf5f5"
+
+	buybackcolor1="#fef4f4"     //매수호가 배경색
+	buybackcolor1_1="#fefbfb"   //매수 1호가
+	buybackcolor1_2="#fef4f4"   //매수 1호가
+	buybackcolor1_3="#faeeee"   //매수 1호가
+	buybackcolor1_4="#f7e7e8"   //매수 1호가
+	buybackcolor1_5="#f4dfe0"   //매수 1호가
+	buybackcolor2="#ffffff"     //매수호가 오른쪽
+	buybarcolor="faeeee"
+
+	sametextcolor="$color_black"        //보합색설정:까만색
+	sellTextColor="$color_blue"
+	buyTextColor="$color_red"
+	
+	linecolor_center="cccccc"   //라인 그리기      
+	width="$super.width"
+	//height="$super.height"
+	height="$var_hogaHeight"
+	hogacount="5"
+	hoga_height="-1"
+	timeout_height="0"
+	total_height="0"
+	bar_height="$h($g_lcdHeight,3.2)"
+	hogamargin="0"
+	align_qty_sell="right"              // 잔량정렬
+	align_qty_buy="right"               // 잔량정렬
+	qtymargin="$w($g_lcdWidth,8)"
+	//middlelinecolor="#CFCFCF"
+	//attrcolor="true"
+	ydaycparrtmargin="10"
+	ydaycparrt_view="false"                 //2 전일가가 나옴
+	qtygraph_view="true"                   //옆에 나오는 애들 그래프임
+	//fluctqty_view="true"                    //총잔량 왼쪽으로 보낼때...
+	fluctqty_view="true"                    //총잔량 왼쪽으로 보낼때...
+	simple_hoga="true"
+	width_hoga="50%"                        //가운데값
+	width_qty="47%"                       //right
+	width_fluctqty="50%"                        //right
+
+	onPriceClicked="100_hogatable_onPriceClicked_Order" // 누르고 놓을때 처리
+/>
+<!--
+********************************************************
+**
+**  컨트롤을 투명버튼으로 해서 전체 클릭되게 한다. - 뷰로 구성된 버튼에서 하용
+**
+********************************************************
+ -->
+<class id="cs_button_none"
+	scope="common"
+	x="0"
+	y="0"
+	width="$super.width"
+	height="$super.height"
+	width_ori="$super.width"
+	height_ori="$super.height"
+	backcolor="none"
+	backcolor_active="none"
+	backcolor_disable="#00000022"
+	/>
+
+<class scope="common" id="cs_updown_price_minus"
+	width="$w($g_lcdWidth,4.7)" 
+	height="$h($g_lcdHeight,3)"
+	gap="5" 
+	money="true"
+	point="$tmp_pricePoint" 
+	unit="$tmp_priceUnit"
+	maxvalue="1000000000" 
+	minvalue="0" 
+	downonly="true"
+	UPDOWN_TICKSIZE="$g_itemTSIZ" 
+	UPDOWN_PINDVALUE="$g_itemPIND" 
+	UPDOWN_ADJUSTVALUE="$g_itemADJV"
+	updown_itemcode="$g_ItemComd"
+	//updown_itemarrayname="arr_MasterData_OPTICK"
+	updown_itemarrayname="$g_MasterData_OPTICK"
+/>
+<class scope="common" id="cs_updown_price_plus"
+	width="$w($g_lcdWidth,4.7)" 
+	height="$h($g_lcdHeight,3)"
+	gap="5"  
+	money="true"
+	point="$tmp_pricePoint" 
+	unit="$tmp_priceUnit"
+	maxvalue="1000000000" 
+	minvalue="0" 
+	uponly="true"
+	UPDOWN_TICKSIZE="$g_itemTSIZ" 
+	UPDOWN_PINDVALUE="$g_itemPIND" 
+	UPDOWN_ADJUSTVALUE="$g_itemADJV"
+	updown_itemcode="$g_ItemComd"
+	//updown_itemarrayname="arr_MasterData_OPTICK"
+	updown_itemarrayname="$g_MasterData_OPTICK"
+/>
+<class id="cs_hoga_table" //호가상단 타이틀테이블
+	scope="common"
+	width="$super.width"
+	height="$var_hogaTopAndBottom_height"       
+	vertical_line="false"
+	vertical_linecolor="252525"        
+	nsrowline="false"
+	nsrowlinecolor="000000"
+	tablebounce="false"
+	scroll_h="false"
+	backcolor="ffffff"
+/>
+<class id="cs_hoga_td"          //호가 하단테이블TD, viewgroup.LABEL
+	scope="common"  
+	fontname="$g_baseFontNameBold"
+	fontsize="$g_fontSize_basic"
+	align="center"
+	backcolor="none"
+	textcolor="000000"
+/>
+
+
+<class id="cs_popscreen_account_open_title" scope="common"
+	width="40%"
+	height="$h($g_lcdHeight,5)"
+	margin_left="$w($g_lcdWidth,3)"
+/>
+<class id="cs_popscreen_account_open_value" scope="common"
+	height="$h($g_lcdHeight,5)"
+/>
+
+//아이폰용 키패드 상단 이벤트 그룹뷰
+<group id="id_inputAccessaryView"  >
+    <viewgroup x="0" y="0" width="$g_lcdWidth" height="$h($g_lcdHeight,7.1)"
+        width_ori="$g_lcdWidth_ori" height_ori="$h($g_lcdHeight,7.1)"
+        margin_left="$w($g_lcdWidth,3.1)"
+        margin_right="$w($g_lcdWidth,3.1)"
+        backcolor="fafafa"
+        hidden_all="true" coord_absolute="true"
+        TOUCHBEGIN_CLEARKEYBOARD="false"
+        onload="
+      //  $log(************테스트 아이디 테스트 $this.key);
+        $setctrlattr(this,rowkey1,$getctrlattr($this.key,value));
+        ">
+        <hr x="0" width="$super.width" backcolor="d4d6d9"/>
+        <br height="$h($g_lcdHeight,1.3)"/>
+            <button width="$w($g_lcdWidth,22)"
+            height="$h($g_lcdHeight,4.8)"
+            layout="left"
+            layout_ori="left"
+            layout_vertical="center"
+            layout_vertical_ori="center"
+            backcolor_active="ffffff10"
+            backcolor="0d2d4f"
+            textcolor="ffffff"
+            textcolor_active="ffffff"
+            border_radius="$w($g_lcdWidth,0.6)"
+            fontsize="$g_fontSize_basic"
+            value="취소"
+            onClicked="
+        //    $log(************TEXTID $super.key, rowkey1 $super.rowkey1);
+            $setctrlattr($super.key,value,$super.rowkey1);"
+            />
+            
+            <button width="$w($g_lcdWidth,22)"
+            height="$h($g_lcdHeight,4.8)"
+            layout="right"
+            layout_ori="right"
+            layout_vertical="center"
+            layout_vertical_ori="center"
+            backcolor_active="00000010"
+            textcolor_active="0d2d4f"
+            border_color="0d2d4f"
+            textcolor="0d2d4f"
+            border_width="1"
+            border_radius="$w($g_lcdWidth,0.6)"
+            fontsize="$g_fontSize_basic"
+            value="완료"
+            onClicked="
+       //     $log(************TEXTID $super.key);
+            $setctrlattr(super,rowkey1,$getctrlattr($super.key,value));"
+            />
+        <hr x="0" width="$super.width" backcolor="d4d6d9" layout_vertical="bottom" layout_vertical_ori="bottom"/>
+    </viewgroup>
+</group>
+
+<class id="cs_btn_ExpDate" scope="common"
+groupid="gr_ExpDate" 
+width="$w($g_lcdWidth,20)" 
+height="$this.remain_bottom"
+fontsize="$g_fontSize_small1"
+textcolor_active="000000"
+textcolor="2c2c2c2"
+BACKGROUNDBOX="bottom,none,000000,$h($g_lcdHeight,1.4),$h($g_lcdHeight,0.2)"
+onClicked="btn_expdate_onClicked"
+/>
+
+<class id="cs_btn_step" scope="common"
+width="$h($g_lcdHeight,2.6)"
+height="$h($g_lcdHeight,2.6)"
+border_width="$w($g_lcdWidth,0.2)"
+border_radius="$result($this.height/2)"
+textcolor="3c3c3c"
+border_color="3c3c3c"
+textcolor_active="cc2f2e"
+BORDER_COLOR_ACTIVE="cc2f2e"
+BORDER_WIDTH_ACTIVE="$w($g_lcdWidth,0.2)"
+BORDER_RADIUS_ACTIVE="$result($this.height/2)"
+layout_vertical="center"
+/>
+
+
+

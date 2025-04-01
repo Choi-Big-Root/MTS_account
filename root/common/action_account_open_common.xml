@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<action id="fnHTMLFontSizeSet" scope="common"
+value="
+    if($isequal_string($tmpDeviceKind,iPhone OS)){                      //320:480 - 20
+        $setvar(tmp_baseFontSize = 12);
+    }
+    elseif($isequal_string($tmpDeviceKind,iPhone5 OS)){                 //320:568 - 20
+        $setvar(tmp_baseFontSize = 12);
+    }
+    elseif($isequal_string($tmpDeviceKind,iPhone6 OS)){                 //375:667 - 20
+        $setvar(tmp_baseFontSize = 15);
+    }
+    elseif($isequal_string($tmpDeviceKind,iPhone6Plus OS)){             //414:736 - 20
+        $setvar(tmp_baseFontSize = 15);
+    }
+    elseif($isequal_string($tmpDeviceKind,iPad OS)){             
+        $setvar(tmp_baseFontSize = 22);
+    }
+    elseif($isequal_string($tmpDeviceKind,HD)){
+        $setvar(tmp_baseFontSize = 27);
+    }
+    elseif($isequal_string($tmpDeviceKind,FULLHD)){
+        $setvar(tmp_baseFontSize = 44);
+    }
+    elseif($isequal_string($tmpDeviceKind,QHD)){
+        $setvar(tmp_baseFontSize = 55);
+    }
+    elseif($isequal_string($tmpDeviceKind,WVGA)){
+        $setvar(tmp_baseFontSize = 20);
+    }
+
+    $setvar(
+        ft_fontsize_basic = $result($tmp_baseFontSize + 1)
+        ,ft_fontsize_basic_p = $result($tmp_baseFontSize + 2)
+        ,ft_fontsize_basic_pp = $result($tmp_baseFontSize + 3)
+    );
+"/>
+
+// 비대면 계좌개설 화면을 열 때 사용 
+<action id="Act_Open_Account_Popup" scope="common"
+params="p_menu_code, p_complete_action"
+value="
+    $delarrayvar(arr_open_account_menu);
+    $setvar( tmp_arr_cnt        = $getarrayvarcount(arr_open_account_menu)  );
+    $setsubarray_common(arr_open_account_menu,$tmp_arr_cnt,$p_menu_code);
+
+    $logarrayvar(arr_open_account_menu);
+
+    if($g_save_keep_go!=1){ 
+        $callaction(fnConfig_SetValue,g_menu_code_open_account_before,$g_menu_code_open_account);
+        $log(########## ID등록화면 오픈시 이전화면 저장.);
+        $log(저장된화면이전 g_menu_code_open_account_before[$g_menu_code_open_account_before]);
+        $log(저장된화면  g_menu_code_open_account[$g_menu_code_open_account]);
+    }
+    $popscreen(popscreen_open_account);
+" />
+// 비대면 계좌개설 화면 이동 
+<action id="Act_Open_Account_Move" scope="common"
+params="p_menu_code"
+value="
+    $log(Act_Open_Account_Move - g_menu_code_open_account : $g_menu_code_open_account);
+    $log(Act_Open_Account_Move - p_menu_code : $p_menu_code);
+    $log(Act_Open_Account_Move - g_IN_CUST_WEAK_YN : $g_IN_CUST_WEAK_YN);
+    if($g_menu_code_open_account < $p_menu_code || $strlen($g_menu_code_open_account) < 1){
+        if(
+            $p_menu_code!=4122 
+            && $p_menu_code!=4123
+            && $p_menu_code!=4141
+            && $p_menu_code!=4142
+            && $p_menu_code!=4143
+            && $p_menu_code!=4144
+            && $p_menu_code!=4145
+        ){
+            // JPY 취약고객인 경우 무조건 고위험 확인서를 띄운다.
+            if($g_menu_code_open_account == 4115 && $p_menu_code == 4117 && $isequal_string($g_IN_CUST_WEAK_YN,Y))
+            {
+                $callaction(Act_Open_Account_Menu_Save,4116);
+                $setvar( tmp_arr_cnt         = $getarrayvarcount(arr_open_account_menu)    );
+                $setsubarray_common(arr_open_account_menu,$tmp_arr_cnt,4116);
+                $callaction(popscreen_open_account_onload);
+                return;
+            }
+            $callaction(Act_Open_Account_Menu_Save,$p_menu_code);
+        }
+    }
+    elseif($g_menu_code_open_account==4135 && $p_menu_code==4119){
+        $callaction(Act_Open_Account_Menu_Save,$p_menu_code);
+    }
+    elseif($g_menu_code_open_account==4134 && $p_menu_code==4129){
+        $callaction(Act_Open_Account_Menu_Save,$p_menu_code);
+    }
+    elseif($g_menu_code_open_account==4133 && $p_menu_code==4121){
+        $callaction(Act_Open_Account_Menu_Save,$p_menu_code);
+    }
+    elseif($g_menu_code_open_account==4136 && $p_menu_code==4131){
+        $callaction(Act_Open_Account_Menu_Save,$p_menu_code);
+    }
+    // JPY 취약고객인 경우 무조건 고위험 확인서를 띄운다.
+    elseif($g_menu_code_open_account == 4115 && $p_menu_code == 4117 && $isequal_string($g_IN_CUST_WEAK_YN,Y))
+    {
+        $callaction(Act_Open_Account_Menu_Save,4116);
+        $setvar( tmp_arr_cnt         = $getarrayvarcount(arr_open_account_menu)    );
+        $setsubarray_common(arr_open_account_menu,$tmp_arr_cnt,4116);
+        $callaction(popscreen_open_account_onload);
+        return;
+    }
+    $setvar( tmp_arr_cnt        = $getarrayvarcount(arr_open_account_menu)  );
+    $setsubarray_common(arr_open_account_menu,$tmp_arr_cnt,$p_menu_code);
+    $callaction(popscreen_open_account_onload);
+" />
+// 비대면 menu 저장
+<action id="Act_Open_Account_Menu_Save" scope="common"
+params="p_menu_code"
+value="
+    $log(저장된화면이전 g_menu_code_open_account_before[$g_menu_code_open_account_before]);
+    $log(저장된화면  g_menu_code_open_account[$g_menu_code_open_account]);
+    $callaction(fnConfig_SetValue,g_menu_code_open_account,$p_menu_code);       // 저장 
+    
+    if($p_menu_code == 4105){
+        $callaction(fnConfig_SetValue,g_open_account_save_date,$now(yyyyMMdd));
+        $callaction(fnConfig_SetValue,g_open_account_save,2);       
+    }
+    elseif($p_menu_code == 4117){
+        $callaction(fnConfig_SetValue,g_open_account_save_date,$now(yyyyMMdd));
+        $callaction(fnConfig_SetValue,g_open_account_save,3);       
+    }
+    elseif($p_menu_code == 4118){
+        $callaction(fnConfig_SetValue,g_open_account_save_date,$now(yyyyMMdd));
+        $callaction(fnConfig_SetValue,g_open_account_save,4);       
+    }
+    elseif($p_menu_code == 4135){
+        $callaction(fnConfig_SetValue,g_open_account_save_date,$now(yyyyMMdd));
+        $callaction(fnConfig_SetValue,g_open_account_save,5);       
+    }
+    elseif($p_menu_code == 4119){
+        $callaction(fnConfig_SetValue,g_open_account_save_date,$now(yyyyMMdd));
+        $callaction(fnConfig_SetValue,g_open_account_save,6);       
+    }
+    elseif($p_menu_code == 4120){
+        $callaction(fnConfig_SetValue,g_open_account_save_date,$now(yyyyMMdd));
+        $callaction(fnConfig_SetValue,g_open_account_save,7);       
+    }
+    elseif($p_menu_code == 4133){
+        $callaction(fnConfig_SetValue,g_open_account_save_date,$now(yyyyMMdd));
+        $callaction(fnConfig_SetValue,g_open_account_save,8);       
+    }
+    elseif($p_menu_code == 4134 && $g_save_open_tp==1){
+        $callaction(fnConfig_SetValue,g_open_account_save_date,$now(yyyyMMdd));
+        $callaction(fnConfig_SetValue,g_open_account_save,8);       
+    }
+    elseif($p_menu_code == 4121 && $g_save_open_tp==2){
+        $callaction(fnConfig_SetValue,g_open_account_save_date,$now(yyyyMMdd));
+        $callaction(fnConfig_SetValue,g_open_account_save,8);       
+    }
+"/>
+// 비대면 계좌개설 화면 popup onload
+<action id="popscreen_open_account_onload" scope="common"
+value="
+$log(비대면화면 액션 popscreen_open_account_onload);
+    $setvar_common(g_is_open_account = true);
+    $setvar(
+        ,tmp_arr_last_idx       = $result($getarrayvarcount(arr_open_account_menu) - 1)
+        ,tmp_account_menu       =  $getarrayvar(arr_open_account_menu,$tmp_arr_last_idx,0)
+
+        ,tmp_open_account_name  = $getxmlvalue(MENUDATA,menu,name,^|id == '$tmp_account_menu')
+        ,tmp_open_account_file  = $getxmlvalue(MENUDATA,menu,file,^|id == '$tmp_account_menu')
+
+        ,lbl_open_account_title.value   = $tmp_open_account_name
+    );
+
+    $logvar(
+        ,tmp_arr_last_idx
+        ,tmp_account_menu
+        ,tmp_open_account_name  
+        ,tmp_open_account_file  
+    );
+    
+    $changescreen_parse(screen_open_account,subscreen_open_account);
+" />
+<action id="popscreen_open_account_onunload" scope="common"
+value="
+    $setvar_common(g_is_open_account = false);
+    $log(비대면화면 액션 popscreen_open_account_onunload);
+" />
+
+// 비대면 계좌개설 화면 popup
+<action id="subscreen_open_account_onload" scope="common"
+value="
+" />
+<popscreen id="popscreen_open_account" scope="common"
+width="$g_lcdWidth" 
+height="$p_lcdHeight"
+layout="center"
+layout_vertical="center"
+onload="popscreen_open_account_onload"
+onunload="popscreen_open_account_onunload"
+margin_right="$w($g_lcdwidth,4.3)"
+>
+    <viewgroup 
+        id="vg_open_account_title"
+        width="$super.width" height="$h($g_lcdHeight,6.2)" backcolor="FFFFFF"  
+        margin_left="$w($g_lcdwidth,4.3)"
+        >
+        <!-- <label  id="lbl_open_account_title"  width="$w($g_lcdWidth,50)"
+        fontsize="$g_fontsize_big1" fontname="$g_baseFontNameBold" align="left"  textcolor="ffffff" 
+         /> -->
+        <viewgroup id="popscreen_open_account_history" width="$w($g_lcdWidth,12.4)" height="$this.remain_bottom" hidden="false">
+            <img src="$cs_icon_arrow_left" layout_vertical="center" width="$w($g_lcdwidth,6.4)" height="$w($g_lcdwidth,6.4)" imagesizefit="false" />
+            <button class="cs_button_none" 
+            onClicked="
+            btn_open_account_history_onClicked
+            " />
+        </viewgroup>
+      <!--   <viewgroup id="popscreen_open_account_history_2" x="$w($g_lcdWidth,87.6)" width="$w($g_lcdWidth,12.4)" height="$this.remain_bottom" hidden="true">
+            <img src="$icon_pop_cancel_w" x="$w($g_lcdWidth,2.6)" layout_vertical="center" />
+            <button class="cs_button_none" 
+                onClicked="
+                btn_open_account_history_onClicked
+                "
+             />
+        </viewgroup> -->
+    <!--     <viewgroup id="popscreen_open_account_confirm" x="$w($g_lcdWidth,0)" width="$w($g_lcdWidth,12.4)" height="$this.remain_bottom">
+            <img id="img_pop_info" src="$icon_ic_tip_off" layout="left" layout_vertical="center" />
+            <button id="btn_pop_info" class="cs_button_none" onClicked="popscreen_open_account_confirm_onclicked" />
+        </viewgroup> -->
+    </viewgroup>
+    <viewgroup 
+        id="vg_account_title_step"
+        width="$w($g_lcdWidth,34.2)"
+        height="$h($g_lcdHeight,6.2)"
+        layout="right"
+        backcolor="FFFFFF"
+        hidden="false"
+        >
+        <viewgroup 
+            width="$w($g_lcdwidth,4.3)"
+            height="$this.remain_bottom"
+            >
+            <label id="lbl_account_title_step_1" value="1" textcolor="BABBBD" align="center" layout="center" fontsize="$h($g_lcdHeight,1.6)" layout_vertical="center" hidden="false"/>
+            <img  id="img_step_1" src="$cs_icon_checkbox_2" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
+        </viewgroup>
+        <viewgroup 
+            width="$w($g_lcdwidth,4.3)"
+            height="$this.remain_bottom"
+            >
+            <label id="lbl_account_title_step_2" value="2" textcolor="BABBBD" align="center" layout="center" fontsize="$h($g_lcdHeight,1.6)" layout_vertical="center" hidden="false"/>
+            <img  id="img_step_2" src="$cs_icon_checkbox_2" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
+        </viewgroup>
+        <viewgroup 
+            width="$w($g_lcdwidth,4.3)"
+            height="$this.remain_bottom"
+            >
+            <label id="lbl_account_title_step_3" value="3" textcolor="BABBBD" align="center" layout="center" fontsize="$h($g_lcdHeight,1.6)" layout_vertical="center" hidden="false"/>
+            <img  id="img_step_3" src="$cs_icon_checkbox_2" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
+        </viewgroup>
+        <viewgroup 
+            width="$w($g_lcdwidth,4.3)"
+            height="$this.remain_bottom"
+            >
+            <label id="lbl_account_title_step_4" value="4" textcolor="BABBBD" align="center" layout="center" fontsize="$h($g_lcdHeight,1.6)" layout_vertical="center" hidden="false"/>
+            <img  id="img_step_4" src="$cs_icon_checkbox_2" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
+        </viewgroup>
+        <viewgroup 
+            width="$w($g_lcdwidth,4.3)"
+            height="$this.remain_bottom"
+            >
+            <label id="lbl_account_title_step_5" value="5" textcolor="BABBBD" align="center" layout="center" fontsize="$h($g_lcdHeight,1.6)" layout_vertical="center" hidden="false"/>
+            <img  id="img_step_5" src="$cs_icon_checkbox_2" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
+        </viewgroup>
+        <viewgroup 
+            width="$w($g_lcdwidth,4.3)"
+            height="$this.remain_bottom"
+            >
+            <label id="lbl_account_title_step_6" value="6" textcolor="BABBBD" align="center" layout="center" fontsize="$h($g_lcdHeight,1.6)" layout_vertical="center" hidden="false"/>
+            <img  id="img_step_6" src="$cs_icon_checkbox_2" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
+        </viewgroup>
+        <viewgroup 
+            width="$w($g_lcdwidth,4.3)"
+            height="$this.remain_bottom"
+            >
+            <label id="lbl_account_title_step_7" value="7" textcolor="BABBBD" align="center" layout="center" fontsize="$h($g_lcdHeight,1.6)" layout_vertical="center" hidden="false"/>
+            <img  id="img_step_7" src="$cs_icon_checkbox_2" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
+        </viewgroup>
+        <viewgroup 
+            width="$w($g_lcdwidth,4.3)"
+            height="$this.remain_bottom"
+            >
+            <label id="lbl_account_title_step_8" value="8" textcolor="BABBBD" align="center" layout="center" fontsize="$h($g_lcdHeight,1.6)" layout_vertical="center" hidden="false"/>
+            <img  id="img_step_8" src="$cs_icon_checkbox_2" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
+        </viewgroup>
+    </viewgroup>
+    <br/>
+    <screen id="screen_open_account" backcolor="ffffff" >
+        <subscreen id="subscreen_open_account" onload="subscreen_open_account_onload">
+            <import_dynamic filename="$tmp_open_account_file"/>
+        </subscreen>
+    </screen>
+    <br/>
+    <viewgroup id="vg_4100_background"
+    x="0"
+    y="0"
+    width="$g_lcdWidth"
+    height="$g_lcdHeight"
+    backgroundimage="$p_introimage"
+    hidden="true"
+    >
+    </viewgroup>
+</popscreen>
+
+//info button
+<action id="popscreen_open_account_confirm_onclicked"  scope="common"
+params="p_x,p_y"
+value="
+    $delvar(tmp_img_id,tmp_info_pop_x,tmp_info_pop_y);
+    $setvar(
+        ,tmp_img_id = $addstring(img_pop_info_,$menu_num)
+        ,$($tmp_img_id).src=$cs_icon_x_mark
+        ,tmp_info_pop_x = $p_x
+        ,tmp_info_pop_y = $p_y
+
+    );
+    if($menu_num < 1009){
+        $setvar(
+            pop_info_tip_lbl=$(고객님의 이름, 주민등록번호 및 휴대폰 인증을 진행해요.주민등록번호는 금융실명거래 및 비밀보장에 관한 법률에 근거하여 확인해요.)
+            ,pop_info_tip_height=$h($g_lcdHeight,9.9)
+        )
+    }elseif($menu_num < 4117){
+        $setvar(
+            pop_info_tip_lbl=일반 투자자정보 확인서를 등록해주세요.
+            ,pop_info_tip_height=$h($g_lcdHeight,10)
+        )
+    }elseif($menu_num < 4118){
+        $setvar(
+            pop_info_tip_lbl=계좌개설을 위한 고객정보를 입력해주세요.
+            ,pop_info_tip_height=$h($g_lcdHeight,10)
+        )
+    }elseif($menu_num < 4119){
+        $setvar(
+            pop_info_tip_lbl=약관 승인 및 위험고지 내용을 확인하시기 바랍니다.
+            ,pop_info_tip_height=$h($g_lcdHeight,10)
+        )
+    }elseif($menu_num < 4120){
+        $setvar(
+            pop_info_tip_lbl=계좌 개설 신청자 명의의 은행(또는 증권사)\n계좌정보를 입력해주세요.
+            ,pop_info_tip_height=$h($g_lcdHeight,13)
+        )
+    }elseif($menu_num < 4121 || $menu_num == 4125 ){
+        $setvar(
+            pop_info_tip_lbl=본인확인을 위한 신분증 제출 단계입니다.
+            ,pop_info_tip_height=$h($g_lcdHeight,10)
+        )
+    }elseif($menu_num < 4124 ){
+        $setvar(
+            pop_info_tip_lbl=본인확인을 위한 영상통화 단계입니다.
+            ,pop_info_tip_height=$h($g_lcdHeight,10)
+        )
+    }elseif($menu_num == 4124 ){
+        $setvar(
+            pop_info_tip_lbl=계좌개설 신청내역 확인을 위한\n본인확인 단계입니다.
+            ,pop_info_tip_height=$h($g_lcdHeight,13)
+        )
+    }elseif($menu_num == 4131 ){ // workContent_20200206
+        $setvar(
+            pop_info_tip_lbl=ID 등록 단계입니다.
+            ,pop_info_tip_height=$h($g_lcdHeight,13)
+        )
+    }elseif($menu_num == 4132 ){ // workContent_20200206
+        $setvar(
+            pop_info_tip_lbl=ID 등록 단계입니다.
+            ,pop_info_tip_height=$h($g_lcdHeight,13)
+        )
+    }elseif($menu_num == 4133 ){ // workContent_20200206
+        $setvar(
+            pop_info_tip_lbl=비대면 인증선택 단계입니다.
+            ,pop_info_tip_height=$h($g_lcdHeight,13)
+        )
+    }elseif($menu_num == 4134 ){ // workContent_20200206
+        $setvar(
+            pop_info_tip_lbl=타금융기관 계좌인증 단계입니다.
+            ,pop_info_tip_height=$h($g_lcdHeight,13)
+        )
+    }elseif($menu_num == 4135 ){ // workContent_20200206
+        $setvar(
+            pop_info_tip_lbl=약관 승인 및 위험고지 내용을 확인하시기 바랍니다.
+            ,pop_info_tip_height=$h($g_lcdHeight,10)
+        )
+    }
+    elseif($menu_num == 4136 ){ // workContent_20200206
+        $setvar(
+            pop_info_tip_lbl=위험고지 녹취안내 단계입니다.
+            ,pop_info_tip_height=$h($g_lcdHeight,10)
+        )
+    }
+    
+    $popscreen(pop_info_tip);
+" />
+
+<action id="pop_info_tip_onload" scope="common"
+value="
+    $setvar(
+        pop_info_tip_open_check=true
+        ,pop_ingo_tip_img_polygon.x = $tmp_info_pop_x
+        ,pop_info_tip.y = $tmp_info_pop_y
+    );
+" />
+
+<action id="pop_info_tip_onunload" scope="common"
+value="
+    $setvar(
+        pop_info_tip_open_check=false
+        ,tmp_img_id = $addstring(img_pop_info_,$menu_num)
+        ,$($tmp_img_id).src=$cs_icon_q_mark
+    );
+" />
+
+<popscreen id="pop_info_tip" scope="common"
+width="$w($g_lcdWidth,100)"
+height="$result($pop_info_tip_height + $h($g_lcdHeight,4.3));"
+onload="pop_info_tip_onload"
+onunload="pop_info_tip_onunload"
+>
+    <screen id="screen_info_tip"
+    width="$super.width" height="$super.height"
+    >
+        <img id="pop_ingo_tip_img_polygon"
+        src="$cs_icon_polygon_5"
+        width="$h($g_lcdHeight,2.0)" 
+        height="$h($g_lcdHeight,2.0)"  
+        imagesizefit="false"
+        />
+        <br/>
+        <viewgroup
+        y="$result($pop_ingo_tip_img_polygon.height - $h($g_lcdHeight,0.4));"
+        width="$w($g_lcdwidth,91.5)"
+        height="$pop_info_tip_height"
+        border_width="1"
+        border_radius="$h($g_lcdHeight,1.3)"
+        backcolor="F3F4F5"
+        layout="center"
+        margin_left="$h($g_lcdHeight,2.0)"
+        margin_right="$h($g_lcdHeight,2.0)"
+        margin_top="$h($g_lcdHeight,2.0)"
+        margin_bottom="$h($g_lcdHeight,2.0)"
+        >
+            <label
+            width="$this.remain_right"
+            height="$this.remain_bottom"
+            multiline="true"
+            fontsize="$h($g_lcdHeight,1.6)"
+            value="$pop_info_tip_lbl"
+            align="left"
+            textcolor="737679"
+            fontsize="$h($g_lcdHeight,1.6)"
+            />
+        </viewgroup>
+    </screen>
+</popscreen>

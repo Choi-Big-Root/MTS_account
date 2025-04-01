@@ -1,0 +1,985 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<br/>
+<!--
+ *********************************************************************************
+ **
+ ** 화면을 그린 후에 필요한 작업을 한다. 
+ ** - TR을 배열에 담는다. 전송은 특이한 경우가 아니면 basescreen에서 일괄적으로 전송한다.
+ **
+ *********************************************************************************
+ -->
+ <!-- <actiondata value="
+ 	$setvar_common(
+ 		g_SSLSocketName = $callaction(Act_SSL_Connect,$g_serverIP_account,$g_serverPort_account_ssl,Act_SSL_Connected,Act_SSL_Closed,Act_SSL_RecvData)
+	);
+ "/> -->
+<action id="screen_contents_onload" value="
+	// 비대면 절차개선 - 2020.09.28
+	// 역이체 가능시간 체크
+	$callaction(fnSendSSL_MO_TIME);
+	
+
+	//$logvar(g_tf_4102_confirm_2_var);	// 주민등록번호
+	
+	$setvar(
+		,img_step_1.hidden=false
+		,img_step_2.hidden=false
+		,img_step_3.hidden=true
+		,img_step_4.hidden=true
+		,img_step_5.hidden=true
+		,img_step_6.hidden=true
+		,img_step_7.hidden=true
+		,img_step_8.hidden=true
+		,lbl_open_account_title.x=$w($g_lcdwidth,4.6) // 순서대로 오지 않을경우에 치우친다.
+		,lbl_account_title_step_1.hidden=true
+		,lbl_account_title_step_2.hidden=true
+		,lbl_account_title_step_3.hidden=false
+		,lbl_account_title_step_4.hidden=false
+		,lbl_account_title_step_5.hidden=false
+		,lbl_account_title_step_6.hidden=false
+		,lbl_account_title_step_7.hidden=false
+		,lbl_account_title_step_8.hidden=false
+		,lbl_account_title_step_3.textcolor=ffffff
+		,lbl_account_title_step_4.textcolor=777777
+		,lbl_account_title_step_5.textcolor=777777
+		,lbl_account_title_step_6.textcolor=777777
+		,lbl_account_title_step_7.textcolor=777777
+		,lbl_account_title_step_8.textcolor=777777
+		,vg_account_title_step.hidden=false
+		,popscreen_open_account_history.hidden=true
+		,popscreen_open_account_history_2.hidden=true
+		,popscreen_open_account_confirm.hidden=false
+		,popscreen_open_account_confirm.x=$w($g_lcdwidth,30)
+		,menu_num=4117
+		,4117_choice_key=
+		,4145_check_f=
+		,4145_check_d=
+		,tmp_4145_pass_1=
+		,tmp_4145_pass_2=
+	);
+
+	$setvar(members_gubun=1);
+	
+$log(해외체크여부 >> chk_4145_5gr_2.checked[$chk_4145_5gr_2.checked]);
+$log(국내체크여부 >> chk_4145_5gr_1.checked[$chk_4145_5gr_1.checked]);
+"/>
+<action id="fnSendSSL_MO_TIME"
+value="	// 비대면 절차개선 - 2020.09.28
+		// 역이체 가능시간 체크
+$popscreen(pop_host_msg,center); 		// 동글뱅이 띄운다.
+	$setvar(	
+		jsonName 		= MO_TIME 	
+	);
+	$json_create($jsonName);
+
+	$json_setdata($jsonName,,HDR,,{});
+	$json_setdata($jsonName,HDR,VER,,1.0); 					// 1.0 : 연동버전
+	$json_setdata($jsonName,HDR,CMD,,$jsonName);			// 
+
+	$json_setdata($jsonName,,BODY,,{});
+	$json_setdata($jsonName,BODY,OPEN_TP,,1); 		// 1: 국내 , 2:해외
+	$json_setdata($jsonName,BODY,WORK_NO,,$g_OUT_AGREE_WORK_NO); 			// 상담번호
+
+	$json_print($jsonName);
+	$delvar(strSSLSendData);
+	$json_getfullstring($jsonName,strSSLSendData);
+	$json_delete($jsonName);
+	$logvar(strSSLSendData);
+	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
+"/>
+<action id="fnRecvSSL_MO_TIME" 
+value="	// 비대면 절차개선 - 2020.09.28
+		// 역이체 가능시간 체크
+	$setvar(
+		recvSSL_hdr_ret 		= $json_getdata($jsonname,HDR.RET)
+		,recvSSL_hdr_msg 		= $json_getdata($jsonname,HDR.MSG)
+		,recvSSL_hdr_err_code	= $json_getdata($jsonname,HDR.ERR_CODE)
+		,recvSSL_body_open_able_yn 	= $json_getdata($jsonname,BODY.OPEN_ABLE_YN)	// 역이체가능여부 Y/N
+		,recvSSL_body_reason_code = $json_getdata($jsonname,BODY.REASON_CODE) 	// 사유코드
+		,recvSSL_body_reason_msg = $json_getdata($jsonname,BODY.REASON_MSG) 	// 사유내용
+
+	);
+	$setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_hdr_err_code));
+
+	$log(========= SSL 받은데이터 ==============);
+	$logvar(
+		recvSSL_hdr_ret 
+		,recvSSL_hdr_msg 
+		,recvSSL_body_open_able_yn
+		,recvSSL_body_reason_code
+		,recvSSL_body_reason_msg
+	);
+	if(!$isequal_string($recvSSL_hdr_ret,OK)){
+		//$alertaction(,,$recv_error_msg,확인);
+		$callaction(fnPopover_AlertAction,,$recv_error_msg,,확인);
+		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤
+		return;
+	}
+	
+	if($isequal_string($recvSSL_body_open_able_yn,N)){ 	// 역이체 가능시간 조회후 국내선물옵션계좌 비활성화
+		$setvar(
+			chk_4145_5gr_1.enable = false 
+		
+			,lbl_4145_guknae_1.backcolor=999999
+			,lbl_4145_guknae_1.textcolor=ffffff
+			,lbl_4145_guknae_2.backcolor=999999
+			,lbl_4145_guknae_2.textcolor=ffffff
+			,lbl_4145_guknae_3.backcolor=999999
+			,lbl_4145_guknae_3.textcolor=ffffff
+		);
+	}
+$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
+	return;
+
+"/>
+
+<action id="btn_4145_confirm_onclicked" value="	
+	if(!$chk_4145_5gr_1.checked && !$chk_4145_5gr_2.checked){
+		$alert(,,개설계좌를 선택해주세요.);
+		return;
+	}
+	if($chk_4145_5gr_1.checked){
+		$setvar(4145_check_d=true);
+	}
+	if($chk_4145_5gr_2.checked){
+		$setvar(4145_check_f=true);
+	}
+	//$isnumcheck(값,체크하고싶은길이(4),같은값체크(true),연속된숫자(true),역순(true))
+	$logvar(tmp_4145_pass_1);
+	if(
+	$strlen($tmp_4145_pass_1)<4 || $strlen($tmp_4145_pass_2)<4
+	){
+		$alert(,,비밀번호는 4자리로 입력해 주세요.);
+		return;
+	}
+	if(
+	!$isnumcheck($tmp_4145_pass_1,3,true,true,true) || $isequal_string($tmp_4145_pass_1,$lbl_4117_phone_3.value)
+	){
+		$alert(,,비밀번호는 3자리 이상 동일숫자%2C 연속숫자 및 휴대폰번호 4자리를 사용할 수 없습니다.);
+		return;
+	}
+
+	//휴대폰번호 4자리 
+	$setvar(tmp_phone_after = $substring($tf_4102_confirm_3_val,7,4));
+	$logvar(tmp_phone_after);
+	if($isequal_string($tmp_phone_after,$tmp_4145_pass_1)){
+		$alert(,,휴대폰번호 4자리는 사용할 수 없습니다.);
+		return;
+	}
+
+	if(
+	!$isequal_string($tmp_4145_pass_1,$tmp_4145_pass_2)
+	){
+		$alert(,,입력한 비밀번호가 서로 다릅니다.);
+		return;
+	}
+	// 계좌개설 국내선물:“10”, 해외선물:“20” (중복 선택인 경우 이어 붙인다. “1020”, “10”)
+	$setvar(tmp_IN_REQUEST_PD1 = );
+	
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_PD1,); // 데이터 입력전 초기화
+	if($chk_4145_5gr_1.checked){ 		// 국내체크시
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_PD1,10);
+	}
+	elseif($chk_4145_5gr_2.checked){ 	// 해외체크시
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_PD1,20);
+	}
+	
+
+	$callaction(fnConfig_SetValue,g_chk_4117_5gr_1 	,$chk_4145_5gr_1.checked); 		//국내
+	$callaction(fnConfig_SetValue,g_chk_4117_5gr_2 	,$chk_4145_5gr_2.checked); 		//해외 
+
+
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_NEW_PW 	,$tmp_4145_pass_1_encvar);
+
+	$log(tf_4145_members_recommend_1.value[$tf_4145_members_recommend_1.value]);
+
+	if($members_gubun==1){
+		if($isequal_string($tf_4145_members_recommend_1.value,리테일영입팀 최용호)){
+			$callaction(fnConfig_SetValue,g_save_members_nm,최용호);
+			$callaction(fnConfig_SetValue,g_save_members_no,51140800);
+		}
+		else{
+			$log(tf_4145_members_recommend_1.value[$tf_4145_members_recommend_1.value]);
+			$setvar( val_tf_4145_members_recommend_1_split = $find($tf_4145_members_recommend_1.value,%20));
+
+			$log(val_tf_4145_members_recommend_1_split[$val_tf_4145_members_recommend_1_split]);
+			$setvar( val_tf_4145_members_recommend_1 = $substring( $tf_4145_members_recommend_1.value, $val_tf_4145_members_recommend_1_split, $strlen($tf_4145_members_recommend_1.value) ) );
+
+			$log(val_tf_4145_members_recommend_1[$val_tf_4145_members_recommend_1]);
+			$callaction(fnConfig_SetValue,g_save_members_nm,$val_tf_4145_members_recommend_1);
+			$callaction(fnConfig_SetValue,g_save_members_no,$tf_4145_members_recommend_1.key);
+		}
+	}
+	elseif($members_gubun==2){
+		$callaction(fnConfig_SetValue,g_save_members_nm,$tf_4145_members_recommend_2.value);
+		$callaction(fnConfig_SetValue,g_save_members_no,71100100);
+	}
+	$logvar(
+		g_save_members_nm
+		,g_save_members_no
+	);
+
+	if($chk_4145_5gr_1.checked){
+		$callaction(fnConfig_SetValue,g_open_tp_select,2); // g_open_tp_select 해외:1, 국내:2
+	}
+	if($chk_4145_5gr_2.checked){
+		$callaction(fnConfig_SetValue,g_open_tp_select,1); // g_open_tp_select 해외:1, 국내:2
+	}
+	$log(국내/해외 구분 >> g_open_tp_select[$g_open_tp_select]);
+	/*
+	$log(
+		확인용 : 
+			4101 g_IN_AGREE_ITEM1[$g_IN_AGREE_ITEM1],
+
+			4142 g_IN_AGREE_ITEM2[$g_IN_AGREE_ITEM2],
+			4142 g_IN_AGREE_ITEM3[$g_IN_AGREE_ITEM3],
+
+			4102 g_save_tel_num[$g_save_tel_num],
+			4102 g_IN_AGREE_RMN_NO[$g_IN_AGREE_RMN_NO],
+			4102 g_IN_AGREE_CLNT_NM[$g_IN_AGREE_CLNT_NM],
+			4102 g_IN_REQUEST_TEL_NUM[$g_IN_REQUEST_TEL_NUM],
+			4102 g_IN_REQUEST_AGE[$g_IN_REQUEST_AGE],
+			4102 g_OUT_AGREE_WORK_NO[$g_OUT_AGREE_WORK_NO],
+
+			4117 g_IN_REQUEST_LOCAL_YN[$g_IN_REQUEST_LOCAL_YN],
+			4117 g_IN_REQUEST_ABODE_NM[$g_IN_REQUEST_ABODE_NM],
+			4117 g_IN_REQUEST_HOME_POST_NO[$g_IN_REQUEST_HOME_POST_NO],
+			4117 g_IN_REQUEST_HOME_ADDR[$g_IN_REQUEST_HOME_ADDR],
+			4117 g_IN_REQUEST_HOME_ADDR2[$g_IN_REQUEST_HOME_ADDR2],
+
+			4143 g_IN_REQUEST_JOB_NM[$g_IN_REQUEST_JOB_NM],
+			4143 g_IN_REQUEST_COM_NM[$g_IN_REQUEST_COM_NM],
+			4143 g_IN_REQUEST_COM_DEPART[$g_IN_REQUEST_COM_DEPART],
+			4143 g_IN_REQUEST_COM_TEL[$g_IN_REQUEST_COM_TEL],
+			4143 g_IN_REQUEST_COM_POST_NO[$g_IN_REQUEST_COM_POST_NO],
+			4143 g_IN_REQUEST_COM_ADDR[$g_IN_REQUEST_COM_ADDR],
+			4143 g_IN_REQUEST_COM_ADDR2[$g_IN_REQUEST_COM_ADDR2],
+
+			4144 g_IN_REQUEST_CLNT_EMAIL[$g_IN_REQUEST_CLNT_EMAIL],
+			4144 g_IN_REQUEST_TRD_PPO[$g_IN_REQUEST_TRD_PPO],
+			4144 g_IN_REQUEST_FUNDS[$g_IN_REQUEST_FUNDS],
+			4144 g_IN_REQUEST_OWN_YN[$g_IN_REQUEST_OWN_YN],
+			4144 g_IN_REQUEST_AMERICAN_YN[$g_IN_REQUEST_AMERICAN_YN],
+			4144 g_IN_REQUEST_TRADE[$g_IN_REQUEST_TRADE],
+			4144 g_IN_REQUEST_DEAL[$g_IN_REQUEST_DEAL],
+
+			4145 g_IN_REQUEST_PD1[$g_IN_REQUEST_PD1],
+			4145 g_chk_4117_5gr_1[$g_chk_4117_5gr_1],
+			4145 g_chk_4117_5gr_2[$g_chk_4117_5gr_2],
+			4145 g_IN_REQUEST_NEW_PW[$g_IN_REQUEST_NEW_PW],
+			4145 g_save_members_nm[$g_save_members_nm],
+			4145 g_save_members_no[$g_save_members_no],
+			4145 g_open_tp_select[$g_open_tp_select],
+	);
+	*/
+
+	// 비밀번호는 없음.
+	$callaction(Act_Open_Account_Move,4118);
+"/>
+<action id="chk_4145_onclicked_confirm" value="
+	//계좌개설선택
+	// workContent_20200206 주석을 제거함..
+	if($chk_4145_onclicked_confirm_param1==9){
+		if($chk_4145_5gr_1.checked){	// 국내 체크인경우
+			$setvar(chk_4145_5gr_2.checked=false);
+		}else{
+			$setvar(chk_4145_5gr_1.checked=true);
+			
+		}
+	}
+	elseif($chk_4145_onclicked_confirm_param1==10){
+		if($chk_4145_5gr_2.checked){	// 해외 체크인경우
+			$setvar(chk_4145_5gr_1.checked=false);
+		}else{
+			$setvar(chk_4145_5gr_2.checked=true);
+		}
+	}
+$log(해외체크여부 >> chk_4145_5gr_2.checked[$chk_4145_5gr_2.checked]);
+$log(국내체크여부 >> chk_4145_5gr_1.checked[$chk_4145_5gr_1.checked]);
+"/>
+<screen id="screen_4145_100"
+	class="cs_screen_contents"
+	backcolor="f1f1f1"
+	onload="screen_contents_onload"
+	>
+	<screen id="screen_4145_200"
+		height="$this.remain_bottom"
+		backcolor="f1f1f1"
+		>
+		<viewgroup 
+			margin_left="$w($g_lcdWidth,6.3)"
+			width="$this.remain_right"
+			height="$h($g_lcdHeight,5)" 
+			backcolor="ffffff"			
+			>			
+			<label 
+				height="$h($g_lcdHeight,5)" 
+				fontname="$g_baseFontNameBold" 
+				fontsize="$g_fontsize_big1" 
+				value="상품 및 계좌정보 입력" 
+				/>
+		</viewgroup>
+		<br/><hr backcolor="cccccc"/><br /><hr height="$h($g_lcdHeight,1)" backcolor="f1f1f1"/><br />
+		<blank width="$w($g_lcdWidth,4.4)" />
+		<viewgroup 
+			width="$super.width"
+			height="$h($g_lcdHeight,75)"
+			>
+			<label 
+				height="$h($g_lcdHeight,4.5)" 
+				fontname="$g_baseFontNameBold" 
+				value="개설계좌 선택" 
+				/>
+			<br/>
+			<viewgroup 
+				width="$w($g_lcdwidth,49)"
+				//height="$h($g_lcdHeight,6.3)"
+				//height="$h($g_lcdHeight,11.6)"
+				height="$h($g_lcdHeight,13.3)"
+				backcolor="ffffff"
+				margin_left="0"
+				>
+				<checkbox
+					id="chk_4145_5gr_2"  
+					width="$super.width" 
+					height="$h($g_lcdHeight,6.3)"
+					checked="false"
+					checkimage="$icon_check2_on" 
+					uncheckimage="$icon_check2_off"
+					//layout_vertical="center"
+					view_reverse="false"
+					//checkimage_leftmargin="$w($g_lcdWidth,4)"
+					checkimage_leftmargin="$w($g_lcdWidth,1)"
+					margin_left="$w($g_lcdWidth,8)" 
+					value_overlay="true"
+					align="left" 
+					//margin_right="$w($g_lcdWidth,2)" 
+					fontsize="$g_fontSize_basic"
+					value="해외선물/옵션계좌\n(미국주식옵션)"
+					onclicked="$callaction(chk_4145_onclicked_confirm,10);"
+					/>
+					<br/>
+					<label 
+					height="$h($g_lcdHeight,4)"
+					margin_left="$w($g_lcdwidth,2)"
+					textcolor="ff0000"
+					fontsize="$g_fontSize_small1"
+					minfontsize="1"
+					align="left"
+					valign="top"
+					
+                    // 2019.08.16 김억수과장 요청으로 제거
+					//value="(무료수수료 이벤트 진행중)"
+                    />
+			</viewgroup>
+			<viewgroup 
+				width="$w($g_lcdwidth,43)"
+				//height="$h($g_lcdHeight,6.3)"
+				height="$h($g_lcdHeight,13.3)"
+				backcolor="ffffff"
+				margin_left="0"
+				>
+				<checkbox
+					id="chk_4145_5gr_1"  
+					width="$super.width" 
+					height="$h($g_lcdHeight,6.3)"
+					checked="false"
+					checkimage="$icon_check2_on" 
+					uncheckimage="$icon_check2_off"
+					//layout_vertical="center"
+					view_reverse="false"
+					//checkimage_leftmargin="$w($g_lcdWidth,4)"
+					checkimage_leftmargin="$w($g_lcdWidth,0)"
+					margin_left="$w($g_lcdWidth,8)" 
+					value_overlay="true"
+					align="left" 
+					//margin_right="$w($g_lcdWidth,2)" 
+					fontsize="$g_fontSize_basic"
+					value="국내선물/옵션계좌"
+					enable="true"
+					backcolor_disable="999999"
+					textcolor_disable="ffffff"
+					onclicked="$callaction(chk_4145_onclicked_confirm,9);"
+					/>
+				<br/>
+				<label id="lbl_4145_guknae_1"
+				height="$h($g_lcdHeight,2)"
+				margin_left="$w($g_lcdwidth,4)"
+				textcolor="000000"
+				fontsize="$g_fontSize_small1"
+				minfontsize="1"
+				align="left"
+				valign="top"
+				//value="(사전교육,모의거래 필요," 
+				value="(사전교육, 모의거래 필요,"
+				/>
+				<br/>
+				<label id="lbl_4145_guknae_2"
+				height="$h($g_lcdHeight,2)"
+				margin_left="$w($g_lcdwidth,4)"
+				textcolor="000000"
+				fontsize="$g_fontSize_small1"
+				minfontsize="1"
+				align="left"
+				valign="top"
+				//value=",기본예탁금 3,000만원)"
+				value="투자자에 따라 기본예탁금" 
+				/><br/>
+				<label id="lbl_4145_guknae_3"
+				height="$h($g_lcdHeight,2)"
+				margin_left="$w($g_lcdwidth,4)"
+				textcolor="000000"
+				fontsize="$g_fontSize_small1"
+				minfontsize="1"
+				align="left"
+				valign="top"
+				//value=",기본예탁금 3,000만원)"
+				value="구분)" 
+				/>
+			</viewgroup>
+
+			<br height="$h($g_lcdHeight,2)"/>
+
+			<label 
+				width="$w($g_lcdWidth,22)"
+				//backcolor="00ff00" 
+				height="$h($g_lcdHeight,4.5)" 
+				fontname="$g_baseFontNameBold" 
+				//fontsize="$g_fontsize_big1" 
+				value="계좌비밀번호" 
+				/>
+				<label 
+				height="$h($g_lcdHeight,4.5)" 
+				fontname="$g_baseFontNameBold" 
+				textcolor="ff0000"
+				value="*" 
+				/>
+			<br/>
+			<viewgroup
+				height="$h($g_lcdHeight,6.3)"
+				>
+				<textfield_security 
+					id="tf_4145_pass_1"
+					width="$w($g_lcdWidth,92)"
+					height="$h($g_lcdHeight,6.3)"
+					maxlength="4"
+					input_type="number"
+					//security_flag="true"
+					align="left"
+					returntype="done"
+					textcolor="000000"
+					fontsize="$g_fontSize_basic"
+					backcolor="ffffff"
+					fontname="$g_baseFontName"
+					description="계좌 비밀번호"
+					hint="계좌 비밀번호를 입력하세요"
+					valuevar="tmp_4145_pass_1"
+					valueencvar="tmp_4145_pass_1_encvar"
+					valuevar_common="false"
+					border_color="dcdcdc"
+					border_width="1"
+					margin_left="$w($g_lcdWidth,4.5)"
+				/>
+			</viewgroup>
+			<br height="$h($g_lcdHeight,1)"/>
+			<viewgroup
+				height="$h($g_lcdHeight,10)"
+				>
+				<viewgroup
+					width="$w($g_lcdwidth,10)"
+					height="$h($g_lcdHeight,3.5)"
+					>
+					<img 
+						id="img_4145_9"
+						width="$w($g_lcdwidth,5)"
+						height="$h($g_lcdHeight,3.5)"
+						src="$icon_note"
+						layout="left"
+						layout_vertical="center"
+						/>
+				</viewgroup>
+				<label 	
+					width="$super.width"
+					height="$h($g_lcdHeight,3.5)"
+					layout="left"
+					margin_left="$w($g_lcdwidth,5)"
+					fontsize="$g_fontSize_basic"
+					textcolor="666666"
+					value="4자리 숫자 입력"				
+					/>
+				<br/>
+				<viewgroup
+					width="$w($g_lcdwidth,10)"
+					height="$h($g_lcdHeight,3.5)"
+					>
+					<img 
+						id="img_4145_10"
+						width="$w($g_lcdwidth,5)"
+						height="$h($g_lcdHeight,3.5)"
+						src="$icon_note"
+						layout="left"
+						layout_vertical="center"
+						/>
+				</viewgroup>
+				<label 	
+					width="$super.width"
+					height="$h($g_lcdHeight,3.5)"
+					layout="left"
+					margin_left="$w($g_lcdwidth,5)"
+					fontsize="$g_fontSize_basic"
+					textcolor="666666"
+					value="3자리 이상 동일숫자,연속숫자 및 휴대폰번호 4자리 "				
+					/>
+				<br/>
+				<label 	
+					width="$super.width"
+					height="$h($g_lcdHeight,3.5)"
+					layout="left"
+					margin_left="$w($g_lcdwidth,5)"
+					fontsize="$g_fontSize_basic"
+					textcolor="666666"
+					value="사용불가"				
+					/>
+			</viewgroup>
+			<br height="$h($g_lcdHeight,2)"/>
+			<label 
+				width="$w($g_lcdWidth,30)"
+				//backcolor="00ff00" 
+				height="$h($g_lcdHeight,4.5)" 
+				fontname="$g_baseFontNameBold" 
+				//fontsize="$g_fontsize_big1" 
+				value="계좌비밀번호 확인" 
+				/>
+			<label 
+			height="$h($g_lcdHeight,4.5)" 
+			fontname="$g_baseFontNameBold" 
+			textcolor="ff0000"
+			value="*" 
+			/>
+			<br/>
+			<viewgroup
+				height="$h($g_lcdHeight,6.3)"
+				>
+				<textfield_security 
+					id="tf_4145_pass_2"
+					width="$w($g_lcdWidth,92)"
+					height="$h($g_lcdHeight,6.3)"
+					maxlength="4"
+					input_type="number"
+					//security_flag="true"
+					align="left"
+					returntype="done"
+					textcolor="000000"
+					fontsize="$g_fontSize_basic"
+					backcolor="ffffff"
+					fontname="$g_baseFontName"
+					description="계좌 비밀번호"
+					hint="계좌 비밀번호를 입력하세요"
+					valuevar="tmp_4145_pass_2"
+					valueencvar="tmp_4145_pass_2_encvar"
+					valuevar_common="false"
+					border_color="dcdcdc"
+					border_width="1"
+					margin_left="$w($g_lcdWidth,4.5)"
+				/>
+			</viewgroup>
+			// workContent_20200206 start
+			// 비대면 절차개선 - 2020.09.28
+			<br height="$h(1)"/>
+			<label 
+				width="$w(200)"
+				height="$h(35)" 
+				fontname="$g_baseFontNameBold" 
+				fontsize="$w(17)"
+				value="추천직원 입력" 
+				/>
+			<br/>
+			<viewgroup id="vg_members_search_1"
+				width="$this.remain_right"
+				height="$h($g_lcdHeight,6.3)"
+				hidden="false"
+				>
+				<textfield id="tf_4145_members_recommend_1"
+					width="$w($g_lcdWidth,59.8)"
+					height="$h($g_lcdHeight,6.3)"
+					//keyboard_type="number"
+					border_color="dcdcdc"
+					border_width="1"
+					margin_left="$w($g_lcdWidth,4.5)"
+					margin_right="$w($g_lcdWidth,2)"
+					//maxlength="11"
+					textcolor_placeholder="cccccc"
+					textcolor="000000"
+					fontsize="$g_fontSize_basic"
+					backcolor="ffffff"
+					backcolor_disable="e9e9e9"
+					textcolor_disable="000000"
+					value="리테일영입팀 최용호"
+					enable="false"
+					/>
+				<blank width="$w($g_lcdWidth,2.5)"/>
+				<button 
+					id="btn_4145_members_search"
+					width="$w($g_lcdWidth,29.6)" 
+					height="$h($g_lcdHeight,6.3)"
+					value="직원검색" 
+					fontsize="$g_fontSize_basic"
+					//fontname="$g_baseFontNameBold"
+					textcolor="ffffff"
+					textcolor_active="ffffff"
+					backcolor="494a53"
+					backcolor_active="5b5d68"
+					key="1"
+					onclicked="$popscreen(popscreen_members_find);"
+					/>
+			</viewgroup>
+			<viewgroup id="vg_members_search_2"
+				x="$vg_members_search_1.x"
+				width="$this.remain_right"
+				height="$h($g_lcdHeight,15.6)" 
+				hidden="true"
+				>
+				<viewgroup 
+					width="$w($g_lcdWidth,59.8)" 
+					height="$h($g_lcdHeight,6.3)" 
+					border_color="dcdcdc"
+					border_width="1"
+					backcolor="ffffff"
+					>
+					<label 
+						width="$w($g_lcdWidth,26)"
+						height="$h($g_lcdHeight,6.3)"
+						margin_left="$w($g_lcdWidth,4.5)"
+						margin_right="$w($g_lcdWidth,2)"
+						fontsize="$g_fontSize_basic"
+						value="유진투자증권"
+						/>
+					<textfield id="tf_4145_members_recommend_2"
+						width="$this.remain_right"
+						height="$h($g_lcdHeight,6.3)"
+						//keyboard_type="number"
+						//border_color="dcdcdc"
+						//border_width="1"
+						//margin_left="$w($g_lcdWidth,4.5)"
+						margin_right="$w($g_lcdWidth,2)"
+						//maxlength="11"
+						textcolor_placeholder="cccccc"
+						textcolor="000000"
+						fontsize="$g_fontSize_basic"
+						backcolor="ffffff"
+						backcolor_disable="e9e9e9"
+						textcolor_disable="000000"
+						value=""
+						/>
+				</viewgroup>
+				<blank width="$w($g_lcdWidth,2.5)"/>
+				<button 
+					id="btn_4145_members_search2"
+					width="$w($g_lcdWidth,29.6)" 
+					height="$h($g_lcdHeight,6.3)"
+					value="직원검색" 
+					fontsize="$g_fontSize_basic"
+					//fontname="$g_baseFontNameBold"
+					textcolor="ffffff"
+					textcolor_active="ffffff"
+					backcolor="494a53"
+					backcolor_active="5b5d68"
+					key="1"
+					onclicked="$popscreen(popscreen_members_find);"
+					/>
+				<br/>
+				<label width="$w($g_lcdWidth,92)" height="$h($g_lcdHeight,5)" 
+					fontname="$g_baseFontName"
+					fontsize="$g_fontSize_basic"
+					textcolor="e33433"
+					//border_width="1"
+					//border_color="e33433"
+					margin_left="$w($g_lcdWidth,1)"
+					value="유진투자증권 + 지점명 + 직원명을 입력해주세요.\n예) 유진투자증권 대방지점 김유진" 
+					/>
+			</viewgroup>	
+
+			// workContent_20200206 end
+		</viewgroup>
+
+		<br/>
+		<blank width="$w($g_lcdWidth,4.4)" />
+		<button 
+			id="btn_4145_bf"
+			fontsize="$g_fontsize_big3" 
+			//y="$result($this.remain_bottom-$h($g_lcdHeight,13.4))"
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,9.4)" 
+			backcolor="ffffff"
+			border_width="$g_roundHeight"
+			border_color="e33433"
+			backcolor_active="e5e5e5"
+			textcolor="e33433"
+			textcolor_active="e33433"
+			value="이전" 
+			onclicked="
+			btn_open_account_history_onClicked
+			"
+			/>
+		<blank width="$w($g_lcdWidth,1.8)"/>
+		<button 
+			id="btn_4145_af"
+			fontsize="$g_fontsize_big3" 
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,9.4)" 
+			backcolor="e33433"
+			border_width="$g_roundHeight"
+			backcolor_active="cc2f2e"
+			textcolor="ffffff"
+			textcolor_active="ffffff"
+			value="다음" 
+			onclicked="btn_4145_confirm_onclicked"
+			/>
+	</screen>
+</screen>
+// 비대면 절차개선 - 2020.09.28
+// 직원검색 팝업
+<popscreen id="popscreen_members_find"
+	width="$g_lcdWidth" 
+	height="$this.remain_bottom"
+	backcolor="00000088"
+	layout="center"
+	layout_vertical="bottom"
+	//onload="popscreen_members_find_onload"
+	>
+	<viewgroup
+		height="$h($g_lcdHeight,7.3)" 
+		//backcolor="f8f8f8"
+		backcolor="464b4e"
+		
+		>
+		<label fontsize="$g_fontsize_big1" fontname="$g_baseFontNameBold" align="center" valign="center" textcolor="ffffff" value="직원검색" />
+		<img src="$icon_pop_cancel_w" x="$w($g_lcdWidth,90)" layout_vertical="center" />
+		<button
+			layout="right"
+			width="$w($g_lcdwidth,15)" 
+			height="$h($g_lcdHeight,7.3)" 
+			backcolor="none"
+			backcolor_active="none"
+			onclicked="$closescreen(popscreen_members_find)"
+			/>
+	</viewgroup>
+	<br />
+	<screen 
+		id="screen_members_find"
+		width="$super.width"
+		height="$this.remain_bottom" 
+		margin_right="0"
+		border_width="$g_roundHeight"
+		border_color="cccccc"
+		backcolor="ffffff"
+		>
+
+			<br height="$h($g_lcdHeight,1.4)"/>
+			<blank width="$w($g_lcdWidth,2.5)"/>
+			<label width="$result($this.remain_right-$w($g_lcdWidth,2.5))" height="$h($g_lcdHeight,7)"
+				fontname="$g_baseFontName"
+				fontsize="$g_fontsize_big1"
+				textcolor="e33433"
+				border_width="1"
+				border_color="e33433"
+				margin_left="$w($g_lcdWidth,1)"
+				value="유진투자선물은 직원이름 입력\n유진투자증권은 유진증권 또는 유진투자증권 입력" 
+				/>
+			<br height="$h($g_lcdHeight,1.4)"/>
+			<blank width="$w($g_lcdWidth,2.5)"/>
+			<textfield id="txt_address_find"
+			width="$w($g_lcdWidth,70)"
+			height="$h($g_lcdHeight,7.3)"
+			keyboard_type="text"
+			border_color="dcdcdc"
+			border_width="1"
+			margin_left="$w($g_lcdWidth,4.5)"
+			margin_right="$w($g_lcdWidth,2)"
+			//maxlength=""
+			textcolor_placeholder="cccccc"
+			textcolor="000000"
+			fontsize="$g_fontSize_basic"
+			backcolor="ffffff"
+			placeholder="직원이름 입력"
+
+//			value=""
+			/>
+			<blank width="$w($g_lcdWidth,2.5)"/>
+			<button id="btn_address_find"
+			width="$w($g_lcdWidth,22.5)" 
+			height="$h($g_lcdHeight,7.3)"
+			value="검색" 
+			fontsize="$g_fontSize_basic"
+			//fontname="$g_baseFontNameBold"
+			textcolor="ffffff"
+			textcolor_active="ffffff"
+			backcolor="494a53"
+			backcolor_active="5b5d68"
+			onclicked="btn_members_find_onclicked"
+			/>
+			<br height="$h($g_lcdHeight,1.4)"/>
+			<table id="tbl_members_find"
+			class="cs_grid"
+			width="$super.width"
+			rowheight="$h($g_lcdHeight,10)"
+			rowkey_count="30"
+			//onload="$setarraydata(tbl_members_find,arrJsonData_Member);"
+			>
+				<th height="$h($g_lcdHeight,6)" backcolor="cccccc" align="center">
+					<td width="$result($super.width/3)" align="center" backcolor="cccccc" >사원번호</td>
+					<td width="$result($super.width/3)" align="center" backcolor="cccccc" >부서명</td>
+					<td width="$result($super.width/3)" align="center" backcolor="cccccc" >사원명</td>
+				</th>
+				<tr
+				arraydata="
+					0:key:trim 		// 사원번호
+					~1:key1:trim 	// 부서명
+					~2:key2:trim 	// 사원명
+					"
+				onClicked="tbl_members_find_onclicked" 
+				>
+					<td width="$result($super.width/3)" align="center" arraydata="0:value:format:^^^***#####"/>
+					<td width="$result($super.width/3)" align="center" arraydata="1:value:trim"/>
+					<td width="$result($super.width/3)" align="center" arraydata="2:value:trim"/>
+				</tr>
+			</table>
+	</screen>
+</popscreen>
+<action id="popscreen_members_find_onload"
+value="
+	$callaction(fnSendSSL_MO_MEMBER);
+" />
+<action id="btn_members_find_onclicked"
+value="
+	if($isequal_string($txt_address_find.value,)){
+		$alert(,,직원이름 또는 유진투자증권(또는 유진증권)을 검색하세요.,확인,);
+		return;
+	}
+
+	elseif($isequal_string($txt_address_find.value,유진증권)||$isequal_string($txt_address_find.value,유진투자증권)){
+		$setvar( 	// 유진투자증권:2
+			vg_members_search_1.hidden=true
+			,vg_members_search_2.hidden=false
+			,members_gubun=2
+		);
+		$closescreen(popscreen_members_find);
+		return;
+	}
+	else{
+		$setvar( 	// 직원검색:1
+			vg_members_search_1.hidden=false
+			,vg_members_search_2.hidden=true
+			,members_gubun=1
+		);
+		
+		$callaction(fnSendSSL_MO_MEMBER);
+	}
+" />
+
+<action id="tbl_members_find_onclicked"
+value="
+$log(this.key[$this.key]);
+	$setvar(
+		selected_no=$this.key
+		,selected_nm=$this.key2
+		,selected_dnm=$this.key1
+	);
+$log(selected_no[$selected_no]);
+$log(selected_nm[$selected_nm]);
+	
+	$setvar(
+		tf_4145_members_recommend_1.value = $selected_dnm $selected_nm
+		,tf_4145_members_recommend_1.key = $selected_no
+	);
+	$log(tf_4145_members_recommend_1.value[$tf_4145_members_recommend_1.value]);
+	$log(tf_4145_members_recommend_1.key[$tf_4145_members_recommend_1.key]);
+
+	$closescreen(popscreen_members_find)
+" />
+<action id="fnSendSSL_MO_MEMBER" 
+value=" // 비대면 절차개선 - 2020.09.28
+		// 추천직원 검색
+$popscreen(pop_host_msg,center); 		// 동글뱅이 띄운다.
+	$setvar(	jsonName 		= MO_MEMBER 	);
+	$json_create($jsonName);
+
+	$json_setdata($jsonName,,HDR,,{});
+	$json_setdata($jsonName,HDR,VER,,1.0); 					// 1.0 : 연동버전
+	$json_setdata($jsonName,HDR,CMD,,$jsonName);			//  
+	$json_setdata($jsonName,,BODY,,{});
+	$json_setdata($jsonName,BODY,MBER_NM,,$txt_address_find.value); 		// 사원명
+	$json_setdata($jsonName,BODY,WORK_NO,,$g_OUT_AGREE_WORK_NO); 			// 상담번호
+
+	$json_print($jsonName);
+	$delvar(strSSLSendData);
+	$json_getfullstring($jsonName,strSSLSendData);
+	$json_delete($jsonName);
+	$logvar(strSSLSendData);
+	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
+"/>
+<action id="fnRecvSSL_MO_MEMBER" 
+value="	// 비대면 절차개선 - 2020.09.28
+		// 추천직원 검색
+	$setvar(
+		recvSSL_hdr_ret 		= $json_getdata($jsonname,HDR.RET)
+		,recvSSL_hdr_msg 		= $json_getdata($jsonname,HDR.MSG)
+		,recvSSL_hdr_err_code	= $json_getdata($jsonname,HDR.ERR_CODE)
+	);
+	$setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_hdr_err_code));
+
+	if(!$isequal_string($recvSSL_hdr_ret,OK)){
+		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
+		//$alertaction(,,$recv_error_msg,확인);
+		$callaction(fnPopover_AlertAction,,$recv_error_msg,,확인);
+		return;
+	}
+
+	$log(배열갯수 = [$json_getcount($jsonname,BODY.MBERS)]);
+	if($json_getcount($jsonname,BODY.MBERS)==0){
+		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
+		$alert(,,검색된 데이터가 없습니다.,확인,);
+		return;
+	}
+	//$json_getdata($jsonname,BODY.MBERS[1].EMPL_NM,strMBRName);
+	//$logvar(strMBRName);
+
+	$delarrayvar(arrJsonData_Member);
+	$json_toArrayData(arrJsonData_Member,$jsonName,BODY.MBERS,,$(EMPL_NO,DEPT_NM,EMPL_NM));
+	$logarrayvar(arrJsonData_Member);
+
+	$setarraydata(tbl_members_find,arrJsonData_Member);
+	$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
+	$callaction(subscreen_4119_menu_1_onload);
+"/>
+
+<action id="textFieldBegin" 
+value="	
+	if($g_isAndroid) {
+		$setvar(
+			y_abs 				= $tf_4145_members_recommend_2.y_abs
+			,tmp_height 		= $h($g_lcdHeight,55)
+			,tmp_scrolloffset_y = $result($tmp_height + $y_abs)
+			//,tmp_scrolloffset_y = $h($g_lcdHeight,55)
+		);
+	}
+	else{
+		$setvar(
+			,tmp_scrolloffset_y = $h($g_lcdHeight,55)
+		);
+	}
+	$logvar(
+		y_abs
+		,tmp_height
+		,tmp_scrolloffset_y
+	);
+	if($isequal_string($textFieldBegin_param1,tf_4145_members_recommend_2)){
+		$setvar(
+			screen_4145_100.scrolloffset_y = $tmp_scrolloffset_y
+		);
+	}
+" />
+<action id="textFieldEnd_local" 
+value="
+	$setvar(screen_4145_100.scrolloffset_y=0);
+" />

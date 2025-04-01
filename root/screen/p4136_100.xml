@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<br/>
+<actiondata value="
+	$setvar_single(strCommentData_1=당사는 금융투자협회 표준투자권유준칙에 따라 상품의 특성 및 최대위험 등에 관하여 고객에게 설명의무가 있으며, ID 등록전 파생상품 사전 위험고지 녹취를 통해 확인하고 있습니다.);
+	$setvar_single(strCommentData_2=※ 계좌개설 완료 후 반드시 위험고지 녹취를 진행해주시기 바랍니다. 위험고지 미녹취시 ID등록이 불가능합니다.);
+"/>
+<action id="screen_contents_onload" value="
+	$setvar(
+		,lbl_open_account_title.x=$w($g_lcdwidth,4.6) // 순서대로 오지 않을경우에 치우친다.
+		,popscreen_open_account_history.hidden=true
+		,popscreen_open_account_history_2.hidden=true
+		,popscreen_open_account_confirm.hidden=false
+		,popscreen_open_account_confirm.x=$w($g_lcdwidth,55)
+		,menu_num=4136
+
+	);
+"/>
+<class id="cls_htmlfield" 
+	width="$this.remain_right" height="$this.remain_bottom" lineheight="$h(30)"
+	fontsize="$w(20)" fontname="$g_baseFontName"
+
+/>
+<class id="cls_labelfield" 
+	width="$this.remain_right" height="$this.remain_bottom" 
+	fontsize="$w(20)" fontname="$g_baseFontName"
+
+/>
+<screen id="screen_4136_100"
+	class="cs_screen_contents"
+	backcolor="f1f1f1"
+	onload="screen_contents_onload"
+	onunload="screen_4135_100_onunload"
+	>
+	<br height="$h(20)" /><blank width="$w(10)" />
+	<htmlview class="cls_htmlfield" width="$w(460)" height="$h(120)" fontsize="$w(24)" lineheight="$h(25)" VALUE_HTML_VAR="strCommentData_1" />
+	<br height="$h(20)" /><blank width="$w(10)" />
+	<htmlview class="cls_htmlfield" width="$w(460)" height="$h(90)" fontsize="$w(24)" lineheight="$h(25)" fontname="$g_htmlFontNameBold" VALUE_HTML_VAR="strCommentData_2" textcolor="e33433" />
+	<br height="$h(20)" /><blank width="$w(10)" />
+	<label class="cls_labelfield" height="$h(30)" fontsize="$w(24)" fontname="$g_htmlFontNameBold" value="위험고지 녹취시간 안내" />
+	<br height="$h(20)" /><blank width="$w(10)" />
+	<label class="cls_labelfield" height="$h(30)" value="• 주간(08:00~16:00, 월~금): 02-3771-8888" />
+	<br height="$h(0)" /><blank width="$w(10)" />
+	<label class="cls_labelfield" height="$h(30)" value="• 야간(16:00~07:00, 월~토): 02-3771-8881" />
+	<br height="$h(50)" /><blank width="$w(90)" />
+	<button width="$w(300)" height="$h(60)" 
+		backcolor="e33433" backcolor_active="cc2f2e" textcolor="ffffff" textcolor_active="ffffff"
+		fontsize="$w(35)" fontname="$g_baseFontName" 
+		value="위험고지 녹취" onclicked="btn_call_onclicked"
+		/>
+	
+	<br height="$h(20)" /><blank width="$w(90)" />
+	<button width="$w(300)" height="$h(60)" 
+		backcolor="e33433" backcolor_active="cc2f2e" textcolor="ffffff" textcolor_active="ffffff"
+		fontsize="$w(35)" fontname="$g_baseFontName" 
+		value="ID등록하기" onclicked="btn_id_add_onclicked"
+		/>
+	<br height="$h(20)" /><blank width="$w(90)" />
+	<button width="$w(300)" height="$h(60)" 
+		backcolor="e33433" backcolor_active="cc2f2e" textcolor="ffffff" textcolor_active="ffffff"
+		fontsize="$w(35)" fontname="$g_baseFontName"
+		value="나중에 등록" onclicked="btn_skip_onclicked"
+		/>
+
+</screen>
+
+<action id="btn_call_onclicked"
+value="	// 
+	if($now(HH) >= 08 && $now(HH) < 16){
+		if($getweekday($now(yyyyMMdd)) != 1 && $getweekday($now(yyyyMMdd)) != 7){ // 토,일 제외
+			$log(주간);
+			$open_callphone(0237718888);	// 주간
+		}
+	}
+	if($now(HH) >= 16 || $now(HH) < 07){
+		if($getweekday($now(yyyyMMdd)) != 1 ){	// 일 제외
+			$log(야간);
+			$open_callphone(0237718881);	// 야간
+		}
+	}
+"/>
+<popscreen id="pop_caution1"
+	width="$g_lcdWidth" 
+	height="$p_lcdHeight"
+	//backcolor="0000ff"
+	modal="true"
+	modalbackcolor="#00000088"
+	layout="center"
+	layout_vertical="center"
+	onload=""
+	onclicked="$closescreen();"
+	key=""
+	>
+	<screen id="screen_comboAccountPopover"
+		width="$w($g_lcdWidth,88.3)"
+		//height="$h($g_lcdHeight,70)"
+		height="$h($g_lcdHeight,49.5)"
+		backcolor="none"
+		layout="center"
+		layout_vertical="center"
+		noscroll_width="true"
+		>
+		<viewgroup 
+			width="$super.width"
+			height="$h($g_lcdHeight,8.6)"
+			backcolor="ffffff"
+			>
+			<label width="$super.width" height="$super.height" align="left" margin_left="$w($g_lcdWidth,3.2)" 
+			fontname="$g_baseFontNameBold"
+			fontsize="$g_fontsize_big2"
+			value="알림" />
+		</viewgroup>
+		<br/><hr backcolor="3c3c3c" /><br/>
+		<viewgroup 
+			width="$super.width"
+			//height="$h($g_lcdHeight,49)"
+			height="$h($g_lcdHeight,12)"
+			backcolor="ffffff"
+			>
+			<viewgroup
+				width="$super.width"
+				height="$h($g_lcdHeight,20)"
+				>
+				<br height="$h($g_lcdHeight,4)" /><blank width="$w($g_lcdWidth,4)"/>
+				<label width="$w($g_lcdWidth,78.3)" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName" 
+					fontsize="$g_fontSize_big1"
+					value="위험고지 녹취후 ID등록이 가능합니다." />
+			</viewgroup>
+		</viewgroup>
+		<br />
+		<viewgroup height="$h($g_lcdHeight,10)">
+			<button 
+				width="100%" 
+				height="$super.height" 
+				value="확인" 
+				backcolor="bd3135"
+				backcolor_active="b8240c"
+				fontsize="$g_fontsize_big2"
+				fontname="$g_baseFontNameBold"
+				textcolor="ffffff"
+				textcolor_active="ffffff"
+				onclicked="$closescreen();"
+				/>
+		</viewgroup>
+	</screen>
+</popscreen>
+<action id="btn_id_add_onclicked"
+value="
+	$callaction(fnSendSSL_MO_RECORD);
+"/>
+<action id="fnSendSSL_MO_RECORD"
+value="	// 비대면 절차개선 - 2020.09.28
+		// 위험고지 녹취여부 확인
+
+$logvar(
+	g_save_acno 			// 국내
+	,g_save_cybr_acct_no
+	,g_save_acno2 			// 해외
+	,g_save_cybr_acct_no2
+);
+
+	$setvar(	
+		jsonName 		= MO_RECORD 	
+	);
+	$logvar(g_tf_4102_confirm_2_var);
+	$json_create($jsonName);
+
+	$json_setdata($jsonName,,HDR,,{});
+	$json_setdata($jsonName,HDR,VER,,1.0); 					// 1.0 : 연동버전
+	$json_setdata($jsonName,HDR,CMD,,$jsonName);			// 
+
+	$json_setdata($jsonName,,BODY,,{});
+	if($g_open_tp_select==1){	//해외
+		$json_setdata($jsonName,BODY,ACNO,,$g_save_acno2); 		// 계좌번호(개설)
+	}
+	elseif($g_open_tp_select==2){	//국내
+		$json_setdata($jsonName,BODY,ACNO,,$g_save_acno); 		// 계좌번호(개설)
+	}
+	$json_setdata($jsonName,BODY,WORK_NO,,$g_OUT_AGREE_WORK_NO); 			// 상담번호
+	
+	$json_print($jsonName);
+	$delvar(strSSLSendData);
+	$json_getfullstring($jsonName,strSSLSendData);
+	$json_delete($jsonName);
+	$logvar(strSSLSendData);
+	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
+"/>
+<action id="fnRecvSSL_MO_RECORD" 
+value="	// 비대면 절차개선 - 2020.09.28
+		// 위험고지 녹취여부 확인
+	$setvar(
+		recvSSL_hdr_ret 		= $json_getdata($jsonname,HDR.RET)
+		,recvSSL_hdr_msg 		= $json_getdata($jsonname,HDR.MSG)
+		,recvSSL_hdr_err_code	= $json_getdata($jsonname,HDR.ERR_CODE)
+		,recvSSL_body_rec_yn 	= $json_getdata($jsonname,BODY.REC_YN)		// 위험고지 녹취여부 Y/N
+	);
+	$setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_hdr_err_code));
+
+	$log(========= SSL 받은데이터 ==============);
+	$logvar(
+		recvSSL_hdr_ret 
+		,recvSSL_hdr_msg 
+		,recvSSL_body_rec_yn
+	);
+
+	if(!$isequal_string($recvSSL_hdr_ret,OK)){
+		//$alertaction(,,$recv_error_msg,확인);
+		$callaction(fnPopover_AlertAction,,$recv_error_msg,,확인);
+		return;
+	}
+
+	$log($recvSSL_body_rec_yn);
+/*
+	if(!$isequal_string($recvSSL_body_rec_yn,Y)){ 	// 위험고지 녹취여부 확인
+		$popscreen(pop_caution1);	// 팝업창 띄움
+		return;
+	}
+*/
+$popscreen(pop_caution1);	// 팝업창 띄움 - 임시로 위험고지 녹취여부 막고 무조건 팝업 띄움
+
+	$callaction(Act_Open_Account_Move,4131); 	// ID 등록화면으로 이동
+	//$closescreen(popscreen_open_account);
+	//$callaction(Act_Open_Account_Popup, 4131);
+	return;
+
+"/>
+<action id="btn_skip_onclicked"
+value="
+// 비대면 절차개선 - 2020.09.28
+// =========== 저장한 전역변수들 초기화 ===========
+	$callaction(fnConfig_SetValue,g_save_acno,);
+	$callaction(fnConfig_SetValue,g_save_cybr_acct_no,);
+	$callaction(fnConfig_SetValue,g_save_acno2,);
+	$callaction(fnConfig_SetValue,g_save_cybr_acct_no2,);
+	$callaction(fnConfig_SetValue,g_save_acno3,);
+	$callaction(fnConfig_SetValue,g_save_hts_id,);
+	$callaction(fnConfig_SetValue,g_save_qustion_1,);
+	$callaction(fnConfig_SetValue,g_save_qustion_2,);
+
+	$callaction(fnConfig_SetValue,g_open_tp_select,);		// 국내,해외 구분
+	$callaction(fnConfig_SetValue,g_save_bank_code,);		// 은행코드
+	$callaction(fnConfig_SetValue,g_save_bank_name,);		// 은행명
+	$callaction(fnConfig_SetValue,g_save_acnt_name,);		// 계좌명
+	$callaction(fnConfig_SetValue,g_save_acnt_no,);			// 계좌번호
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_NEW_PW,);	// 계좌비밀번호
+	$callaction(fnConfig_SetValue,g_save_tel_num,);			// 전화번호
+	$callaction(fnConfig_SetValue,g_save_members_nm,);			// 추천직원 이름
+	$callaction(fnConfig_SetValue,g_save_members_no,);			// 추천직원 사번
+	$callaction(fnConfig_SetValue,g_save_frontImageEncryptData_base64,); 	// 신분증 이미지 바이너리
+
+	$callaction(fnConfig_SetValue,g_save_bsns_date,);			// 거래일자
+	$callaction(fnConfig_SetValue,g_save_inout_no,);			// 입출금번호
+	$callaction(fnConfig_SetValue,g_save_mast_acctno,);			// 대표계좌번호
+	
+	$callaction(fnConfig_SetValue,g_save_open_tp,);			// 인증방법
+	$callaction(fnConfig_SetValue,g_save_result_yn,);		// 진위여부
+	$callaction(fnConfig_SetValue,g_OUT_AGREE_WORK_NO,);			// 상담번호
+
+	$callaction(fnConfig_SetValue,g_open_account_save,); 			// 마지막 화면번호
+	$callaction(fnConfig_SetValue,g_menu_code_open_account,); 		// 마지막 화면번호
+// ==========================================
+	
+	//$closescreen(popscreen_open_account); 	// 로그인화면으로 이동
+	$closescreen_all();
+	$setvar(g_is_open_account =); //로그인화면에서 종료위해 초기화
+"/>

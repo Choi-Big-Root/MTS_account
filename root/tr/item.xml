@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<STRUCT CODE="FUCODE" TABLEVERSION="10001" TABLENAME="IMD_FUCODE" TABLEQUERY="
+	DROP TABLE IF EXISTS IMD_FUCODE;
+	
+	CREATE TABLE IMD_FUCODE (
+		CODE    VARCHAR
+		, ENAM  VARCHAR
+		, NAME  VARCHAR
+		, EXCH  VARCHAR
+		, TYPE  VARCHAR
+		, PROD  VARCHAR
+		, PIND  VARCHAR
+		, TRDF  VARCHAR
+		, ONOF  VARCHAR
+		, TSIZ  VARCHAR
+		, ADJV  VARCHAR
+		, UNIT  VARCHAR
+		, LMON  VARCHAR
+		, RTIC  VARCHAR
+		, COMD  VARCHAR
+		, YYMM  VARCHAR
+		, FLAG  VARCHAR
+		, FILL  VARCHAR
+	);
+	" COMMENT="FUCODE_마스터 (FUCODE.DAT)">
+	<FIELD CODE="CODE" TYPE="CHAR" SIZE="16"    COMMENT="symbol code" />
+	<FIELD CODE="ENAM" TYPE="CHAR" SIZE="30"    COMMENT="symbol name (english)" SAVESTYLE="UTF8"/>
+	<FIELD CODE="NAME" TYPE="CHAR" SIZE="30"    COMMENT="symbol name" SAVESTYLE="UTF8" />
+	<FIELD CODE="EXCH" TYPE="CHAR" SIZE="2"     COMMENT="exchange section   01:CME, 02:CBOT, 03:NYMEX, 04:EUREX, 05:SGX, 06:HKFX, 07:OSE, 08:TSE, 09:LIFFE, 10:TIFFE, 11:??" />
+	<FIELD CODE="TYPE" TYPE="CHAR" SIZE="1"     COMMENT="symbol type    F: Futures, O: Options, I: Index, X: Forex"  />
+	<FIELD CODE="PROD" TYPE="CHAR" SIZE="2"     COMMENT="production section" />
+	<!--
+	 PROD 데이터 종류
+	 10: Foreign exchange(Currency)-통화
+	 20: Interest rate-채권
+	 30: Index(Equity)-지수
+	 40: Commodity (Agriculture, ...)-농산물
+	 50: Metals-상품
+	 60: Energy-상품
+	 80: Single Stock-지수옵션(현재 미사용)
+	 90: Etc commodity(현재 미사용)
+	 -->
+	<FIELD CODE="PIND" TYPE="CHAR" SIZE="1"     COMMENT="price indicator" />
+	<FIELD CODE="TRDF" TYPE="CHAR" SIZE="1"     COMMENT="trading flag 상품 매매 가능 여부(1: tradable, 0: N/A)" SAVESTYLE="BINCHAR"/>
+	<FIELD CODE="ONOF" TYPE="CHAR" SIZE="1"     COMMENT="on/off line tradable       1: On-Line, 2: Off-Line, 0: N/A" SAVESTYLE="BINCHAR"/>
+	<FIELD CODE="TSIZ" TYPE="CHAR" SIZE="9"     COMMENT="tick size  (include decimal point (ex: 0.01))" SAVESTYLE="TRIM"/>
+	<FIELD CODE="ADJV" TYPE="CHAR" SIZE="9"     COMMENT="adjustment value   (include decimal point (ex: 0.01))" SAVESTYLE="TRIM"/>
+	<FIELD CODE="UNIT" TYPE="CHAR" SIZE="4"     COMMENT="trading unit (*1000)" />
+	<FIELD CODE="LMON" TYPE="CHAR" SIZE="1"     COMMENT="lead month flag(1: Yes, 0: No)"  SAVESTYLE="BINCHAR"/>
+	<FIELD CODE="RTIC" TYPE="CHAR" SIZE="1"     COMMENT="regular tick type (1: 1/1, 2: 1/2, 4: 1/4)"  SAVESTYLE="BINCHAREX"/>
+	<FIELD CODE="COMD" TYPE="CHAR" SIZE="6"     COMMENT="commodity code" />
+	<FIELD CODE="YYMM" TYPE="CHAR" SIZE="6"     COMMENT="contract year & month(YYYYMM)" />
+	<FIELD CODE="FLAG" TYPE="CHAR" SIZE="1"     COMMENT="attribute flag 1:Option의 기초자산"  SAVESTYLE="BINCHAREX"/>
+	<FIELD CODE="FILL" TYPE="CHAR" SIZE="21"    COMMENT="filler" />
+</STRUCT>
+<STRUCT CODE="OPCODE" TABLEVERSION="10001" TABLENAME="IMD_OPCODE" TABLEQUERY="
+	DROP TABLE IF EXISTS IMD_OPCODE;
+	
+	CREATE TABLE IMD_OPCODE (
+		code    VARCHAR
+		, fcod  VARCHAR
+		, strk  VARCHAR
+		, otyp  VARCHAR
+		, atmf  VARCHAR
+		, fill  VARCHAR
+		, endf  VARCHAR
+	);
+	" COMMENT="OPCODE_마스터 (OPCODE.DAT)">
+	<FIELD CODE="code" TYPE="CHAR" SIZE="16"    COMMENT="symbol code" />
+	<FIELD CODE="fcod" TYPE="CHAR" SIZE="8"    COMMENT="futures code" SAVESTYLE="UTF8"/>
+	<FIELD CODE="strk" TYPE="CHAR" SIZE="8"    COMMENT="strike price"  />
+	<FIELD CODE="otyp" TYPE="CHAR" SIZE="1"     COMMENT="option type (C:Call, P:Put)" />
+	<FIELD CODE="atmf" TYPE="CHAR" SIZE="1"     COMMENT="1:ATM(등가격), 2:ITM(내가격), 3:OTM(외가격)" />
+		<FIELD CODE="fill" TYPE="CHAR" SIZE="8"     COMMENT="Filler" />
+		<FIELD CODE="endf" TYPE="CHAR" SIZE="1"     COMMENT=" end of record ('\n')" />
+	</STRUCT>
+	<STRUCT CODE="OPITEM" TABLEVERSION="10001" TABLENAME="IMD_OPITEM" TABLEQUERY="
+	DROP TABLE IF EXISTS IMD_OPITEM;
+	
+	CREATE TABLE IMD_OPITEM (
+		comd    VARCHAR
+		, exnm  VARCHAR
+		, exid  VARCHAR
+		, enam  VARCHAR
+		, name  VARCHAR
+		, type  VARCHAR
+		, trdf  VARCHAR
+		, prod  VARCHAR
+		, pind  VARCHAR
+		, tsiz  VARCHAR
+		, tval  VARCHAR
+		, adjv  VARCHAR
+		, csiz  VARCHAR
+		, cval  VARCHAR
+		, stid  VARCHAR
+		, osty  VARCHAR
+		, onof  VARCHAR
+		, fill  VARCHAR
+		, endf  VARCHAR
+	);
+	" COMMENT="OPITEM_마스터 (OPITEM.DAT)">
+	<FIELD CODE="comd" TYPE="CHAR" SIZE="16"    COMMENT="item code  " />
+	<FIELD CODE="exnm" TYPE="CHAR" SIZE="8"    COMMENT="exchange name" SAVESTYLE="UTF8"/>
+	<FIELD CODE="exid" TYPE="CHAR" SIZE="2"    COMMENT=" exchange id 1:CME, 4:EUREX, 5:SGX 6:HKE "  />
+	<FIELD CODE="enam" TYPE="CHAR" SIZE="30"     COMMENT="item name (english)" />
+	<FIELD CODE="name" TYPE="CHAR" SIZE="30"     COMMENT="item name (korean)" />
+	<FIELD CODE="type" TYPE="CHAR" SIZE="1"     COMMENT="symbol type('O') " />
+	<FIELD CODE="trdf" TYPE="CHAR" SIZE="1"     COMMENT="trading flag (1: tradable)" />
+	<FIELD CODE="prod" TYPE="CHAR" SIZE="2"     COMMENT="production section" />
+	<FIELD CODE="pind" TYPE="CHAR" SIZE="1"     COMMENT="price indicator" />
+	<FIELD CODE="tsiz" TYPE="CHAR" SIZE="9"     COMMENT="tick size" />
+	<FIELD CODE="tval" TYPE="CHAR" SIZE="9"     COMMENT="tick value" />
+	<FIELD CODE="adjv" TYPE="CHAR" SIZE="7"     COMMENT="adjustment value " />
+	<FIELD CODE="csiz" TYPE="CHAR" SIZE="9"     COMMENT="cab tick size" />
+	<FIELD CODE="cval" TYPE="CHAR" SIZE="7"     COMMENT="cab value" />
+	<FIELD CODE="stid" TYPE="CHAR" SIZE="1"     COMMENT="strike indicator" />
+	<FIELD CODE="osty" TYPE="CHAR" SIZE="1"     COMMENT="option style  1: American, 2: European" />
+	<FIELD CODE="onof" TYPE="CHAR" SIZE="1"     COMMENT="on/off line tradable  1: on-line, 2: off-Line" />
+	<FIELD CODE="fill" TYPE="CHAR" SIZE="8"     COMMENT="Filler" />
+	<FIELD CODE="endf" TYPE="CHAR" SIZE="1"     COMMENT="end of record ('\n')" />
+</STRUCT>
+

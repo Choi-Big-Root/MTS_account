@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+<?xml-stylesheet href='tableio.xsl' type='text/xsl'?>
+<request Name="RH" descript="마켓히트 실시간" >
+	<output>        
+		<record name="OutBlock" type="1" size="0" sizetype="0"  sizeformat="" sizefield="" >    
+			<field name="type"      type="1" size="2" bindname="메시지구분" fieldformat="" constvalue="" desc="RH"/>
+			<field name="sect"      type="1" size="2" bindname="상품구분" fieldformat="" constvalue="" desc="상품구분,10:Currency(통화),20:Interest rate(금리),30:Index(지수),40:Commodity(농축산),50:Metals(금속),60:Energy(에너지)"/>
+			<field name="sect_name" type="1" size="15" bindname="상품구분명" fieldformat="" constvalue="" desc="상품구분명"/>
+			<field name="avg_rate"  type="1" size="9" bindname="평균등락율" fieldformat="" constvalue="" desc="상품군 평균 등락률(절대값)"/>
+			<field name="top_exnm"  type="1" size="8" bindname="거래소" fieldformat="" constvalue="" desc="절대값 등락률이 가장 큰 종목의 거래소"/>            
+			<field name="top_isym"  type="1" size="20" bindname="내부종목코드" fieldformat="" constvalue="" desc="절대값 등락률이 가장 큰 내부종목코드"/>
+			<field name="top_esym"  type="1" size="20" bindname="시세종목코드" fieldformat="" constvalue="" desc="절대값 등락률이 가장 큰 시세종목코드"/>
+		</record>
+	</output>
+</request>
+-->
+
+<STRUCT CODE="RH" SERVICECODE="RH" NAME="마켓히트 실시간" COMMENT="마켓히트 실시간">
+	<BLOCK CODE="PageBlock" NAME="PageBlock" SEND="NO" ATTR="NO" OCCURS="NO">
+		<FIELD CODE="sect" TYPE="CHAR" SIZE="2" NAME="상품구분,10:Currency(통화),20:Interest rate(금리),30:Index(지수),40:Commodity(농축산),50:Metals(금속),60:Energy(에너지)"/>
+		<FIELD CODE="sect_name" TYPE="CHAR" SIZE="15" NAME="상품구분명"/>
+		<FIELD CODE="avg_rate" TYPE="CHAR" SIZE="9" NAME="상품군 평균 등락률(절대값)"/>
+		<FIELD CODE="top_exnm" TYPE="CHAR" SIZE="8" NAME="절대값 등락률이 가장 큰 종목의 거래소"/>
+		<FIELD CODE="top_isym" TYPE="CHAR" SIZE="20" NAME="절대값 등락률이 가장 큰 내부종목코드"/>
+		<FIELD CODE="top_esym" TYPE="CHAR" SIZE="20" NAME="절대값 등락률이 가장 큰 시세종목코드"/>
+	</BLOCK> 
+</STRUCT>

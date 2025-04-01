@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<br/>
+<!--
+ *********************************************************************************
+ **
+ ** 화면을 그린 후에 필요한 작업을 한다. 
+ ** - TR을 배열에 담는다. 전송은 특이한 경우가 아니면 basescreen에서 일괄적으로 전송한다.
+ **
+ *********************************************************************************
+ -->
+<class id="css_4109_select"
+	groupid="btn_4109_100" 
+	width="$w($g_lcdwidth,92)" 
+	height="$h($g_lcdHeight,8.3)"  
+	align="center"
+	backcolor="ffffff"
+	backcolor_active="ffffff"
+	fontsize="$g_fontSize_big1" 
+	fontname="$g_baseFontName"
+	textcolor="444444"
+	textcolor_active="e33433"
+	border_width="$g_roundHeight"	
+	border_color="bbbbbb"
+	border_width_active="$g_roundHeight"
+	border_color_active="e33433"
+	onclicked="btn_4109_onclciked"
+	/>
+<action id="screen_contents_onload" value="
+	$logvar(g_tf_4102_confirm_2_var);
+	$setvar(
+		,img_step_1.hidden=false
+		,img_step_2.hidden=true
+		,img_step_3.hidden=true
+		,img_step_4.hidden=true
+		,img_step_5.hidden=true
+		,img_step_6.hidden=true
+		,img_step_7.hidden=true
+		,img_step_8.hidden=true
+		,lbl_open_account_title.x=$w($g_lcdwidth,4.6) // 순서대로 오지 않을경우에 치우친다.
+		,lbl_account_title_step_1.hidden=true
+		,lbl_account_title_step_2.hidden=false
+		,lbl_account_title_step_3.hidden=false
+		,lbl_account_title_step_4.hidden=false
+		,lbl_account_title_step_5.hidden=false
+		,lbl_account_title_step_6.hidden=false
+		,lbl_account_title_step_7.hidden=false
+		,lbl_account_title_step_8.hidden=false
+		,lbl_account_title_step_2.textcolor=ffffff
+		,lbl_account_title_step_3.textcolor=777777
+		,lbl_account_title_step_4.textcolor=777777
+		,lbl_account_title_step_5.textcolor=777777
+		,lbl_account_title_step_6.textcolor=777777
+		,lbl_account_title_step_7.textcolor=777777
+		,lbl_account_title_step_8.textcolor=777777
+		,vg_account_title_step.hidden=false
+		
+		,popscreen_open_account_history.hidden=true
+		,popscreen_open_account_history_2.hidden=true
+		,popscreen_open_account_confirm.hidden=false
+		,popscreen_open_account_confirm.x=$w($g_lcdwidth,57)
+		,menu_num=4109
+		);
+		//$setControlHidden(popscreen_open_account_history,true);
+		//$setControlHidden(popscreen_open_account_history_2,true);
+		//$setControlHidden(popscreen_open_account_confirm,false);
+"/>
+<action id="btn_4109_confirm_onclicked" value="
+	if($strlen($vg_4109_100_select.selectkey)<1){
+		$alert(,,답변을 선택해주세요.);
+		return;
+	}
+	$callaction(fnConfig_SetValue,g_IN_CUST_Q5 	,$vg_4109_100_select.selectkey); 	//Q5
+	$callaction(Act_Open_Account_Move,4110); 
+"/>
+<screen id="screen_4109_100"
+	class="cs_screen_contents"
+	backcolor="eeeeee"
+	onload="screen_contents_onload"
+	>
+	<viewgroup 
+		width="$super.width"
+		height="$h($g_lcdHeight,0.5)"
+		backcolor="c3201f"
+		>
+		<label width="$w($g_lcdwidth,50)" backcolor="ffffff"/>
+	</viewgroup>
+	<br/>
+	<screen
+		height="$this.remain_bottom"
+		backcolor="eeeeee"
+		>
+		<viewgroup 
+			width="$w($g_lcdwidth,10.2)"
+			height="$h($g_lcdHeight,8.5)"
+			>
+			<label textcolor="e33433" fontsize="$g_fontsize_big3"  align="right" value="05"/>
+		</viewgroup>
+		<br/>
+		<label
+			width="$super.width" 
+			height="$h($g_lcdHeight,6)"
+			value="고객님께서 투자하고자 하는 자금은 고객님의 전체\n금융자산 중 어느 정도의 비중을 차지 합니까?" 
+			margin_left="$w($g_lcdWidth,4)"
+			fontsize="$g_fontsize_big1" 
+			fontname="$g_baseFontNameBold"
+			align="center"
+			layout="top"
+			/>
+		<br height="$h($g_lcdHeight,3)"/><blank width="$w($g_lcdWidth,4)"/>
+		<viewgroup id="vg_4109_100_select" height="$h($g_lcdHeight,50)">
+			<button 
+				class="css_4109_select"
+				value="10%이하" 
+				key="1"
+				/>
+			<br height="$h($g_lcdHeight,1.5)"/>
+			<button 
+				class="css_4109_select"
+				value="10% ~ 20%" 
+				key="2"
+				/>
+			<br height="$h($g_lcdHeight,1.5)"/>
+			<button 
+				class="css_4109_select"
+				value="20% ~ 30%" 
+				key="3"
+				/>
+			<br height="$h($g_lcdHeight,1.5)"/>
+			<button 
+				class="css_4109_select"
+				value="30% ~ 40%" 
+				key="4"
+				/>
+			<br height="$h($g_lcdHeight,1.5)"/>
+			<button 
+				class="css_4109_select"
+				value="40% 초과" 
+				key="5"
+			/>
+		</viewgroup>
+		<br/><blank width="$w($g_lcdWidth,4)"/>
+		<button 
+			id="btn_4109_bf"
+			fontsize="$g_fontsize_big3" 
+			y="$result($this.remain_bottom-$h($g_lcdHeight,13.4))"
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,9.4)" 
+			backcolor="ffffff"
+			border_width="$g_roundHeight"
+			border_color="e33433"
+			backcolor_active="e5e5e5"
+			textcolor="e33433"
+			textcolor_active="e33433"
+			value="이전" 
+			onclicked="btn_open_account_history_onClicked"
+			//$callaction(Act_Open_Account_Move,4108);
+			//$closescreen(popscreen_base);
+			//enable="false"
+			//backcolor_disable="bfbfbf"
+			//textcolor_disable="999999"
+			/>
+		<blank width="$w($g_lcdWidth,1.8)"/>
+		<button 
+			id="btn_4109_af"
+			y="$result($this.remain_bottom-$h($g_lcdHeight,13.4))"
+			fontsize="$g_fontsize_big3" 
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,9.4)" 
+			backcolor="e33433"
+			border_width="$g_roundHeight"
+			backcolor_active="cc2f2e"
+			textcolor="ffffff"
+			textcolor_active="ffffff"
+			value="다음" 
+			onclicked="btn_4109_confirm_onclicked"
+			//enable="false"
+			//backcolor_disable="bfbfbf"
+			//textcolor_disable="999999"
+			/>
+	</screen>
+</screen>

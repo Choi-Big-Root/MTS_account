@@ -1,0 +1,780 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ *********************************************************************************
+ **
+ ** fnSetDefaultConfig: Config 설정값이 없는 경우 디폴트 값을 넣는다.
+ **
+ *********************************************************************************
+ -->
+ <!--
+<action id="fnSetDefaultConfig" scope="common" 
+value="
+	$setvar(tmp_isSave=false);
+	
+	// 백신실행여부
+	$config_getvalue(cf_vaccine_autoplay,tmp_vaccine_autoplay);
+	if($strlen($tmp_vaccine_autoplay)<1){ $callaction(fnSetConfig,g_vaccine_autoplay,cf_vaccine_autoplay,true);$setvar(tmp_isSave=true);  }
+
+	// app 버전
+	$config_getvalue(cf_appversion,tmp_app_version);
+	if($strlen($tmp_app_version)<1){ $callaction(fnSetConfig,g_app_version,cf_app_version,$bundleinfo(VERSION));$setvar(tmp_isSave=true);  }
+	
+	// XML버전
+	$config_getvalue(cf_xmlVersion,tmp_xmlVersion);
+	if($strlen($tmp_xmlVersion)<1){ $callaction(fnSetConfig,g_xmlVersion,cf_xmlVersion,0);$setvar(tmp_isSave=true);  }
+	
+	// 마스터버젼
+	$config_getvalue(cf_master_version,tmp_master_version);
+	if($strlen($tmp_master_version)<1){ $callaction(fnSetConfig,g_master_version,cf_master_version,);$setvar(tmp_isSave=true);  }
+	
+	// 임시로 한번 셋팅한다.
+	//$callaction(fnSetConfig,g_menuCode,cf_menuCode,1110);$setvar(tmp_isSave=true);
+	// 디폴트 메뉴코드
+	$config_getvalue(cf_menuCode,tmp_menuCode);
+	if($strlen($tmp_menuCode)<1){ $callaction(fnSetConfig,g_menuCode,cf_menuCode,1110);$setvar(tmp_isSave=true);  }
+
+	if($isequal_string($tmp_isSave,true)){  $callaction(fnSaveConfigAll);   }
+" />
+-->
+<!--
+ *********************************************************************************
+ **
+ ** fnLoadConfigAll: DB에서 Config 설정파일을  읽어와 배열에 저장한다. - 관련배열:arr_config
+ **
+ *********************************************************************************
+ -->
+ <!--
+<action id="fnLoadConfigAll" scope="common"
+value="
+	// 기존배열을 삭제한다.
+	$delarrayvar(arr_config);
+
+	$setvar(
+		sql=$(
+			SELECT *  FROM ldh_config
+		)
+	);
+	$query_result    = $db_exec_query(CONFIG, $sql);
+	$query_cnt       = $db_rowcount(CONFIG, $query_result);
+
+	$logvar(query_cnt);
+	for($dbCnt = 0; $dbCnt < $query_cnt; $dbCnt++){
+		$setvar(varValue_dbFieldName=, varValue_varName=, varValue_value=);
+		$setvar(
+			varValue_dbFieldName    = $db_colnamevalue(CONFIG, $query_result, $dbCnt, CODE)
+			, varValue_value        = $db_colnamevalue(CONFIG, $query_result, $dbCnt, VALUE1)
+			, varValue_varName      = $db_colnamevalue(CONFIG, $query_result, $dbCnt, VALUE2)
+			, varValue_useCheck     = $db_colnamevalue(CONFIG, $query_result, $dbCnt, VALUE5)
+		);
+
+		// 사용여부를 결정짓는다. 5번재 값에 false추가 굳이 두번 부를필요 없는것들은 여기서 막는다.
+		if(!$isequal_string($varValue_useCheck,false)){
+			if($strlen($varValue_varName)<1){ $setvar(varValue_varName=$addstring(g_,$varValue_dbFieldName)); }
+			$setsubarray_common(arr_config,$dbCnt,$varValue_dbFieldName,$varValue_value,$varValue_varName);
+			$callaction(fnSetVarCommon,$varValue_varName,$varValue_value,설정파일);
+		}
+	}
+	$db_exec_close(CONFIG,$query_result);
+" 
+/>
+-->
+<!--
+ *********************************************************************************
+ **
+ ** fnSaveConfigAll: Config 설정 배열을 DB에 저장한다. - 관련배열:arr_config
+ **
+ *********************************************************************************
+ -->
+ <!--
+<action id="fnSaveConfigAll" scope="common" 
+value="
+	$setvar(var_arrCnt=$getarrayvarcount(arr_config));
+	$log(설정값 저장 : $var_arrCnt);
+	for($arrCnt=0;$arrCnt<$var_arrCnt;$arrCnt++){
+		$setvar(
+			varValue_dbFieldName    	= $getarrayvar(arr_config,$arrCnt,0)        // db필드명
+			,varValue_value         		= $getarrayvar(arr_config,$arrCnt,1)        // 값
+			,varValue_varName       	= $getarrayvar(arr_config,$arrCnt,2)        // 변수명
+		);
+		$config_setvalue($varValue_dbFieldName,$varValue_value,$varValue_varName);
+	}
+"/>
+
+
+<action id="fnSetConfig" scope="common" 
+value="
+	$setvar(
+		varValue_varName=$fnSetConfig_param1            // 변수병
+		,varValue_dbFieldName=$fnSetConfig_param2       // db필드명
+		,varValue_value=$fnSetConfig_param3             // 값
+	);
+	$setvar(varIdx_varName=$getarrayindex(arr_config,0,$varValue_varName));
+	// 중복체크해야함.
+	if($varIdx_varName<0){   $setvar(arr_idx=$getarrayvarcount(arr_config));   }
+	else{   $setvar(arr_idx=$varIdx_varName);   }
+
+	$setsubarray_common(arr_config,$arr_idx,$varValue_dbFieldName,$varValue_value,$varValue_varName);
+	$callaction(fnSetVarCommon,$varValue_varName,$varValue_value,설정파일셋팅);
+" />
+
+<action id="fnLogConfig" scope="common" value="
+	$setvar(var_arrCnt=$getarrayvarcount(arr_config));
+	
+	$log(********** Config 배열목록 *********);
+	for($arrCnt=0;$arrCnt<$var_arrCnt;$arrCnt++){
+		$setvar(
+			varValue_dbFieldName        = $getarrayvar(arr_config,$arrCnt,0)        // db필드명
+			,varValue_value             = $getarrayvar(arr_config,$arrCnt,1)        // 값
+			,varValue_varName           = $getarrayvar(arr_config,$arrCnt,2)        // 변수명
+		);
+		$setvar(varValue_varValue       = $getvar_common($($varValue_varName)));
+	
+		$log(전역변수명:[$varValue_varName],전역변수값:[$varValue_varValue], DB필드명:[$varValue_dbFieldName], 값:[$varValue_value]);
+	}
+	$log(**********************************);
+" />
+-->
+
+<action id="fnSetVarCommon" scope="common" 
+paramlog="false"
+value="
+	$setvar(
+		varName=$fnSetVarCommon_param1                          // 변수병
+		,varValue=$fnSetVarCommon_param2                        // 값
+		,varDescription=$fnSetVarCommon_param3                  // 설명
+	);
+	$setvar(varIdx=$getarrayindex(arr_commonVar,0,$varName));
+	// 중복체크해야함.
+	if($varIdx<0){      	$setvar(arr_idx=$getarrayvarcount(arr_commonVar));   }
+	else{               		$setvar(arr_idx=$varIdx);   }
+
+	$setsubarray_common(arr_commonVar,$arr_idx,$varName,$varValue,$varDescription);
+	$setvar_common($($varName)=$varValue);
+	$setvar(varValue_varValue       = $getvar_common($($varName)));
+" />
+
+<action id="fnLogVarCommon" scope="common" 
+value="
+	$setvar(var_arrCnt=$getarrayvarcount(arr_commonVar));
+	$log(********** 전역변수 목록 *********);
+	for($arrCnt=0;$arrCnt<$var_arrCnt;$arrCnt++){
+		$setvar(
+			varName                 = $getarrayvar(arr_commonVar,$arrCnt,0)                  // 변수병
+			,varValue               = $getarrayvar(arr_commonVar,$arrCnt,1)           // 값
+			,varDescription         = $getarrayvar(arr_commonVar,$arrCnt,2)       // 설명
+		);
+		$setvar(varValue_varValue       = $getvar_common($($varName)));
+		$log(전역변수명:[$varName],전역변수값:[$varValue_varValue], 값:[$varValue], 설명:[$varDescription]);
+	}
+	$log(**********************************);
+" />
+
+<!--
+ *********************************************************************************
+ **
+ ** fnSetInitPath: 경로를 설정한다.
+ **
+ *********************************************************************************
+ -->
+<action id="fnSetInitPath" scope="common" 
+value="
+	$callaction(fnSetVarCommon,g_path,plist/root/,경로);
+	$callaction(fnSetVarCommon,g_path_root,plist,경로);
+	$callaction(fnSetVarCommon,g_path_screen,$($g_path+screen/),경로);
+	$callaction(fnSetVarCommon,g_path_image,$($g_path+resource/),경로);
+	$callaction(fnSetVarCommon,g_path_image_skin,$($g_path+resource/$g_path_skin),경로);
+	$callaction(fnSetVarCommon,g_path_sound,$($g_path+sound/),경로);
+	$callaction(fnSetVarCommon,g_path_common,$($g_path+common/),경로);
+	$callaction(fnSetVarCommon,g_path_template,$($g_path+template/),경로);
+	$callaction(fnSetVarCommon,g_path_map,$($g_path+tr/),경로);
+	$callaction(fnSetVarCommon,g_path_mapsned,$($g_path+trsend/),경로);
+	$callaction(fnSetVarCommon,g_cssName,$addstring(plist/root/common/css_,$g_path_skin,.xml),경로);
+	$callaction(fnSetVarCommon,g_path_image_icon,$($g_path_image+icon/$g_DeviceIconDir+$g_DeviceIconDir_prefix),경로);
+	$callaction(fnSetVarCommon,g_path_image_common,$($g_path_image+common/),경로);
+
+	$callaction(fnSetVarCommon,g_path_image_common_figma,$($g_path_image+common/figma/),경로);
+
+	$callaction(fnSetVarCommon,g_path_image_icon_skin,$($g_path_image_skin+icon/$g_DeviceIconDir),경로);
+	$callaction(fnSetVarCommon,g_path_image_common_skin,$($g_path_image_skin+common/),경로);	
+
+	/*
+	// 시뮬레이터와 구분한다. 
+	//if($isequal_string($g_deviceinfo_NAME,iPhone Simulator) || $isequal_string($g_deviceinfo_NAME,iPad Simulator)|| //$g_debug_down_flag){   $callaction(fnSetVarCommon,g_path_down,$($g_path_root+/down),다운로드);}
+	//else{   $callaction(fnSetVarCommon,g_path_down,$($g_path_root),다운로드);   }
+	*/
+
+	if($g_debug_down_flag){   $callaction(fnSetVarCommon,g_path_down,$($g_path_root+/down),다운로드);}
+	else{   $callaction(fnSetVarCommon,g_path_down,$($g_path_root),다운로드);   }
+" />
+<!--
+ *********************************************************************************
+ **
+ ** fnSetDeviceInfo: 디바이스 정보 및 기준 해상도를  전역변수에 저장한다.
+ **
+ *********************************************************************************
+ -->
+<action id="fnSetDeviceInfo" scope="common" 
+value="
+	$callaction(fnSetVarCommon,g_deviceinfo_NAME,$deviceinfo(NAME));
+	$callaction(fnSetVarCommon,g_deviceinfo_MODEL,$deviceinfo(MODEL));
+	$callaction(fnSetVarCommon,g_deviceinfo_LOCALIZEDMODEL,$deviceinfo(LOCALIZEDMODEL));
+	$callaction(fnSetVarCommon,g_deviceinfo_SYSTEMNAME,$deviceinfo(SYSTEMNAME));
+	$callaction(fnSetVarCommon,g_deviceinfo_SYSTEMVERSION,$deviceinfo(SYSTEMVERSION));
+	$callaction(fnSetVarCommon,g_deviceinfo_UNIQUEIDENTIFIER,$deviceinfo(UNIQUEIDENTIFIER));
+	//$callaction(fnSetVarCommon,g_deviceinfo_IPADDRESS,$deviceinfo(IPADDRESS));
+	$callaction(fnSetVarCommon,g_deviceinfo_IPADDRESS,$deviceinfo(IPADDRESS_NONZERO));
+	$callaction(fnSetVarCommon,g_deviceinfo_MACADDRESS,$deviceinfo(MACADDRESS));
+	$callaction(fnSetVarCommon,g_get_DEVICEUID,$getdeviceaddress());           // mm 파일에서 수정가능
+	$callaction(fnSetVarCommon,g_bundleinfo_VERSION,$bundleinfo(VERSION));          // app버젼
+	$callaction(fnSetVarCommon,g_bundleinfo_UUID_RANDOM,$deviceinfo(UUID));          // app버젼
+	$callaction(fnSetVarCommon,g_bundleinfo_VERSION_DIC,$bundleinfo(VERSION_DIC));
+	$callaction(fnSetVarCommon,g_bundleinfo_EXECUTABLE,$bundleinfo(EXECUTABLE));
+	$callaction(fnSetVarCommon,g_bundleinfo_IDENTIFIER,$bundleinfo(IDENTIFIER));
+	$callaction(fnSetVarCommon,g_bundleinfo_DEVREGION,$bundleinfo(DEVREGION));
+	$callaction(fnSetVarCommon,g_bundleinfo_BUNDLENAME,$bundleinfo(BUNDLENAME));
+	$callaction(fnSetVarCommon,g_bundleinfo_BUNDLELOCAL,$bundleinfo(BUNDLELOCAL));
+	$callaction(fnSetVarCommon,g_deviceaddress,$getdeviceaddress());
+	
+	// 기본이 되는 해상도는 WVGA이다.
+	$callaction(fnSetVarCommon,g_baseWidth,480);
+	$callaction(fnSetVarCommon,g_baseHeight,$result(800 - $getstatusbar_height()));
+	$callaction(fnSetVarCommon,g_baseWidth_ori,800);
+	$callaction(fnSetVarCommon,g_baseHeight_ori,$result(480 - $getstatusbar_height()));
+
+	$callaction(fnSetVarCommon,g_deviceName,$callaction(fnGetDeviceName),해상도별로 구분함);
+
+	// 기기별 화면 화면구성 크기지정:타이틀바, 메뉴 등
+	$callaction(fnSetDeviceSize,$g_deviceName);
+
+	// 기기별 Default 폰트 및 크기 지정
+	$callaction(fnSetDeviceFont,$g_deviceName);
+
+	// 기기별 Icon 폴더 설정
+	$callaction(fnSetIconDir,$g_deviceName);
+
+	$callaction(fnSetInitPath);
+
+	$callaction(fnSetIconPath);         // 아이콘 경로 셋팅 
+
+	$callaction(fnSetInitContorlSize);
+
+
+	$callaction(fnSetVarCommon,g_widthRatio,$result_double($g_lcdWidth/$g_baseWidth),라티오);
+	$callaction(fnSetVarCommon,g_heightRatio,$result_double($g_lcdHeight/$g_baseHeight),라티오);
+	$callaction(fnSetVarCommon,g_widthRatio_ori,$result_double($g_lcdWidth_ori/$g_baseWidth_ori),라티오);
+	$callaction(fnSetVarCommon,g_heightRatio_ori,$result_double($g_lcdHeight_ori/$g_baseHeight_ori),라티오);
+
+	// 화면이 변경될때 처리 어떻게 되나?
+	$setwideimage_ratio($g_widthRatio,$g_heightRatio);
+
+" />
+<!--
+ *********************************************************************************
+ **
+ ** fnSetDeviceFont: 폰트 전역변수 설정
+ **
+ *********************************************************************************
+ -->
+<action id="fnSetDeviceFont"  scope="common" 
+value="
+	$log(fnSetDeviceFont);
+	$setvar_common(tmpDeviceKind=$fnSetDeviceFont_param1);
+	$logvar(tmpDeviceKind);
+
+	if($isequal_string($tmpDeviceKind,iPhone OS)){                      //320:480 - 20
+		$callaction(fnSetVarCommon,g_baseFontName,Helvetica,폰트명);
+		$callaction(fnSetVarCommon,g_baseFontNameBold,Helvetica-Bold,볼드폰트명);
+		$callaction(fnSetVarCommon,g_baseFontSize,12,기본폰트크기);
+		$callaction(fnSetVarCommon,g_baseFontUnitSize,2,폰트증감크기);
+		$callaction(fnSetVarCommon,g_htmlFontName,Helvetica,폰트명);
+		$callaction(fnSetVarCommon,g_htmlFontNameBold,Helvetica-Bold,볼드폰트명);
+	}
+	elseif($isequal_string($tmpDeviceKind,iPhone5 OS)){                 //320:568 - 20
+		$callaction(fnSetVarCommon,g_baseFontName,Helvetica,폰트명);
+		$callaction(fnSetVarCommon,g_baseFontNameBold,Helvetica-Bold,볼드폰트명);
+		$callaction(fnSetVarCommon,g_baseFontSize,12,기본폰트크기);
+		$callaction(fnSetVarCommon,g_baseFontUnitSize,2,폰트증감크기);
+		$callaction(fnSetVarCommon,g_htmlFontName,Helvetica,폰트명);
+		$callaction(fnSetVarCommon,g_htmlFontNameBold,Helvetica-Bold,볼드폰트명);
+	}
+	elseif($isequal_string($tmpDeviceKind,iPhone6 OS)){                 //375:667 - 20
+		$callaction(fnSetVarCommon,g_baseFontName,Helvetica,폰트명);
+		$callaction(fnSetVarCommon,g_baseFontNameBold,Helvetica-Bold,볼드폰트명);
+		$callaction(fnSetVarCommon,g_baseFontSize,15,기본폰트크기);
+		$callaction(fnSetVarCommon,g_baseFontUnitSize,3,폰트증감크기);
+		$callaction(fnSetVarCommon,g_htmlFontName,Helvetica,폰트명);
+		$callaction(fnSetVarCommon,g_htmlFontNameBold,Helvetica-Bold,볼드폰트명);
+	}
+	elseif($isequal_string($tmpDeviceKind,iPhone6Plus OS)){             //414:736 - 20
+		$callaction(fnSetVarCommon,g_baseFontName,NanumBarunGothic,폰트명);
+		$callaction(fnSetVarCommon,g_baseFontNameBold,NanumBarunGothicBold,볼드폰트명);
+		$callaction(fnSetVarCommon,g_baseFontSize,15,기본폰트크기);
+		$callaction(fnSetVarCommon,g_baseFontUnitSize,3,폰트증감크기);
+		$callaction(fnSetVarCommon,g_htmlFontName,Helvetica,폰트명);
+		$callaction(fnSetVarCommon,g_htmlFontNameBold,Helvetica-Bold,볼드폰트명);
+	}
+	elseif($isequal_string($tmpDeviceKind,iPad OS)){             
+		//$callaction(fnSetVarCommon,g_baseFontName,NanumBarunGothic,폰트명);
+		//$callaction(fnSetVarCommon,g_baseFontNameBold,NanumBarunGothicBold,볼드폰트명);
+		$callaction(fnSetVarCommon,g_baseFontSize,22,기본폰트크기);
+		$callaction(fnSetVarCommon,g_baseFontUnitSize,4,폰트증감크기);
+		$callaction(fnSetVarCommon,g_htmlFontName,Helvetica,폰트명);
+		$callaction(fnSetVarCommon,g_htmlFontNameBold,Helvetica-Bold,볼드폰트명);
+	}
+	elseif($isequal_string($tmpDeviceKind,HD)){
+		//$callaction(fnSetVarCommon,g_baseFontName,NanumBarunGothic,폰트명);
+		//$callaction(fnSetVarCommon,g_baseFontNameBold,NanumBarunGothicBold,볼드폰트명);
+		$callaction(fnSetVarCommon,g_baseFontSize,30,기본폰트크기);
+		$callaction(fnSetVarCommon,g_baseFontUnitSize,3,폰트증감크기);
+		$callaction(fnSetVarCommon,g_htmlFontName,NanumBarunGothic,폰트명);
+		$callaction(fnSetVarCommon,g_htmlFontNameBold,NanumBarunGothicBold,볼드폰트명);
+	}
+	elseif($isequal_string($tmpDeviceKind,FULLHD)){
+		//$callaction(fnSetVarCommon,g_baseFontName,NanumBarunGothic,폰트명);
+		//$callaction(fnSetVarCommon,g_baseFontNameBold,NanumBarunGothicBold,볼드폰트명);
+		$callaction(fnSetVarCommon,g_baseFontSize,44,기본폰트크기);
+		$callaction(fnSetVarCommon,g_baseFontUnitSize,4,폰트증감크기);
+		$callaction(fnSetVarCommon,g_htmlFontName,NanumBarunGothic,폰트명);
+		$callaction(fnSetVarCommon,g_htmlFontNameBold,NanumBarunGothicBold,볼드폰트명);
+	}
+	elseif($isequal_string($tmpDeviceKind,QHD)){
+		//$callaction(fnSetVarCommon,g_baseFontName,NanumBarunGothic,폰트명);
+		//$callaction(fnSetVarCommon,g_baseFontNameBold,NanumBarunGothicBold,볼드폰트명);
+		$callaction(fnSetVarCommon,g_baseFontSize,50,기본폰트크기);
+		$callaction(fnSetVarCommon,g_baseFontUnitSize,5,폰트증감크기);
+		$callaction(fnSetVarCommon,g_htmlFontName,NanumBarunGothic,폰트명);
+		$callaction(fnSetVarCommon,g_htmlFontNameBold,NanumBarunGothicBold,볼드폰트명);
+	}
+	elseif($isequal_string($tmpDeviceKind,WVGA)){
+		//$callaction(fnSetVarCommon,g_baseFontName,NanumBarunGothic,폰트명);
+		//$callaction(fnSetVarCommon,g_baseFontNameBold,NanumBarunGothicBold,볼드폰트명);
+		$callaction(fnSetVarCommon,g_baseFontSize,20,기본폰트크기);
+		$callaction(fnSetVarCommon,g_baseFontUnitSize,2,폰트증감크기);
+		$callaction(fnSetVarCommon,g_htmlFontName,NanumBarunGothic,폰트명);
+		$callaction(fnSetVarCommon,g_htmlFontNameBold,NanumBarunGothicBold,볼드폰트명);
+	}
+	$logvar(
+		g_baseFontSize
+		,g_baseFontUnitSize
+		,g_htmlFontName
+		,g_htmlFontNameBold
+
+	);
+" />
+<!--
+ *********************************************************************************
+ **
+ ** fnSetDeviceFont: 폰트 전역변수 설정
+ **
+ *********************************************************************************
+ -->
+<action id="fnGetDeviceName" scope="common" 
+value="
+	$log(======= 화면해상도 ======);
+	$setvar(
+		tmpDeviceModel = $deviceinfo(MODEL)
+		,tmpStatus = $getstatusbar_height()
+	);
+	$logvar(tmpDeviceModel,tmpStatus,p_lcdwidth,p_lcdheight);
+
+	if($isequal_string($tmpDeviceModel,iPhone) || $isequal_string($tmpDeviceModel,iPad))
+	{
+		$setvar_common(g_isAndroid=false, g_border_width=0, g_TR_HEADER_OSTP=2);
+		// status 영역은 제거된 걸로 계산한다.
+		if($p_lcdheight<0)    {   return Error; }
+		elseif($p_lcdheight>=1004) { return iPad OS;  }   //iPad          (768:1004 - 20)
+
+		elseif($p_lcdheight>=716) { return iPhone6Plus OS;  }   //iPhone6S Plus 포함          (414:736 - 20)
+		elseif($p_lcdheight>=647) { return iPhone6 OS;  }       //iPhone6S 포함               (375:667 - 20)
+		elseif($p_lcdheight>=548) { return iPhone5 OS;  }       //iPhone5S 포함               (320:568 - 20)
+		elseif($p_lcdheight>=460) { return iPhone OS;   }       //iPhone3GS,iPhone4,iPhone4S (320:480 - 20)
+	}
+	else{
+		$setvar_common(g_isAndroid=true, g_border_width=3, g_TR_HEADER_OSTP=1);
+		if($p_lcdwidth<0)      {        return Error; }
+		elseif($p_lcdwidth>=1440){      return QHD;  }
+		elseif($p_lcdwidth>=1080){      return FULLHD;  }
+		elseif($p_lcdwidth>=720){       return HD;      }
+		elseif($p_lcdwidth>=480){       return WVGA;    }
+	}
+" />
+<!--
+ *********************************************************************************
+ **
+ ** fnSetDeviceSize: 화면 해상도 셋팅
+ **
+ *********************************************************************************
+ -->
+<action id="fnSetDeviceSize" scope="common" 
+value="
+	// 아이폰 세로 사이즈 때문에 추가 
+	//iOS 10이상 safeArea
+    $getSafeArea(iTopVar,iBottomVar,iLeftVar,iRightVar);
+	$setvar_common( 
+		g_iTopVar 		= $iTopVar
+		,g_iBottomVar 	= $iBottomVar
+		,g_iLeftVar 	= $iLeftVar
+		,g_iRightVar 	= $iRightVar
+	);
+    $logvar(g_iTopVar,g_iBottomVar,g_iLeftVar,g_iRightVar);
+    $callaction(loadLcdInfo);
+
+    
+	$setvar(tmpDeviceKind=$fnSetDeviceSize_param1);
+	$callaction(fnSetVarCommon,g_lcdWidth,$p_lcdwidth,가로크기);
+	$callaction(fnSetVarCommon,g_lcdHeight,$p_lcdheight,세로크기);
+	$callaction(fnSetVarCommon,g_lcdWidth_ori,$p_lcdwidth_ori,세로크기);
+	$callaction(fnSetVarCommon,g_lcdHeight_ori,$p_lcdheight_ori,세로크기);
+
+	if( $g_iBottomVar > 0) {
+       $log(여기 탔냐);
+        $setvar_common(
+                g_lcdWidth                     = $p_lcdwidth
+               ,g_lcdHeight                    = $result_double($p_lcdheight -$g_iBottomVar)
+               ,g_lcdWidth_ori                 = $result_double($p_lcdwidth_ori - $g_iTopVar -$g_iBottomVar)
+               ,g_lcdHeight_ori                = $p_lcdheight_ori
+
+               ,g_lcdBaseX = 0
+                ,g_lcdBaseY = 0
+                ,g_lcdBaseX_ori = $g_iTopVar
+                ,g_lcdBaseY_ori = 0
+        );
+    }
+    else{
+    	if($g_isAndroid){
+    		$setvar_common(
+	                g_lcdWidth                     = $p_lcdwidth
+	               ,g_lcdHeight                    = $p_lcdheight
+	               ,g_lcdWidth_ori                 = $g_lcdHeight
+	               ,g_lcdHeight_ori                = $result($g_lcdWidth - $getstatusbar_height())
+	               ,g_lcdBaseX = 0
+	                ,g_lcdBaseY = 0
+	                ,g_lcdBaseX_ori = 0
+	                ,g_lcdBaseY_ori = 0
+	        );
+    	}
+    	else{
+
+    	    $setvar_common(
+	                g_lcdWidth                     = $p_lcdwidth
+	               ,g_lcdHeight                    = $p_lcdheight
+	               ,g_lcdWidth_ori                 = $p_lcdwidth_ori
+	               ,g_lcdHeight_ori                = $p_lcdheight_ori
+	               ,g_lcdBaseX = 0
+	                ,g_lcdBaseY = 0
+	                ,g_lcdBaseX_ori = 0
+	                ,g_lcdBaseY_ori = 0
+	        );
+	    }
+    }
+
+
+	// 19:9 기준 설정
+	$setvar(tmpResultHeight = $result((19 * $p_lcdwidth / 9) - $getstatusbar_height()));
+	$logvar(p_lcdheight, tmpResultHeight);
+//	if($isequal_string($g_deviceinfo_MODEL,SM-G973N)){ 	// S10 
+	if($p_lcdheight >= $tmpResultHeight) {
+		$setvar(tmp_width_ori = $result($p_lcdwidth_ori-$getstatusbar_height()));
+		$logvar(tmp_width_ori);
+		$callaction(fnSetVarCommon,g_lcdWidth_ori,$tmp_width_ori,세로크기);
+	}
+
+	// 액티비티 사이즈 셋팅 
+	$callaction(fnSetActivitySize);     
+"/>
+// 컨트롤 크기를 셋팅한다.
+<action id="fnSetInitContorlSize" scope="common" 
+value="
+	$imagesize_noratio($icon_back,size_icon_back_width,size_icon_back_height);              // 뒤로가기 버튼 이미지 - 타이틀 세로사용.
+	$imagesize_noratio($icon_btn_01_on,size_btn_01_off_width,size_btn_01_off_height);       // 메뉴-종합이미지 - 타이틀 세로사용.
+	$imagesize_noratio($icon_like_off,size_icon_like_off_width,size_icon_like_off_height);  // 관심종목 - item_info - 세로사용.
+	$imagesize_noratio($icon_down,size_icon_down_width,size_icon_down_height);              // 히스토리버튼 
+
+	$setvar(
+		var_topHeight=$size_icon_back_height
+		,var_bottomHeight=$size_btn_01_off_height
+		,var_itemSearchHeight=$size_icon_like_off_height
+		,var_historyWidth=$size_icon_down_width
+	);
+	// 테스트용 임시 
+	
+	$setvar(
+		size_icon_back_height=0
+		,size_icon_like_off_height=0
+		,size_icon_down_width=0
+		,size_btn_01_off_height=0
+	);
+	
+	if($size_icon_back_height<1){       $setvar(var_topHeight=$result($g_lcdHeight/100*7.9));   }
+	if($size_icon_like_off_height<1){   $setvar(var_itemSearchHeight=$result($g_lcdHeight/100*9.1));   }
+	if($size_icon_down_width<1){        $setvar(var_historyWidth=$result($g_lcdWidth/100*13));   }
+	if($size_btn_01_off_height<1){      $setvar(var_bottomHeight=$result($g_lcdHeight/100*9.1));   }
+
+	$log(=========== 아이콘크기 ========= );
+
+	
+	// 타이틀
+	$callaction(fnSetVarCommon,g_topWidth,$g_lcdWidth,타이틀:width-가로모드);
+	$callaction(fnSetVarCommon,g_topHeight,$var_topHeight,타이틀:height-가로모드);
+	$callaction(fnSetVarCommon,g_topWidth_ori,$g_lcdwidth_ori,타이틀:width-세로모드);
+	$callaction(fnSetVarCommon,g_topHeight_ori,0,타이틀:height-세로모드);
+
+	// 8.1 +   9.9 
+	$callaction(fnSetVarCommon,g_itemInfoHeight,$result($g_lcdHeight/100*18),iteminfo:height-가로모드);
+	$callaction(fnSetVarCommon,g_itemSearchHeight,$var_itemSearchHeight,종목검색:height-가로모드);
+	$callaction(fnSetVarCommon,g_itemSearchHeight_ori,0,iteminfo:height-세로모드);
+	// 종목 히스토리
+	$callaction(fnSetVarCommon,g_historyX,$result($g_lcdWidth-$var_historyWidth),히스토리버튼 x);
+
+	// 메뉴
+	$callaction(fnSetVarCommon,g_bottomHeight,$var_bottomHeight,메뉴:height-가로모드);
+	$callaction(fnSetVarCommon,g_bottomHeight_ori,0,메뉴:height-세로모드);
+
+	// 컨텐츠 부분
+	$callaction(fnSetVarCommon,g_contentWidth,$g_lcdWidth,컨텐츠:width-가로모드);
+	$callaction(fnSetVarCommon,g_contentHeight,$result($g_lcdHeight-$g_bottomHeight),컨텐츠:height-가로모드);      // 타이틀바 포함크기.
+	$callaction(fnSetVarCommon,g_contentWidth_ori,$g_lcdWidth_ori,);
+	$callaction(fnSetVarCommon,g_contentHeight_ori,$g_lcdHeight_ori,);
+
+	
+	// hr 구분선 크기 - 아이폰과 구분지어서 테스트해본다.
+	if($isequal_string($g_deviceinfo_MODEL, iPhone)){
+		$callaction(fnSetVarCommon,g_roundHeight,1,라운드 크기);
+		$callaction(fnSetVarCommon,g_hrHeight,0.6,구분선 세로크기);
+	}
+	else{
+		$callaction(fnSetVarCommon,g_roundHeight,2,라운드 크기);
+		$callaction(fnSetVarCommon,g_hrHeight,1,구분선 세로크기);
+	}
+" />
+<!--
+ *********************************************************************************
+ **
+ ** fnSetIconDir: 기기별 아이콘 경로 설정
+ **
+ *********************************************************************************
+ -->
+<action id="fnSetIconDir" 
+value="
+	$setvar_common(tmpDeviceKind=$fnSetIconDir_param1);
+	$log(tmpDeviceKind[$tmpDeviceKind]);
+	if($isequal_string($tmpDeviceKind,iPhone OS)){                      //320:480 - 20
+		$callaction(fnSetVarCommon,g_DeviceIconDir,iphone4g/,아이콘폴더);
+		$callaction(fnSetVarCommon,g_DeviceIconDir_prefix,iphone4g_,접두사);
+	}
+	elseif($isequal_string($tmpDeviceKind,iPhone5 OS)){                 //320:568 - 20
+		$callaction(fnSetVarCommon,g_DeviceIconDir,iphone5/,아이콘폴더);
+		$callaction(fnSetVarCommon,g_DeviceIconDir_prefix,iphone5_,접두사);
+	}
+	elseif($isequal_string($tmpDeviceKind,iPhone6 OS)){                 //375:667 - 20(750*1334)
+		$callaction(fnSetVarCommon,g_DeviceIconDir,iphone6/,아이콘폴더);
+		$callaction(fnSetVarCommon,g_DeviceIconDir_prefix,iphone6_,접두사);
+	}
+	elseif($isequal_string($tmpDeviceKind,iPhone6Plus OS)){             //414:736 - 20(1242*2208)
+		$callaction(fnSetVarCommon,g_DeviceIconDir,iphone6plus/,아이콘폴더);
+		$callaction(fnSetVarCommon,g_DeviceIconDir_prefix,iphone6plus_,접두사);
+	}
+	elseif($isequal_string($tmpDeviceKind,iPad OS)){             //414:736 - 20(1242*2208)
+		$callaction(fnSetVarCommon,g_DeviceIconDir,fullhd/,아이콘폴더);
+		$callaction(fnSetVarCommon,g_DeviceIconDir_prefix,fullhd_,접두사);
+	}
+	
+	elseif($isequal_string($tmpDeviceKind,HD)){
+		$callaction(fnSetVarCommon,g_DeviceIconDir,hd/,아이콘폴더);
+		$callaction(fnSetVarCommon,g_DeviceIconDir_prefix,hd_,접두사);
+	}
+	elseif($isequal_string($tmpDeviceKind,FULLHD)){
+		$callaction(fnSetVarCommon,g_DeviceIconDir,fullhd/,아이콘폴더);
+		$callaction(fnSetVarCommon,g_DeviceIconDir_prefix,fullhd_,접두사);
+	}
+	elseif($isequal_string($tmpDeviceKind,QHD)){
+		$callaction(fnSetVarCommon,g_DeviceIconDir,qhd/,아이콘폴더);
+		$callaction(fnSetVarCommon,g_DeviceIconDir_prefix,qhd_,접두사);
+	}
+	elseif($isequal_string($tmpDeviceKind,WVGA)){
+		$callaction(fnSetVarCommon,g_DeviceIconDir,wvga/,아이콘폴더);
+		$callaction(fnSetVarCommon,g_DeviceIconDir_prefix,wvga_,접두사);
+	}
+" />
+
+
+
+
+
+
+
+<action id="fnConfig_Load_All" scope="common" value="
+	$delarrayvar(arr_config);
+	$config_getarray(arr_config,common);
+
+	//$logarrayvar(arr_config);
+
+	for($arrCnt=0;$arrCnt<$getarrayvarcount(arr_config);$arrCnt++){
+		$setvar(
+			varName=$getarrayvar(arr_config,$arrCnt,2)        // 변수명
+			,varValue=$getarrayvar(arr_config,$arrCnt,1)      // 값
+		);
+		if($strlen($varName)>0){	$setvar_common($($varName)=$varValue);	}
+	}
+	// Config 변수 초기화 셋팅
+	if($strlen($g_sise_auto_login)<1){		$callaction(fnConfig_SetValue,g_sise_auto_login,true);	} 			// 조회전용 자동로그인
+	if($strlen($g_cert_login_keep)<1){		$callaction(fnConfig_SetValue,g_cert_login_keep,true);	} 			// 공동인증접속 유지
+
+	if($strlen($lcd_open)<1){		$callaction(fnConfig_SetValue,lcd_open,false);	} 			// 화면자동꺼짐방지
+	if($strlen($hot_deal_menu_open)<1){		$callaction(fnConfig_SetValue,hot_deal_menu_open,false);	} 			// 초기 핫딜시 메뉴 오픈 
+	if($strlen($order_confirm_popup_open)<1){ $callaction(fnConfig_SetValue,order_confirm_popup_open,true); }	//주문확인창 보기 
+
+	if($strlen($g_jumunNche_alarm)<1){	$callaction(fnConfig_SetValue,g_jumunNche_alarm,true);	} 	// 주문체결 알람
+	if($strlen($g_news_alarm)<1){		$callaction(fnConfig_SetValue,g_news_alarm,false);	} 		// 뉴스알람
+	if($strlen($g_buy_tick)<1){     		$callaction(fnConfig_SetValue,g_buy_tick,100); } 			// 주문착오 매수
+	if($strlen($g_sell_tick)<1){     		$callaction(fnConfig_SetValue,g_sell_tick,100); } 			// 주문착오 매도
+	if($strlen($g_amount_tick)<1){     	$callaction(fnConfig_SetValue,g_amount_tick,50); } 			// 주문착오 수량
+
+	// 차트관련 환경변수 
+	if($strlen($g_avglineSet)<1){     		$callaction(fnConfig_SetValue,g_avglineSet,false); } 			// 
+	if($strlen($g_bollingerSet)<1){     	$callaction(fnConfig_SetValue,g_bollingerSet,false); } 			// 
+	if($strlen($g_mamulSet)<1){     		$callaction(fnConfig_SetValue,g_mamulSet,false); } 			// 
+	if($strlen($g_envelopeSet)<1){     	$callaction(fnConfig_SetValue,g_envelopeSet,false); } 			// 
+	if($strlen($g_secondary_index)<1){     	$callaction(fnConfig_SetValue,g_secondary_index,volume); } 		// 
+	if($strlen($g_3galarm)<1){     	$callaction(fnConfig_SetValue,g_3galarm,false); } 				// 초기 3g/4g알림 여부
+
+	// 자동로그인  변수 
+	if($strlen($g_is_auto_login)<1){     	$callaction(fnConfig_SetValue,g_is_auto_login,true); } 			// 자동로그인 여부  
+	if($strlen($g_autologin_type)<1){     	$callaction(fnConfig_SetValue,g_autologin_type,1); } 			// 1:시세자동로그인, 2:공동인증 
+
+
+	// 해외선물 
+	if( $strlen($g_limit_tick_global)<1 ){   $callaction(fnConfig_SetValue,g_limit_tick_global,100); 	} 				// 해외 제한틱 
+	if( $strlen($g_warnning_tick_global)<1 ){   $callaction(fnConfig_SetValue,g_warnning_tick_global,20); 	} 			// 해외 제한틱 
+	if( $strlen($g_limit_amount_global)<1 ){   $callaction(fnConfig_SetValue,g_limit_amount_global,100); 	} 				// 해외 제한틱 
+	if( $strlen($g_warnning_amount_global)<1 ){   $callaction(fnConfig_SetValue,g_warnning_amount_global,20); 	} 			// 해외 제한틱 
+
+
+	// 국내선물 
+	// 제한틱, 경고틱 ,제한수량, 경고수량 
+	if( $strlen($g_limit_tick_rate)<1 ){   $callaction(fnConfig_SetValue,g_limit_tick_rate,100); 	} 				//금리선물
+	if($strlen($g_limit_tick_currency)<1){     		$callaction(fnConfig_SetValue,g_limit_tick_currency,100); } 			// 통화선물
+	if($strlen($g_limit_tick_kospi200)<1){     	$callaction(fnConfig_SetValue,g_limit_tick_kospi200,100); } 			// 코스피200 선물 
+	if($strlen($g_limit_tick_minikospi)<1){     	$callaction(fnConfig_SetValue,g_limit_tick_minikospi,250); } 			// 미니코스피200선물 
+	if($strlen($g_limit_tick_pork)<1){     		$callaction(fnConfig_SetValue,g_limit_tick_pork,100); } 			// 돈육선물
+	if($strlen($g_limit_tick_gold)<1){     		$callaction(fnConfig_SetValue,g_limit_tick_gold,250); } 			// 금선물
+	if($strlen($g_limit_tick_ksq)<1){     		$callaction(fnConfig_SetValue,g_limit_tick_ksq,100); } 			// 코스닥150
+
+	if($strlen($g_warnning_tick_rate)<1){     		$callaction(fnConfig_SetValue,g_warnning_tick_rate,20); } 			// 금리선물
+	if($strlen($g_warnning_tick_currency)<1){     		$callaction(fnConfig_SetValue,g_warnning_tick_currency,20); } 		// 통화선물
+	if($strlen($g_warnning_tick_kospi200)<1){     		$callaction(fnConfig_SetValue,g_warnning_tick_kospi200,20); } 		// 코스피200 선물 
+	if($strlen($g_warnning_tick_minikospi)<1){     		$callaction(fnConfig_SetValue,g_warnning_tick_minikospi,50); } 		// 미니코스피200선물 
+	if($strlen($g_warnning_tick_pork)<1){     		$callaction(fnConfig_SetValue,g_warnning_tick_pork,20); } 			// 돈육선물
+	if($strlen($g_warnning_tick_gold)<1){     		$callaction(fnConfig_SetValue,g_warnning_tick_gold,50); } 			// 금선물
+	if($strlen($g_warnning_tick_ksq)<1){     		$callaction(fnConfig_SetValue,g_warnning_tick_ksq,50); } 			// 코스닥150
+
+	if($strlen($g_limit_amount_rate)<1){     		$callaction(fnConfig_SetValue,g_limit_amount_rate,500); } 			// 금리선물
+	if($strlen($g_limit_amount_currency)<1){     	$callaction(fnConfig_SetValue,g_limit_amount_currency,2500); } 		// 통화선물
+	if($strlen($g_limit_amount_kospi200)<1){     	$callaction(fnConfig_SetValue,g_limit_amount_kospi200,1000); } 		// 코스피200 선물 
+	if($strlen($g_limit_amount_minikospi)<1){     	$callaction(fnConfig_SetValue,g_limit_amount_minikospi,5000); } 		// 미니코스피200선물 
+	if($strlen($g_limit_amount_pork)<1){     		$callaction(fnConfig_SetValue,g_limit_amount_pork,500); } 			// 돈육선물
+	if($strlen($g_limit_amount_gold)<1){     		$callaction(fnConfig_SetValue,g_limit_amount_gold,500); } 			// 금선물
+	if($strlen($g_limit_amount_ksq)<1){     		$callaction(fnConfig_SetValue,g_limit_amount_ksq,500); } 			// 코스닥150
+
+	if($strlen($g_warnning_amount_rate)<1){     		$callaction(fnConfig_SetValue,g_warnning_amount_rate,300); } 		// 금리선물
+	if($strlen($g_warnning_amount_currency)<1){     	$callaction(fnConfig_SetValue,g_warnning_amount_currency,1500); } 		// 통화선물
+	if($strlen($g_warnning_amount_kospi200)<1){     	$callaction(fnConfig_SetValue,g_warnning_amount_kospi200,600); } 		// 코스피200 선물 
+	if($strlen($g_warnning_amount_minikospi)<1){     	$callaction(fnConfig_SetValue,g_warnning_amount_minikospi,3000); } 	// 미니코스피200선물 
+	if($strlen($g_warnning_amount_pork)<1){     		$callaction(fnConfig_SetValue,g_warnning_amount_pork,300); } 		// 돈육선물
+	if($strlen($g_warnning_amount_gold)<1){     		$callaction(fnConfig_SetValue,g_warnning_amount_gold,300); } 		// 금선물
+	if($strlen($g_warnning_amount_ksq)<1){     		$callaction(fnConfig_SetValue,g_warnning_amount_ksq,300); } 		// 코스닥150
+
+	// 제한금액 
+	if($strlen($g_limit_money_kospi_option)<1){     		$callaction(fnConfig_SetValue,g_limit_money_kospi_option,50); } 		// 코스피200옵션 
+	if($strlen($g_limit_money_minikospi_option)<1){     	$callaction(fnConfig_SetValue,g_limit_money_minikospi_option,50); } 	// 미니코스피200옵션 
+	if($strlen($g_limit_money_usd_option)<1){     			$callaction(fnConfig_SetValue,g_limit_money_usd_option,5); } 			// 미국달러옵션 
+	if($strlen($g_limit_money_stock_option)<1){     		$callaction(fnConfig_SetValue,g_limit_money_stock_option,10); } 		// 개별주식선물 
+	if($strlen($g_limit_money_wkospi_option)<1){			$callaction(fnConfig_SetValue,g_limit_money_wkospi_option,50); }		// 위클리옵션
+
+	// 경고금액 
+	if($strlen($g_warnning_money_kospi_option)<1){     		$callaction(fnConfig_SetValue,g_warnning_money_kospi_option,20); } 		// 코스피200옵션 
+	if($strlen($g_warnning_money_minikospi_option)<1){     	$callaction(fnConfig_SetValue,g_warnning_money_minikospi_option,20); } 	// 미니코스피200옵션 
+	if($strlen($g_warnning_money_usd_option)<1){     		$callaction(fnConfig_SetValue,g_warnning_money_usd_option,2); } 		// 미국달러옵션 
+	if($strlen($g_warnning_money_stock_option)<1){     		$callaction(fnConfig_SetValue,g_warnning_money_stock_option,4); } 		// 개별주식선물 
+	if($strlen($g_warnning_money_wkospi_option)<1){			$callaction(fnConfig_SetValue,g_warnning_money_wkospi_option,20); }		// 위클리옵션
+
+	// 틱한도
+	if($strlen($g_max_tick_rate)<1){     		$callaction(fnConfig_SetValue,g_max_tick_rate,200); } 			// 금리선물
+	if($strlen($g_max_tick_currency)<1){     		$callaction(fnConfig_SetValue,g_max_tick_currency,200); } 			// 통화선물
+	if($strlen($g_max_tick_kospi200)<1){     	$callaction(fnConfig_SetValue,g_max_tick_kospi200,200); } 			// 코스피200 선물 
+	if($strlen($g_max_tick_minikospi)<1){     	$callaction(fnConfig_SetValue,g_max_tick_minikospi,500); } 			// 미니코스피200선물 
+	if($strlen($g_max_tick_pork)<1){     		$callaction(fnConfig_SetValue,g_max_tick_pork,200); } 			// 돈육선물
+	if($strlen($g_max_tick_gold)<1){     		$callaction(fnConfig_SetValue,g_max_tick_gold,500); } 			// 금선물
+	if($strlen($g_max_tick_ksq)<1){     		$callaction(fnConfig_SetValue,g_max_tick_ksq,200); } 			// 코스닥150
+	// 수량한도
+	if($strlen($g_max_amount_rate)<1){     		$callaction(fnConfig_SetValue,g_max_amount_rate,1000); } 			// 금리선물
+	if($strlen($g_max_amount_currency)<1){     	$callaction(fnConfig_SetValue,g_max_amount_currency,5000); } 		// 통화선물
+	if($strlen($g_max_amount_kospi200)<1){     	$callaction(fnConfig_SetValue,g_max_amount_kospi200,2000); } 		// 코스피200 선물 
+	if($strlen($g_max_amount_minikospi)<1){     	$callaction(fnConfig_SetValue,g_max_amount_minikospi,5000); } 		// 미니코스피200선물 
+	if($strlen($g_max_amount_pork)<1){     		$callaction(fnConfig_SetValue,g_max_amount_pork,1000); } 			// 돈육선물
+	if($strlen($g_max_amount_gold)<1){     		$callaction(fnConfig_SetValue,g_max_amount_gold,1000); } 			// 금선물
+	if($strlen($g_max_amount_ksq)<1){     		$callaction(fnConfig_SetValue,g_max_amount_ksq,1000); } 			// 코스닥150
+	// 금액한도
+	// 제한금액 
+	if($strlen($g_max_money_kospi_option)<1){     		$callaction(fnConfig_SetValue,g_max_money_kospi_option,50); } 		// 코스피200옵션 
+	if($strlen($g_max_money_minikospi_option)<1){     	$callaction(fnConfig_SetValue,g_max_money_minikospi_option,50); } 	// 미니코스피200옵션 
+	if($strlen($g_max_money_usd_option)<1){     		$callaction(fnConfig_SetValue,g_max_money_usd_option,5); } 			// 미국달러옵션 
+	if($strlen($g_max_money_stock_option)<1){     		$callaction(fnConfig_SetValue,g_max_money_stock_option,10); } 		// 개별주식선물 
+	if($strlen($g_max_money_wkospi_option)<1){			$callaction(fnConfig_SetValue,g_max_money_wkospi_option,50); }		// 위클리옵션
+" />
+<action id="fnConfig_Save_All" scope="common" 
+paramlog="false"
+value="
+	for($arrCnt=0;$arrCnt<$getarrayvarcount(arr_config);$arrCnt++){
+		$setvar(
+			varValue_dbFieldName    = $getarrayvar(arr_config,$arrCnt,0)        // db필드명
+			,varValue_value         = $getarrayvar(arr_config,$arrCnt,1)        // 값
+			,varValue_varName       = $getarrayvar(arr_config,$arrCnt,2)        // 변수명
+		);
+		$config_setvalue($varValue_dbFieldName,$varValue_value,$varValue_varName);
+
+		//$log(*** 설정저장 [$varValue_dbFieldName],[$varValue_value],[$varValue_varName]);
+	}
+" />
+<action id="fnConfig_SetValue" scope="common" 
+paramlog="false"
+params="
+	p_config_varName
+	,p_config_varValue
+"
+value="
+	$setvar(
+		tmp_varName 	=$p_config_varName
+		,tmp_Value 	=$p_config_varValue
+	);
+	//$logvar(tmp_varName,tmp_Value);
+	$setvar(arr_idx=$getarrayindex(arr_config,2,$tmp_varName));
+	if($arr_idx<0){   	$setvar(arr_idx=$getarrayvarcount(arr_config),varDbFiledName=$addstring(cf_,$tmp_varName) 	);}
+	else{   			$setvar( varDbFiledName=$getarrayvar(arr_config,$arr_idx,0) 	);}
+	$config_setvalue($varDbFiledName,$tmp_Value,$tmp_varName);							// Config 파일에 저장
+	$setsubarray_common(arr_config,$arr_idx,$varDbFiledName,$tmp_Value,$tmp_varName);	// Config 배열에 저장
+	$setvar_common($($tmp_varName)=$tmp_Value);											// Config 전역변수에 저장
+" />
+<action id="fnConfig_Log" scope="common" 
+value="
+	$log(*********************** Config 배열목록 Start **************************);
+	for($arrCnt=0;$arrCnt<$getarrayvarcount(arr_config);$arrCnt++){
+		$setvar(
+			varValue_dbFieldName        = $getarrayvar(arr_config,$arrCnt,0)        // db필드명
+			,varValue_value             = $getarrayvar(arr_config,$arrCnt,1)        // 값
+			,varValue_varName           = $getarrayvar(arr_config,$arrCnt,2)        // 변수명
+		);
+		$setvar(	varValue_varValue       = $getvar_common($($varValue_varName))	);
+		$config_getvalue($varValue_dbFieldName,tmp_config_value);
+		$log(설정파일
+			 | 배열-0:[$varValue_dbFieldName],1:[$varValue_value],2:[$varValue_varName]
+			 | 전역변수:[$varValue_varValue]
+			 | 파일:[$tmp_config_value] 
+		);
+	}
+	$log(*********************** Config 배열목록 End **************************);
+" />
+
+
+

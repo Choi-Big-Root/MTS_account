@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+type	char	2	"FC"
+code	char	12	
+delt	char	12	
+thet	char	12	
+vega	char	12	
+gama	char	12	
+rho	char	12	
+tprc	char	12	이론가
+iv	char	12	내재변동성
+-->
+<STRUCT CODE="REAL_FC" SERVICECODE="REAL_FC" NAME="실시간 민감도" COMMENT="K">
+	<BLOCK CODE="PageBlock" NAME="PageBlock" SEND="NO" ATTR="NO" OCCURS="NO">
+		<!-- <FIELD CODE="type" TYPE="CHAR" SIZE="2" NAME="must be 'FC'"/> -->
+		<FIELD CODE="code" TYPE="CHAR" SIZE="20" NAME="realtime symbol"/>
+		<FIELD CODE="delt" TYPE="CHAR" SIZE="12" NAME="델타"/>
+		<FIELD CODE="thet" TYPE="CHAR" SIZE="12" NAME="세타"/>
+		<FIELD CODE="vega" TYPE="CHAR" SIZE="12" NAME="베가"/>
+		<FIELD CODE="gama" TYPE="CHAR" SIZE="12" NAME="감마"/>
+		<FIELD CODE="rho" TYPE="CHAR" SIZE="12" NAME="로"/>
+		<FIELD CODE="tprc" TYPE="CHAR" SIZE="12" NAME="이론가"/>
+		<FIELD CODE="iv" TYPE="CHAR" SIZE="12" NAME="내재변동성"/>		
+	</BLOCK>
+</STRUCT>

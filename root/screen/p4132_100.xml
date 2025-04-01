@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<br/>
+<actiondata value="
+	$logvar(
+		g_open_tp_select 	// 해외:1, 국내:2
+		,g_save_acno 			// 국내
+		,g_save_cybr_acct_no
+		,g_save_acno2 			// 해외
+		,g_save_acno3
+		,g_save_cybr_acct_no2
+		,g_save_hts_id
+		,g_save_qustion_1
+		,g_save_qustion_2
+	);
+
+	//if($g_open_tp_select==1){
+	if($formatstring(#,$g_save_acno3)==4){
+		$setvar(
+			data_1 = 해외선물
+			//,data_2 = $g_save_acno2
+			,data_2 = $g_save_acno3
+			,data_3 = $g_save_hts_id
+			,data_4 = $g_save_qustion_1
+			,data_5 = $g_save_qustion_2
+		);
+	}
+	//elseif($g_open_tp_select==2){
+	else{
+		$setvar(
+			data_1 = 국내선물
+			//,data_2 = $g_save_acno
+			,data_2 = $g_save_acno3
+			,data_3 = $g_save_hts_id
+			,data_4 = $g_save_qustion_1
+			,data_5 = $g_save_qustion_2
+		);
+	}
+	$setvar_single(strCommentData_1=고객님의 ID 등록이 완료되었습니다.);
+	$setvar_single(strCommentData_2=
+		계좌구분: $data_1<br/>
+		계좌번호: $data_2<br/>
+		ID: $data_3<br/>
+		출신초등학교: $data_4<br/>
+		친한친구이름: $data_5
+	);
+	$setvar_single(strCommentData_3=공동인증서 등록을 원하시면<br/>하단의 공동인증서 등록을 클릭해주세요.);
+"/>
+<action id="screen_contents_onload" value="
+	$setvar(
+		,lbl_open_account_title.x=$w($g_lcdwidth,4.6) // 순서대로 오지 않을경우에 치우친다.
+		,popscreen_open_account_history.hidden=true
+		,popscreen_open_account_history_2.hidden=true
+		,popscreen_open_account_confirm.hidden=false
+		,popscreen_open_account_confirm.x=$w($g_lcdwidth,28)
+		,menu_num=4132
+	);
+"/>
+<class id="clsButton" width="$w(220)" height="$h(70)" fontsize="$w(30)" fontname="$g_baseFontName"
+	 backcolor="ffffff" margin_left="$w(20)" border_width="$w(1)" textcolor_disable="ffffff" backcolor_disable="999999"
+/>
+<screen id="screen_4132_100" class="cs_screen_contents" backcolor="f1f1f1" onload="screen_contents_onload">
+	<br height="$h(50)"/>
+	<blank width="$w(40)"/>
+	<htmlview VALUE_HTML_VAR="strCommentData_1" fontsize="$w(25)" fontname="$g_baseFontName"
+		 width="$w(400)" height="$h(50)" backcolor="none" lineheight="$h(30)"
+	/>
+	<br height="$h(10)"/>
+	<blank width="$w(90)"/>
+	<htmlview VALUE_HTML_VAR="strCommentData_2" fontsize="$w(25)" fontname="$g_baseFontName"
+		 width="$w(300)" height="$h(200)" backcolor="none" lineheight="$h(30)"
+	/>
+	<br height="$h(10)"/>
+	<blank width="$w(40)"/>
+	<htmlview VALUE_HTML_VAR="strCommentData_3" fontsize="$w(20)" fontname="$g_baseFontName"
+		 width="$w(400)" height="$h(100)" backcolor="none" lineheight="$h(30)"
+	/>
+	<br height="$h(100)"/>
+	<blank width="$w(15)"/>
+	<button id="btn_4132_prev" class="clsButton" value="공동인증서 등록" textcolor="#e33433" border_color="#e33433"
+		 onClicked="fnGoRegister"
+		 />
+	<blank width="$w(10)"/>
+	<button id="btn_4132_ok" class="clsButton" value="확인" textcolor="#ffffff" border_color="#ffffff" backcolor="#e33433" 
+		 onClicked="fnEndIDRegister"
+		 />
+</screen>
+<action id="fnDataClear"
+value="
+	// 비대면 절차개선 - 2020.09.28
+// =========== 저장한 전역변수들 초기화 ===========
+	$callaction(fnConfig_SetValue,g_save_acno,);
+	$callaction(fnConfig_SetValue,g_save_cybr_acct_no,);
+	$callaction(fnConfig_SetValue,g_save_acno2,);
+	$callaction(fnConfig_SetValue,g_save_cybr_acct_no2,);
+	$callaction(fnConfig_SetValue,g_save_acno3,);
+	$callaction(fnConfig_SetValue,g_save_hts_id,);
+	$callaction(fnConfig_SetValue,g_save_qustion_1,);
+	$callaction(fnConfig_SetValue,g_save_qustion_2,);
+
+	$callaction(fnConfig_SetValue,g_open_tp_select,);		// 국내,해외 구분
+	$callaction(fnConfig_SetValue,g_save_bank_code,);		// 은행코드
+	$callaction(fnConfig_SetValue,g_save_bank_name,);		// 은행명
+	$callaction(fnConfig_SetValue,g_save_acnt_name,);		// 계좌명
+	$callaction(fnConfig_SetValue,g_save_acnt_no,);			// 계좌번호
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_NEW_PW,);	// 계좌비밀번호
+	$callaction(fnConfig_SetValue,g_save_tel_num,);			// 전화번호
+	$callaction(fnConfig_SetValue,g_save_members_nm,);			// 추천직원 이름
+	$callaction(fnConfig_SetValue,g_save_members_no,);			// 추천직원 사번
+	$callaction(fnConfig_SetValue,g_save_frontImageEncryptData_base64,); 	// 신분증 이미지 바이너리
+
+	$callaction(fnConfig_SetValue,g_save_bsns_date,);			// 거래일자
+	$callaction(fnConfig_SetValue,g_save_inout_no,);			// 입출금번호
+	$callaction(fnConfig_SetValue,g_save_mast_acctno,);			// 대표계좌번호
+	
+	$callaction(fnConfig_SetValue,g_save_open_tp,);			// 인증방법
+	$callaction(fnConfig_SetValue,g_save_result_yn,);		// 진위여부
+	$callaction(fnConfig_SetValue,g_OUT_AGREE_WORK_NO,);			// 상담번호
+
+	$callaction(fnConfig_SetValue,g_open_account_save,); 			// 마지막 화면번호
+	$callaction(fnConfig_SetValue,g_menu_code_open_account,); 		// 마지막 화면번호
+// ==========================================
+
+	$callaction(fnConfig_SetValue,g_save_keep_go,0); // 개설후 ID등록 계속 진행여부> 1:진행,0:미진행
+" />
+<action id="fnEndIDRegister" value="
+	$callaction(fnDataClear);
+	//$closescreen(popscreen_open_account); 	
+	$closescreen_all();
+	$setvar(g_is_open_account =); //로그인화면에서 종료위해 초기화
+"/>
+<action id="fnGoRegister" value="
+	$callaction(fnDataClear);
+	//$closescreen_all();
+	$callaction(fnOpenPopScreen,plist/root/screen/p1180_100.xml,공동인증센터,);
+"/>
+<action id="fnSendSSL_MO_BANK" 
+value="
+	$setvar(	jsonName 		= MO_BANK 	);
+	$json_create($jsonName);
+
+	$json_setdata($jsonName,,HDR,,{});
+	$json_setdata($jsonName,HDR,VER,,1.0); 					// 1.0 : 연동버전
+	$json_setdata($jsonName,HDR,CMD,,$jsonName);			//  
+	$json_setdata($jsonName,,BODY,,{});
+	$json_setdata($jsonName,BODY,WORK_NO,,$g_OUT_AGREE_WORK_NO); 	// 상담번호
+
+	$json_print($jsonName);
+	$delvar(strSSLSendData);
+	$json_getfullstring($jsonName,strSSLSendData);
+	$json_delete($jsonName);
+	$logvar(strSSLSendData);
+	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
+"/>
+<action id="fnRecvSSL_MO_BANK" 
+value="
+	$setvar(
+		recvSSL_hdr_ret 		= $json_getdata($jsonname,HDR.RET)
+		,recvSSL_hdr_msg 		= $json_getdata($jsonname,HDR.MSG)
+		,recvSSL_hdr_err_code	= $json_getdata($jsonname,HDR.ERR_CODE)
+	);
+	$setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_hdr_err_code));
+
+	if(!$isequal_string($recvSSL_hdr_ret,OK)){
+		//$alertaction(,,$recv_error_msg,확인);
+		$callaction(fnPopover_AlertAction,,$recv_error_msg,,확인);
+		return;
+	}
+
+	$log(배열갯수 = [$json_getcount($jsonname,BODY.BNKS)]);
+	$json_getdata($jsonname,BODY.BNKS[1].BNK_NM,strBNKName);
+	$logvar(strBNKName);
+
+	$delarrayvar(arrJsonData_Bank);
+	$json_toArrayData(arrJsonData_Bank,$jsonName,BODY.BNKS,,$(BNK_CODE,BNK_NM));
+	$logarrayvar(arrJsonData_Bank);
+	
+	$delarrayvar(arrData_Bank);
+	$delarrayvar(arrData_Stock);
+	$getCompareArray(arrData_Bank,arrJsonData_Bank,0,GT,200);
+	$getCompareArray(arrData_Stock,arrJsonData_Bank,0,LT,200);
+	$logarrayvar(arrData_Bank);
+	$logarrayvar(arrData_Stock);
+
+	$callaction(subscreen_4132_menu_1_onload);
+"/>
+<action id="btn_4132_number_onclicked" value="
+	$log(g_is_open_account_testing:$g_is_open_account_testing);
+	if($g_is_open_account_testing){		
+		$callaction(fnActive_Next_4132);
+	}
+
+	$callaction(fnConfig_SetValue,g_IN_BNKNAME_BNK_CODE 	,$btn_4118_100.key);
+	$callaction(fnConfig_SetValue,g_IN_BNKNAME_BNK_NO 	,$tf_4132_confirm_01.value);
+
+	$callaction(fnSendSSL_MO_BNKNAME);
+" />
+//계좌 명의 확인
+<action id="fnSendSSL_MO_BNKNAME" 
+value="
+	$popscreen(pop_host_msg,center); 
+
+	$setvar(	jsonName 		= MO_BNKNAME 	);
+	$json_create($jsonName);
+
+	$json_setdata($jsonName,,HDR,,{});
+	$json_setdata($jsonName,HDR,VER,,1.0); 					// 1.0 : 연동버전
+	$json_setdata($jsonName,HDR,CMD,,$jsonName);			// 
+
+	$json_setdata($jsonName,,BODY,,{});
+	$json_setdata($jsonName,BODY,BNK_CODE,,$g_IN_BNKNAME_BNK_CODE); 	// 은행 코드
+	$json_setdata($jsonName,BODY,BNK_NO,,$g_IN_BNKNAME_BNK_NO); 		// 은행 계좌 번호
+	$json_setdata($jsonName,BODY,WORK_NO,,$g_OUT_AGREE_WORK_NO); 	// 상담번호
+
+	// 추가됨 
+	//$json_setdata($jsonName,BODY,HCB_BANK_CD,,006);		 				//주택은행코드
+	//$json_setdata($jsonName,BODY,TOT_AMT,,1); 							//송금총금액
+	//$json_setdata($jsonName,BODY,CHECK_AMT,,0); 						//수표금액
+	//$json_setdata($jsonName,BODY,CH_AMT,,1); 							//현금금액
+
+	$json_print($jsonName);
+	$delvar(strSSLSendData);
+	$json_getfullstring($jsonName,strSSLSendData);
+	$json_delete($jsonName);
+	$logvar(strSSLSendData);
+	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
+"/>
+<action id="fnRecvSSL_MO_BNKNAME" 
+value="
+	
+	$closescreen(pop_host_msg);
+
+	$setvar(
+		recvSSL_hrd_ret 		= $json_getdata($jsonname,HDR.RET)
+		,recvSSL_hrd_msg 		= $json_getdata($jsonname,HDR.MSG)
+		,recvSSL_hdr_err_code	= $json_getdata($jsonname,HDR.ERR_CODE)
+		,recvSSL_body_result	= $json_getdata($jsonname,BODY.RESULT)
+		,recvSSL_body_NAME		= $json_getdata($jsonname,BODY.NAME)
+	);
+	$setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_hdr_err_code));
+	$log(========= SSL 받은데이터 ==============);
+	$logvar(
+		recvSSL_hrd_ret 	
+		,recvSSL_hrd_msg 	
+		,recvSSL_body_result	
+		,recvSSL_body_NAME		
+		,recvSSL_hdr_err_code
+		,recv_error_msg
+	);
+	if(!$isequal_string($recvSSL_hrd_ret,OK)){
+		$setvar(vg_4199_100_result.hidden = true);
+		//$alertaction(,,$recv_error_msg,확인);
+		$callaction(fnPopover_AlertAction,,$recv_error_msg,,확인);
+		return;
+	}
+
+	$callaction(fnConfig_SetValue,g_IN_BNKNAME_BNK_NM 	,$recvSSL_body_NAME);
+
+	$setvar(
+		vg_4199_100_result.hidden = false
+		,lbl_4199_100_result_bank.value = $btn_4118_100.value
+		,lbl_4199_100_result_name.value = $recvSSL_body_NAME
+		,lbl_4199_100_result_no.value = $tf_4132_confirm_01.value
+	);
+
+//	$callaction(fnConfig_SetValue,,);			// 
+
+	//$alertaction(fnActive_Next_4132,,계좌조회가 완료되었습니다.,확인);
+	$callaction(fnPopover_AlertAction,fnActive_Next_4132,계좌조회가 완료되었습니다.,,확인);
+
+"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

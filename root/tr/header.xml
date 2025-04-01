@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<STRUCT NAME="공통헤더" CODE="COMM_HEADER" ATTR="NO" AUTOFIELD="TRUE" PADDING_CHAR="0">
+	<FIELD CODE="msgl" TYPE="INT_NET" LEN="1" NAME="message length" COMMENT="공통헤더길이를 제외한 길이" VALUE="$COMM_HEADER_MSGL" INPUTBINARY="TRUE"/>
+	<FIELD CODE="msgf" TYPE="CHAR" LEN="1" NAME="message flags" COMMENT="default : 0x00" VALUE="$COMM_HEADER_MSGF" INPUTBINARY="TRUE"/>
+	<FIELD CODE="func" TYPE="CHAR" LEN="1" NAME="function code" COMMENT="default: '1', heartbeat : '0'" VALUE="$COMM_HEADER_FUNC" INPUTBINARY="TRUE"/>
+	<FIELD CODE="wmid" TYPE="SHORT_NET" LEN="1" NAME="window identifier" COMMENT="default: 0, requestid 로 사용" VALUE="$COMM_HEADER_WMID" INPUTBINARY="TRUE"/>
+</STRUCT>
+
+<STRUCT NAME="TR헤더" CODE="TR_HEADER" ATTR="NO" AUTOFIELD="TRUE" PADDING_CHAR="0">
+	<FIELD CODE="svcp" TYPE="CHAR" LEN="16" NAME="service program" COMMENT="그룹코드" VALUE="$TR_HEADER_SVCP"/>
+	<FIELD CODE="svcc" TYPE="CHAR" LEN="16" NAME="service code" COMMENT="TRCODE" VALUE="$TR_HEADER_SVCC"/>
+	<FIELD CODE="msgk" TYPE="CHAR" LEN="1" NAME="message kind" COMMENT="default: 0x10" VALUE="$TR_HEADER_MSGK" INPUTBINARY="TRUE"/>
+	<FIELD CODE="actf" TYPE="CHAR" LEN="1" NAME="action flags" COMMENT="default: 0x00" VALUE="$TR_HEADER_ACTF" INPUTBINARY="TRUE"/>
+	<FIELD CODE="chkf" TYPE="CHAR" LEN="1" NAME="checking flags" COMMENT="default: 0x00" VALUE="$TR_HEADER_CHKF" INPUTBINARY="TRUE"/>
+	<FIELD CODE="lang" TYPE="CHAR" LEN="1" NAME="language code" COMMENT="사용하지 않음..default: 0x00" VALUE="$TR_HEADER_LANG" INPUTBINARY="TRUE"/>
+
+	<FIELD CODE="ostp" TYPE="CHAR" LEN="1" NAME="OS type" COMMENT="'1':Android '2':iOS" VALUE="$TR_HEADER_OSTP"/>
+	<FIELD CODE="fill" TYPE="CHAR" LEN="3" NAME="Filler" COMMENT="사용하지 않음..default: 0x00" VALUE="$TR_HEADER_FILL"/>
+	
+	//<FIELD CODE="fill" TYPE="CHAR" LEN="4" NAME="Filler" COMMENT="사용하지 않음..default: 0x00" VALUE="$TR_HEADER_FILL"/>
+</STRUCT>
+
+<STRUCT NAME="GRID헤더" CODE="GRID_HEADER" ATTR="NO" AUTOFIELD="TRUE">
+	<FIELD CODE="ikey" TYPE="CHAR" LEN="1" NAME="inputed key action" COMMENT="default:4" VALUE="$GRID_HEADER_IKEY"/>
+	<FIELD CODE="sdir" TYPE="CHAR" LEN="1" NAME="sort direction" COMMENT="사용하지 않음..default: 0x00" VALUE="$GRID_HEADER_SDIR"/>
+	<FIELD CODE="aflg" TYPE="CHAR" LEN="1" NAME="where to be added" COMMENT="사용하지 않음..default: 0x00" VALUE="$GRID_HEADER_AFLG"/>
+	<FIELD CODE="ckey" TYPE="CHAR" LEN="1" NAME="continuous key flag" COMMENT="default: 0x10" VALUE="$GRID_HEADER_CKEY"/>
+	<FIELD CODE="nrow" TYPE="CHAR" LEN="4" NAME="number of rows" COMMENT="default: 0x00" VALUE="$GRID_HEADER_NROW"/>
+	<FIELD CODE="kval" TYPE="CHAR" LEN="70" NAME="next queried key value" COMMENT="default: 0x10" VALUE="$GRID_HEADER_KVAL" PADDING_CHAR="0x00"/>
+</STRUCT>
+
+<STRUCT NAME="실시간헤더" CODE="REAL_HEADER" ATTR="NO" AUTOFIELD="TRUE">
+	<FIELD CODE="func" TYPE="CHAR" LEN="1" COMMENT="'I' or 'D' : 의미는 모르겠음.."/>
+	<FIELD CODE="flag" TYPE="CHAR" LEN="1" COMMENT=""/>
+	<FIELD CODE="type" TYPE="CHAR" LEN="1" COMMENT=""/>
+	<FIELD CODE="mlen" TYPE="CHAR" LEN="3" COMMENT="데이터 길이"/>
+	<FIELD CODE="svtp" TYPE="CHAR" SIZE="1" NAME="'F':Future 'O':Option"/>
+	<FIELD CODE="comd" TYPE="CHAR" SIZE="6" NAME="commodity code"/>
+	<FIELD CODE="code" TYPE="CHAR" SIZE="16" NAME="realtime code"/>
+	<FIELD CODE="pind" TYPE="CHAR" SIZE="1" NAME="price indicator"/>
+</STRUCT>
+
+<STRUCT NAME="LEDGER헤더" CODE="LEDGER_HEADER" ATTR="NO" AUTOFIELD="TRUE" PADDING_CHAR="0x00">
+	<FIELD CODE="wktp" TYPE="CHAR" SIZE="1" NAME="Work type('Q':Query,'S':Save)" VALUE="$LEDGER_WKTP"/>
+	<FIELD CODE="scrn" TYPE="CHAR" SIZE="8" NAME="Screen id" VALUE="$LEDGER_SCRN"/>
+	<FIELD CODE="usid" TYPE="CHAR" SIZE="12" NAME="User or staff's logon ID" VALUE="$LEDGER_USID"/>
+	<FIELD CODE="utyp" TYPE="CHAR" SIZE="1" NAME="User type" VALUE="$LEDGER_UTYP"/>
+	<FIELD CODE="brok" TYPE="CHAR" SIZE="16" NAME="Broker code" VALUE="$LEDGER_BROK"/>
+	<FIELD CODE="clnt" TYPE="CHAR" SIZE="16" NAME="Client or associate code" VALUE="$LEDGER_CLNT"/>
+	<FIELD CODE="unit" TYPE="CHAR" SIZE="1" NAME="Access unit" VALUE="$LEDGER_UNIT"/>
+	<FIELD CODE="orgn" TYPE="CHAR" SIZE="16" NAME="Organization code" VALUE="$LEDGER_ORGN"/>
+	<FIELD CODE="yhpf" TYPE="CHAR" SIZE="1" NAME="Y-HP required flag" VALUE="$LEDGER_YHPF"/>
+	<FIELD CODE="ipad" TYPE="CHAR" SIZE="15" NAME="Public IP-Address" VALUE="$LEDGER_IPAD"/>
+	<FIELD CODE="loip" TYPE="CHAR" SIZE="15" NAME="Local IP-Address" VALUE="$LEDGER_LOIP"/>
+	<FIELD CODE="tlog" TYPE="CHAR" SIZE="1" NAME="Trace logging ? (1: Log ON)" VALUE="$LEDGER_TLOG"/>
+	<FIELD CODE="rcod" TYPE="CHAR" SIZE="6" NAME="Return code (00000: success)" VALUE="$LEDGER_RCOD"/>
+	<FIELD CODE="rmsg" TYPE="CHAR" SIZE="70" NAME="Return message" VALUE="$LEDGER_RMSG"/>
+	<FIELD CODE="fill" TYPE="CHAR" SIZE="21" NAME="FILLER" VALUE="$LEDGER_FILL"/>
+</STRUCT>
+
+<STRUCT NAME="BROAD 헤더" CODE="BROAD_HEADER" ATTR="NO" AUTOFIELD="TRUE">
+	<FIELD CODE="mtyp" TYPE="CHAR" LEN="1" COMMENT="0x01 : Emergency, 0x02 : Order, Pos, Balance notice"/>
+	<FIELD CODE="styp" TYPE="CHAR" LEN="1" COMMENT="'S' : NEWS, 'T' : SERVERTIME, else ORDER"/>
+	<FIELD CODE="mlen" TYPE="CHAR" LEN="4" COMMENT="데이터 길이"/>
+</STRUCT>
+<!--
+ typedef    struct  {           /* data struct of number-1  */
+	char    ccol[1];        /* color indicator      */
+ /* '1':Red, '2':Blue, '3':Black    */
+	char    updn[1];        /* up/down indicator        */
+ /* '1': '↑'    '2': '↓'    */
+ /* '3': '↔'    ' ': blank  */
+	char    ptyp[1];        /* price type           */
+ /* 'A': Ask    'B': Bid    */
+ /* 'C': Close  'S': Settlement */
+	char    frid[1];        /* number fractional indicator  */
+	char    sign[1];        /* number sign ('-', ' ', '+')  */
+	char    data[9];        /* number filled by zero (>= 0) */
+ /* variable length in realtime */
+ } DNUM_1;
+-->
+
+
+<STRUCT NAME="마이MQ TH" CODE="MYMQ_TH" ATTR="NO" AUTOFIELD="TRUE" PADDING_CHAR="0">
+	<FIELD CODE="PKT_LEN" TYPE="INT_NET" LEN="1" NAME="길이" VALUE="$MYMQ_TH_PKT_LEN" COMMENT="" />
+ /*PKI_1 
+RHI	0x01 Following RH
+CPI	0x02 Continuous Packet Indicator
+BPI	0x04 Begin Packet Indicator
+EPI	0x08 End Packet Indicator
+ZIP	0x10 Compressed 
+ERR	0x20 Error  Indicator
+ENC	0x40 Encrypted 
+*/
+	<FIELD CODE="PKI_1" TYPE="CHAR" LEN="1" NAME="Packet Indicator" VALUE="$MYMQ_HEADER_PKTI_1" COMMENT="" INPUTBINARY="TRUE"/>
+	<FIELD CODE="PKI_2" TYPE="CHAR" LEN="1" NAME="Packet Indicator" VALUE="$MYMQ_HEADER_PKTI_2" COMMENT="" INPUTBINARY="TRUE"/>
+ /*FUNC
+0x01 : Get server’s IP address
+0x02 : Exchange key for message encryption
+‘A’     : Sign-on
+;B’     : Notify signed user’s id 
+‘C’     : General Request for transactions
+‘D’     : Error Response
+‘E’     : Unsolicited Message(General)
+‘F’     : Unsolicited Message (Alarm)
+‘G’     : Real-Time symbol (Inbound)
+‘H’     : Real-Time push message(outbound)
+*/
+	<FIELD CODE="FUNC" TYPE="CHAR" LEN="1" NAME="Function Code" VALUE="$MYMQ_HEADER_FUNC" COMMENT="" INPUTBINARY="TRUE"/>
+</STRUCT>
+
+<STRUCT NAME="마이MQ RH" CODE="MYMQ_RH" ATTR="NO" AUTOFIELD="TRUE" PADDING_CHAR="0x20">
+/*
+0x01 : Common Header Indicator
+0x02 : PKI(Previous Key Information)
+0x04   NKI(Next Key Indicator)
+*/
+	<FIELD CODE="FLAG" TYPE="CHAR" LEN="1" NAME="Flag" VALUE="$MYMQ_RH_FLAG"  INPUTBINARY="TRUE" COMMENT="" PADDING_CHAR="0x00"/>
+	<FIELD CODE="WKEY" TYPE="CHAR" LEN="8" NAME="Window Key" VALUE="$MYMQ_RH_WKEY" INPUTBINARY="TRUE" COMMENT="" />
+	<FIELD CODE="SVCODE" TYPE="CHAR" LEN="4" NAME="Service Code" VALUE="$MYMQ_RH_SVCODE" COMMENT=""/>
+	<FIELD CODE="EXCODE" TYPE="CHAR" LEN="8" NAME="Exchange Code" VALUE="$MYMQ_RH_EXCODE" COMMENT="" />
+	<FIELD CODE="RKEY" TYPE="CHAR" LEN="16" NAME="Routing Key" VALUE="$MYMQ_RH_RKEY" COMMENT=""/> //algo0200
+</STRUCT>
+
+<STRUCT NAME="마이MQ IP" CODE="MYMQ_IP" ATTR="NO" AUTOFIELD="TRUE" PADDING_CHAR="0x20">
+	<FIELD CODE="IP_1" TYPE="CHAR" LEN="24" NAME="ip1" VALUE="$MYMQ_IP_1" COMMENT="" />
+	<FIELD CODE="IP_2" TYPE="CHAR" LEN="24" NAME="ip2" VALUE="$MYMQ_IP_2" COMMENT="" />
+	<FIELD CODE="IP_3" TYPE="CHAR" LEN="24" NAME="ip3" VALUE="$MYMQ_IP_2" COMMENT="" />
+</STRUCT>
+
+<STRUCT NAME="업무계공통헤더" CODE="MYMQ_APPLICATION_HEADER" ATTR="NO" AUTOFIELD="TRUE" PADDING_CHAR="0x20" >
+	/*
+	char	trxc[16];	//전문 코드
+	char	scrn[6 ];	//화면번호
+	char	loip[16];	//로컬 IP
+	char	auip[16];	//공인 IP
+	char	maca[20];	//하드웨어 MAC
+	char	usid[16];	//사용자 아이디
+	char	ctyp[1 ];	//접속 매체구분
+	char	cont[1 ];	//접속사용자구분
+	char	over[36];	//OS 버전
+	char	rtyp[1 ];	//응답코드 타입
+	char	rcod[5 ];	//응답코드
+	char	pflg[1 ];	//팝업여부
+	char	memb[5 ];	//회원사코드
+	char	brcd[3 ];	//부서
+	char	auth[1 ];	//권한정보
+	char	cuse[20];	//Client 사용 영역
+	char	epwd[ 1];	//패스워드 구분 1:계좌 2:팀비밀번호
+	char	udef[91];	//FILLER
+	*/
+	<FIELD CODE="TRCODE" TYPE="CHAR" LEN="16" NAME="Transaction Code" VALUE="$MYMQ_AH_TRCODE" COMMENT="전문 코드"/>
+	<FIELD CODE="SCNO" TYPE="CHAR" LEN="6" NAME="Screen Number" VALUE="$MYMQ_AH_SCNO" COMMENT="화면번호"/>
+	<FIELD CODE="LOIP" TYPE="CHAR" LEN="16" NAME="Local ip address" VALUE="$MYMQ_AH_LOIP" COMMENT="로컬 IP"/>
+	<FIELD CODE="AUIP" TYPE="CHAR" LEN="16" NAME="Authorized ip address" VALUE="$MYMQ_AH_AUIP" COMMENT="공인 IP"/>
+	<FIELD CODE="MACA" TYPE="CHAR" LEN="20" NAME="MAC address" VALUE="$MYMQ_AH_MACA" COMMENT="하드웨어 MAC"/> 
+	<FIELD CODE="USID" TYPE="CHAR" LEN="16" NAME="User's id" VALUE="$MYMQ_AH_USID" COMMENT="사용자 아이디"/> 
+	<FIELD CODE="CTYP" TYPE="CHAR" LEN="1" NAME="Channel type" VALUE="$MYMQ_AH_CTYP" COMMENT="접속사용자구분"/> 
+	<FIELD CODE="CONT" TYPE="CHAR" LEN="1" NAME="Connection type" VALUE="$MYMQ_AH_CONT" COMMENT="접속사용자구분"/> 
+	<FIELD CODE="OVER" TYPE="CHAR" LEN="36" NAME="OS version" VALUE="$MYMQ_AH_OVER" COMMENT="OS 버전"/> 
+	<FIELD CODE="RTYP" TYPE="CHAR" LEN="1" NAME="Reply code type" VALUE="$MYMQ_AH_RTYP" COMMENT="응답코드 타입"/> 
+	<FIELD CODE="RCOD" TYPE="CHAR" LEN="5" NAME="Reply code" VALUE="$MYMQ_AH_RCOD" COMMENT="응답코드" /> 
+	<FIELD CODE="PFLG" TYPE="CHAR" LEN="1" NAME="Popup Flag" VALUE="$MYMQ_AH_PFLG" COMMENT="팝업여부"/> 
+	<FIELD CODE="MEMB" TYPE="CHAR" LEN="5" NAME="Member Code" VALUE="$MYMQ_AH_MEMB" COMMENT="회원사코드"/> 
+	<FIELD CODE="BRCD" TYPE="CHAR" LEN="3" NAME="Dept" VALUE="$MYMQ_AH_BRCD" COMMENT="부서"/> 
+	<FIELD CODE="AUTH" TYPE="CHAR" LEN="1" NAME="Auth Info" VALUE="$MYMQ_AH_AUTH" COMMENT="권한정보"/> 
+	<FIELD CODE="CUSE" TYPE="CHAR" LEN="20" NAME="Reserved for a client" VALUE="$MYMQ_AH_CUSE" COMMENT="Client 사용 영역"/> 
+	<FIELD CODE="epwd" TYPE="CHAR" LEN="1" NAME="Reserved for a client" VALUE="$MYMQ_AH_epwd" COMMENT="패스워드 구분 1:계좌 2:팀비밀번호"/> 
+	<FIELD CODE="eflg" TYPE="CHAR" LEN="1" NAME="" VALUE="$MYMQ_AH_eflg" COMMENT="업무 완료 여부 '0' 정상 '1' 오류"/> 
+	<FIELD CODE="UDEF" TYPE="CHAR" LEN="90" NAME="user's defined data" VALUE="$MYMQ_AH_UDEF" COMMENT="FILLER"/> 
+
+	<!-- <FIELD CODE="TMP" TYPE="CHAR" LEN="5" NAME="user's defined data" VALUE="$MYMQ_AH_TMP" COMMENT="뭐냐?"/>  -->
+
+</STRUCT>
+
+<STRUCT NAME="국내선물 FILE" CODE="MYMQ_FILE" ATTR="NO" AUTOFIELD="TRUE" PADDING_CHAR="0">
+	<FIELD CODE="PATH" TYPE="CHAR" LEN="80" NAME="상대패스" VALUE="$MYMQ_FILE_PATH" COMMENT="" />
+	<FIELD CODE="SEQN" TYPE="CHAR" LEN="4" NAME="1부터" VALUE="$MYMQ_FILE_SEQN" COMMENT="" />
+	<FIELD CODE="SIZE" TYPE="CHAR" LEN="12" NAME="Total File Size" VALUE="$MYMQ_FILE_SIZE" COMMENT="" />
+	<FIELD CODE="SENT" TYPE="CHAR" LEN="12" NAME="전송 사이즈" VALUE="$MYMQ_FILE_SENT" COMMENT="" />
+	<FIELD CODE="DATE" TYPE="CHAR" LEN="14" NAME="YYYYMMDDhhmmss" VALUE="$MYMQ_FILE_DATE" COMMENT="" />
+	<FIELD CODE="ZIPF" TYPE="CHAR" LEN="1" NAME="압축시1로 설정" VALUE="$MYMQ_FILE_ZIPF" COMMENT="" />
+	<FIELD CODE="ERRF" TYPE="CHAR" LEN="1" NAME="에러시1로설정" VALUE="$MYMQ_FILE_ERRF" COMMENT="" />
+	<FIELD CODE="EMSG" TYPE="CHAR" LEN="80" NAME="Error Message" VALUE="$MYMQ_FILE_EMSG" COMMENT="" />
+</STRUCT>
+
+
+
+
+
+
+
+
+
+
+

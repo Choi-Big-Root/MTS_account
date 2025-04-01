@@ -1,0 +1,785 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actiondata value="
+
+	// 폴링 설정 시간.
+ 	$setvar_common(
+ 		g_polling_time = 30 			// 단위 초 
+ 		,g_polling_limit_cnt = 5
+ 		,g_polling_fail_cnt = 0
+ 		,g_polling_d_fail_cnt = 0
+ 		,g_polling_r_fail_cnt = 0
+ 	);
+" />
+
+<!--
+ *********************************************************************************
+ **
+ ** fnSetActivitySize: 액티비티 컨트롤의 크기를 지정한다.
+ **
+ *********************************************************************************
+ -->
+<action id="fnSetActivitySize" scope="common" value="
+	$setvar_common(
+		activity_width=$result_double(20 * $g_widthRatio)
+		,activity_height=$result_double(20 * $g_heightRatio)
+	);
+
+	$logvar(
+		activity_width
+		,activity_height
+	);
+	$activity_size($activity_width,$activity_height);
+" />
+
+<action id="FNSEND_SISEDATA_DOMESTIC" scope="common" 
+value="
+	$setvar(tmp_reqid=$callaction(Act_Network_SendData
+			, $g_SiseSocketName_DOMESTIC
+			, $FNSEND_SISEDATA_DOMESTIC_PARAM1
+			, $FNSEND_SISEDATA_DOMESTIC_PARAM2
+			, $FNSEND_SISEDATA_DOMESTIC_PARAM3
+			, $FNSEND_SISEDATA_DOMESTIC_PARAM4
+			, $FNSEND_SISEDATA_DOMESTIC_PARAM5
+			, $FNSEND_SISEDATA_DOMESTIC_PARAM6
+		)
+	);
+	return $tmp_reqid;
+"/>
+
+// 키교환 로직입니다.
+<action id="fnKeyChangeNetwork" scope="common" 
+value="
+	if($g_OrderServerKeyChangeResult) {
+		$log(fnKeyChangeNetwork : 이미 키교환이 되어있다. 모의거래여부[$g_OrderServerCheckSimulation] Call ActionName[$g_OrderServerKeyChangeAfterAction]);
+		$callaction($g_OrderServerKeyChangeAfterAction);
+		//$callaction($fnKeyChangeNetwork_param1);
+		return;
+	}
+	$delvar(strKeyTokenVarName);
+	$security_initkeytoken(strKeyTokenVarName);
+	$logvar_binary(strKeyTokenVarName);
+	$setvar(strKeyTokenLength=$getvarlen(strKeyTokenVarName));
+
+	$setvar(COMM_HEADER_MSGL=$result($strKeyTokenLength+$map_getstructsize($g_OrderSocketName,TR_HEADER)));
+
+	$setbit(COMM_HEADER_MSGF,0xD8);
+
+	$setvar(COMM_HEADER_FUNC=1);
+	$setvar(COMM_HEADER_WMID=$callaction(FNNETWORK_ORDERSOCKET_GETREQUESTID));
+	$setvar(
+		TR_HEADER_SVCP=
+		, TR_HEADER_SVCC=
+	);
+	$logvar(TR_HEADER_SVCP,TR_HEADER_SVCC);
+	$setbit(TR_HEADER_MSGK,0x70);
+	//$setbit(TR_HEADER_MSGK,0x10);
+	$setbit(TR_HEADER_ACTF,0x00);
+	$setbit(TR_HEADER_CHKF,0x00);
+	$setbit(TR_HEADER_LANG,0x00);
+	$setbit(TR_HEADER_FILL,0x00);
+
+	$map_getstructsenddata($g_OrderSocketName,COMM_HEADER,,strKeySendData);
+	$map_getstructsenddata($g_OrderSocketName,TR_HEADER,,strTrHeader);
+	$addvar(strKeySendData,strTrHeader);
+	$addvar(strKeySendData,strKeyTokenVarName);
+
+	$logvar_binary(FNSEND_ORDERDATA KEYCHANGE,strKeySendData);
+
+	$sendvardata($g_OrderSocketName,,strKeySendData,$COMM_HEADER_WMID,,,TRUE);
+" />
+
+<action id="fnLoadMastData" scope="common" 
+params="p_socketName"
+value="
+	// 호출하는 곳이 없다.
+	$setvar(
+		tmp_dat_path = $g_path_down/dat/ 			// dat경로 
+	);
+	$setvar_common(
+		g_arr_datFile = [
+			[fucode] 	
+			,[opcode]	
+			,[opitem]	
+			,[oprcode]
+		]
+	);
+	//$logarrayvar(g_arr_datFile);
+	for($i=0; $i < $getarrayvarcount(g_arr_datFile); $i++){
+		$setvar(
+			tmp_dat_file = $addstring($tmp_dat_path,$getarrayvar(g_arr_datFile,$i,0),.dat)	//  파일
+			,tmp_dat_arrName = $addstring(arr_MasterData,_,$getarrayvar(g_arr_datFile,$i,0)) 	// 생성될 배열명
+		);
+		//$log(==========================================);
+		//$logvar(tmp_dat_file,tmp_dat_arrName);
+
+		$delarrayvar($tmp_dat_arrName);
+		$addTokenArrayFile($tmp_dat_file,$tmp_dat_arrName);	
+
+		//$logarrayvar($tmp_dat_arrName);
+	}
+
+	$copyfile(master.sqlite,$g_path_down/dat/master.sqlite);
+	$copyfile(config.sqlite,$g_path_down/dat/config.sqlite);
+
+
+
+	//  배열에 담는다. 
+	$delarrayvar(g_ArrFuturesExch);
+	//전역	 ,리버스,삭제안함,중복허용안함,원본서브인덱스,타겟서브인덱스,대소문자무시
+	$arraycopy(arr_MasterData_fucode,g_ArrFuturesExch,true,true,false,true,2,2,common); 
+	$log(********** 거래소 코드 );
+	//$logarrayvar(g_ArrFuturesExch);
+	$setvar(tmpExchlistcnt = $getarrayvarcount(g_ArrFuturesExch));
+
+	for($iIndex = 0; $iIndex < $tmpExchlistcnt; $iIndex++){
+		$callaction(fnLoadMasterArrayExch,$getarrayvar(g_ArrFuturesExch, $iIndex, 2));
+	}
+
+
+
+	return;
+	$setvar_single( SQL = $(SELECT EXCH FROM IMD_FUCODE GROUP BY EXCH));
+	$delarrayvar(g_ArrFuturesExch);
+
+	$db_exec_array(g_ArrFuturesExch, $SQL, MASTER, TRUE);
+	$setvar(tmpExchlistcnt = $getarrayvarcount(g_ArrFuturesExch));
+	//  $logvar(tmpExchlistcnt);
+	//  $logarrayvar(g_ArrFuturesExch);
+	for($iIndex = 0; $iIndex < $tmpExchlistcnt; $iIndex++){
+		$callaction(fnLoadMasterArrayExch,$getarrayvar(g_ArrFuturesExch, $iIndex, 0));
+	}
+
+	// 옵션
+	//arr_MasterData_OPCODE
+	$setvar(tmpOpitemCnt = $getarrayvarcount(arr_MasterData_OPITEM));
+	//$logarrayvar(arr_MasterData_OPITEM);
+	for($iIndex = 0; $iIndex < $tmpOpitemCnt; $iIndex++){
+		$callaction(fnLoadMasterArrayOPITEM,$getarrayvar(arr_MasterData_OPITEM, $iIndex, 0));
+	}
+
+
+	return;
+
+
+	$log(fnLoadMastData: $g_path_down/dat);
+	$setmasterpath($g_path_down/dat);
+	// delete 는 fucode.dat 파일 다운로드시..
+	$loadmaster($g_SiseSocketName,,fucode.dat, opcode.dat, opitem.dat);
+
+	$delarrayvar(arr_MasterData);
+	$setvar(SQL=$(
+		SELECT  CODE, NAME FROM  IMD_FUCODE order by CODE asc
+	));
+	$db_exec_array(arr_MasterData, $SQL, MASTER, TRUE);
+	$arraysort(arr_MasterData,,,0);
+	$logarrayvar(arr_MasterData,10);
+
+	// 옵션
+	$delarrayvar(arr_MasterData_OPCODE);
+	
+	$setvar(SQL_OPCODE=$(select code, fcod, strk, otyp, atmf , fill, endf from imd_opcode));
+	$db_exec_array(arr_MasterData_OPCODE, $SQL_OPCODE, MASTER, TRUE);
+	//$arraysort(arr_MasterData_OPCODE,,,0);
+	$logarrayvar(arr_MasterData_OPCODE,10);
+
+	
+	// 옵션종목 
+	$delarrayvar(arr_MasterData_OPITEM);
+
+	$setvar(SQL_OPITEM=$(
+		SELECT  comd, exnm, exid, enam, name, type, trdf, prod, pind, tsiz, tval, adjv, csiz, cval, stid, osty, onof, fill, endf FROM  IMD_OPITEM ORDER BY exnm ASC
+	));
+	$db_exec_array(arr_MasterData_OPITEM, $SQL_OPITEM, MASTER, TRUE);
+	$arraysort(arr_MasterData_OPITEM,,,0);
+	//$logarrayvar(arr_MasterData_OPITEM);
+
+
+	$copyfile(master.sqlite,$g_path_down/dat/master.sqlite);
+	$copyfile(config.sqlite,$g_path_down/dat/config.sqlite);
+
+	$setvar_common(g_MasterLoadFlag=true);
+
+	if($getarrayvarcount(g_arrMasterData) <= 0) {
+		$setvar_single( SQL = $(SELECT CODE, ENAM, NAME, EXCH, TYPE, PROD, PIND, TRDF, ONOF, TSIZ, ADJV, UNIT, LMON, RTIC, COMD, YYMM, FLAG FROM    IMD_FUCODE)  );
+		$logvar(SQL);
+		$db_exec_array(g_arrMasterData, $SQL, MASTER, TRUE);
+		$arraysort(g_arrMasterData,,,0);
+
+		//$logarrayvar(g_arrMasterData);
+	}
+" />
+<action id="fnLoadMastData_domestic" scope="common" 
+value="
+
+	$setvar(
+		tmp_dat_path = $g_path_down/dat/ 			// dat경로 
+	);
+	$setvar_common(
+		g_arrd_datFile = [
+			//[fogjcd]			// 	- 종목구분,기초자산,옵션승수,선물승수,국내이자율,국외이자율,배당액지수,역사적변동성(X 179개),옵션구분
+								//종목구분=> 1:KOFEX, 2:KOSPI
+								//옵션구분=> 1:현물, 2: 선물, 3:지수
+			//,[fojmcd]   		// 	- 종목구분,종목,기조자산명,만기년월,근월물순서,선물코드,행사가,옵션구분,파생상품코드,잔존일수,계약당기준증거금,전일최대이론가,옵션매도이론가,5%이론가,전일종가,기조자산구분
+								//종목구분 => 1:KOFEX, 2:KOSPI
+								//선물코드 => 선물만사용
+								//옵션구분 => 1:현물옵션, 2,선물옵션, 3:지수옵션
+								//파생상품코드 => 001:유럽형콜 002:유럽형풋 004:선물 006:미국형콜 007:미국형풋
+								//기초자산구분 => 1:채권 2:통화 3:지수
+			,[sfile01] 		// 기초자산정보 - 마켓구분,선물/옵션구분,기초자산명,기초자산코드,기초자산설명(한글),기초자산설며(영문)
+			,[sfile02]		// 만기월물정보 - 마켓타입,선물/옵션구분,기초자산명,만기년월
+			,[sfile03]		// 종목정보 - 거래소구분,선물/옵션구분,옵션구분,기초자산명,만기년월,주야간구분,분류,거래소코드,종목코드,상위종목(KTB에서만사용),한글종목명,영문종목명,상한가,하한가,행사가격,파생상품코드,소수점정보,계약크기,잔존일수,실시간상한가적용여부,실시간상한가,실시간하한가,실시간종목코드
+								//주야간구분 => day, night
+								//거래소구분 => 1:KOFEX, 2:KOSPI 5:MINI KOSPI
+								//선물옵션구분 => F:선물 O:옵션
+			,[sfile05]		// 스프레드정보 - 기초자산명,종목코드,구성종목,구성일련번호,구성비율,매수시매매구분,매도시매매구분
+			,[sfile07]		// 틱사이즈테이블 - 선물옵션구분,기초자산명,파생상품코드,하한,상한,틱사지즈(소수점미포함),소수점정보
+			,[sfile09]		// 연속월물정보 - 거래소구분,연속월물종목,종목코드,기초자산명
+			,[sfile11]		// 옵션ATM - 기초자산명,만기년월,행사가격
+			,[sfile12]		// 연도코드 - 연도코드,연도
+			,[sfile14]		// 국내종목 종료,운영 시간 -  7월31일 국내 제도변경관련하여 장운영시간, 종료시간을 제공하게 됩니다.
+		]
+	);
+	//$logarrayvar(g_arrd_datFile);
+	for($i=0; $i < $getarrayvarcount(g_arrd_datFile); $i++){
+		$setvar(
+			tmp_dat_file = $addstring($tmp_dat_path,$getarrayvar(g_arrd_datFile,$i,0),.dat)	//  파일
+			,tmp_dat_arrName = $addstring(arr_MasterData,_,$getarrayvar(g_arrd_datFile,$i,0)) 	// 생성될 배열명
+		);
+		$log(==========================================);
+		$logvar(tmp_dat_file,tmp_dat_arrName);
+		$addTokenArrayFile($tmp_dat_file,$tmp_dat_arrName);	
+
+		//$logarrayvar($tmp_dat_arrName);
+	}
+
+
+	// 마스터 로딩 후로 위치 변경한다.
+	//1. 주식선물인것을 골라낸다.(0번째 6인거는 주식선물 )
+	$getsearcharray(arr_MasterData_sfile01,g_arrMaster_base_sf_d,6,common,0,,first);
+	//$logarrayvar(g_arrMaster_base_sf_d,120);
+	//2. 선물옵션을 골라낸다.
+	$setcomparearray(g_arrMaster_base_fo_d,arr_MasterData_sfile01,g_arrMaster_base_sf_d,0,0,local,NE);
+	//$logarrayvar(g_arrMaster_base_fo_d);
+	// 3.선물을 골라낸다.
+	$getsearcharray(g_arrMaster_base_fo_d,g_arrMaster_base_fu_d,F,common,1,,first);
+	//$logarrayvar(g_arrMaster_base_fu_d);
+	// 4.옵션을 골라낸다.
+	$delarrayvar(tmp_arrMaster_base_op_d);
+	$getsearcharray(g_arrMaster_base_fo_d,tmp_arrMaster_base_op_d,O,local,1,,first);
+	$getsearcharray(tmp_arrMaster_base_op_d,g_arrMaster_base_op_d,USD,common,2,,NOTEQUAL);
+	//$logarrayvar(g_arrMaster_base_op_d);
+	// 마스터 로딩 후로 위치 변경한다. - 여기까지 
+
+	// 파일을 배열로 만든다. 
+	//$addTokenArrayFile(data.dat,tokenArray);
+	
+" />
+
+<action id="fnLoadMasterArray" scope="common" 
+value="
+
+	return;
+	$setvar_single( SQL = $(SELECT EXCH FROM IMD_FUCODE GROUP BY EXCH));
+	$delarrayvar(g_ArrFuturesExch);
+
+	$db_exec_array(g_ArrFuturesExch, $SQL, MASTER, TRUE);
+	$setvar(tmpExchlistcnt = $getarrayvarcount(g_ArrFuturesExch));
+	//  $logvar(tmpExchlistcnt);
+	//  $logarrayvar(g_ArrFuturesExch);
+	for($iIndex = 0; $iIndex < $tmpExchlistcnt; $iIndex++){
+		$callaction(fnLoadMasterArrayExch,$getarrayvar(g_ArrFuturesExch, $iIndex, 0));
+	}
+
+	// 옵션
+	//arr_MasterData_OPCODE
+	$setvar(tmpOpitemCnt = $getarrayvarcount(arr_MasterData_OPITEM));
+	//$logarrayvar(arr_MasterData_OPITEM);
+	for($iIndex = 0; $iIndex < $tmpOpitemCnt; $iIndex++){
+		$callaction(fnLoadMasterArrayOPITEM,$getarrayvar(arr_MasterData_OPITEM, $iIndex, 0));
+	}
+"/>
+<action id="fnLoadMasterArrayOPITEM" scope="common" 
+params="p_code"
+value="
+	$log(================= 분류 시작 ===============);
+	$setvar(
+		arr_varName = $addstring(arr_MasterData_OPITEM_,$p_code)
+		,arr_varName_C = $addstring(arr_MasterData_OPITEM_,$p_code,_C)
+		,arr_varName_P = $addstring(arr_MasterData_OPITEM_,$p_code,_P)
+	);
+	//전역	 ,리버스,삭제안함,중복허용안함,원본서브인덱스,타겟서브인덱스,대소문자무시
+	$delarrayvar($arr_varName);
+	$delarrayvar($arr_varName_C);
+	$delarrayvar($arr_varName_P);
+	
+	$getsearcharray(arr_MasterData_OPCODE,$arr_varName,$p_code,common,2,,last);
+	$getsearcharray($arr_varName,$arr_varName_C,C,common,6,,last);
+	$getsearcharray($arr_varName,$arr_varName_P,P,common,6,,last);
+	
+"/>
+<action id="fnGetExchArrayName" scope="common" value="
+	$setvar(
+		tmpExch=$fnGetExchArrayName_PARAM1
+	);
+	return $(g_ArrFuturesExch_$($tmpExch));
+"/>
+<action id="fnGetExchComdArrayName" scope="common" value="
+	$setvar(
+		tmpExch=$fnGetExchComdArrayName_PARAM1
+		, tmpComd=$fnGetExchComdArrayName_PARAM2
+	);
+	return $(g_ArrFuturesExch_$($tmpExch)_$($tmpComd));
+"/>
+<action id="fnLoadMasterArrayExch" scope="common" 
+params="p_exch"
+value="
+	$setvar(
+		strExch=$p_exch
+		, strExchArrName=$(g_ArrFuturesExch_$($strExch))
+		, strItemArrName=$(g_ArrFuturesAll_$($strExch))
+	);
+  	//$logvar(strExch,strExchArrName);
+
+	$delarrayvar($strExchArrName);
+	$delarrayvar(tmplist);
+
+
+	//$setvar_single( SQL = $(SELECT  * FROM IMD_FUCODE WHERE EXCH='$strExch' and length(yymm) = 6 and trdf=1 and (YYMM >= strftime('%Y%m', 'now','localtime')  or YYMM=='000000') order by comd asc, yymm asc)  );
+	//$log(쿼리문:$SQL);
+	//$db_exec_array(tmplist, $SQL, MASTER, FALSE);
+
+	// $getsearcharray(배열명,생성할배열명,첮을문자열,생성배열의 SCOPE,찾을서브인덱스,대소문자무시여부,문자열찾을위치-first:middle:last); ==> 디폴트값 : $getsearcharray(없음,없음,없음,local,0,true,first);
+	$getsearcharray(arr_MasterData_fucode, tmplist, $strExch, common, 2,true, first);
+	
+	$setvar(
+		tmplistcnt = $getarrayvarcount(tmplist)
+		, iComdIndex = 0
+	);
+	if($tmplistcnt>0){
+		$arraycopy_common(tmplist,$strItemArrName);
+	}
+	//$logvar(tmplistcnt);
+	//$logarrayvar(tmplist);
+
+	$delarrayvar(tmp_ArrFuturesComd);
+	//전역	 ,리버스,삭제안함,중복허용안함,원본서브인덱스,타겟서브인덱스,대소문자무시
+	$arraycopy(tmplist,tmp_ArrFuturesComd,local,true,false,true,14,14,true); 
+//	$logarrayvar(tmp_ArrFuturesComd);
+//	$logvar(strExch,strExchArrName,strItemArrName,tmplistcnt);
+//	$logarrayvar(tmp_ArrFuturesComd);
+
+	for($i = 0; $i < $getarrayvarcount(tmp_ArrFuturesComd); $i ++){
+		$setvar(
+			tmp_comd 		= $getarrayvar(tmp_ArrFuturesComd, $i,14)
+			, tmp_arr_name 	= $(g_ArrFuturesExch_$($strExch)_$($tmp_comd))
+			, tmp_col_itemName 	= $getarrayvar(tmp_ArrFuturesComd, $i,3)
+		);
+//		$logvar(tmp_comd, tmp_arr_name, tmp_col_itemName);
+		
+		$getsearcharray(tmplist,$tmp_arr_name, $tmp_comd, common, 14,true, first);
+		$arraysort($tmp_arr_name,,,15);
+
+		$setvar(	tmp_arr_count = $getarrayvarcount($tmp_arr_name)	);
+
+		$addarray_common($strExchArrName,$tmp_comd,$tmp_col_itemName, $tmp_comd);
+
+//		$logvar(tmp_arr_count);
+		if($tmp_arr_count > 0){
+			$setvar(
+				col_CODE    		= $getarrayvar($tmp_arr_name, 0, 0)
+				,col_NAME   		= $getarrayvar($tmp_arr_name, 0, 3)
+				,col_COMD   		= $getarrayvar($tmp_arr_name, 0, 14)
+				,col_YYMM   		= $getarrayvar($tmp_arr_name, 0, 15)
+				,col_LMON   		= $getarrayvar($tmp_arr_name, 0, 13)
+				,col_Section   		= $getarrayvar($tmp_arr_name, 0, 7)
+
+				,tmp_yymm 		= $formatstring(##/##,$substring($col_YYMM,2,4))
+				,len_code 		= $strlen($col_CODE)
+				,len_code_start 	= $result($len_code-3)
+				,tmp_codename 	=$substring($col_CODE,$len_code_start,3)
+				,tmp_codename 	= $addstring($tmp_codename,\n,$tmp_yymm)
+				, oldExchComdArrName =$strExchComdArrName
+				, strExchComdArrName =$(g_ArrFuturesExch_$($strExch)_$($col_COMD))
+
+			);
+			$setarrayvar($strExchArrName,$iComdIndex,3,$col_CODE,TRUE);
+			$setarrayvar($strExchArrName,$iComdIndex,4,$tmp_codename,TRUE);
+			$setarrayvar($strExchArrName,$iComdIndex,5,$col_LMON,TRUE);
+			$setarrayvar($strExchArrName,$iComdIndex,6,$col_Section,TRUE); 		// 상품구분은 첫번째에만 추가함.
+
+		}
+
+		if($tmp_arr_count > 1){
+			$setvar(
+				col_CODE    			= $getarrayvar($tmp_arr_name, 1, 0)
+				,col_NAME   			= $getarrayvar($tmp_arr_name, 1, 3)
+				,col_COMD   			= $getarrayvar($tmp_arr_name, 1, 14)
+				,col_YYMM   			= $getarrayvar($tmp_arr_name, 1, 15)
+				,col_LMON   			= $getarrayvar($tmp_arr_name, 1, 13)
+
+				,tmp_yymm 			= $formatstring(##/##,$substring($col_YYMM,2,4))
+				,len_code 			= $strlen($col_CODE)
+				,len_code_start 		= $result($len_code-3)
+				,tmp_codename 		=$substring($col_CODE,$len_code_start,3)
+				,tmp_codename  		= $addstring($tmp_codename,\n,$tmp_yymm)
+				, oldExchComdArrName  	=$strExchComdArrName
+				, strExchComdArrName 	=$(g_ArrFuturesExch_$($strExch)_$($col_COMD))
+
+			);
+			$setarrayvar($strExchArrName,$iComdIndex,7,$col_CODE,TRUE);
+			$setarrayvar($strExchArrName,$iComdIndex,8,$tmp_codename,TRUE);
+			$setarrayvar($strExchArrName,$iComdIndex,9,$col_LMON,TRUE);
+		}
+		if($tmp_arr_count > 2){
+			$setvar(
+				col_CODE    			= $getarrayvar($tmp_arr_name, 2, 0)
+				,col_NAME   			= $getarrayvar($tmp_arr_name, 2, 3)
+				,col_COMD   			= $getarrayvar($tmp_arr_name, 2, 14)
+				,col_YYMM   			= $getarrayvar($tmp_arr_name, 2, 15)
+				,col_LMON   			= $getarrayvar($tmp_arr_name, 2, 13)
+
+				,tmp_yymm 			= $formatstring(##/##,$substring($col_YYMM,2,4))
+				,len_code 			= $strlen($col_CODE)
+				,len_code_start 		= $result($len_code-3)
+				,tmp_codename 		=$substring($col_CODE,$len_code_start,3)
+				,tmp_codename  		= $addstring($tmp_codename,\n,$tmp_yymm)
+				, oldExchComdArrName  	=$strExchComdArrName
+				, strExchComdArrName 	=$(g_ArrFuturesExch_$($strExch)_$($col_COMD))
+
+			);
+			$setarrayvar($strExchArrName,$iComdIndex,10,$col_CODE,TRUE);
+			$setarrayvar($strExchArrName,$iComdIndex,11,$tmp_codename,TRUE);
+			$setarrayvar($strExchArrName,$iComdIndex,12,$col_LMON,TRUE);
+		}
+		if($tmp_arr_count > 3{
+			$setvar(
+				col_CODE    			= $getarrayvar($tmp_arr_name, 3, 0)
+				,col_NAME   			= $getarrayvar($tmp_arr_name, 3, 3)
+				,col_COMD   			= $getarrayvar($tmp_arr_name, 3, 14)
+				,col_YYMM   			= $getarrayvar($tmp_arr_name, 3, 15)
+				,col_LMON   			= $getarrayvar($tmp_arr_name, 3, 13)
+
+				,tmp_yymm 			= $formatstring(##/##,$substring($col_YYMM,2,4))
+				,len_code 			= $strlen($col_CODE)
+				,len_code_start 		= $result($len_code-3)
+				,tmp_codename 		=$substring($col_CODE,$len_code_start,3)
+				,tmp_codename  		= $addstring($tmp_codename,\n,$tmp_yymm)
+				, oldExchComdArrName  	=$strExchComdArrName
+				, strExchComdArrName 	=$(g_ArrFuturesExch_$($strExch)_$($col_COMD))
+
+			);
+			$setarrayvar($strExchArrName,$iComdIndex,13,$col_CODE,TRUE);
+			$setarrayvar($strExchArrName,$iComdIndex,14,$tmp_codename,TRUE);
+			$setarrayvar($strExchArrName,$iComdIndex,15,$col_LMON,TRUE);
+		}
+$log(aaa ***** tmp_arr_count[$tmp_arr_count] iComdIndex[$iComdIndex]);
+		if($tmp_arr_count > 4){
+			//$setarrayvar($strExchArrName,$iComdIndex,9,$strExchComdArrName,TRUE);
+			$setarrayvar($strExchArrName,$iComdIndex,16,$strExchComdArrName,TRUE);
+$log(aaa ***** insert tmp_arr_count[$tmp_arr_count]);
+		}
+		$setvar(iComdIndex = $result($iComdIndex+1));
+		if($tmp_arr_count < 5) {
+			$log(tmp_arr_count is small [$tmp_arr_count] iComdIndex[$iComdIndex] tmp_arr_name[$tmp_arr_name] strExchComdArrName[$strExchComdArrName] strExchArrName[$strExchArrName]);
+			$logarrayvar($strExchArrName);
+		}
+	}
+	//[6A] [Australian Dollar] [6A] 		[6AU17] [U17 17/09] [1] 	[6AV17] [V17 17/10] [0] 	[g_ArrFuturesExch_FCME_6A]
+	//[6A][Australian Dollar][6A]		[6AU17] [U17 17/09] [1]	[6AV17 ][V17 17/10] [0]	[6AV17][V17 17/10][0][6AV17][V17
+17/10][0][g_ArrFuturesExch_FCME_6A]
+
+	$log(*********** 여기서 찾아보자 tmplistcnt[$tmplistcnt]);
+	$logarrayvar($strExchArrName);
+	return;
+	$log(*********** 여기서 찾아보자 not return);
+
+	for($i = 0; $i < $tmplistcnt; $i ++){
+		$setvar(
+			col_CODE    = $getarrayvar(tmplist, $i, 0)
+			,col_NAME   = $getarrayvar(tmplist, $i, 3)
+			,col_COMD   = $getarrayvar(tmplist, $i, 14)
+			,col_YYMM   = $getarrayvar(tmplist, $i, 15)
+			,col_LMON   = $getarrayvar(tmplist, $i, 13)
+
+			,tmp_yymm = $formatstring(##/##,$substring($col_YYMM,2,4))
+			,len_code = $strlen($col_CODE)
+			,len_code_start = $result($len_code-3)
+			,tmp_codename=$substring($col_CODE,$len_code_start,3)
+			,tmp_codename = $addstring($tmp_codename,\n,$tmp_yymm)
+			, oldExchComdArrName=$strExchComdArrName
+			, strExchComdArrName=$(g_ArrFuturesExch_$($strExch)_$($col_COMD))
+		);
+		$logvar(
+			col_CODE  
+			,col_NAME
+			,col_COMD
+			,col_YYMM
+			,col_LMON 
+			,tmp_yymm
+			,len_code 
+			,len_code_start
+			,tmp_codename
+			,tmp_codename
+			, oldExchComdArrName
+			, strExchComdArrName
+		);
+
+		/*
+		if($isequal_string($col_YYMM,000000)) {
+			$setvar(
+				tmpColIdx = 0
+				, iInsertColIndex = 3
+				, iComdIndex = $getarrayvarcount($strExchArrName)
+			);
+			$addarray_common($strExchArrName,$col_CODE,$col_NAME,$col_COMD);
+			$delarrayvar($strExchComdArrName);
+		}
+		else {
+			//$log($strExchArrName,$tmpColIdx,$iComdIndex,$iInsertColIndex,$tmp_codename,$strExchComdArrName);
+			if($tmpColIdx < 2) {
+				$setarrayvar($strExchArrName,$iComdIndex,$iInsertColIndex,$col_CODE,TRUE);
+				$setarrayvar($strExchArrName,$iComdIndex,$result($iInsertColIndex+1),$tmp_codename,TRUE);
+
+				$setarrayvar($strExchArrName,$iComdIndex,$result($iInsertColIndex+2),$col_LMON,TRUE);
+			}
+			else if($tmpColIdx == 2) {
+				$setarrayvar($strExchArrName,$iComdIndex,$iInsertColIndex,$strExchComdArrName,TRUE);
+			}
+
+			$setvar(
+				tmpColIdx = $result($tmpColIdx + 1)
+				, iInsertColIndex = $result($iInsertColIndex + 3)
+			);
+			$arraycopyindex(tmplist,$strExchComdArrName,$i,,TRUE);
+		}
+		*/
+	}
+//	$log(****** 나와라 );
+//	$logarrayvar($strExchComdArrName);
+//	$logarrayvar($strExchArrName);
+"/>
+
+<action id="FNVERSION_PROCESS" scope="common" value="
+	$setvar(
+		iProcessKind = $FNVERSION_PROCESS_PARAM1
+		, strPath = $FNVERSION_PROCESS_PARAM2
+		, strName = $FNVERSION_PROCESS_PARAM3
+		, iResultCode = $FNVERSION_PROCESS_PARAM4   // 파일 저장 등의 결과..
+	);
+	$log(KIND [$iProcessKind] RESULTCODE [$iResultCode] SendData Path[$strPath] Name[$strName] *************************);
+
+	if($iProcessKind == 2) {
+		if($iResultCode == 1) {
+			$setvar_common(g_iSuccessFileCount=$result($g_iSuccessFileCount+1));
+		}
+		else {
+			$addarray_common(arr_DownloadError,$strPath, $strName );
+			$setvar_common(g_iErrorFileCount=$result($g_iErrorFileCount+1));
+		}
+		if($isequal_string($strName,fucode.dat.gz)) {
+			$db_noexec_var(MASTER,delete from IMD_FUCODE);
+		}
+		if($isequal_string($strName,opcode.dat.gz)) {
+			$db_noexec_var(MASTER,delete from IMD_OPCODE);
+			$db_noexec_var(MASTER,delete from IMD_OPITEM);
+		}
+
+		$log(RECVCOUNT[SUCCESS/FAILED/TOTAL] [$g_iSuccessFileCount/$g_iErrorFileCount/$g_iRecvTotalFileCount]);
+		$callaction(fnMasterNXmlDownloading,$g_iSuccessFileCount,$g_iErrorFileCount,$g_iRecvTotalFileCount);
+
+		if($result($g_iSuccessFileCount+$g_iErrorFileCount) >= $g_iRecvTotalFileCount) {
+			$log(FNVERSION_PROCESS 호출된 갯수가 전체 갯수와 같아 졌다..파일 다운로드를 끝낸다. ***********************);
+			$setvar(iProcessKind=3);
+		}
+	}
+	else if($iProcessKind == 1) {
+		$callaction(FNSEND_VERSIONDATA,$strPath,$strName);
+	}
+
+	if($iProcessKind == 3) {
+		$saveNameToken(tknNewVersion,$g_path_down/$g_strVersionFilePath/$g_strVersionFileName);
+		$freeNameToken(tknOldVersion);
+		$freeNameToken(tknNewVersion);
+		$setvar_common(g_bVersionFileRequest=false);
+
+		$log(FNVERSION_PROCESS VERSION ACCESS END ******************************);
+		$log(뭐고??);
+		$logarrayvar(arr_DownloadError);
+		$callaction(fnMasterNXmlDownloadComplete,$g_iSuccessFileCount,$g_iErrorFileCount,$g_iRecvTotalFileCount);
+	}
+"/>
+
+<!--
+ *********************************************************************************
+ **
+ ** 시세데이터 
+ **
+ *********************************************************************************
+ -->
+<action id="FNSEND_SISEDATA" scope="common" 
+value="
+
+	$setvar(tmp_reqid=$callaction(Act_Network_SendData
+			, $g_SiseSocketName
+			, $FNSEND_SISEDATA_PARAM1
+			, $FNSEND_SISEDATA_PARAM2
+			, $FNSEND_SISEDATA_PARAM3
+			, $FNSEND_SISEDATA_PARAM4
+			, $FNSEND_SISEDATA_PARAM5
+			, $FNSEND_SISEDATA_PARAM6
+		)
+	);
+	return $tmp_reqid;
+
+	return;
+
+
+	$log(*******FNSEND_SISEDATA);
+	$setvar(
+		strTrCode=$FNSEND_SISEDATA_PARAM1
+		, strBlockCode=$FNSEND_SISEDATA_PARAM2
+		, strSiseDataVarName=$FNSEND_SISEDATA_PARAM3
+		, strFunc=$FNSEND_SISEDATA_PARAM4
+		, strBeforeActionName=$FNSEND_SISEDATA_PARAM5
+		, strAfterActionName=$FNSEND_SISEDATA_PARAM6
+		, strDataLength=$getvarlen(strSiseDataVarName)
+		, COMM_HEADER_MSGL=0
+		, COMM_HEADER_FUNC=$strFunc
+	);
+
+	$delvar(strSendData);
+
+	$logvar(strDataLength,strSiseDataVarName,strBlockCode);
+	if($strlen($strSiseDataVarName) <= 0) {
+		$map_getstructsenddata($g_SiseSocketName,$strTrCode,$strBlockCode,strSiseDataVarName);
+		$setvar(strDataLength=$getvarlen(strSiseDataVarName));
+	}
+	//$logvar(strDataLength,strSiseDataVarName);
+
+	$setvar(COMM_HEADER_MSGL=$result($strDataLength+$map_getstructsize($g_SiseSocketName,TR_HEADER)));
+	$setbit(COMM_HEADER_MSGF,0x00);
+	if($getvarlen(COMM_HEADER_FUNC) <= 0) {
+		$setvar(COMM_HEADER_FUNC=1);
+	}
+	$setvar(COMM_HEADER_WMID=$callaction(FNNETWORK_SISESOCKET_GETREQUESTID));
+	
+	$setvar(
+		TR_HEADER_SVCP=$map_getattrvalue($g_SiseSocketName,$strTrCode,SERVICECODE)
+		, TR_HEADER_SVCC=$strTrCode
+	);
+	$logvar(TR_HEADER_SVCP,TR_HEADER_SVCC);
+	$setbit(TR_HEADER_MSGK,0x10);
+	$setbit(TR_HEADER_ACTF,0x00);
+	$setbit(TR_HEADER_CHKF,0x00);
+	$setbit(TR_HEADER_LANG,0x00);
+	$setbit(TR_HEADER_FILL,0x00);
+
+	$setvar(TR_HEADER_OSTP=$g_TR_HEADER_OSTP);
+
+	$map_getstructsenddata($g_SiseSocketName,COMM_HEADER,,strSendData);
+	$map_getstructsenddata($g_SiseSocketName,TR_HEADER,,strTrHeader);
+	$addvar(strSendData,strTrHeader);
+	$addvar(strSendData,strSiseDataVarName);
+
+	//$logvar_binary(FNSEND_SISEDATA TESTBINARY,strSendData);
+
+	$sendvardata($g_SiseSocketName,$strTrCode,strSendData,$COMM_HEADER_WMID,$strBeforeActionName,$strAfterActionName,TRUE);
+
+	$callaction(fnAddReqId,$COMM_HEADER_WMID,$strTrCode);
+	
+	return $COMM_HEADER_WMID;
+"/>
+<action id="FNSEND_ORDERDATA" scope="common" 
+paramlog="false"
+value="
+	$setvar(tmp_reqid=$callaction(Act_Network_SendData_Order
+			, $g_SiseSocketName_DOMESTIC
+			, $FNSEND_ORDERDATA_PARAM1
+			, $FNSEND_ORDERDATA_PARAM2
+			, $FNSEND_ORDERDATA_PARAM3
+			, $FNSEND_ORDERDATA_PARAM4
+			, $FNSEND_ORDERDATA_PARAM5
+			, $FNSEND_ORDERDATA_PARAM6
+		)
+	);
+	return $tmp_reqid;
+"/>
+
+// 실시간 해제를 위해 reqid를 따른 저장한다. - 실시간 해제 작업과 배열 삭제는 basescreen unonload 에서 
+<action id="fnAddReqId" scope="common" value="
+	$log(****** fnAddReqId:$fnAddReqId_param1);
+		
+
+	$setvar(
+		arrCnt=$getarrayvarcount(arr_real_reqid)
+		,tmp_arrIdx = $getarrayindex(arr_real_reqid,0,$fnAddReqId_param1)
+	);
+	$logvar(tmp_arrIdx);
+	//if($tmp_arrIdx<0){      $setvar(tmp_arrIdx=0);    }
+	//else{                 $setvar(tmp_arrIdx=$arrCnt);    }
+	$setsubarray_common(arr_real_reqid,$arrCnt,$fnAddReqId_param1,$fnAddReqId_param2);
+	$logarrayvar(arr_real_reqid);
+" />
+
+<!--
+ *********************************************************************************
+ **
+ ** 주문데이터 
+ **
+ *********************************************************************************
+ -->
+ 
+<action id="FNORDER_DISCONNECT_CONFIRM" scope="common" value="  
+	$setvar_common(
+		last_g_menuCode=$g_menuCode
+		,last_g_itemCode = $g_itemCode
+	);
+	$setvar(paramLoginProcess_user_id=$g_user_id);
+
+	$callaction(fnInitNetwork_SISEnORDER,fnBecomeActive_CONNECTED);
+" />
+
+<!--
+ *********************************************************************************
+ **
+ ** 시세데이터 받고 난 다음 플랫폼에서 호출되는 콜백함수.
+ **
+ *********************************************************************************
+ -->
+// 재접속 확인.
+<action id="fnDisconnect_Confirm" scope="common" value="
+	
+	//$openfile(plist/root/intro.xml); 
+	$openfile(plist/root/main.xml); 
+" />
+
+<action id="FNNETWORK_SISESOCKET_DOMESTIC_GETREQUESTID" scope="common" 
+paramlog="false"
+value="
+	if($g_SiseSocketRequestID_DOMESTIC >= 1024) {
+		$setvar_common(g_SiseSocketRequestID_DOMESTIC=766);
+	}
+	else {
+		$setvar_common(g_SiseSocketRequestID_DOMESTIC=$result($g_SiseSocketRequestID_DOMESTIC+1));
+	}
+	return $g_SiseSocketRequestID_DOMESTIC;
+"/>
+<action id="FNNETWORK_SISESOCKET_GETREQUESTID" scope="common" value="
+	if($g_SiseSocketRequestID >= 255) {
+		$setvar_common(g_SiseSocketRequestID=1);
+	}
+	else {
+		$setvar_common(g_SiseSocketRequestID=$result($g_SiseSocketRequestID+1));
+	}
+	return $g_SiseSocketRequestID;
+"/>
+
+<action id="FNNETWORK_ORDERSOCKET_GETREQUESTID" scope="common" value="
+	if($g_OrderSocketRequestID >= 510) {
+		$setvar_common(g_OrderSocketRequestID=256);
+	}
+	else {
+		$setvar_common(g_OrderSocketRequestID=$result($g_OrderSocketRequestID+1));
+	}
+	return $g_OrderSocketRequestID;
+"/>

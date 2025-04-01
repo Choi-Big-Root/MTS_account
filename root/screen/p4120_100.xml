@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<br/>
+<!--
+ *********************************************************************************
+ **
+ ** 화면을 그린 후에 필요한 작업을 한다. 
+ ** - TR을 배열에 담는다. 전송은 특이한 경우가 아니면 basescreen에서 일괄적으로 전송한다.
+ **
+ *********************************************************************************
+ -->
+ <actiondata value="
+$readfile(plist/root/html/4120_100_2.html,4120_htmldata_2);
+$readfile(plist/root/html/4120_100_3.html,4120_htmldata_3);
+"/>
+<action id="screen_contents_onload" value="
+	$setvar(
+		,img_step_1.hidden=false
+		,img_step_2.hidden=false
+		,img_step_3.hidden=false
+		,img_step_4.hidden=false
+		,img_step_5.hidden=false
+		,img_step_6.hidden=false
+		,img_step_7.hidden=true
+		,img_step_8.hidden=true
+		,lbl_open_account_title.x=$w($g_lcdwidth,4.6) // 순서대로 오지 않을경우에 치우친다.
+		,lbl_account_title_step_1.hidden=true
+		,lbl_account_title_step_2.hidden=true
+		,lbl_account_title_step_3.hidden=true
+		,lbl_account_title_step_4.hidden=true
+		,lbl_account_title_step_5.hidden=true
+		,lbl_account_title_step_6.hidden=true
+		,lbl_account_title_step_7.hidden=false
+		,lbl_account_title_step_8.hidden=false
+		,lbl_account_title_step_7.textcolor=ffffff
+		,lbl_account_title_step_8.textcolor=777777
+		,vg_account_title_step.hidden=false
+		,popscreen_open_account_history.hidden=true
+		,popscreen_open_account_history_2.hidden=true
+		,popscreen_open_account_confirm.hidden=false
+		,popscreen_open_account_confirm.x=$w($g_lcdwidth,28)
+		,menu_num=4120
+	);
+
+		//$setControlHidden(img_step_5,false);
+		//$setControlHidden(img_step_6,true);
+		//$setControlHidden(lbl_account_title_step_5,true);
+		//$setControlHidden(lbl_account_title_step_6,false);
+		//$setControlHidden(popscreen_open_account_history,true);
+		//$setControlHidden(popscreen_open_account_history_2,true);
+		//$setControlHidden(popscreen_open_account_confirm,false);
+
+	// 애드브릭스 테스트
+	$setvar(
+		tmp_arr_custom_data = [
+			[menucode, $tmp_account_menu]
+			,[acntname, $g_save_acnt_name]
+		]
+	);
+	// 배열명(키,밸류), 이벤트명
+	$adbrixCustom(tmp_arr_custom_data,screen);	// 화면별 데이터
+
+"/>
+<action id="4120_camera_onclicked" value="
+	/*
+	$log(
+		확인용 : 
+			4101 g_IN_AGREE_ITEM1[$g_IN_AGREE_ITEM1],
+
+			4142 g_IN_AGREE_ITEM2[$g_IN_AGREE_ITEM2],
+			4142 g_IN_AGREE_ITEM3[$g_IN_AGREE_ITEM3],
+
+			4102 g_save_tel_num[$g_save_tel_num],
+			4102 g_IN_AGREE_RMN_NO[$g_IN_AGREE_RMN_NO],
+			4102 g_IN_AGREE_CLNT_NM[$g_IN_AGREE_CLNT_NM],
+			4102 g_IN_REQUEST_TEL_NUM[$g_IN_REQUEST_TEL_NUM],
+			4102 g_IN_REQUEST_AGE[$g_IN_REQUEST_AGE],
+			4102 g_OUT_AGREE_WORK_NO[$g_OUT_AGREE_WORK_NO],
+
+			4117 g_IN_REQUEST_LOCAL_YN[$g_IN_REQUEST_LOCAL_YN],
+			4117 g_IN_REQUEST_ABODE_NM[$g_IN_REQUEST_ABODE_NM],
+			4117 g_IN_REQUEST_HOME_POST_NO[$g_IN_REQUEST_HOME_POST_NO],
+			4117 g_IN_REQUEST_HOME_ADDR[$g_IN_REQUEST_HOME_ADDR],
+			4117 g_IN_REQUEST_HOME_ADDR2[$g_IN_REQUEST_HOME_ADDR2],
+
+			4143 g_IN_REQUEST_JOB_NM[$g_IN_REQUEST_JOB_NM],
+			4143 g_IN_REQUEST_COM_NM[$g_IN_REQUEST_COM_NM],
+			4143 g_IN_REQUEST_COM_DEPART[$g_IN_REQUEST_COM_DEPART],
+			4143 g_IN_REQUEST_COM_TEL[$g_IN_REQUEST_COM_TEL],
+			4143 g_IN_REQUEST_COM_POST_NO[$g_IN_REQUEST_COM_POST_NO],
+			4143 g_IN_REQUEST_COM_ADDR[$g_IN_REQUEST_COM_ADDR],
+			4143 g_IN_REQUEST_COM_ADDR2[$g_IN_REQUEST_COM_ADDR2],
+
+			4144 g_IN_REQUEST_CLNT_EMAIL[$g_IN_REQUEST_CLNT_EMAIL],
+			4144 g_IN_REQUEST_TRD_PPO[$g_IN_REQUEST_TRD_PPO],
+			4144 g_IN_REQUEST_FUNDS[$g_IN_REQUEST_FUNDS],
+			4144 g_IN_REQUEST_OWN_YN[$g_IN_REQUEST_OWN_YN],
+			4144 g_IN_REQUEST_AMERICAN_YN[$g_IN_REQUEST_AMERICAN_YN],
+			4144 g_IN_REQUEST_TRADE[$g_IN_REQUEST_TRADE],
+			4144 g_IN_REQUEST_DEAL[$g_IN_REQUEST_DEAL],
+
+			4145 g_IN_REQUEST_PD1[$g_IN_REQUEST_PD1],
+			4145 g_chk_4117_5gr_1[$g_chk_4117_5gr_1],
+			4145 g_chk_4117_5gr_2[$g_chk_4117_5gr_2],
+			4145 g_IN_REQUEST_NEW_PW[$g_IN_REQUEST_NEW_PW],
+			4145 g_save_members_nm[$g_save_members_nm],
+			4145 g_save_members_no[$g_save_members_no],
+			4145 g_open_tp_select[$g_open_tp_select],
+
+			4118 X,
+
+			4135 X,
+
+			4141 X,
+
+			4119 g_IN_BNKNAME_BNK_CODE[$g_IN_BNKNAME_BNK_CODE],
+			4119 g_IN_BNKNAME_BNK_NO[$g_IN_BNKNAME_BNK_NO],
+			4119 g_IN_BNKNAME_BNK_NM[$g_IN_BNKNAME_BNK_NM],
+			4119 g_save_bank_name[$g_save_bank_name],
+			4119 g_save_bank_code[$g_save_bank_code],
+			4119 g_save_acnt_name[$g_save_acnt_name],
+			4119 g_save_acnt_no[$g_save_acnt_no],
+
+			4120 X,
+	);
+	*/
+	$callaction(Act_Open_Account_Move,4125);
+"/>
+<action id="screen_4120_100_onunload" value="
+	$delvar(
+		4120_htmldata_2,4120_htmldata_3
+	);
+"/>
+<screen id="screen_4120_100"
+	class="cs_screen_contents"
+	backcolor="e33433"
+	onload="screen_contents_onload"
+	onunload="screen_4120_100_onunload"
+	>
+	<screen id="screen_4120_100"
+	noscroll_height="true"
+		backcolor="f1f1f1"
+		>
+		<label
+		width="$super.width"
+		height="$h($g_lcdHeight,3)"
+		backcolor="919191"
+		textcolor="ffffff"
+		fontsize="$g_fontsize_big1"
+		fontname="$g_baseFontNameBold"
+		//backcolor="ff000022"
+		align="center"
+		valign="bottom"
+		value="본인 확인을 위해 신분증 촬영이 필요합니다."
+		/>
+		<br/>
+		<hr height="$h($g_lcdHeight,1)" backcolor="919191"/>
+		<br/>
+		<viewgroup
+		id="vg_4120_100"
+		width="$super.width"
+		height="$h($g_lcdHeight,18)"
+		//backcolor="919191"
+		>
+			<img id="img_bg_idcard"
+			src="$bg_img_idcard_slice" 
+			width="$super.width"
+			height="$h($g_lcdHeight,18)"
+			layout="center" 
+			layout_vertical="center"
+			imagesizefit="false"
+			/>	
+		</viewgroup>
+		<br/>
+		<hr height="$h($g_lcdHeight,1)" backcolor="919191"/>
+		<br/>	
+		<br height="$h($g_lcdHeight,1.7)"/><blank width="$w($g_lcdwidth,4.4)"/>
+		<viewgroup
+			width="$w($g_lcdwidth,92)"
+			height="$h($g_lcdHeight,33)"
+			backcolor="ffffff"
+			border_color="cccccc"
+			border_radius="$w($g_lcdWidth,0.5)">
+			<br height="$h($g_lcdHeight,1.2)"/>
+			<label 
+				margin_left="$w($g_lcdwidth,2.5)"
+				height="$h($g_lcdHeight,4)"
+				fontsize="$g_fontsize_big1"
+				fontname="$g_baseFontNameBold"
+				value="촬영 전 알아두세요."
+				textcolor="e33433"
+				align="left"/>
+			<br/>
+			<htmlview 
+				id="html1"
+				width="$w($g_lcdWidth,91.8)" 
+				height="$h($g_lcdHeight,26)"
+				value_html_var="4120_htmldata_2"
+				fontsize="$g_fontsize_basic"
+				//basefontsize="$g_fontsize_basic"
+				textcolor="000000"
+				backcolor="ffffff"
+				//border_color="979797"
+				//border_width="1"
+				lineheight="$h($g_lcdHeight,3)"
+				margin_left="$w($g_lcdWidth,2)"
+				margin_right="$w($g_lcdWidth,2)"
+				margin_top="$h($g_lcdHeight,1.5)"
+				margin_bottom="$h($g_lcdHeight,1.5)"
+				noscroll_height="true"
+				/>
+		</viewgroup>
+		<br height="$h($g_lcdHeight,1.7)"/><blank width="$w($g_lcdwidth,4.4)"/>
+		<viewgroup
+			width="$w($g_lcdwidth,92)"
+			height="$h($g_lcdHeight,20)"
+			backcolor="ffffff"
+			border_color="cccccc"
+			border_radius="$w($g_lcdWidth,0.5)">
+			<br height="$h($g_lcdHeight,1.2)"/>
+			<label 
+				margin_left="$w($g_lcdwidth,2.5)"
+				height="$h($g_lcdHeight,4)"
+				fontsize="$g_fontsize_big1"
+				fontname="$g_baseFontNameBold"
+				value="촬영 후엔 진위여부를 확인해요."
+				textcolor="e33433"
+				align="left"/>
+			<br/>
+			<htmlview 
+				id="html2"
+				width="$w($g_lcdWidth,91.8)" 
+				height="$h($g_lcdHeight,19)"
+				value_html_var="4120_htmldata_3"
+				fontsize="$g_fontsize_basic"
+				//basefontsize="$g_fontsize_basic"
+				textcolor="000000"
+				backcolor="ffffff"
+				//border_color="979797"
+				//border_width="1"
+				lineheight="$h($g_lcdHeight,3)"
+				margin_left="$w($g_lcdWidth,2)"
+				margin_right="$w($g_lcdWidth,2)"
+				margin_top="$h($g_lcdHeight,1.5)"
+				margin_bottom="$h($g_lcdHeight,1.5)"
+				noscroll_height="true"
+				/>
+		</viewgroup>
+		<br height="$h($g_lcdHeight,2)" />
+		<blank width="$w($g_lcdWidth,4)" />
+		<button 
+			id="btn_4120_bf"
+			fontsize="$g_fontsize_big3" 
+			//y="$result($this.remain_bottom-$h($g_lcdHeight,5.4))"
+			width="$w($g_lcdwidth,44)" 
+			height="$h($g_lcdHeight,9.4)" 
+			backcolor="ffffff"
+			border_width="$g_roundHeight"
+			border_color="e33433"
+			backcolor_active="e5e5e5"
+			textcolor="e33433"
+			textcolor_active="e33433"
+			value="이전" 
+			onclicked="btn_open_account_history_onClicked"
+			//$callaction(Act_Open_Account_Move,4119);
+			//$closescreen(popscreen_base);
+			//enable="false"
+			//backcolor_disable="bfbfbf"
+			//textcolor_disable="999999"
+			/>
+		<blank width="$w($g_lcdWidth,4)" />
+		<button 
+		id="btn_4120_100_1"
+		fontsize="$g_fontsize_big3" 
+		//y="$result($this.remain_bottom-$h($g_lcdHeight,5.4))"
+		height="$h($g_lcdHeight,9.4)" 
+		width="$w($g_lcdwidth,44)" 
+		backcolor="dddfe0"
+		border_width="$g_roundHeight"
+		value="신분증 촬영" 
+		textcolor="ffffff"
+		textcolor_active="ffffff"
+		backcolor="e33433"
+		backcolor_active="bd3135"
+		//border_color="ffffff"
+		border_radius="$w($g_lcdWidth,0.5)"
+		fontsize="$g_fontsize_big2"
+		fontname="$g_baseFontNameBold"
+		align="center"
+		onclicked="4120_camera_onclicked" 
+		/>
+		<!-- <blank width="$w($g_lcdWidth,1.8)"/>
+		<button 
+			id="btn_4120_af"
+			y="$result($this.remain_bottom-$h($g_lcdHeight,13.4))"
+			fontsize="$g_fontsize_big3" 
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,9.4)" 
+			backcolor="e33433"
+			border_width="$g_roundHeight"
+			backcolor_active="505050"
+			textcolor="ffffff"
+			textcolor_active="ffffff"
+			value="영상통화 예약" 
+			onclicked="$callaction(Act_Open_Account_Move,4121);"
+			//$callaction(fnOpenPopScreen,plist/root/screen/p4121_100.xml,영상통화,);
+			//backcolor_disable="bfbfbf"
+			//textcolor_disable="999999"
+			/> -->
+		<br height="$h($g_lcdHeight,4)"/>
+	</screen>
+</screen>

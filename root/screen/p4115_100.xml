@@ -1,0 +1,1014 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<br/>
+<!--
+ *********************************************************************************
+ **
+ ** 화면을 그린 후에 필요한 작업을 한다. 
+ ** - TR을 배열에 담는다. 전송은 특이한 경우가 아니면 basescreen에서 일괄적으로 전송한다.
+ **
+ *********************************************************************************
+ -->
+ <actiondata value="
+$readfile(plist/root/html/4115_100_1.html,4115_htmldata_1);
+$readfile(plist/root/html/4115_100_2.html,4115_htmldata_2);
+$readfile(plist/root/html/4115_100_3.html,4115_htmldata_3);
+$readfile(plist/root/html/4115_100_4.html,4115_htmldata_4);
+$readfile(plist/root/html/4115_100_5.html,4115_htmldata_5);
+"/>
+ <action id="screen_contents_onload" value="
+ 	$logvar(g_tf_4102_confirm_2_var);
+	$setvar(
+		,img_step_1.hidden=false
+		,img_step_2.hidden=true
+		,img_step_3.hidden=true
+		,img_step_4.hidden=true
+		,img_step_5.hidden=true
+		,img_step_6.hidden=true
+		,img_step_7.hidden=true
+		,img_step_8.hidden=true
+		,lbl_open_account_title.x=$w($g_lcdwidth,4.6) // 순서대로 오지 않을경우에 치우친다.
+		,lbl_account_title_step_1.hidden=true
+		,lbl_account_title_step_2.hidden=false
+		,lbl_account_title_step_3.hidden=false
+		,lbl_account_title_step_4.hidden=false
+		,lbl_account_title_step_5.hidden=false
+		,lbl_account_title_step_6.hidden=false
+		,lbl_account_title_step_7.hidden=false
+		,lbl_account_title_step_8.hidden=false
+		,lbl_account_title_step_2.textcolor=ffffff
+		,lbl_account_title_step_3.textcolor=777777
+		,lbl_account_title_step_4.textcolor=777777
+		,lbl_account_title_step_5.textcolor=777777
+		,lbl_account_title_step_6.textcolor=777777
+		,lbl_account_title_step_7.textcolor=777777
+		,lbl_account_title_step_8.textcolor=777777
+		,vg_account_title_step.hidden=false
+
+		,lbl_open_account_title.align=left
+		,popscreen_open_account_history.hidden=true
+		,popscreen_open_account_history_2.hidden=true
+		,popscreen_open_account_confirm.hidden=false
+		,popscreen_open_account_confirm.x=$w($g_lcdwidth,57)
+		,menu_num=4115
+	);
+	//$setControlHidden(popscreen_open_account_history,true);
+	//$setControlHidden(popscreen_open_account_history_2,true);
+	//$setControlHidden(popscreen_open_account_confirm,false);
+
+
+	// 투자자정보 내용 수정을 위한 주석 addGradeConent_20191114
+	$callaction(fnSendSSL_MO_CUST);
+	//$callaction(fn4115_100_InvTpChange);
+"/>
+<var name="varInvTpSub" value="해외선물거래고객 또는 기존고객 사전교육 및 모의거래 이수 불필요"/>
+<action id="fn4115_100_InvTpChange" value="
+	// 투자자정보 내용 수정 2019.11.14 추가내용 addGradeConent_20191114
+	$delvar(tmpInvTpCls);
+	$setvar(tmpInvTpCls=$recvSSL_body_INV_TP);
+//	$logvar(g_IN_REQUEST_AGE,recvSSL_body_INV_TP);
+	if($g_IN_REQUEST_AGE >= 70){
+		$setvar(tmpInvTpCls=6);
+	}
+	$setvar(strTextColor=#e33433);
+//	$setvar(tmpInvTpCls=1);
+//	$setvar(
+//		lbl_INV_TP_sub1.hidden=false
+//		, lbl_INV_TP_sub1_1.hidden=false
+//		, lbl_INV_TP_sub2.hidden=false
+//	);
+//	$setvar(lbl_INV_TP_sub2.value=$varInvTpSub);
+
+	$setvar(
+		lbl_INV_TP_sub_var=
+		, strInvTpValue1=
+		, strInvTpValue2=
+		, strInvTpValue3=
+	);
+
+	if($isequal_string($tmpInvTpCls,1)){		
+		$setvar(lbl_INV_TP.value = 안정형);	
+//		$setvar(
+//			lbl_INV_TP_sub1.value=고객님께서는 안정 성향으로  사전교육시간
+//			, lbl_INV_TP_sub1_1.value=10시간 및 모의거래 3시간을 이수하셔야합니다
+//		);
+		$setvar(
+			strInvTpValue1=안정 성향
+			, strInvTpValue2=사전교육시간 10시간
+			, strInvTpValue3=모의거래 3시간
+		);
+	}
+	elseif($isequal_string($tmpInvTpCls,2)){	
+		$setvar(lbl_INV_TP.value = 안정추구형);	
+//		$setvar(
+//			lbl_INV_TP_sub1.value=고객님께서는 안정추구 성향으로  사전교육시간
+//			, lbl_INV_TP_sub1_1.value=10시간 및 모의거래 3시간을 이수하셔야합니다
+//		);
+		$setvar(
+			strInvTpValue1=안정추구 성향
+			, strInvTpValue2=사전교육시간 10시간
+			, strInvTpValue3=모의거래 3시간
+		);
+	}
+	elseif($isequal_string($tmpInvTpCls,3)){	
+		$setvar(lbl_INV_TP.value = 위험중립형);	
+		// 고객님께서는 위험중립/적극투자 성향으로 사전교육시간 3시간 및 모의거래 3시간을 이수하셔야합니다
+//		$setvar(
+//			lbl_INV_TP_sub1.value=고객님께서는 위험중립 성향으로  사전교육시간
+//			, lbl_INV_TP_sub1_1.value=3시간 및 모의거래 3시간을 이수하셔야합니다
+//		);
+		$setvar(
+			strInvTpValue1=위험중립 성향
+			, strInvTpValue2=사전교육시간 3시간
+			, strInvTpValue3=모의거래 3시간
+		);
+	}
+	elseif($isequal_string($tmpInvTpCls,4)){	
+		$setvar(lbl_INV_TP.value = 적극투자형);	
+//		$setvar(
+//			lbl_INV_TP_sub1.value=고객님께서는 적극투자 성향으로  사전교육시간
+//			, lbl_INV_TP_sub1_1.value=3시간 및 모의거래 3시간을 이수하셔야합니다
+//		);
+		$setvar(
+			strInvTpValue1=적극투자 성향
+			, strInvTpValue2=사전교육시간 3시간
+			, strInvTpValue3=모의거래 3시간
+		);
+	}
+	elseif($isequal_string($tmpInvTpCls,5)){	
+		$setvar(lbl_INV_TP.value = 공격투자형);	
+//		$setvar(
+//			lbl_INV_TP_sub1.value=고객님께서는 공격투자 성향으로  사전교육시간
+//			, lbl_INV_TP_sub1_1.value=1시간 및 모의거래 3시간을 이수하셔야합니다
+//		);
+		$setvar(
+			strInvTpValue1=공격투자 성향
+			, strInvTpValue2=사전교육시간 1시간
+			, strInvTpValue3=모의거래 3시간
+		);
+	}
+	elseif($isequal_string($tmpInvTpCls,6)){	
+		// lbl_INV_TP 은 원래대로 하려면 if 문 하나를 없애고 if 문 밖에 >= 70 을 조건으로 라벨값만 따로 바꾼다. 전부해당이라서..
+		$setvar(lbl_INV_TP.value = 고령투자자);	
+//		$setvar(
+//			lbl_INV_TP_sub1.value=고객님께서는 고령투자자임으로  사전교육시간
+//			, lbl_INV_TP_sub1_1.value=10시간 및 모의거래 3시간을 이수하셔야합니다
+//		);
+		$setvar(
+			strInvTpValue1=고령투자자
+			, strInvTpValue2=사전교육시간 10시간
+			, strInvTpValue3=모의거래 3시간
+		);
+	}
+
+	if($getvarlen(strInvTpValue1) > 0) {
+		$setvar(
+			strTemp1=고객님께서는 $strInvTpValue1이므로
+			, strTemp2=$strInvTpValue2 및 $strInvTpValue3을 이수하셔야합니다
+			, iWidth1=$stringwidth($strTemp1,,$g_baseFontNameBold,$w(16))
+			, iWidth2=$stringwidth($strTemp2,,$g_baseFontNameBold,$w(19))
+			, iSpace1=$result(($lbl_INV_TP_sub.width-$iWidth1)/5*2)
+			, iSpace2=$result(($lbl_INV_TP_sub.width-$iWidth2)/2)
+		);
+		if($iSpace1 < 0) {
+			$setvar(iSpace1=0);
+		}
+		if($iSpace2 < 0) {
+			$setvar(iSpace2=0);
+		}
+//		$logvar(strTemp1,strTemp2,iWidth1,iWidth2,iSpace1,iSpace2);
+		/*
+		$setvar(lbl_INV_TP_sub_var=<box width='$iSpace1'/><font style='font-size:$w(17)'>고객님께서는 <font color='$strTextColor'>$strInvTpValue1</font>이므로<br/><box width='$iSpace2'/><font color='$strTextColor'>$strInvTpValue2</font> 및 <font color='$strTextColor'>$strInvTpValue3</font>을 이수하셔야합니다</font><br/>$varInvTpSub);
+		*/
+
+		$setvar(
+			strTemp1=$strInvTpValue2 및
+			, strTemp2=$strInvTpValue3을
+			, strTemp3=이수하셔야합니다.
+			, strTemp4=%28기존고객은 이수 불필요%29
+
+			, strTemp2_1 =해외선물거래고객은
+			, strTemp2_2 =사전교육 및 모의거래
+			, strTemp2_3 =이수 불필요
+
+
+			, iWidth1=$stringwidth($strTemp1,,$g_baseFontNameBold,$w(16))
+			, iWidth2=$stringwidth($strTemp2,,$g_baseFontNameBold,$w(16))
+			, iWidth3=$stringwidth($strTemp3,,$g_baseFontNameBold,$w(16))
+			, iWidth4=$stringwidth($strTemp4,,$g_baseFontNameBold,$w(16))
+
+			, iWidth2_1=$stringwidth($strTemp2_1,,$g_baseFontNameBold,$w(16))
+			, iWidth2_2=$stringwidth($strTemp2_2,,$g_baseFontNameBold,$w(16))
+			, iWidth2_3=$stringwidth($strTemp2_3,,$g_baseFontNameBold,$w(16))
+
+			, iSpace1=$result(($lbl_INV_TP_sub.width-$iWidth1)/ 2)
+			, iSpace2=$result(($lbl_INV_TP_sub.width-$iWidth2)/ 2)
+			, iSpace3=$result(($lbl_INV_TP_sub.width-$iWidth3)/ 2)
+			, iSpace4=$result(($lbl_INV_TP_sub.width-$iWidth4)/ 2)
+
+			, iSpace2_1=$result(($lbl_INV_TP_sub2.width-$iWidth2_1)/ 2)
+			, iSpace2_2=$result(($lbl_INV_TP_sub2.width-$iWidth2_2)/ 2)
+			, iSpace2_3=$result(($lbl_INV_TP_sub2.width-$iWidth2_3)/ 2)
+		);
+
+		if($iSpace1 < 0) {
+			$setvar(iSpace1=0);
+		}
+		if($iSpace2 < 0) {
+			$setvar(iSpace2=0);
+		}
+		if($iSpace3 < 0) {
+			$setvar(iSpace3=0);
+		}
+		if($iSpace4 < 0) {
+			$setvar(iSpace4=0);
+		}
+
+		if($iSpace2_1 < 0) {
+			$setvar(iSpace2_1=0);
+		}
+		if($iSpace2_2 < 0) {
+			$setvar(iSpace2_2=0);
+		}
+		if($iSpace2_3 < 0) {
+			$setvar(iSpace2_3=0);
+		}
+
+		$logvar(strTemp1,strTemp2,strTemp3,strTemp4,iWidth1,iWidth2,iWidth3,iWidth4,iSpace1,iSpace2,iSpace3,iSpace4);
+
+
+
+		$setvar(lbl_INV_TP_sub_var=<box width='$iSpace1'/><font color='$strTextColor'>$strInvTpValue2</font> 및<br/><box width='$iSpace2'/><font color='$strTextColor'>$strInvTpValue3</font>을<br/><box width='$iSpace3'/>이수하셔야합니다.<br/><box width='$iSpace4'/>%28기존고객은 이수 불필요%29);
+
+		$setvar(lbl_INV_TP_sub2_var=<box width='$iSpace2_1'/>해외선물거래고객은<br/><box width='$iSpace2_2'/>사전교육 및 모의거래<br/><box width='$iSpace2_3'/>이수 불필요);
+
+		$reloadcontrol(lbl_INV_TP_sub);
+		$reloadcontrol(lbl_INV_TP_sub2);
+	}
+"/>
+
+<action id="btn_4115_confirm_onclicked" value="
+	if(!$chk_4115_confirm_1.checked || !$chk_4115_confirm_2.checked){
+		$alert(,,고객 확인사항에 체크해주세요.);
+		return;
+	}
+	$log(최대근로그 ***************** 여기를 확인);
+	$logvar(g_INV_TP);
+	if($g_INV_TP == 5){
+		$callaction(Act_Open_Account_Move,4117); 
+	}
+	else{
+		$callaction(Act_Open_Account_Move,4116); 
+	}
+	
+"/>
+//투자자 정보 확인서 등록
+<action id="fnSendSSL_MO_CUST" 
+value="
+	$popscreen(pop_host_msg,center); 		// 동글뱅이 띄운다.
+
+	$setvar(	jsonName 		= MO_CUST 	);
+	$json_create($jsonName);
+
+	$json_setdata($jsonName,,HDR,,{});
+	$json_setdata($jsonName,HDR,VER,,1.0); 					// 1.0 : 연동버전
+	$json_setdata($jsonName,HDR,CMD,,$jsonName);			// 
+
+	$json_setdata($jsonName,,BODY,,{});
+	$json_setdata($jsonName,BODY,WORK_NO,,$g_OUT_AGREE_WORK_NO); 	// 상담번호
+	$json_setdata($jsonName,BODY,CUST_TP,,1); 						// 고객구분: 1-개인, 2-법인
+	$json_setdata($jsonName,BODY,CUSTT_YN,,$g_IN_CUST_CUSTT_YN); 	// 투자권유 희망 여부: Y-희망 N-불원
+	$json_setdata($jsonName,BODY,USE_PRE,,$g_IN_CUST_USE_PRE); 		// 기존정보 사용여부: Y-사용 N-신규/갱신(존재하지 않으면 오류) Y:사용, N:신규/갱신,C:정상완료된 내역만 확인
+	$json_setdata($jsonName,BODY,Q1,,$g_IN_CUST_Q1); 				// 질문1  1:19세 이하,2:20세~40세,3:41세~50세,4:51세~60세,5:61세 이상
+	$json_setdata($jsonName,BODY,Q2,,$g_IN_CUST_Q2); 				// 질문2  1:6개월 미만,2:6개월 ~ 1년,3:1년 ~ 2년,4:2년 ~ 3년,5:3년 이상
+	$json_setdata($jsonName,BODY,Q3A,,$g_IN_CUST_Q3A); 				// 질문3-1: 1 선택하지 않은 항목은 공백 :안정형 상품-1
+	$json_setdata($jsonName,BODY,Q3B,,$g_IN_CUST_Q3B); 				// 질문3-2: 2 선택하지 않은 항목은 공백 :안정추구형 상품 -2
+	$json_setdata($jsonName,BODY,Q3C,,$g_IN_CUST_Q3C); 				// 질문3-3: 3 선택하지 않은 항목은 공백 :위험중립형 상품 - 3
+	$json_setdata($jsonName,BODY,Q3D,,$g_IN_CUST_Q3D); 				// 질문3-4: 4 선택하지 않은 항목은 공백 :적극 투자형 상품 - 4
+	$json_setdata($jsonName,BODY,Q3E,,$g_IN_CUST_Q3E); 				// 질문3-5: 5 선택하지 않은 항목은 공백 :공격투자형 상품 - 5
+	$json_setdata($jsonName,BODY,Q4,,$g_IN_CUST_Q4); 				// 질문4   1:매우 낮음,2:낮은 수준,3:높은 수준,4:매우 높은 수준
+	$json_setdata($jsonName,BODY,Q5,,$g_IN_CUST_Q5); 				// 질문5   1:10% 이하,2:10% ~ 20%,3:20% ~ 30%,4:30% ~ 40%,5:40%초과
+	$json_setdata($jsonName,BODY,Q6,,$g_IN_CUST_Q6); 				// 질문6.  1:현재 일정한 수입/ 향후 유지, 증가,2:현재 일정한 수입/ 향후 감소,불안정,3:현재. 수입 없고 연금이 주 수입원
+	$json_setdata($jsonName,BODY,Q7,,$g_IN_CUST_Q7); 				// 질문7   1:무슨 일이 있어도 투자 원금은 보전되어야 한다.,2:투자원금에서 최소한의 손실만을 감수할 수 있다.,3:투자원금 중 일부의 손실을 감수할 수 있다.,4:기대수익이 높다면 위험이 높아도 상관하지 않겠다.
+	$json_setdata($jsonName,BODY,Q8,,$g_IN_CUST_Q8); 				// 질문8.  1:안정형,2:안정추구형,3:위험중립형,4:적극 투자형,5:공격투자형
+	$json_setdata($jsonName,BODY,Q9,,$g_IN_CUST_Q9); 				// 질문9.  1:3년 이하,2:5년 이하,3:5년 이상 //받은거랑 틀림. - MTS에 되어있는데로 
+	$json_setdata($jsonName,BODY,COUN_01,,$g_IN_CUST_COUN_01); 		// 투자권유 불원 확인 Y 
+
+	$json_setdata($jsonName,BODY,WEAK_YN,,$g_IN_CUST_WEAK_YN); 		// 취약 금융 소비자 여부 N,Y 
+	$json_setdata($jsonName,BODY,CFRM_YN,,$g_IN_CUST_CFRM_YN); 		// 투자권유 불원 확인서 (취약 금융 소비자) Y
+	
+	$json_print($jsonName);
+	$delvar(strSSLSendData);
+	$json_getfullstring($jsonName,strSSLSendData);
+	$json_delete($jsonName);
+	$logvar(strSSLSendData);
+	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
+
+"/>
+<action id="fnRecvSSL_MO_CUST" 
+value="
+
+	$closescreen(pop_host_msg);
+	$delvar(recvSSL_body_INV_TP);
+
+	$setvar(
+		recvSSL_hrd_ret 		= $json_getdata($jsonname,HDR.RET)
+		,recvSSL_hrd_MSG 		= $json_getdata($jsonname,HDR.MSG)
+		,recvSSL_hdr_err_code	= $json_getdata($jsonname,HDR.ERR_CODE)
+
+		,recvSSL_body_INV_TP 	= $json_getdata($jsonname,BODY.INV_TP) 		//투자성향 
+		,recvSSL_body_COUN_YN 	= $json_getdata($jsonname,BODY.COUN_YN)
+		,recvSSL_body_Q1 		= $json_getdata($jsonname,BODY.Q1)
+		,recvSSL_body_Q2 		= $json_getdata($jsonname,BODY.Q2)
+		,recvSSL_body_Q3A 		= $json_getdata($jsonname,BODY.Q3A)
+		,recvSSL_body_Q3B 		= $json_getdata($jsonname,BODY.Q3B)
+		,recvSSL_body_Q3C 		= $json_getdata($jsonname,BODY.Q3C)
+		,recvSSL_body_Q3D 		= $json_getdata($jsonname,BODY.Q3D)
+		,recvSSL_body_Q3E 		= $json_getdata($jsonname,BODY.Q3E)
+		,recvSSL_body_Q4 		= $json_getdata($jsonname,BODY.Q4)
+		,recvSSL_body_Q5 		= $json_getdata($jsonname,BODY.Q5)
+		,recvSSL_body_Q6 		= $json_getdata($jsonname,BODY.Q6)
+		,recvSSL_body_Q7 		= $json_getdata($jsonname,BODY.Q7)
+		,recvSSL_body_Q8 		= $json_getdata($jsonname,BODY.Q8)
+		,recvSSL_body_Q9 		= $json_getdata($jsonname,BODY.Q9)
+	);
+	$setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_hdr_err_code));
+
+	$log(========= SSL 받은데이터 ==============);
+	$logvar(
+		recvSSL_hrd_ret 		
+		,recvSSL_hrd_MSG 		
+		,recvSSL_body_INV_TP 	
+		,recvSSL_body_COUN_YN 	
+		,recvSSL_body_Q1 		
+		,recvSSL_body_Q2 		
+		,recvSSL_body_Q3A 		
+		,recvSSL_body_Q3B 		
+		,recvSSL_body_Q3C 		
+		,recvSSL_body_Q3D 		
+		,recvSSL_body_Q3E 		
+		,recvSSL_body_Q4 		
+		,recvSSL_body_Q5 		
+		,recvSSL_body_Q6 		
+		,recvSSL_body_Q7 		
+		,recvSSL_body_Q8 		
+		,recvSSL_body_Q9 		
+	);
+	if(!$isequal_string($recvSSL_hrd_ret,OK)){
+		//$alertaction(,,$recv_error_msg,확인);
+		$callaction(fnPopover_AlertAction,,$recv_error_msg,,확인);
+		return;
+	}
+	// 투자자정보 내용 수정 2019.11.14 addGradeConent_20191114
+	$callaction(fn4115_100_InvTpChange);
+//	if($isequal_string($recvSSL_body_INV_TP,1)){		$setvar(lbl_INV_TP.value = 안정형);	}
+//	elseif($isequal_string($recvSSL_body_INV_TP,2)){	$setvar(lbl_INV_TP.value = 안정추구형);	}
+//	elseif($isequal_string($recvSSL_body_INV_TP,3)){	$setvar(lbl_INV_TP.value = 위험중립형);	}
+//	elseif($isequal_string($recvSSL_body_INV_TP,4)){	$setvar(lbl_INV_TP.value = 적극투자형);	}
+//	elseif($isequal_string($recvSSL_body_INV_TP,5)){	$setvar(lbl_INV_TP.value = 공격투자형);	}
+
+	$callaction(fnConfig_SetValue,g_INV_TP 	,$recvSSL_body_INV_TP);		// 투자성향
+
+"/>
+<action id="btn_4115_confirm_after" value="
+	$callaction(Act_Open_Account_Move,4116); 
+"/>
+<action id="btn_4115_pop_open" value="
+	$popscreen(popscreen_4115_100_1);
+"/>
+<action id="screen_4115_100_onunload" value="
+	$delvar(
+		4115_htmldata_1
+		,4115_htmldata_2
+		,4115_htmldata_3
+		,4115_htmldata_4
+		,4115_htmldata_5
+	);
+"/>
+<screen id="screen_4115_100"
+	class="cs_screen_contents"
+	backcolor="f1f1f1"
+	onload="screen_contents_onload"
+	onunload="screen_4115_100_onunload"
+	>
+	<screen
+		height="$this.remain_bottom"
+		backcolor="f1f1f1"
+		>
+		<viewgroup
+			width="$super.width" height="$h($g_lcdHeight,29)" layout="center">
+			<br height="$h($g_lcdHeight,2)"/>
+			<label height="$h($g_lcdHeight,3.7)"  align="center" value="고객님의 투자성향은" textcolor="000000" fontname="$g_baseFontNameBold" fontsize="$g_fontsize_big1" />
+			<br/><blank width="$w($g_lcdwidth,34)"/>
+			<label id="lbl_INV_TP" width="$w($g_lcdwidth,20)" height="$h($g_lcdHeight,5)" align="center" value="" fontname="$g_baseFontNameBold" fontsize="$g_fontsize_big1" textcolor="e33433" />
+			<label  width="$w($g_lcdwidth,14)" height="$h($g_lcdHeight,5)" align="center" value="입니다." fontname="$g_baseFontNameBold" fontsize="$g_fontsize_big1"  />
+			<br/>
+			<blank width="$w($g_lcdWidth,4.4)" />
+			<label  
+			width="$w($g_lcdwidth,44.6)" 
+			height="$h($g_lcdHeight,5)" 
+			align="center" 
+			value="국내선물 개설시" 
+			fontname="$g_baseFontNameBold"
+			fontsize="$g_fontSize_basic"  
+			/>
+			<blank width="$w($g_lcdWidth,2)" />
+			<label  
+			width="$w($g_lcdwidth,44.6)" 
+			height="$h($g_lcdHeight,5)" 
+			align="center" 
+			value="해외선물 개설시" 
+			fontname="$g_baseFontNameBold"
+			fontsize="$g_fontSize_basic"  
+			/>
+			<br/>
+			<blank width="$w($g_lcdWidth,4.4)" />
+			<htmlview id="lbl_INV_TP_sub" 
+			border_width="1"
+			border_color="000000"
+			width="$w($g_lcdwidth,44.6)" 
+			height="$h($g_lcdHeight,12.1)" 
+			//backcolor="ff000022"
+			fontname="$g_baseFontNameBold" 
+			fontsize="$w(16)" 
+			lineheight="$w(25)"
+			value_html_var="lbl_INV_TP_sub_var"
+			/>
+			<blank width="$w($g_lcdWidth,2)" />
+			<htmlview id="lbl_INV_TP_sub2"
+			border_width="1"
+			border_color="000000"
+			width="$w($g_lcdwidth,44.6)"
+			height="$h($g_lcdHeight,12.1)" 
+			//backcolor="ffff0022"
+			fontname="$g_baseFontNameBold" 
+			fontsize="$w(16)" 
+			lineheight="$w(25)"
+			value_html_var="lbl_INV_TP_sub2_var"
+			/>
+		</viewgroup>
+		<br height="$h($g_lcdHeight,0)"/>
+		<button
+			width="$w($g_lcdWidth,71.3)" 
+			height="$h($g_lcdHeight,6)"
+			value="금융투자상품 별 투자위험도 분류기준" 
+			fontsize="$g_fontSize_basic"
+			align="center"
+			layout="center"
+			backcolor="dddfe0"
+			textcolor="343c49"
+			border_width="$g_roundHeight"
+			border_radius="$getratio_width($g_lcdWidth,0.5)"
+			onclicked="btn_4115_pop_open"
+			/>
+		<br height="$h($g_lcdHeight,1)"/>
+		<blank width="$w($g_lcdWidth,4.4)" />
+		<viewgroup
+			//margin_left="$w($g_lcdWidth,2)"
+			width="$w($g_lcdwidth,92)" 
+			height="$h($g_lcdHeight,42)"
+			border_color="cccccc"
+			backcolor="ffffff"
+			border_width="$g_roundHeight"
+			>
+			<label
+			margin_left="$w($g_lcdWidth,2)"
+			width="$w($g_lcdwidth,92)" 
+			height="$h($g_lcdHeight,5.9)"
+			value="고객 확인사항"
+			fontname="$g_baseFontNameBold" 
+			fontsize="$g_fontSize_basic"
+			backcolor="f9f9f9"
+			textcolor="3a3a3a"
+			margin_left="$w($g_lcdWidth,4.2)"
+			/>
+			<br/><hr /><br />
+			<screen
+				height="$h($g_lcdHeight,17)" backcolor="ffffff">
+				<blank width="$w($g_lcdWidth,4.4)" />
+				<htmlview 
+				id="html5"
+				width="$w($g_lcdWidth,83.2)" 
+				height="$h($g_lcdHeight,17)"
+				value_html_var="4115_htmldata_5"
+				fontsize="$g_fontsize_basic"
+				//basefontsize="$g_fontsize_basic"
+				textcolor="666666"
+				backcolor="ffffff"
+				//border_color="979797"
+				//border_width="1"
+				lineheight="$h($g_lcdHeight,3)"
+				margin_left="$w($g_lcdWidth,2)"
+				margin_right="$w($g_lcdWidth,2)"
+				margin_top="$h($g_lcdHeight,1.5)"
+				margin_bottom="$h($g_lcdHeight,1.5)"
+				noscroll_height="true"
+				/>
+			</screen>
+			<br/><hr /><br />
+			<checkbox 
+			id="chk_4115_confirm_1"
+			width="$w($g_lcdwidth,92)" 
+			height="$h($g_lcdHeight,9)"
+			checked="false"
+			checkimage="$icon_check2_on" 
+			uncheckimage="$icon_check2_off"
+			//layout_vertical="center"
+			view_reverse="false"
+			checkimage_leftmargin="$w($g_lcdWidth,4.2)"
+			margin_left="$w($g_lcdWidth,12)"
+			value_overlay="true"
+			align="left"
+			textcolor="222222"
+			fontsize="$g_fontSize_basic"
+			value="본인은 투자성향 진단에 제공한 정보가\n사실과 같음을 확인하고,"
+			/>
+			<br/><hr /><br />
+			<checkbox 
+			id="chk_4115_confirm_2"
+			width="$w($g_lcdwidth,92)" 
+			height="$h($g_lcdHeight,9)"
+			checked="false"
+			checkimage="$icon_check2_on" 
+			uncheckimage="$icon_check2_off"
+			//layout_vertical="center"
+			view_reverse="false"
+			checkimage_leftmargin="$w($g_lcdWidth,4.2)"
+			margin_left="$w($g_lcdWidth,12)"
+			value_overlay="true"
+			align="left"
+			textcolor="222222"
+			fontsize="$g_fontSize_basic"
+			value="진단결과 본인에게 적합한 금융투자 상품을\n확인하였습니다."
+			/>	
+		</viewgroup>		
+		<br height="$h($g_lcdHeight,2)"/>
+		<blank width="$w($g_lcdWidth,4)"/>
+		<button 
+			id="btn_4115_bf"
+			fontsize="$g_fontsize_big3" 
+			//y="$result($this.remain_bottom-$h($g_lcdHeight,13.4))"
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,9.4)" 
+			backcolor="ffffff"
+			border_width="$g_roundHeight"
+			border_color="e33433"
+			backcolor_active="e5e5e5"
+			textcolor="e33433"
+			textcolor_active="e33433"
+			value="이전" 
+			onclicked="btn_open_account_history_onClicked"
+			//$callaction(Act_Open_Account_Move,4114);
+			//$closescreen(popscreen_base);
+			//enable="false"
+			//backcolor_disable="bfbfbf"
+			//textcolor_disable="999999"
+			/>
+		<blank width="$w($g_lcdWidth,1.8)"/>
+		<button 
+			id="btn_4115_af"
+			//y="$result($this.remain_bottom-$h($g_lcdHeight,13.4))"
+			fontsize="$g_fontsize_big3" 
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,9.4)" 
+			backcolor="e33433"
+			border_width="$g_roundHeight"
+			backcolor_active="cc2f2e"
+			textcolor="ffffff"
+			textcolor_active="ffffff"
+			value="다음" 
+			onclicked="btn_4115_confirm_onclicked"
+			//enable="false"
+			//backcolor_disable="bfbfbf"
+			//textcolor_disable="999999"
+			/>
+		<br height="$h($g_lcdHeight,4)"/>
+	</screen>
+</screen>
+<popscreen
+	id="popscreen_4115_100_1"
+	width="$g_lcdWidth" 
+	height="$p_lcdHeight"
+   	onload="popscreen_item_onload"
+   	onunload="popscreen_item_onunload"
+	noscroll_height="true"
+	>
+	<screen 
+		id="screen_4115_100_bottom"
+		class="cs_screen_contents"
+		backcolor="f1f1f1"
+		>
+		<viewgroup 
+			width="$super.width" height="$g_topHeight"	
+			backcolor="464b4e" 
+			>
+			<label  fontsize="$g_fontsize_big1" fontname="$g_baseFontNameBold" align="center" valign="center" textcolor="ffffff" 
+			value="금융투자상품 별 투자위험도 분류기준" />
+			<viewgroup x="$w($g_lcdWidth,86)" width="$w($g_lcdWidth,12.4)" height="$this.remain_bottom" >
+				<img src="$icon_ic_close" layout="center" layout_vertical="center" />
+				<button class="cs_button_none" onClicked="$closescreen(popscreen_4115_100_1)" />
+			</viewgroup>
+		</viewgroup>
+		<br/>
+		<viewgroup
+			width="$w($g_lcdWidth,32)"
+			height="$h($g_lcdHeight,72.1)" 
+			backcolor="ffffff"
+			>
+			<label
+				value="구분"
+				height="$h($g_lcdHeight,4.6)" 
+				align="center"
+				textcolor="5c6066"
+				fontname="$g_baseFontNameBold"
+				backcolor="f2f2f2"
+				/>
+			<br /><hr /><br />
+			<label
+				value="주식"
+				height="$h($g_lcdHeight,13.5)" 
+				margin_left="$w($g_lcdWidth,3)"
+				/>
+			<br /><hr /><br />
+			<label
+				value="ETF / ETN"
+				height="$h($g_lcdHeight,9)" 
+				margin_left="$w($g_lcdWidth,3)"
+				/>
+			<br /><hr /><br />
+			<label
+				value="장내파생상품\n(선물옵션)"
+				height="$h($g_lcdHeight,9)" 
+				margin_left="$w($g_lcdWidth,3)"
+				/>
+			<br /><hr /><br />
+			<label
+				value="ELW"
+				height="$h($g_lcdHeight,9)" 
+				margin_left="$w($g_lcdWidth,3)"
+				/>
+			<br /><hr /><br />
+			<label
+				value="채권"
+				height="$h($g_lcdHeight,9)" 
+				margin_left="$w($g_lcdWidth,3)"
+				/>
+			<br /><hr /><br />
+			<label
+				value="파생결합증권\n(ELS/DLS/ELF)"
+				height="$h($g_lcdHeight,9)" 
+				margin_left="$w($g_lcdWidth,3)"
+				/>
+			<br /><hr /><br />
+			<label
+				value="펀드"
+				height="$this.remain_bottom" 
+				margin_left="$w($g_lcdWidth,3)"
+				/>
+		</viewgroup>
+		<hr width="1" height="$h($g_lcdHeight,72.1)"  /> 
+		<screen 
+			width="$this.remain_right"
+			height="$h($g_lcdHeight,72.1)" 
+			scrollbar_leftcontrol="4115_100_scroll_left" 
+        	scrollbar_rightcontrol="4115_100_scroll_right"
+        	scroll_bounce="false"
+			scrollbar_margin_top="0"
+			scroll_hbar="false"
+			noscroll_width="false"
+			backcolor="ffffff"
+			>
+			<img id="4115_100_scroll_left" coord_absolute="true" src="$icon_title_l" />
+			<img id="4115_100_scroll_right" coord_absolute="true" src="$icon_title_r" />
+			<viewgroup
+				width="$w($g_lcdWidth,68)"
+				>
+				<viewgroup
+					width="$super.width"
+					>
+					<label
+						value="초고위험"
+						height="$h($g_lcdHeight,4.6)" 
+						align="center"
+						textcolor="ffffff"
+						fontname="$g_baseFontNameBold"
+						backcolor="e43f42"
+						/>
+					<br /><hr /><br />
+					<label
+						value="주식(투자주의/투자경고/\n투자위험/관리종목)\n신용/담보대출 해외주식"
+						height="$h($g_lcdHeight,13.5)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value="파생상품 ETF ETN"
+						height="$h($g_lcdHeight,9)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value="장내파생상품(선물옵션)"
+						height="$h($g_lcdHeight,9)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value="ELW"
+						height="$h($g_lcdHeight,9)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value="해외채권"
+						height="$h($g_lcdHeight,9)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value="개별주식(상품) 기초자산"
+						height="$h($g_lcdHeight,9)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value="초고위험펀드"
+						height="$this.remain_bottom" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+				</viewgroup>
+			</viewgroup>
+			<hr width="1" height="$super.height" /> 
+			<viewgroup
+				width="$w($g_lcdWidth,68)"
+				>
+				<viewgroup
+					width="$super.width"
+					>
+					<label
+						value="고위험"
+						height="$h($g_lcdHeight,4.6)" 
+						align="center"
+						textcolor="ffffff"
+						fontname="$g_baseFontNameBold"
+						backcolor="e43f42"
+						/>
+					<br /><hr /><br />
+					<label
+						value="주식"
+						height="$h($g_lcdHeight,13.5)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value="ETF"
+						height="$h($g_lcdHeight,9)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value=""
+						height="$h($g_lcdHeight,9)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value=""
+						height="$h($g_lcdHeight,9)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value="투기등급포함(BB이하)\n원금비보장형"
+						height="$h($g_lcdHeight,9)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value="INDEX 기초자산"
+						height="$h($g_lcdHeight,9)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value="중고위험펀드, 고위험펀드"
+						height="$this.remain_bottom" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+				</viewgroup>
+			</viewgroup>
+			<hr width="1" height="$super.height" /> 
+			<viewgroup
+				width="$w($g_lcdWidth,68)"
+				>
+				<viewgroup
+					width="$super.width"
+					>
+					<label
+						value="위험중립형"
+						height="$h($g_lcdHeight,4.6)" 
+						align="center"
+						textcolor="ffffff"
+						fontname="$g_baseFontNameBold"
+						backcolor="ffa415"
+						/>
+					<br /><hr /><br />
+					<label
+						value=""
+						height="$h($g_lcdHeight,13.5)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value=""
+						height="$h($g_lcdHeight,9)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value=""
+						height="$h($g_lcdHeight,9)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value=""
+						height="$h($g_lcdHeight,9)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value="회사채(BBB+ ~BBB-)\n원금부분보장형"
+						height="$h($g_lcdHeight,9)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value=""
+						height="$h($g_lcdHeight,9)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value="중위험펀드"
+						height="$this.remain_bottom" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+				</viewgroup>
+			</viewgroup>
+			<hr width="1" height="$super.height" /> 
+			<viewgroup
+				width="$w($g_lcdWidth,68)"
+				>
+				<viewgroup
+					width="$super.width"
+					>
+					<label
+						value="안정추구형"
+						height="$h($g_lcdHeight,4.6)" 
+						align="center"
+						textcolor="ffffff"
+						fontname="$g_baseFontNameBold"
+						backcolor="ffa415"
+						/>
+					<br /><hr /><br />
+					<label
+						value=""
+						height="$h($g_lcdHeight,13.5)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value=""
+						height="$h($g_lcdHeight,9)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value=""
+						height="$h($g_lcdHeight,9)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value=""
+						height="$h($g_lcdHeight,9)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value="특수채, 금융채, 회사채(A+이상),\nELB, DLB"
+						height="$h($g_lcdHeight,9)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value=""
+						height="$h($g_lcdHeight,9)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value="저위험펀드"
+						height="$this.remain_bottom" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+				</viewgroup>
+			</viewgroup>
+			<hr width="1" height="$super.height" /> 
+			<viewgroup
+				width="$w($g_lcdWidth,68)"
+				>
+				<viewgroup
+					width="$super.width"
+					>
+					<label
+						value="안정형"
+						height="$h($g_lcdHeight,4.6)" 
+						align="center"
+						textcolor="ffffff"
+						fontname="$g_baseFontNameBold"
+						backcolor="58b048"
+						/>
+					<br /><hr /><br />
+					<label
+						value=""
+						height="$h($g_lcdHeight,13.5)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value=""
+						height="$h($g_lcdHeight,9)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value=""
+						height="$h($g_lcdHeight,9)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value=""
+						height="$h($g_lcdHeight,9)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value="국고채, 통안채, 지방채, 보증채"
+						height="$h($g_lcdHeight,9)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value=""
+						height="$h($g_lcdHeight,9)" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+					<br /><hr /><br />
+					<label
+						value="초저위험펀드"
+						height="$this.remain_bottom" 
+						margin_left="$w($g_lcdWidth,3)"
+						textcolor="666666"
+						/>
+				</viewgroup>
+			</viewgroup>
+		</screen>
+		<br /><hr /><br />	
+	</screen>
+</popscreen>
