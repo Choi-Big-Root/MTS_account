@@ -193,7 +193,7 @@ value="
 	$callaction(fnSetVarCommon,g_path_image_icon,$($g_path_image+icon/$g_DeviceIconDir+$g_DeviceIconDir_prefix),경로);
 	$callaction(fnSetVarCommon,g_path_image_common,$($g_path_image+common/),경로);
 
-	$callaction(fnSetVarCommon,g_path_image_common_figma,$($g_path_image+common/figma/),경로);
+	$callaction(fnSetVarCommon,g_path_image_common_account,$($g_path_image+common/account/),경로);
 
 	$callaction(fnSetVarCommon,g_path_image_icon_skin,$($g_path_image_skin+icon/$g_DeviceIconDir),경로);
 	$callaction(fnSetVarCommon,g_path_image_common_skin,$($g_path_image_skin+common/),경로);	
