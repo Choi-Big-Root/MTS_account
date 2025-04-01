@@ -1,0 +1,9 @@
+.DS_Store
+
+dat/*
+
+#이미지
+root/resource/*
+
+root/common/action_intro_after.xml
+intro_before.xml
