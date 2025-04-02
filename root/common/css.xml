@@ -9,7 +9,7 @@
  -->
 <actiondata value="
 	$setvar_common(
-		cs_color_main = FEEB00,
+		cs_color_main = FFEB00,
 		cs_color_black = 060B11,
 		cs_color_gray_dark = 545454,
 		cs_color_white = FFFFFF,
@@ -28,13 +28,21 @@
 		cs_icon_icon = $g_path_image_common_account+icon.png,
 		cs_icon_icon_1 = $g_path_image_common_account+icon_1.png,
 		cs_icon_icon_2 = $g_path_image_common_account+icon_2.png,
-		cs_icon_rectangle_230 = $g_path_image_common_account+rectangle_230.png ,
+		cs_icon_rectangle_230 = $g_path_image_common_account+rectangle.png ,
 		cs_icon_phone = $g_path_image_common_account+phone.png,
 		cs_icon_image_210= $g_path_image_common_account+image_210.png,
-		cs_icon_checkbox_2 = $g_path_image_common_account+checkbox_2.png ,
+		cs_icon_top_title_chk_box = $g_path_image_common_account+top_title_chk_box.png ,
 		cs_icon_q_mark = $g_path_image_common_account+q_mark.png,
 		cs_icon_x_mark = $g_path_image_common_account+x_mark.png ,
 		cs_icon_polygon_5 = $g_path_image_common_account+polygon_5.png ,
+		cs_icon_checkbox_on = $g_path_image_common_account+checkbox_on.png ,
+		cs_icon_checkbox2_on = $g_path_image_common_account+checkbox2_on.png ,
+		cs_icon_checkbox_off = $g_path_image_common_account+checkbox_off.png ,
+		cs_icon_checkbox2_off = $g_path_image_common_account+checkbox2_off.png ,
+
+		/*
+		cs_icon_ = $g_path_image_common_account+ ,
+		*/
 
 
 		cs_font_100 = Pretendard_100,
@@ -46,10 +54,6 @@
 		cs_font_700 = Pretendard_700,
 		cs_font_800 = Pretendard_800,
 		cs_font_900 = Pretendard_900,
-
-		/*
-		cs_icon_ = $g_path_image_common_figma+ ,
-		*/
 	);
 	/* black 테마.
 	$setvar_common(

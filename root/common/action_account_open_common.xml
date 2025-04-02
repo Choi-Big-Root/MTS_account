@@ -195,7 +195,6 @@ layout="center"
 layout_vertical="center"
 onload="popscreen_open_account_onload"
 onunload="popscreen_open_account_onunload"
-margin_right="$w($g_lcdwidth,4.3)"
 >
     <viewgroup 
         id="vg_open_account_title"
@@ -227,8 +226,9 @@ margin_right="$w($g_lcdwidth,4.3)"
     </viewgroup>
     <viewgroup 
         id="vg_account_title_step"
-        width="$w($g_lcdWidth,34.2)"
+        width="$w($g_lcdWidth,38.5)"
         height="$h($g_lcdHeight,6.2)"
+        margin_right="$w($g_lcdwidth,4.3)"
         layout="right"
         backcolor="FFFFFF"
         hidden="false"
@@ -238,56 +238,56 @@ margin_right="$w($g_lcdwidth,4.3)"
             height="$this.remain_bottom"
             >
             <label id="lbl_account_title_step_1" value="1" textcolor="BABBBD" align="center" layout="center" fontsize="$h($g_lcdHeight,1.6)" layout_vertical="center" hidden="false"/>
-            <img  id="img_step_1" src="$cs_icon_checkbox_2" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
+            <img  id="img_step_1" src="$cs_icon_top_title_chk_box" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
         </viewgroup>
         <viewgroup 
             width="$w($g_lcdwidth,4.3)"
             height="$this.remain_bottom"
             >
             <label id="lbl_account_title_step_2" value="2" textcolor="BABBBD" align="center" layout="center" fontsize="$h($g_lcdHeight,1.6)" layout_vertical="center" hidden="false"/>
-            <img  id="img_step_2" src="$cs_icon_checkbox_2" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
+            <img  id="img_step_2" src="$cs_icon_top_title_chk_box" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
         </viewgroup>
         <viewgroup 
             width="$w($g_lcdwidth,4.3)"
             height="$this.remain_bottom"
             >
             <label id="lbl_account_title_step_3" value="3" textcolor="BABBBD" align="center" layout="center" fontsize="$h($g_lcdHeight,1.6)" layout_vertical="center" hidden="false"/>
-            <img  id="img_step_3" src="$cs_icon_checkbox_2" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
+            <img  id="img_step_3" src="$cs_icon_top_title_chk_box" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
         </viewgroup>
         <viewgroup 
             width="$w($g_lcdwidth,4.3)"
             height="$this.remain_bottom"
             >
             <label id="lbl_account_title_step_4" value="4" textcolor="BABBBD" align="center" layout="center" fontsize="$h($g_lcdHeight,1.6)" layout_vertical="center" hidden="false"/>
-            <img  id="img_step_4" src="$cs_icon_checkbox_2" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
+            <img  id="img_step_4" src="$cs_icon_top_title_chk_box" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
         </viewgroup>
         <viewgroup 
             width="$w($g_lcdwidth,4.3)"
             height="$this.remain_bottom"
             >
             <label id="lbl_account_title_step_5" value="5" textcolor="BABBBD" align="center" layout="center" fontsize="$h($g_lcdHeight,1.6)" layout_vertical="center" hidden="false"/>
-            <img  id="img_step_5" src="$cs_icon_checkbox_2" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
+            <img  id="img_step_5" src="$cs_icon_top_title_chk_box" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
         </viewgroup>
         <viewgroup 
             width="$w($g_lcdwidth,4.3)"
             height="$this.remain_bottom"
             >
             <label id="lbl_account_title_step_6" value="6" textcolor="BABBBD" align="center" layout="center" fontsize="$h($g_lcdHeight,1.6)" layout_vertical="center" hidden="false"/>
-            <img  id="img_step_6" src="$cs_icon_checkbox_2" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
+            <img  id="img_step_6" src="$cs_icon_top_title_chk_box" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
         </viewgroup>
         <viewgroup 
             width="$w($g_lcdwidth,4.3)"
             height="$this.remain_bottom"
             >
             <label id="lbl_account_title_step_7" value="7" textcolor="BABBBD" align="center" layout="center" fontsize="$h($g_lcdHeight,1.6)" layout_vertical="center" hidden="false"/>
-            <img  id="img_step_7" src="$cs_icon_checkbox_2" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
+            <img  id="img_step_7" src="$cs_icon_top_title_chk_box" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
         </viewgroup>
         <viewgroup 
             width="$w($g_lcdwidth,4.3)"
             height="$this.remain_bottom"
             >
             <label id="lbl_account_title_step_8" value="8" textcolor="BABBBD" align="center" layout="center" fontsize="$h($g_lcdHeight,1.6)" layout_vertical="center" hidden="false"/>
-            <img  id="img_step_8" src="$cs_icon_checkbox_2" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
+            <img  id="img_step_8" src="$cs_icon_top_title_chk_box" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
         </viewgroup>
     </viewgroup>
     <br/>
