@@ -3,11 +3,13 @@
 <!--
 ********************************************************
 **
-**  비대면 신규 색상.
+**  비대면 신규 색상 및 이미지.
 **
 ********************************************************
  -->
 <actiondata value="
+	$printfont();
+	//테마에 맞게 설정되도록 추후 분기.
 	$setvar_common(
 		cs_color_main = FFEB00,
 		cs_color_black = 060B11,
@@ -22,28 +24,6 @@
 		cs_color_box = F8F9FB,
 		cs_color_box2 = F5F6F8,
 		cs_color_sky_blue = 008DFF,
-
-		//icon 및 이미 일단 대기
-		cs_icon_arrow_left = $g_path_image_common_account+arrow_left.png,
-		cs_icon_icon = $g_path_image_common_account+icon.png,
-		cs_icon_icon_1 = $g_path_image_common_account+icon_1.png,
-		cs_icon_icon_2 = $g_path_image_common_account+icon_2.png,
-		cs_icon_rectangle_230 = $g_path_image_common_account+rectangle.png ,
-		cs_icon_phone = $g_path_image_common_account+phone.png,
-		cs_icon_image_210= $g_path_image_common_account+image_210.png,
-		cs_icon_top_title_chk_box = $g_path_image_common_account+top_title_chk_box.png ,
-		cs_icon_q_mark = $g_path_image_common_account+q_mark.png,
-		cs_icon_x_mark = $g_path_image_common_account+x_mark.png ,
-		cs_icon_polygon_5 = $g_path_image_common_account+polygon_5.png ,
-		cs_icon_checkbox_on = $g_path_image_common_account+checkbox_on.png ,
-		cs_icon_checkbox2_on = $g_path_image_common_account+checkbox2_on.png ,
-		cs_icon_checkbox_off = $g_path_image_common_account+checkbox_off.png ,
-		cs_icon_checkbox2_off = $g_path_image_common_account+checkbox2_off.png ,
-
-		/*
-		cs_icon_ = $g_path_image_common_account+ ,
-		*/
-
 
 		cs_font_100 = Pretendard_100,
 		cs_font_200 = Pretendard_200,

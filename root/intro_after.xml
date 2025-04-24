@@ -8,6 +8,7 @@
 <import filename="plist/root/common/action_dxfeed_real.xml"/> //dxFeed 실시간전용 함수.
 <import filename="plist/root/common/action_chart.xml"/>
 <import filename="plist/root/common/icon_path.xml"/>
+<import filename="plist/root/common/json_icon_path.xml"/>
 // 로직변경으로 추가함. 
 <actiondata value="
 	$callaction(fnSetDeviceInfo);       // Device 정보 및 장치별 변수 셋팅

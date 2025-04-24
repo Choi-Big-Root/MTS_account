@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<action id="fnSetJsonIconPath" scope="common" value="
+	$log(============== fnSetJsonIconPath);
+	$setvar_common(
+		// 메뉴아이콘
+		,icon_arrow_left 		= $callaction(fnGetJsonIconPathName,arrow-left)
+		,bg_splash 		= $callaction(fnGetJsonIconPathName,bg_splash)
+	);
+
+	$logvar(icon_arrow_left,bg_splash);
+" />
+<action id="fnGetJsonIconPathName" scope="common" 
+paramlog="false"
+value="
+	return $addstring($g_path_json,$fnGetJsonIconPathName_param1,.json);
+" />
