@@ -89,7 +89,9 @@ value="
 "/>
 <action id="N_ACT_Xml_Donwlod_Complete" scope="common"
 value="
-	$callaction(N_Act_Download_Master_D_Start, N_ACT_Master_D_Donwlod_Complete); 	// 국내마스터 다운로드
+	//마스터 파일 관련 수정 : 최대근
+	$callaction(N_ACT_Master_D_Donwlod_Complete);
+	//$callaction(N_Act_Download_Master_D_Start, N_ACT_Master_D_Donwlod_Complete); 	// 국내마스터 다운로드
 "/>
 <action id="N_ACT_Master_D_Donwlod_Complete" scope="common"
 value="
@@ -121,7 +123,9 @@ value="
 		$callaction(N_Server_GetIP,N_Server_GetIP_After);				
 	}
 	else{
-		$callaction(N_Act_Download_Master_Start, N_ACT_Master_Donwlod_Complete); 	// 해외마스터 다운로드
+		//마스터 파일 관련 수정 : 최대근
+		$callaction(N_ACT_Master_Donwlod_Complete);
+		//$callaction(N_Act_Download_Master_Start, N_ACT_Master_Donwlod_Complete); 	// 해외마스터 다운로드
 	}
 " />
 <action id="N_Server_GetIP_After" scope="common"
@@ -132,7 +136,9 @@ p_server_ip_1
 "
 value="
 	$setvar_common(g_connected_server_ip = $strIP1); 			// 현재접속 서버IP를 저장한다.
-	$callaction(N_Act_Download_Master_Start, N_ACT_Master_Donwlod_Complete); 	// 해외마스터 다운로드
+	//마스터 파일 관련 수정 : 최대근
+	$callaction(N_ACT_Master_Donwlod_Complete);
+	//$callaction(N_Act_Download_Master_Start, N_ACT_Master_Donwlod_Complete); 	// 해외마스터 다운로드
 "/>
 <action id="N_ACT_Master_Donwlod_Complete" scope="common"
 value="
@@ -143,14 +149,19 @@ value="
 	$log(해외 [$g_arr_mater_cnt] );
 	$log(********************************************************************);
 	if($g_arr_xml_cnt > 0 
-	|| $g_arr_mater_d_cnt > 0 
-	|| $g_arr_mater_cnt > 0 
 	){
 		$openfile(plist/root/intro.xml); 			// 받은파일이 있는경우 intro.xml 보낸다.
 		return;
 	}
 
-	$setnstimer(TIMER_N_ACT_Master_Donwlod_Complete,0.01,N_ACT_Master_Donwlod_Complete_Timer,FALSE);
+	if($g_is_download_background){
+		$callaction(N_Act_BecomeActive_Connect, N_Act_BecomeActive_Connected_After);	 // 해외,국내 서버연결 및 키교환까지 함.
+	}
+	else{
+		$setsocketaction($g_SiseSocketName,Act_Network_RecvData,); 				// RecvAction 을 변경하여 보낸다. 
+		$setsocketaction($g_SiseSocketName_DOMESTIC,Act_Network_RecvData,); 	// RecvAction 을 변경하여 보낸다. 
+		$callaction(Act_LoadMaster_Complete); 			//intro_after.xml	
+	}
 "/>
 <action id="N_ACT_Master_Donwlod_Complete_Timer" scope="common"
 value="
