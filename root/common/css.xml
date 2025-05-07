@@ -25,15 +25,15 @@
 		cs_color_box2 = F5F6F8,
 		cs_color_sky_blue = 008DFF,
 
-		cs_font_100 = Pretendard_100,
-		cs_font_200 = Pretendard_200,
-		cs_font_300 = Pretendard_300,
-		cs_font_400 = Pretendard_400,
-		cs_font_500 = Pretendard_500,
-		cs_font_600 = Pretendard_600,
-		cs_font_700 = Pretendard_700,
-		cs_font_800 = Pretendard_800,
-		cs_font_900 = Pretendard_900,
+		cs_font_100 = Pretendard-Regular,
+		cs_font_200 = Pretendard-Thin,
+		cs_font_300 = Pretendard-ExtraLight,
+		cs_font_400 = Pretendard-Light,
+		cs_font_500 = Pretendard-Medium,
+		cs_font_600 = Pretendard-SemiBold,
+		cs_font_700 = Pretendard-Bold,
+		cs_font_800 = Pretendard-ExtraBold,
+		cs_font_900 = Pretendard-Black,
 	);
 	/* black 테마.
 	$setvar_common(

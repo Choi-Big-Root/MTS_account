@@ -3,6 +3,7 @@
 <actiondata value="
     $checkapns_key();
     $logvar(p_APNS_RegKey);
+    $printfont();
 "/>
 <action id="screen_main_onload"
 value="
@@ -24,11 +25,21 @@ value="
         $log(***** 비대면 안함.);    
     }
 "/>
+<action id="android_keymap" scope="common"
+value="
+    if($android_keymap_param1 == 1 && $android_keymap_param2 == 4) {
+        $log(안드로이드 뒤로가기);
+        $webview_goback(trading_webview);
+        //$web_goback(trading_webview);
+        $setvar(trading_webview.goback = true);
+    }
+"/>
 <screen id="screen_main"
     backcolor="ffffff"
     width="$p_lcdWidth"
     height="$p_lcdHeight"
     onLoad="screen_main_onload"
+    //ani_backgroundJSON="$icon_arrow_left"
     >
     <button 
         width="$w($g_lcdWidth,38)" 
@@ -41,12 +52,9 @@ value="
         fontsize="$g_fontsize_big2"
         border_width="$g_roundHeight"
         value="비대면 계좌개설"
-        onclicked="$callaction(Act_Open_Account_Popup, 1001);"
+        onclicked="$callaction(Act_Open_Account_Popup, 1000);"
     />
     <br/>
-    <webview id="trading_webview" width="$super.width" height="$this.remain_bottom"
-        href="https://dev-options.eugenefutures.com/wts/login/egcloud"
-    />
 </screen>
 // 뒤로가기 버튼 클릭 
 <action id="btn_open_account_history_onClicked" 

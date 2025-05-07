@@ -65,8 +65,19 @@
 		,lbl_account_title_step_8.textcolor=BABBBD
 
 
+		,lbl_account_title_step_1.fontname=$cs_font_600
+		,lbl_account_title_step_2.fontname=$cs_font_400
+		,lbl_account_title_step_3.fontname=$cs_font_400
+		,lbl_account_title_step_4.fontname=$cs_font_400
+		,lbl_account_title_step_5.fontname=$cs_font_400
+		,lbl_account_title_step_6.fontname=$cs_font_400
+		,lbl_account_title_step_7.fontname=$cs_font_400
+		,lbl_account_title_step_8.fontname=$cs_font_400
+
+
 		,vg_open_account_title.backcolor=FFFFFF
 		,popscreen_open_account_history.hidden=false
+		,vg_account_title_step.hidden = false
 
 		,menu_num=1001
 	);
@@ -125,6 +136,7 @@ value="
 				width="$w($g_lcdWidth,13.9)"
 				height="$h($g_lcdHeight,2.5)"
 				fontsize="$h($g_lcdHeight,1.9)"
+				fontname="$cs_font_400"
 				textcolor="737679"
 				align="left"
 				value="본인인증"
@@ -154,6 +166,7 @@ value="
 	   				height="$h($g_lcdHeight,4.2)"
 	   				textcolor="070A0F"
 	   				fontsize="$h($g_lcdHeight,3.0)"
+	   				fontname="$cs_font_600"
 	   				value="약관을 확인하고"
 	   			/>
 	   			<br/>
@@ -162,97 +175,133 @@ value="
 	   				height="$h($g_lcdHeight,4.2)"
 	   				textcolor="070A0F"
 	   				fontsize="$h($g_lcdHeight,3.0)"
+	   				fontname="$cs_font_600"
 	   				value="동의해 주세요."
 	   			/>
 	   		</viewgroup>
 		</viewgroup>
-		<br/>
-		
+		<br height="$h($g_lcdHeight,2.5)" />
+		<viewgroup
+			width="$this.remain_right"
+			height="$h($g_lcdHeight,26.1)"
+			border_radius="$h($g_lcdHeight,1.9)"
+			backcolor="F8F9FB"
+			margin_left="$h($g_lcdHeight,2.5)"
+			margin_right="$h($g_lcdHeight,2.5)"
+			margin_top="$h($g_lcdHeight,2.5)"
+			margin_bottom="$h($g_lcdHeight,2.5)"
+		>
+			<viewgroup
+				width="$this.remain_right"
+				height="$h($g_lcdHeight,3.0)"
+				backcolor="ff000022"
+			>
+				<img
+					src="$cs_icon_checkbox_off"
+					width="$h($g_lcdHeight,3.0)"
+					height="$this.remain_bottom"
+					imagesizefit="false"
+				/>
+				<blank width="$w($g_lcdwidth,1.1)"/>
+				<label
+					width="$w($g_lcdwidth,53.6)"
+					height="$this.remain_bottom"
+					fontsize="$h($g_lcdHeight,2.0)"
+					fontname="$cs_font_600"
+					textcolor="232B2B"
+					backcolor="ff000022"
+					value="개인(신용)정보 필수동의서"
+				/>
+				<viewgroup
+					width="$this.remain_right"
+					height="$this.remain_bottom"
+					backcolor="ffff0044"
+					border_width="1"			
+					border_radius="$h($g_lcdHeight,0.7)"
+				>
+					<label
+						width="$result($this.remain_right/2)"
+						height="$this.remain_bottom"
+						backcolor="737679"
+						value="요약"
+						align="center"
+						textcolor="ffffff"
+						fontsize="$h($g_lcdHeight,1.5)"
+					/>
+					<label
+						width="$this.remain_right"
+						height="$this.remain_bottom"
+						backcolor="E7E9EB"
+						value="상세"
+						align="center"
+						textcolor="737679"
+						fontsize="$h($g_lcdHeight,1.5)"
+					/>
+				</viewgroup>
+			</viewgroup>
+			<br/>
+			<!-- 여기부터 확인 -->
+			<img
+				src="$cs_icon_checkbox2_off"
+				width="$h($g_lcdHeight,2.3)"
+				height="$h($g_lcdHeight,2.3)"
+				imagesizefit="false"	
+			/>
+			<blank width="$w($g_lcdwidth,1.1)"/>
+			<label
+			width="$w($g_lcdwidth,34.7)"
+			height="$h($g_lcdHeight,2.3)"
+			backcolor="ff000022"
+			fontsize="$h($g_lcdHeight,1.8)"
+			textcolor="232B2B"
+			value="1. 수집/이용에 관한 사항"
+			/>
+			<br/>
+	
+		</viewgroup>
+		<br height="$h($g_lcdHeight,2.5)" />
+		<viewgroup
+			width="$this.remain_right"
+			height="$h($g_lcdHeight,21.7)"
+			backcolor="ff000022"
+		>
+			
+		</viewgroup>
 	</viewgroup>
 	<br/>
-    <br/>
-
-	<screen id="screen_1001_scroll"
-		height="$this.remain_bottom"
+	<viewgroup
+		width="$w($g_lcdwidth,91.5)"
+		height="$h($g_lcdHeight,6.7)"
+		layout="center"
+		layout_vertical="bottom"
 	>
-		<label
-			width="$this.remain_right"
-			height="$h($g_lcdHeight,6)"
-			valign="center"
-			margin_left="$w($g_lcdwidth,5)"
-			fontsize="$g_fontSize_big11"
-			value="약관을 확인하고"
+		<button 
+			width="$w($g_lcdwidth,26.7)" 
+			height="$this.remain_bottom"
+			layout="left"
+			backcolor="$cs_color_line"
+			border_width="1"
+			border_radius="$h($g_lcdHeight,6.2)"
+			fontsize="$h($g_lcdHeight,2.0)"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_black"
+			value="취소"
+			//onClicked="$closescreen(pop_1000_1_2);"
 		/>
-		<br/>
-		<label
-			width="$this.remain_right"
-			height="$h($g_lcdHeight,6)"
-			valign="center"
-			margin_left="$w($g_lcdwidth,5)"
-			fontsize="$g_fontSize_big11"
-			value="동의해 주세요."
+		<button
+			width="$w($g_lcdwidth,62.7)" 
+			height="$this.remain_bottom"
+			layout="right"
+			backcolor="$cs_color_main"
+			border_width="1"
+			border_radius="$h($g_lcdHeight,6.2)"
+			fontsize="$h($g_lcdHeight,2.0)"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_black"
+			value="확인"
+			onclicked="$callaction(Act_Open_Account_Popup, 4101);"	
 		/>
-		<br/><hr backcolor="cccccc" /><br /><hr height="$h($g_lcdHeight,2)" backcolor="f1f1f1"/><br />
-		<viewgroup id="vg_4101_100_agree_kind" class="cs_vg_4101_100_contents">
-			<blank width="$w($g_lcdWidth,10)"/>
-			<button class="cs_btn_4101_100_agree_kind"
-			key="1"
-			value="상세동의서"
-			/>
-			<blank width="$w($g_lcdWidth,0)"/>
-			<button class="cs_btn_4101_100_agree_kind"
-			key="2"
-			value="요약동의서"
-			select="true"
-			/>
-		</viewgroup>
-		<br height="$h($g_lcdHeight,1)"/>
-		<viewgroup class="cs_vg_4101_100_contents"
-		height="$h($g_lcdHeight,24)"
-		>
-			<checkbox id="btn_1_1" class="cs_btn_essential_4101_100" key="1_1" value="1-1 수집/이용에 관한 사항" /><br/>
-			<checkbox id="btn_2_1" class="cs_btn_essential_4101_100" key="2_1" value="2-1 제공에 관한 사항 [미수/파생상품 거래용]"/><br/>
-			<checkbox id="btn_2_2" class="cs_btn_essential_4101_100" key="2_2" value="2-2 제공에 관한 사항 [해외파생상품 거래용]"/><br/>
-			<checkbox id="btn_3_1" class="cs_btn_essential_4101_100" key="3_1" value="3-1 조회에 관한 사항 [미수/파생상품 거래용]"/><br/>
-		</viewgroup>
-
-		<br height="$h($g_lcdHeight,4)"/>
-		
-		<blank width="$w($g_lcdWidth,4)"/>
-		<viewgroup height="$h($g_lcdHeight,9.4)" >
-			<button 
-			id="btn_4101_bf"
-			fontsize="$g_fontsize_big3" 
-			width="$w($g_lcdwidth,45.1)" 
-			height="$h($g_lcdHeight,9.4)" 
-			backcolor="ffffff"
-			border_width="$g_roundHeight"
-			border_color="e33433"
-			backcolor_active="e5e5e5"
-			textcolor="e33433"
-			textcolor_active="e33433"
-			value="이전" 
-			onclicked="btn_open_account_history_onClicked"
-			/>
-			<blank width="$w($g_lcdWidth,1.8)"/>
-			<button 
-			id="btn_4101_af"
-			fontsize="$g_fontsize_big3" 
-			width="$w($g_lcdwidth,45.1)" 
-			height="$h($g_lcdHeight,9.4)" 
-			border_width="$g_roundHeight"
-			backcolor="e33433"
-			backcolor_active="cc2f2e"
-			backcolor_disable="cccccc"
-			textcolor="ffffff"
-			textcolor_active="ffffff"
-			textcolor_disable="ffffff"
-			value="약관보기" 
-			enable="true"
-			onclicked="btn_4101_confirm_onclicked"
-			/>
-		</viewgroup>		
-	</screen>
+	</viewgroup>
 </screen>
 
 <action id="btn_essential_4101_100_onClicked"

@@ -205,7 +205,16 @@ onunload="popscreen_open_account_onunload"
         fontsize="$g_fontsize_big1" fontname="$g_baseFontNameBold" align="left"  textcolor="ffffff" 
          /> -->
         <viewgroup id="popscreen_open_account_history" width="$w($g_lcdWidth,12.4)" height="$this.remain_bottom" hidden="false">
-            <img src="$cs_icon_arrow_left" layout_vertical="center" width="$w($g_lcdwidth,6.4)" height="$w($g_lcdwidth,6.4)" imagesizefit="false" />
+            <label 
+            layout_vertical="center" 
+            width="$w($g_lcdwidth,8.4)"
+            height="$w($g_lcdwidth,8.4)" 
+            ANI_JSON_WIDTH="$w($g_lcdwidth,6.4)" 
+            ANI_JSON_HEIGHT="$w($g_lcdwidth,6.4)"
+            ani_backgroundJSON="$icon_arrow_left"
+            backgroundimage_align="center"
+            //backcolor="ff0000" 
+            />
             <button class="cs_button_none" 
             onClicked="
             btn_open_account_history_onClicked
