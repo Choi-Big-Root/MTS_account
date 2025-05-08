@@ -9,9 +9,11 @@
  -->
 <actiondata value="
 	$printfont();
-	//테마에 맞게 설정되도록 추후 분기.
+	//테마 별 색상 컬러
+	// white 테마.
 	$setvar_common(
-		cs_color_main = FFEB00,
+		//cs_color_main = FFEB00,
+		cs_color_main = 177DF2,
 		cs_color_black = 060B11,
 		cs_color_gray_dark = 545454,
 		cs_color_white = FFFFFF,
@@ -24,20 +26,11 @@
 		cs_color_box = F8F9FB,
 		cs_color_box2 = F5F6F8,
 		cs_color_sky_blue = 008DFF,
-
-		cs_font_100 = Pretendard-Regular,
-		cs_font_200 = Pretendard-Thin,
-		cs_font_300 = Pretendard-ExtraLight,
-		cs_font_400 = Pretendard-Light,
-		cs_font_500 = Pretendard-Medium,
-		cs_font_600 = Pretendard-SemiBold,
-		cs_font_700 = Pretendard-Bold,
-		cs_font_800 = Pretendard-ExtraBold,
-		cs_font_900 = Pretendard-Black,
 	);
 	/* black 테마.
 	$setvar_common(
-		cs_color_main = FEEB00,
+		//cs_color_main = FEEB00,
+		cs_color_main = 177DF2,
 		cs_color_black = FFFFFF,
 		cs_color_gray_dark = BCC0C3,
 		cs_color_white = 0B0C10,
@@ -52,6 +45,26 @@
 		cs_color_sky_blue = 239AFD,
 	);
 	*/
+
+	//폰트
+	$setvar_common(
+		cs_font_100 = Pretendard-Regular,
+		cs_font_200 = Pretendard-Thin,
+		cs_font_300 = Pretendard-ExtraLight,
+		cs_font_400 = Pretendard-Light,
+		cs_font_500 = Pretendard-Medium,
+		cs_font_600 = Pretendard-SemiBold,
+		cs_font_700 = Pretendard-Bold,
+		cs_font_800 = Pretendard-ExtraBold,
+		cs_font_900 = Pretendard-Black,
+	);
+
+	//border radius
+	$setvar_common(
+		cs_radius_10 = $h($g_lcdHeight,1.3)
+		,cs_radius_20 = $h($g_lcdHeight,2.5)
+		,cs_radius_30 = $h($g_lcdHeight,3.7)
+	);
 "/>
 
 
