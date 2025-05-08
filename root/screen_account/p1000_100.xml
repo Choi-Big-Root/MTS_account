@@ -21,46 +21,46 @@ value="
 	onload="screen_contents_onload"
 	onunload="screen_contents_onunload"
 	noscroll_height="true"
-	margin_bottom="$h($g_lcdHeight,2.5)"
+	margin_bottom="$cs_height_20"
 >
 	<viewgroup
 		width="$this.remain_right"
-		height="$h($g_lcdHeight,45.1)"
-		margin_top="$h($g_lcdHeight,1.9)"
-		margin_left="$w($g_lcdwidth,4.3)"
-		margin_right="$w($g_lcdwidth,4.3)"
+		height="$cs_height_366"
+		margin_top="$cs_height_15"
+		margin_left="$cs_width_16"
+		margin_right="$cs_width_16"
 	>
 		<viewgroup
 			width="$this.remain_right"
-			height="$h($g_lcdHeight,13.1)"
+			height="$cs_height_106"
 		>
 			<label
 				width="$this.remain_right"
-				height="$h($g_lcdHeight,4.2)"
+				height="$cs_height_34"
 				valign="center"
 				fontname="$cs_font_600"
-				fontsize="$h($g_lcdHeight,3.0)"
+				fontsize="$cs_fontsize_24"
 				textcolor="$cs_color_black"
 				value="미국주식옵션 종목"
 			/>
 			<br/>
 			<label
 				width="$this.remain_right"
-				height="$h($g_lcdHeight,4.2)"
+				height="$cs_height_34"
 				valign="center"
 				fontname="$cs_font_600"
-				fontsize="$h($g_lcdHeight,3.0)"
+				fontsize="$cs_fontsize_24"
 				textcolor="$cs_color_black"
 				value="5000+ 이상 거래가능."
 			/>
 			<br/>
 			<label
 				width="$this.remain_right"
-				height="$h($g_lcdHeight,3.5)"
+				height="$cs_height_28"
 				valign="center"
 				fontname="$cs_font_400"
 				layout_vertical="bottom"
-				fontsize="$h($g_lcdHeight,2.3)"
+				fontsize="$cs_fontsize_18"
 				textcolor="$cs_color_black"
 				value="개설 시 아래 세가지가 필요해요."
 			/>
@@ -68,84 +68,84 @@ value="
 		<br/>
 		<viewgroup
 			width="$this.remain_right"
-			height="$h($g_lcdHeight,25.9)"
+			height="$cs_height_210"
 			layout_vertical="bottom"
 		>
 			<label 
 				ani_backgroundJSON="$icon_icon_1" 
-				width="$h($g_lcdHeight,6.2)" 
-				height="$h($g_lcdHeight,6.2)" 
-				ANI_JSON_WIDTH="$h($g_lcdHeight,6.2)" 
-            	ANI_JSON_HEIGHT="$h($g_lcdHeight,6.2)"
+				width="$cs_height_50" 
+				height="$cs_height_50" 
+				ANI_JSON_WIDTH="$cs_height_50" 
+            	ANI_JSON_HEIGHT="$cs_height_50"
 			/>
-			<blank width="$w($g_lcdwidth,4)"/>
+			<blank width="$cs_width_15"/>
 			<label
 				width="$this.remain_right"
-				height="$h($g_lcdHeight,6.2)" 
+				height="$cs_height_50" 
 				fontname="$cs_font_400"
-				fontsize="$h($g_lcdHeight,2.0)"
+				fontsize="$cs_fontsize_16"
 				textcolor="$cs_color_black"
 				value="본인명의 휴대폰"
 			/>
-			<br height="$h($g_lcdHeight,3.7)"/>
+			<br height="$cs_height_30"/>
 			<label 
 				ani_backgroundJSON="$icon_icon_2"  
-				width="$h($g_lcdHeight,6.2)" 
-				height="$h($g_lcdHeight,6.2)" 
-				ANI_JSON_WIDTH="$h($g_lcdHeight,6.2)" 
-            	ANI_JSON_HEIGHT="$h($g_lcdHeight,6.2)"
+				width="$cs_height_50" 
+				height="$cs_height_50" 
+				ANI_JSON_WIDTH="$cs_height_50" 
+            	ANI_JSON_HEIGHT="$cs_height_50"
 			/>
-			<blank width="$w($g_lcdwidth,4)"/>
+			<blank width="$cs_width_15"/>
 			<label
 				width="$this.remain_right"
-				height="$h($g_lcdHeight,6.2)" 
+				height="$cs_height_50" 
 				fontname="$cs_font_400"
-				fontsize="$h($g_lcdHeight,2.0)"
+				fontsize="$cs_fontsize_16"
 				textcolor="$cs_color_black"
 				value="주민등록증 또는 운전면허증"
 			/>
-			<br height="$h($g_lcdHeight,3.7)"/>
+			<br height="$cs_height_30"/>
 			<label 
 				ani_backgroundJSON="$icon_icon_3"  
-				width="$h($g_lcdHeight,6.2)" 
-				height="$h($g_lcdHeight,6.2)" 
-				ANI_JSON_WIDTH="$h($g_lcdHeight,6.2)" 
-            	ANI_JSON_HEIGHT="$h($g_lcdHeight,6.2)"
+				width="$cs_height_50" 
+				height="$cs_height_50" 
+				ANI_JSON_WIDTH="$cs_height_50" 
+            	ANI_JSON_HEIGHT="$cs_height_50"
 			/>
-			<blank width="$w($g_lcdwidth,4)"/>
+			<blank width="$cs_width_15"/>
 			<label
 				width="$this.remain_right"
-				height="$h($g_lcdHeight,6.2)" 
+				height="$cs_height_50" 
 				fontname="$cs_font_400"
-				fontsize="$h($g_lcdHeight,2.0)"
+				fontsize="$cs_fontsize_16"
 				textcolor="$cs_color_black"
 				value="온라인에서 조회 가능한 금융계좌"
 			/>
 		</viewgroup>
 		
 	</viewgroup>
-	<br height="$h($g_lcdHeight,33.4)" />
+	<br height="$cs_height_271" />
 	<label
 	width="$this.remain_right"
-	height="$h($g_lcdHeight,2.3)"
+	height="$cs_height_18"
 	textcolor="$cs_color_black"
 	fontname="$cs_font_400"
-	fontsize="$h($g_lcdHeight,1.9)"
+	fontsize="$cs_fontsize_15"
 	align="center"
 	value="비대면 계좌개설이 제한되는 경우는요?"
 	onClicked="$popscreen(pop_1000_1_4);"
 	/>
-	<br height="$h($g_lcdHeight,2.3)" />
+	<br height="$cs_height_18" />
 	<button id="btn_1000_account_open"
-		width="$w($g_lcdwidth,91.5)"
-		height="$h($g_lcdHeight,6.7)"
+		width="$cs_width_343"
+		height="$cs_height_54"
 		layout="center"
 		layout_vertical="bottom"
 		border_radius="$cs_radius_10"
 		backcolor_disable="$cs_color_line"
 		backcolor="$cs_color_main"
 		enable="true"
-		fontsize="$h($g_lcdHeight,1.9)"
+		fontsize="$cs_fontsize_15"
 		textcolor="$cs_color_white"
 		fontname="$cs_font_700"
 		value="해외파생상품 계좌 만들게요" 
@@ -190,106 +190,106 @@ value="
 		width="$this.remain_right"
 		layout="center"
 		layout_vertical="bottom"
-		margin_bottom="$h($g_lcdHeight,2.5)"
-		height="$h($g_lcdHeight,58.8)"
-		background_roundinfo="$cs_color_white,$cs_color_white,$h($g_lcdHeight,3.7),1,true,true,false,false"
+		margin_bottom="$cs_height_20"
+		height="$cs_height_477"
+		background_roundinfo="$cs_color_white,$cs_color_white,$cs_radius_30,1,true,true,false,false"
 	>
-		<br height="$h($g_lcdHeight,3.7)" />
+		<br height="$cs_height_30" />
 		<viewgroup
 			width="$this.remain_right"
-			height="$h($g_lcdHeight,42.5)"
-			margin_left="$w($g_lcdwidth,6.2)"
-			margin_right="$w($g_lcdwidth,6.2)"
+			height="$cs_height_345"
+			margin_left="$cs_width_23"
+			margin_right="$cs_width_23"
 		>
 			<label
 				width="$this.remain_right"
-				height="$h($g_lcdHeight,3.1)"
+				height="$cs_height_25"
 				textcolor="$cs_color_black"
-				fontsize="$h($g_lcdHeight,2.3)"
+				fontsize="$cs_fontsize_18"
 				fontname="$cs_font_700"
 				value="금융거래 한도제한 안내"
 			/>
-			<br height="$h($g_lcdHeight,1.3)"/>
+			<br height="$cs_height_10"/>
 			<viewgroup
 				width="$this.remain_right"
-				height="$h($g_lcdHeight,32.1)"
+				height="$cs_height_260"
 				backcolor="$cs_color_bg"
 				border_width="1"
 				border_radius="$cs_radius_10"
-				margin_top="$h($g_lcdHeight,2)"
-				margin_bottom="$h($g_lcdHeight,2)"
-				margin_left="$h($g_lcdHeight,2)"
-				margin_right="$h($g_lcdHeight,2)"
+				margin_top="$cs_height_16"
+				margin_bottom="$cs_height_16"
+				margin_left="$cs_height_16"
+				margin_right="$cs_height_16"
 			>
 				<label
-					width="$w($g_lcdwidth,1.1)"
-					height="$h($g_lcdHeight,2.7)"
-					ANI_JSON_WIDTH="$h($g_lcdHeight,0.5)" 
-            		ANI_JSON_HEIGHT="$h($g_lcdHeight,0.5)"
+					width="$cs_width_4"
+					height="$cs_height_22"
+					ANI_JSON_WIDTH="$cs_height_4" 
+            		ANI_JSON_HEIGHT="$cs_height_4"
             		ani_backgroundJSON="$icon_rectangle_230"
             		backgroundimage_align_vertical="center"
 				/>
-				<blank width="$w($g_lcdwidth,1.4)"/>
+				<blank width="$cs_width_5"/>
 				<label
 					width="$this.remain_right"
-					height="$h($g_lcdHeight,8.2)"
+					height="$cs_height_66"
 					margin_top="0"
 					multiline="true"
 					valign="top"
-					fontsize="$h($g_lcdHeight,1.8)"
+					fontsize="$cs_fontsize_14"
 					textcolor="$cs_color_text"
 					fontname="$cs_font_400"
 					value="거래 없이 입금, 출금만 하는 경우, 금융거래 목적이 확인 되지 않은 경우,금융사기 방지를 위해’출금제한계좌’ 로 설정이 됩니다."
 				/>
-				<br height="$h($g_lcdHeight,1.3)"/>
+				<br height="$cs_height_10"/>
 				<label
-					width="$w($g_lcdwidth,1.1)"
-					height="$h($g_lcdHeight,2.7)"
-					ANI_JSON_WIDTH="$h($g_lcdHeight,0.5)" 
-            		ANI_JSON_HEIGHT="$h($g_lcdHeight,0.5)"
+					width="$cs_width_4"
+					height="$cs_height_22"
+					ANI_JSON_WIDTH="$cs_height_4" 
+            		ANI_JSON_HEIGHT="$cs_height_4"
             		ani_backgroundJSON="$icon_rectangle_230"
             		backgroundimage_align_vertical="center"
 				/>
-				<blank width="$w($g_lcdwidth,1.4)"/>
+				<blank width="$cs_width_5"/>
 				<label
 					width="$this.remain_right"
-					height="$h($g_lcdHeight,2.7)"
-					fontsize="$h($g_lcdHeight,1.8)"
+					height="$cs_height_22"
+					fontsize="$cs_fontsize_14"
 					textcolor="$cs_color_text"
 					fontname="$cs_font_400"
 					value="거래발생시 출금제한은 해지됩니다."
 				/>
-				<br height="$h($g_lcdHeight,1.3)"/>
+				<br height="$cs_height_10"/>
 				<label
-					width="$w($g_lcdwidth,1.1)"
-					height="$h($g_lcdHeight,2.7)"
-					ANI_JSON_WIDTH="$h($g_lcdHeight,0.5)" 
-            		ANI_JSON_HEIGHT="$h($g_lcdHeight,0.5)"
+					width="$cs_width_4"
+					height="$cs_height_22"
+					ANI_JSON_WIDTH="$cs_height_4" 
+            		ANI_JSON_HEIGHT="$cs_height_4"
             		ani_backgroundJSON="$icon_rectangle_230"
             		backgroundimage_align_vertical="center"
 				/>
-				<blank width="$w($g_lcdwidth,1.4)"/>
+				<blank width="$cs_width_5"/>
 				<label
 					width="$this.remain_right"
-					height="$h($g_lcdHeight,2.7)"
-					fontsize="$h($g_lcdHeight,1.8)"
+					height="$cs_height_22"
+					fontsize="$cs_fontsize_14"
 					textcolor="$cs_color_text"
 					fontname="$cs_font_400"
 					value="1일 최대 이체 한도"
 				/>
-				<br height="$h($g_lcdHeight,0.7)"/>
+				<br height="$cs_height_5"/>
 				<viewgroup 
-					width="$w($g_lcdwidth,74.2)"
-					height="$h($g_lcdHeight,4.8)"
+					width="$cs_width_278"
+					height="$cs_height_39"
 					layout="center"
 					border_width="1"
 					border_color="$cs_color_line"
 				>
 					<label
-						width="$w($g_lcdwidth,29.4)"
+						width="$cs_width_110"
 						height="$this.remain_bottom"
 						align="center"
-						fontsize="$h($g_lcdHeight,1.8)"
+						fontsize="$cs_fontsize_14"
 						backcolor="$cs_color_bg"
 						textcolor="$cs_color_text"
 						fontname="$cs_font_400"
@@ -299,28 +299,28 @@ value="
 						width="$this.remain_right"
 						height="$this.remain_bottom"
 						align="left"
-						fontsize="$h($g_lcdHeight,1.8)"
+						fontsize="$cs_fontsize_14"
 						backcolor="$cs_color_white"
 						textcolor="$cs_color_text"
-						margin_left="$w($g_lcdwidth,2.7)"
+						margin_left="$cs_width_10"
 						fontname="$cs_font_400"
 						value="출금 100만원"
 					/>
 				</viewgroup>
-				<br height="$h($g_lcdHeight,1.3)"/>
+				<br height="$cs_height_10"/>
 				<label
-					width="$w($g_lcdwidth,1.1)"
-					height="$h($g_lcdHeight,2.7)"
-					ANI_JSON_WIDTH="$h($g_lcdHeight,0.5)" 
-            		ANI_JSON_HEIGHT="$h($g_lcdHeight,0.5)"
+					width="$cs_width_4"
+					height="$cs_height_22"
+					ANI_JSON_WIDTH="$cs_height_4" 
+            		ANI_JSON_HEIGHT="$cs_height_4"
             		ani_backgroundJSON="$icon_rectangle_230"
             		backgroundimage_align_vertical="center"
 				/>
-				<blank width="$w($g_lcdwidth,1.4)"/>
+				<blank width="$cs_width_5"/>
 				<label
 					width="$this.remain_right"
-					height="$h($g_lcdHeight,5.5)"
-					fontsize="$h($g_lcdHeight,1.8)"
+					height="$cs_height_44"
+					fontsize="$cs_fontsize_14"
 					fontname="$cs_font_400"
 					textcolor="$cs_color_text"
 					valign="top"
@@ -331,24 +331,24 @@ value="
 			<br/>
 			<viewgroup
 				width="$this.remain_right"
-				height="$h($g_lcdHeight,3.7)"
+				height="$cs_height_30"
 				layout_vertical="bottom"
 			>
 				<label
-					width="$h($g_lcdHeight,3.7)" 
-					height="$h($g_lcdHeight,3.7)"
-					ANI_JSON_WIDTH="$h($g_lcdHeight,3.7)" 
-            		ANI_JSON_HEIGHT="$h($g_lcdHeight,3.7)"
+					width="$cs_height_30" 
+					height="$cs_height_30"
+					ANI_JSON_WIDTH="$cs_height_30" 
+            		ANI_JSON_HEIGHT="$cs_height_30"
             		ani_backgroundJSON="$icon_icon_4"
             		//backgroundimage_align_vertical="center"
 				/>
 				<label
 					width="$this.remain_right"
 					height="$this.remain_bottom"
-					fontsize="$h($g_lcdHeight,1.8)"
+					fontsize="$cs_fontsize_14"
 					fontname="$cs_font_400"
 					textcolor="$cs_color_black"
-					margin_left="$w($g_lcdwidth,3.5)"
+					margin_left="$cs_width_10"
 					align="left"
 					value="문의 02-3771-8888 (평일 오전 9시~오후 5시)"
 				/>
@@ -356,32 +356,32 @@ value="
 		</viewgroup>
 		<br/>
 		<viewgroup
-			width="$w($g_lcdwidth,91.5)"
-			height="$h($g_lcdHeight,6.7)"
+			width="$cs_width_343"
+			height="$cs_height_54"
 			layout="center"
 			layout_vertical="bottom"
 		>
 			<button id="btn_1000_1_2_cancel"
-				width="$w($g_lcdwidth,26.7)" 
+				width="$cs_width_100" 
 				height="$this.remain_bottom"
 				layout="left"
 				backcolor="$cs_color_line"
 				border_width="1"
 				border_radius="$cs_radius_10"
-				fontsize="$h($g_lcdHeight,2.0)"
+				fontsize="$cs_fontsize_16"
 				fontname="$cs_font_700"
 				textcolor="$cs_color_black"
 				value="취소"
 				onClicked="$closescreen(pop_1000_1_2);"
 			/>
 			<button id="btn_pop_1000_1_2_confirm"
-				width="$w($g_lcdwidth,62.7)" 
+				width="$cs_width_235" 
 				height="$this.remain_bottom"
 				layout="right"
 				backcolor="$cs_color_main"
 				border_width="1"
 				border_radius="$cs_radius_10"
-				fontsize="$h($g_lcdHeight,2.0)"
+				fontsize="$cs_fontsize_16"
 				fontname="$cs_font_700"
 				textcolor="$cs_color_white"
 				value="확인"
@@ -451,38 +451,38 @@ value="
 	onload="pop_1000_1_3_onload"
 	onunload="pop_1000_1_3_onunload"
 >
-	<br height="$h($g_lcdHeight,18.3)"/>
+	<br height="$cs_height_148"/>
 	<screen id="pop_1000_1_3_screen"
-		width="$w($g_lcdwidth,80)"
-		height="$h($g_lcdHeight,45.6)"
+		width="$cs_width_300"
+		height="$cs_height_370"
 		layout="center"
 		backcolor="$cs_color_white"
-		margin_top="$h($g_lcdHeight,3.7)"
-		margin_bottom="$h($g_lcdHeight,2.5)"
+		margin_top="$cs_height_30"
+		margin_bottom="$cs_height_20"
 		border_width="1"
 		border_radius="$cs_radius_20"
 	>
 		<viewgroup
-			width="$w($g_lcdwidth,72)"
-			height="$h($g_lcdHeight,29.7)"
+			width="$cs_width_270"
+			height="$cs_height_241"
 			layout="center"
 		>
 			<img
 				src="plist/root/resource/image/image-210.png"
-				width="$h($g_lcdHeight,9.9)"
-				height="$h($g_lcdHeight,9.9)"
+				width="$cs_height_80"
+				height="$cs_height_80"
 				layout="center"
 				imagesizefit="false"
 			/>
-			<br height="$h($g_lcdHeight,2.5)" />
+			<br height="$cs_height_20" />
 			<viewgroup
 				width="$this.remain_right"
-				height="$h($g_lcdHeight,5.8)"
+				height="$cs_height_47"
 			>
 				<label
 					width="$this.remain_right"
-					height="$h($g_lcdHeight,3.0)"
-					fontsize="$h($g_lcdHeight,2.0)"
+					height="$cs_height_24"
+					fontsize="$cs_fontsize_16"
 					fontname="$cs_font_600"
 					textcolor="$cs_color_black"
 					layout_vertical="top"
@@ -492,8 +492,8 @@ value="
 				<br/>
 				<label
 					width="$this.remain_right"
-					height="$h($g_lcdHeight,2.3)"
-					fontsize="$h($g_lcdHeight,1.8)"
+					height="$cs_height_18"
+					fontsize="$cs_fontsize_14"
 					fontname="$cs_font_400"
 					textcolor="$cs_color_text"
 					layout_vertical="bottom"
@@ -501,20 +501,20 @@ value="
 					value="아래 시간대를 피하여 개설해주세요"
 				/>
 			</viewgroup>
-			<br height="$h($g_lcdHeight,2.5)" />
+			<br height="$cs_height_20" />
 			<viewgroup
 				width="$this.remain_right"
-				height="$h($g_lcdHeight,9.2)"
-				margin_top="$h($g_lcdHeight,1.9)"
-				margin_bottom="$h($g_lcdHeight,1.9)"
+				height="$cs_height_74"
+				margin_top="$cs_height_15"
+				margin_bottom="$cs_height_15"
 				backcolor="$cs_color_bg"
 				border_width="1"
 				border_radius="$cs_radius_10"
 			>
 				<label
 					width="$this.remain_right"
-					height="$h($g_lcdHeight,2.7)"
-					fontsize="$h($g_lcdHeight,1.8)"
+					height="$cs_height_22"
+					fontsize="$cs_fontsize_14"
 					fontname="$cs_font_400"
 					textcolor="$cs_color_black"
 					align="center"
@@ -523,8 +523,8 @@ value="
 				<br/>
 				<label
 					width="$this.remain_right"
-					height="$h($g_lcdHeight,2.7)"
-					fontsize="$h($g_lcdHeight,1.8)"
+					height="$cs_height_22"
+					fontsize="$cs_fontsize_14"
 					fontname="$cs_font_400"
 					textcolor="$cs_color_black"
 					align="center"
@@ -534,12 +534,12 @@ value="
 		</viewgroup>
 		<br/>
 		<button id="btn_pop_1000_1_3_confirm"
-			width="$w($g_lcdwidth,72)"
-			height="$h($g_lcdHeight,6.2)"
+			width="$cs_width_270"
+			height="$cs_height_50"
 			layout="center"
 			layout_vertical="bottom"
 			value="확인"
-			fontsize="$h($g_lcdHeight,1.8)"
+			fontsize="$cs_fontsize_14"
 			fontname="$cs_font_500"
 			textcolor="$cs_color_white"
 			border_width="1"
@@ -564,60 +564,60 @@ value="
 		width="$this.remain_right"
 		layout="center"
 		layout_vertical="bottom"
-		margin_bottom="$h($g_lcdHeight,2.5)"
-		height="$h($g_lcdHeight,58.8)"
+		margin_bottom="$cs_height_20"
+		height="$cs_height_477"
 		background_roundinfo="$cs_color_white,$cs_color_white,$cs_radius_30,1,true,true,false,false"
 	>
-		<br height="$h($g_lcdHeight,3.7)" />
+		<br height="$cs_height_30" />
 		<viewgroup
 			width="$this.remain_right"
-			height="$h($g_lcdHeight,42.5)"
-			margin_left="$w($g_lcdwidth,6.2)"
-			margin_right="$w($g_lcdwidth,6.2)"
+			height="$cs_height_345"
+			margin_left="$cs_width_23"
+			margin_right="$cs_width_23"
 		>
 			<label
 				width="$this.remain_right"
-				height="$h($g_lcdHeight,3.1)"
+				height="$cs_height_25"
 				textcolor="$cs_color_black"
-				fontsize="$h($g_lcdHeight,2.3)"
+				fontsize="$cs_fontsize_18"
 				fontname="$cs_font_700"
 				value="비대면 계좌개설 제한고객"
 			/>
-			<br height="$h($g_lcdHeight,1.3)"/>
+			<br height="$cs_height_10"/>
 			<viewgroup
 				width="$this.remain_right"
-				height="$h($g_lcdHeight,16.0)"
+				height="$cs_height_130"
 				backcolor="$cs_color_bg"
 				border_width="1"
 				border_radius="$cs_radius_10)"
-				margin_top="$h($g_lcdHeight,2)"
-				margin_bottom="$h($g_lcdHeight,2)"
-				margin_left="$h($g_lcdHeight,2)"
-				margin_right="$h($g_lcdHeight,2)"
+				margin_top="$cs_height_16"
+				margin_bottom="$cs_height_16"
+				margin_left="$cs_height_16"
+				margin_right="$cs_height_16"
 			>
 				<viewgroup
 					width="$this.remain_right"
-					height="$h($g_lcdHeight,5.5)"
+					height="$cs_height_44"
 					layout_vertical="top"
 				>
 					<label
-						width="$w($g_lcdwidth,1.1)"
-						height="$h($g_lcdHeight,2.7)"
-						ANI_JSON_WIDTH="$h($g_lcdHeight,0.5)" 
-	            		ANI_JSON_HEIGHT="$h($g_lcdHeight,0.5)"
+						width="$cs_width_4"
+						height="$cs_height_22"
+						ANI_JSON_WIDTH="$cs_height_4" 
+	            		ANI_JSON_HEIGHT="$cs_height_4"
 	            		ani_backgroundJSON="$icon_rectangle_230"
 	            		backgroundimage_align_vertical="center"
 					/>
 
-					<blank width="$w($g_lcdwidth,1.4)"/>
+					<blank width="$cs_width_5"/>
 					<viewgroup
 						width="$this.remain_right"
 						height="$this.remain_bottom"
 					>
 						<label
 							width="$this.remain_right"
-							height="$h($g_lcdHeight,2.7)"
-							fontsize="$h($g_lcdHeight,1.8)"
+							height="$cs_height_22"
+							fontsize="$cs_fontsize_14"
 							fontname="$cs_font_700"
 							layout_vertical="top"
 							textcolor="$cs_color_text"
@@ -626,8 +626,8 @@ value="
 						<br/>
 						<label
 							width="$this.remain_right"
-							height="$h($g_lcdHeight,2.7)"
-							fontsize="$h($g_lcdHeight,1.8)"
+							height="$cs_height_22"
+							fontsize="$cs_fontsize_14"
 							fontname="$cs_font_400"
 							layout_vertical="bottom"
 							textcolor="$cs_color_text"
@@ -642,23 +642,23 @@ value="
 					layout_vertical="bottom"
 				>
 					<label
-						width="$w($g_lcdwidth,1.1)"
-						height="$h($g_lcdHeight,2.7)"
-						ANI_JSON_WIDTH="$h($g_lcdHeight,0.5)" 
-	            		ANI_JSON_HEIGHT="$h($g_lcdHeight,0.5)"
+						width="$cs_width_4"
+						height="$cs_height_22"
+						ANI_JSON_WIDTH="$cs_height_4" 
+	            		ANI_JSON_HEIGHT="$cs_height_4"
 	            		ani_backgroundJSON="$icon_rectangle_230"
 	            		backgroundimage_align_vertical="center"
 					/>
 
-					<blank width="$w($g_lcdwidth,1.4)"/>
+					<blank width="$cs_width_5"/>
 					<viewgroup
 						width="$this.remain_right"
 						height="$this.remain_bottom"
 					>
 						<label
 							width="$this.remain_right"
-							height="$h($g_lcdHeight,2.7)"
-							fontsize="$h($g_lcdHeight,1.8)"
+							height="$cs_height_22"
+							fontsize="$cs_fontsize_14"
 							fontname="$cs_font_700"
 							layout_vertical="top"
 							textcolor="$cs_color_text"
@@ -667,8 +667,8 @@ value="
 						<br/>
 						<label
 							width="$this.remain_right"
-							height="$h($g_lcdHeight,2.7)"
-							fontsize="$h($g_lcdHeight,1.8)"
+							height="$cs_height_22"
+							fontsize="$cs_fontsize_14"
 							fontname="$cs_font_400"
 							layout_vertical="bottom"
 							textcolor="$cs_color_text"
@@ -677,46 +677,46 @@ value="
 					</viewgroup>
 				</viewgroup>
 			</viewgroup>
-			<br height="$h($g_lcdHeight,2.4)" />
+			<br height="$cs_height_20)" />
 			<label
 				width="$this.remain_right"
-				height="$h($g_lcdHeight,3.1)"
+				height="$cs_height_25"
 				textcolor="$cs_color_black"
-				fontsize="$h($g_lcdHeight,2.3)"
+				fontsize="$cs_fontsize_18"
 				fontname="$cs_font_700"
 				value="비대면 계좌개설 제한시간"
 			/>
-			<br height="$h($g_lcdHeight,1.3)"/>
+			<br height="$cs_height_10"/>
 			<viewgroup
 				width="$this.remain_right"
-				height="$h($g_lcdHeight,9.4)"
+				height="$cs_height_76"
 				backcolor="$cs_color_bg"
 				border_width="1"
 				border_radius="$cs_radius_10"
-				margin_top="$h($g_lcdHeight,2)"
-				margin_bottom="$h($g_lcdHeight,2)"
-				margin_left="$h($g_lcdHeight,2)"
-				margin_right="$h($g_lcdHeight,2)"
+				margin_top="$cs_height_16"
+				margin_bottom="$cs_height_16"
+				margin_left="$cs_height_16"
+				margin_right="$cs_height_16"
 			>
 				<viewgroup
 					width="$this.remain_right"
-					height="$h($g_lcdHeight,2.7)"
+					height="$cs_height_22"
 					layout_vertical="top"
 				>
 					<label
-						width="$w($g_lcdwidth,1.1)"
-						height="$h($g_lcdHeight,2.7)"
-						ANI_JSON_WIDTH="$h($g_lcdHeight,0.5)" 
-	            		ANI_JSON_HEIGHT="$h($g_lcdHeight,0.5)"
+						width="$cs_width_4"
+						height="$cs_height_22"
+						ANI_JSON_WIDTH="$cs_height_4" 
+	            		ANI_JSON_HEIGHT="$cs_height_4"
 	            		ani_backgroundJSON="$icon_rectangle_230"
 	            		backgroundimage_align_vertical="center"
 					/>
 
-					<blank width="$w($g_lcdwidth,1.4)"/>
+					<blank width="$cs_width_5"/>
 					<label
 						width="$this.remain_right"
-						height="$h($g_lcdHeight,2.7)"
-						fontsize="$h($g_lcdHeight,1.8)"
+						height="$cs_height_22"
+						fontsize="$cs_fontsize_14"
 						fontname="$cs_font_400"
 						layout_vertical="top"
 						textcolor="$cs_color_text"
@@ -726,23 +726,23 @@ value="
 				<br/>
 				<viewgroup
 					width="$this.remain_right"
-					height="$h($g_lcdHeight,2.7)"
+					height="$cs_height_22"
 					layout_vertical="bottom"
 				>
 					<label
-						width="$w($g_lcdwidth,1.1)"
-						height="$h($g_lcdHeight,2.7)"
-						ANI_JSON_WIDTH="$h($g_lcdHeight,0.5)" 
-	            		ANI_JSON_HEIGHT="$h($g_lcdHeight,0.5)"
+						width="$cs_width_4"
+						height="$cs_height_22"
+						ANI_JSON_WIDTH="$cs_height_4" 
+	            		ANI_JSON_HEIGHT="$cs_height_4"
 	            		ani_backgroundJSON="$icon_rectangle_230"
 	            		backgroundimage_align_vertical="center"
 					/>
 
-					<blank width="$w($g_lcdwidth,1.4)"/>
+					<blank width="$cs_width_5"/>
 					<label
 						width="$this.remain_right"
-						height="$h($g_lcdHeight,2.7)"
-						fontsize="$h($g_lcdHeight,1.8)"
+						height="$cs_height_22"
+						fontsize="$cs_fontsize_14"
 						fontname="$cs_font_400"
 						layout_vertical="top"
 						textcolor="$cs_color_text"
@@ -750,26 +750,26 @@ value="
 					/>
 				</viewgroup>
 			</viewgroup>
-			<br height="$h($g_lcdHeight,2.4)" />
+			<br height="$cs_height_20" />
 			<viewgroup
 				width="$this.remain_right"
-				height="$h($g_lcdHeight,3.7)"
+				height="$cs_height_30"
 				layout_vertical="bottom"
 			>
 				<label
-					width="$h($g_lcdHeight,3.7)" 
-					height="$h($g_lcdHeight,3.7)"
-					ANI_JSON_WIDTH="$h($g_lcdHeight,3.7)" 
-            		ANI_JSON_HEIGHT="$h($g_lcdHeight,3.7)"
+					width="$cs_height_30" 
+					height="$cs_height_30"
+					ANI_JSON_WIDTH="$cs_height_30" 
+            		ANI_JSON_HEIGHT="$cs_height_30"
             		ani_backgroundJSON="$icon_icon_4"
 				/>
 				<label
 					width="$this.remain_right"
 					height="$this.remain_bottom"
-					fontsize="$h($g_lcdHeight,1.8)"
+					fontsize="$cs_fontsize_14"
 					fontname="$cs_font_400"
 					textcolor="$cs_color_black"
-					margin_left="$w($g_lcdwidth,3.5)"
+					margin_left="$cs_width_10"
 					align="left"
 					value="문의 02-3771-8888 (평일 오전 9시~오후 5시)"
 				/>
@@ -777,15 +777,15 @@ value="
 		</viewgroup>
 		<br/>
 		<button 
-			width="$w($g_lcdwidth,91.5)"
-			height="$h($g_lcdHeight,6.7)"
+			width="$cs_width_343"
+			height="$cs_height_54"
 			layout="center"
 			layout_vertical="bottom"
 			border_radius="$cs_radius_10"
 			backcolor_disable="$cs_color_line"
 			backcolor="$cs_color_main"
 			enable="true"
-			fontsize="$h($g_lcdHeight,1.9)"
+			fontsize="$cs_fontsize_15"
 			fontname="$cs_font_700"
 			textcolor="$cs_color_white"
 			value="확인" 
