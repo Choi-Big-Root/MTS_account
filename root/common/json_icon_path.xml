@@ -4,7 +4,16 @@
 	$setvar_common(
 		// 메뉴아이콘
 		,icon_arrow_left 		= $callaction(fnGetJsonIconPathName,arrow-left)
-		,bg_splash 		= $callaction(fnGetJsonIconPathName,bg_splash)
+		,icon_icon_1 			= $callaction(fnGetJsonIconPathName,icon-1)
+		,icon_icon_2 			= $callaction(fnGetJsonIconPathName,icon-2)
+		,icon_icon_3 			= $callaction(fnGetJsonIconPathName,icon-3)
+		,icon_icon_4 			= $callaction(fnGetJsonIconPathName,icon-4)
+
+		,icon_rectangle_230 			= $callaction(fnGetJsonIconPathName,rectangle-230 )
+
+
+
+		,bg_splash 				= $callaction(fnGetJsonIconPathName,bg_splash)
 	);
 
 	$logvar(icon_arrow_left,bg_splash);
