@@ -19,6 +19,13 @@
 		,icon_checkbox_on 			= $callaction(fnGetSvgIconPathName,checkbox-on)
 		,icon_checkbox_2 			= $callaction(fnGetSvgIconPathName,checkbox-2)
 
+		,icon_polygon_5 			= $callaction(fnGetSvgIconPathName,polygon-5)
+
+		,icon_cancel 			= $callaction(fnGetSvgIconPathName,cancel)
+		,icon_cancel_2 			= $callaction(fnGetSvgIconPathName,cancel-2)
+
+		,icon_step 			= $callaction(fnGetSvgIconPathName,step)
+
 	);
 " />
 <action id="fnGetSvgIconPathName" scope="common" 
