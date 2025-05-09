@@ -249,56 +249,160 @@ onunload="popscreen_open_account_onunload"
             height="$this.remain_bottom"
             >
             <label id="lbl_account_title_step_1" value="1" textcolor="$cs_color_disable" align="center" layout="center" fontsize="$h($g_lcdHeight,1.6)" layout_vertical="center" hidden="false"/>
-            <img  id="img_step_1" src="$cs_icon_top_title_chk_box" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
+            <label id="img_step_1" 
+                width="$cs_height_16" 
+                height="$cs_height_16"  
+                layout="center" 
+                layout_vertical="center" 
+                hidden="true" 
+                BACKGROUNDSVG="$icon_step"
+                BACKGROUNDSVG_DISABLE="$icon_step"
+                BACKGROUNDSVG_HIGHLIGHT="$icon_step"
+                BACKGROUNDSVG_WIDTH="$cs_height_16"
+                BACKGROUNDSVG_HEIGHT="$cs_height_16"
+                backgroundimage_align="center"
+                backgroundimage_align_vertical="center"
+            />
         </viewgroup>
         <viewgroup 
             width="$w($g_lcdwidth,4.3)"
             height="$this.remain_bottom"
             >
             <label id="lbl_account_title_step_2" value="2" textcolor="$cs_color_disable" align="center" layout="center" fontsize="$h($g_lcdHeight,1.6)" layout_vertical="center" hidden="false"/>
-            <img  id="img_step_2" src="$cs_icon_top_title_chk_box" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
+            <label id="img_step_2" 
+                width="$cs_height_16" 
+                height="$cs_height_16"  
+                layout="center" 
+                layout_vertical="center" 
+                hidden="true" 
+                BACKGROUNDSVG="$icon_step"
+                BACKGROUNDSVG_DISABLE="$icon_step"
+                BACKGROUNDSVG_HIGHLIGHT="$icon_step"
+                BACKGROUNDSVG_WIDTH="$cs_height_16"
+                BACKGROUNDSVG_HEIGHT="$cs_height_16"
+                backgroundimage_align="center"
+                backgroundimage_align_vertical="center"
+            />
         </viewgroup>
         <viewgroup 
             width="$w($g_lcdwidth,4.3)"
             height="$this.remain_bottom"
             >
             <label id="lbl_account_title_step_3" value="3" textcolor="$cs_color_disable" align="center" layout="center" fontsize="$h($g_lcdHeight,1.6)" layout_vertical="center" hidden="false"/>
-            <img  id="img_step_3" src="$cs_icon_top_title_chk_box" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
+             <label id="img_step_3" 
+                width="$cs_height_16" 
+                height="$cs_height_16"  
+                layout="center" 
+                layout_vertical="center" 
+                hidden="true" 
+                BACKGROUNDSVG="$icon_step"
+                BACKGROUNDSVG_DISABLE="$icon_step"
+                BACKGROUNDSVG_HIGHLIGHT="$icon_step"
+                BACKGROUNDSVG_WIDTH="$cs_height_16"
+                BACKGROUNDSVG_HEIGHT="$cs_height_16"
+                backgroundimage_align="center"
+                backgroundimage_align_vertical="center"
+            />
         </viewgroup>
         <viewgroup 
             width="$w($g_lcdwidth,4.3)"
             height="$this.remain_bottom"
             >
             <label id="lbl_account_title_step_4" value="4" textcolor="$cs_color_disable" align="center" layout="center" fontsize="$h($g_lcdHeight,1.6)" layout_vertical="center" hidden="false"/>
-            <img  id="img_step_4" src="$cs_icon_top_title_chk_box" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
+             <label id="img_step_4" 
+                width="$cs_height_16" 
+                height="$cs_height_16"  
+                layout="center" 
+                layout_vertical="center" 
+                hidden="true" 
+                BACKGROUNDSVG="$icon_step"
+                BACKGROUNDSVG_DISABLE="$icon_step"
+                BACKGROUNDSVG_HIGHLIGHT="$icon_step"
+                BACKGROUNDSVG_WIDTH="$cs_height_16"
+                BACKGROUNDSVG_HEIGHT="$cs_height_16"
+                backgroundimage_align="center"
+                backgroundimage_align_vertical="center"
+            />
         </viewgroup>
         <viewgroup 
             width="$w($g_lcdwidth,4.3)"
             height="$this.remain_bottom"
             >
             <label id="lbl_account_title_step_5" value="5" textcolor="$cs_color_disable" align="center" layout="center" fontsize="$h($g_lcdHeight,1.6)" layout_vertical="center" hidden="false"/>
-            <img  id="img_step_5" src="$cs_icon_top_title_chk_box" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
+            <label id="img_step_5" 
+                width="$cs_height_16" 
+                height="$cs_height_16"  
+                layout="center" 
+                layout_vertical="center" 
+                hidden="true" 
+                BACKGROUNDSVG="$icon_step"
+                BACKGROUNDSVG_DISABLE="$icon_step"
+                BACKGROUNDSVG_HIGHLIGHT="$icon_step"
+                BACKGROUNDSVG_WIDTH="$cs_height_16"
+                BACKGROUNDSVG_HEIGHT="$cs_height_16"
+                backgroundimage_align="center"
+                backgroundimage_align_vertical="center"
+            />
         </viewgroup>
         <viewgroup 
             width="$w($g_lcdwidth,4.3)"
             height="$this.remain_bottom"
             >
             <label id="lbl_account_title_step_6" value="6" textcolor="$cs_color_disable" align="center" layout="center" fontsize="$h($g_lcdHeight,1.6)" layout_vertical="center" hidden="false"/>
-            <img  id="img_step_6" src="$cs_icon_top_title_chk_box" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
+             <label id="img_step_6" 
+                width="$cs_height_16" 
+                height="$cs_height_16"  
+                layout="center" 
+                layout_vertical="center" 
+                hidden="true" 
+                BACKGROUNDSVG="$icon_step"
+                BACKGROUNDSVG_DISABLE="$icon_step"
+                BACKGROUNDSVG_HIGHLIGHT="$icon_step"
+                BACKGROUNDSVG_WIDTH="$cs_height_16"
+                BACKGROUNDSVG_HEIGHT="$cs_height_16"
+                backgroundimage_align="center"
+                backgroundimage_align_vertical="center"
+            />
         </viewgroup>
         <viewgroup 
             width="$w($g_lcdwidth,4.3)"
             height="$this.remain_bottom"
             >
             <label id="lbl_account_title_step_7" value="7" textcolor="$cs_color_disable" align="center" layout="center" fontsize="$h($g_lcdHeight,1.6)" layout_vertical="center" hidden="false"/>
-            <img  id="img_step_7" src="$cs_icon_top_title_chk_box" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
+            <label id="img_step_7" 
+                width="$cs_height_16" 
+                height="$cs_height_16"  
+                layout="center" 
+                layout_vertical="center" 
+                hidden="true" 
+                BACKGROUNDSVG="$icon_step"
+                BACKGROUNDSVG_DISABLE="$icon_step"
+                BACKGROUNDSVG_HIGHLIGHT="$icon_step"
+                BACKGROUNDSVG_WIDTH="$cs_height_16"
+                BACKGROUNDSVG_HEIGHT="$cs_height_16"
+                backgroundimage_align="center"
+                backgroundimage_align_vertical="center"
+            />
         </viewgroup>
         <viewgroup 
             width="$w($g_lcdwidth,4.3)"
             height="$this.remain_bottom"
             >
             <label id="lbl_account_title_step_8" value="8" textcolor="$cs_color_disable" align="center" layout="center" fontsize="$h($g_lcdHeight,1.6)" layout_vertical="center" hidden="false"/>
-            <img  id="img_step_8" src="$cs_icon_top_title_chk_box" width="$w($g_lcdwidth,3.2)" height="$h($g_lcdHeight,2.0)"  layout="center" layout_vertical="center" hidden="true" imagesizefit="false" />
+            <label id="img_step_8" 
+                width="$cs_height_16" 
+                height="$cs_height_16"  
+                layout="center" 
+                layout_vertical="center" 
+                hidden="true" 
+                BACKGROUNDSVG="$icon_step"
+                BACKGROUNDSVG_DISABLE="$icon_step"
+                BACKGROUNDSVG_HIGHLIGHT="$icon_step"
+                BACKGROUNDSVG_WIDTH="$cs_height_16"
+                BACKGROUNDSVG_HEIGHT="$cs_height_16"
+                backgroundimage_align="center"
+                backgroundimage_align_vertical="center"
+            />
         </viewgroup>
     </viewgroup>
     <br/>
@@ -334,7 +438,7 @@ value="
     if($menu_num < 1009){
         $setvar(
             pop_info_tip_lbl=$(고객님의 이름, 주민등록번호 및 휴대폰 인증을 진행해요.주민등록번호는 금융실명거래 및 비밀보장에 관한 법률에 근거하여 확인해요.)
-            ,pop_info_tip_height=$h($g_lcdHeight,9.9)
+            ,pop_info_tip_height=$cs_height_80
         )
     }elseif($menu_num < 4117){
         $setvar(
@@ -434,35 +538,40 @@ onunload="pop_info_tip_onunload"
     <screen id="screen_info_tip"
     width="$super.width" height="$super.height"
     >
-        <img id="pop_ingo_tip_img_polygon"
-        src="$cs_icon_polygon_5"
-        width="$h($g_lcdHeight,2.0)" 
-        height="$h($g_lcdHeight,2.0)"  
-        imagesizefit="false"
+        <label id="pop_ingo_tip_img_polygon"
+        width="$cs_height_16" 
+        height="$cs_height_16"  
+        BACKGROUNDSVG="$icon_polygon_5"
+        BACKGROUNDSVG_DISABLE="$icon_polygon_5"
+        BACKGROUNDSVG_HIGHLIGHT="$icon_polygon_5"
+        BACKGROUNDSVG_WIDTH="$cs_height_20"
+        BACKGROUNDSVG_HEIGHT="$cs_height_20"
+        backgroundimage_align="center"
+        backgroundimage_align_vertical="center"
         />
         <br/>
         <viewgroup
         y="$result($pop_ingo_tip_img_polygon.height - $h($g_lcdHeight,0.4));"
-        width="$w($g_lcdwidth,91.5)"
+        width="$cs_width_343"
         height="$pop_info_tip_height"
         border_width="1"
-        border_radius="$h($g_lcdHeight,1.3)"
-        backcolor="F3F4F5"
+        border_radius="$cs_radius_10"
+        backcolor="$cs_color_bg"
         layout="center"
-        margin_left="$h($g_lcdHeight,2.0)"
-        margin_right="$h($g_lcdHeight,2.0)"
-        margin_top="$h($g_lcdHeight,2.0)"
-        margin_bottom="$h($g_lcdHeight,2.0)"
+        margin_left="$cs_height_10"
+        margin_right="$cs_height_10"
+        margin_top="$cs_height_10"
+        margin_bottom="$cs_height_10"
         >
             <label
             width="$this.remain_right"
             height="$this.remain_bottom"
             multiline="true"
-            fontsize="$h($g_lcdHeight,1.6)"
+            fontsize="$cs_fontsize_13"
+            fontname="$cs_font_400"
             value="$pop_info_tip_lbl"
             align="left"
-            textcolor="737679"
-            fontsize="$h($g_lcdHeight,1.6)"
+            textcolor="$cs_color_text"
             />
         </viewgroup>
     </screen>
