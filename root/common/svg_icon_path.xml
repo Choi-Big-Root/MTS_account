@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<action id="fnSetSvgIconPath" scope="common" value="
+	$log(============== fnSetSvgIconPath);
+	$setvar_common(
+		,icon_arrow_left 		= $callaction(fnGetSvgIconPathName,arrow-left)
+
+		,icon_icon_1 			= $callaction(fnGetSvgIconPathName,icon-1)
+		,icon_icon_2 			= $callaction(fnGetSvgIconPathName,icon-2)
+		,icon_icon_3 			= $callaction(fnGetSvgIconPathName,icon-3)
+		,icon_icon_4 			= $callaction(fnGetSvgIconPathName,icon-4)
+
+		,icon_rectangle_230 			= $callaction(fnGetSvgIconPathName,rectangle-230 )
+
+		,icon_question 			= $callaction(fnGetSvgIconPathName,question)
+
+		,icon_checkbox_check_off 			= $callaction(fnGetSvgIconPathName,checkbox-check-off)
+		,icon_checkbox_check_on 			= $callaction(fnGetSvgIconPathName,checkbox-check-on)
+		,icon_checkbox_off 			= $callaction(fnGetSvgIconPathName,checkbox-off)
+		,icon_checkbox_on 			= $callaction(fnGetSvgIconPathName,checkbox-on)
+		,icon_checkbox_2 			= $callaction(fnGetSvgIconPathName,checkbox-2)
+
+	);
+" />
+<action id="fnGetSvgIconPathName" scope="common" 
+paramlog="false"
+value="
+	return $addstring($g_path_svg,$fnGetSvgIconPathName_param1,.svg);
+" />
