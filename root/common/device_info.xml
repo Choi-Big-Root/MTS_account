@@ -195,6 +195,7 @@ value="
 
 	$callaction(fnSetVarCommon,g_path_image_common_account,$($g_path_image+common/account/),경로);
 	$callaction(fnSetVarCommon,g_path_json,$($g_path_image+json/),경로);
+	$callaction(fnSetVarCommon,g_path_svg,$($g_path_image+svg/),경로);
 
 	$callaction(fnSetVarCommon,g_path_image_icon_skin,$($g_path_image_skin+icon/$g_DeviceIconDir),경로);
 	$callaction(fnSetVarCommon,g_path_image_common_skin,$($g_path_image_skin+common/),경로);	
@@ -259,6 +260,7 @@ value="
 	$callaction(fnSetIconPath);         // 아이콘 경로 셋팅 
 
 	$callaction(fnSetJsonIconPath);         // Json 아이콘 경로 셋팅 
+	$callaction(fnSetSvgIconPath);         // Svg 아이콘 경로 셋팅 
 
 	$callaction(fnSetInitContorlSize);
 
