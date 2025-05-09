@@ -39,7 +39,6 @@ value="
     width="$p_lcdWidth"
     height="$p_lcdHeight"
     onLoad="screen_main_onload"
-    //ani_backgroundJSON="$icon_arrow_left"
     >
     <button 
         width="$w($g_lcdWidth,38)" 

@@ -72,11 +72,15 @@ value="
 			layout_vertical="bottom"
 		>
 			<label 
-				ani_backgroundJSON="$icon_icon_1" 
 				width="$cs_height_50" 
 				height="$cs_height_50" 
-				ANI_JSON_WIDTH="$cs_height_50" 
-            	ANI_JSON_HEIGHT="$cs_height_50"
+            	BACKGROUNDSVG="$icon_icon_1"
+		        BACKGROUNDSVG_DISABLE="$icon_icon_1"
+		        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_1"
+		        BACKGROUNDSVG_WIDTH="$cs_height_50"
+		        BACKGROUNDSVG_HEIGHT="$cs_height_50"
+		        backgroundimage_align="center"
+		        backgroundimage_align_vertical="center"
 			/>
 			<blank width="$cs_width_15"/>
 			<label
@@ -89,11 +93,15 @@ value="
 			/>
 			<br height="$cs_height_30"/>
 			<label 
-				ani_backgroundJSON="$icon_icon_2"  
 				width="$cs_height_50" 
 				height="$cs_height_50" 
-				ANI_JSON_WIDTH="$cs_height_50" 
-            	ANI_JSON_HEIGHT="$cs_height_50"
+				BACKGROUNDSVG="$icon_icon_2"
+		        BACKGROUNDSVG_DISABLE="$icon_icon_2"
+		        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_2"
+		        BACKGROUNDSVG_WIDTH="$cs_height_50"
+		        BACKGROUNDSVG_HEIGHT="$cs_height_50"
+		        backgroundimage_align="center"
+		        backgroundimage_align_vertical="center"
 			/>
 			<blank width="$cs_width_15"/>
 			<label
@@ -106,11 +114,15 @@ value="
 			/>
 			<br height="$cs_height_30"/>
 			<label 
-				ani_backgroundJSON="$icon_icon_3"  
 				width="$cs_height_50" 
 				height="$cs_height_50" 
-				ANI_JSON_WIDTH="$cs_height_50" 
-            	ANI_JSON_HEIGHT="$cs_height_50"
+				BACKGROUNDSVG="$icon_icon_3"
+		        BACKGROUNDSVG_DISABLE="$icon_icon_3"
+		        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_3"
+		        BACKGROUNDSVG_WIDTH="$cs_height_50"
+		        BACKGROUNDSVG_HEIGHT="$cs_height_50"
+		        backgroundimage_align="center"
+		        backgroundimage_align_vertical="center"
 			/>
 			<blank width="$cs_width_15"/>
 			<label
@@ -224,10 +236,13 @@ value="
 				<label
 					width="$cs_width_4"
 					height="$cs_height_22"
-					ANI_JSON_WIDTH="$cs_height_4" 
-            		ANI_JSON_HEIGHT="$cs_height_4"
-            		ani_backgroundJSON="$icon_rectangle_230"
-            		backgroundimage_align_vertical="center"
+            		BACKGROUNDSVG="$icon_rectangle_230"
+			        BACKGROUNDSVG_DISABLE="$icon_rectangle_230"
+			        BACKGROUNDSVG_HIGHLIGHT="$icon_rectangle_230"
+			        BACKGROUNDSVG_WIDTH="$cs_height_4"
+			        BACKGROUNDSVG_HEIGHT="$cs_height_4"
+			        backgroundimage_align="center"
+			        backgroundimage_align_vertical="center"
 				/>
 				<blank width="$cs_width_5"/>
 				<label
@@ -245,10 +260,13 @@ value="
 				<label
 					width="$cs_width_4"
 					height="$cs_height_22"
-					ANI_JSON_WIDTH="$cs_height_4" 
-            		ANI_JSON_HEIGHT="$cs_height_4"
-            		ani_backgroundJSON="$icon_rectangle_230"
-            		backgroundimage_align_vertical="center"
+					BACKGROUNDSVG="$icon_rectangle_230"
+			        BACKGROUNDSVG_DISABLE="$icon_rectangle_230"
+			        BACKGROUNDSVG_HIGHLIGHT="$icon_rectangle_230"
+			        BACKGROUNDSVG_WIDTH="$cs_height_4"
+			        BACKGROUNDSVG_HEIGHT="$cs_height_4"
+			        backgroundimage_align="center"
+			        backgroundimage_align_vertical="center"
 				/>
 				<blank width="$cs_width_5"/>
 				<label
@@ -263,10 +281,13 @@ value="
 				<label
 					width="$cs_width_4"
 					height="$cs_height_22"
-					ANI_JSON_WIDTH="$cs_height_4" 
-            		ANI_JSON_HEIGHT="$cs_height_4"
-            		ani_backgroundJSON="$icon_rectangle_230"
-            		backgroundimage_align_vertical="center"
+					BACKGROUNDSVG="$icon_rectangle_230"
+			        BACKGROUNDSVG_DISABLE="$icon_rectangle_230"
+			        BACKGROUNDSVG_HIGHLIGHT="$icon_rectangle_230"
+			        BACKGROUNDSVG_WIDTH="$cs_height_4"
+			        BACKGROUNDSVG_HEIGHT="$cs_height_4"
+			        backgroundimage_align="center"
+			        backgroundimage_align_vertical="center"
 				/>
 				<blank width="$cs_width_5"/>
 				<label
@@ -311,10 +332,13 @@ value="
 				<label
 					width="$cs_width_4"
 					height="$cs_height_22"
-					ANI_JSON_WIDTH="$cs_height_4" 
-            		ANI_JSON_HEIGHT="$cs_height_4"
-            		ani_backgroundJSON="$icon_rectangle_230"
-            		backgroundimage_align_vertical="center"
+					BACKGROUNDSVG="$icon_rectangle_230"
+			        BACKGROUNDSVG_DISABLE="$icon_rectangle_230"
+			        BACKGROUNDSVG_HIGHLIGHT="$icon_rectangle_230"
+			        BACKGROUNDSVG_WIDTH="$cs_height_4"
+			        BACKGROUNDSVG_HEIGHT="$cs_height_4"
+			        backgroundimage_align="center"
+			        backgroundimage_align_vertical="center"
 				/>
 				<blank width="$cs_width_5"/>
 				<label
@@ -337,10 +361,13 @@ value="
 				<label
 					width="$cs_height_30" 
 					height="$cs_height_30"
-					ANI_JSON_WIDTH="$cs_height_30" 
-            		ANI_JSON_HEIGHT="$cs_height_30"
-            		ani_backgroundJSON="$icon_icon_4"
-            		//backgroundimage_align_vertical="center"
+            		BACKGROUNDSVG="$icon_icon_4"
+			        BACKGROUNDSVG_DISABLE="$icon_icon_4"
+			        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_4"
+			        BACKGROUNDSVG_WIDTH="$cs_height_30"
+			        BACKGROUNDSVG_HEIGHT="$cs_height_30"
+			        backgroundimage_align="center"
+			        backgroundimage_align_vertical="center"
 				/>
 				<label
 					width="$this.remain_right"
@@ -603,10 +630,13 @@ value="
 					<label
 						width="$cs_width_4"
 						height="$cs_height_22"
-						ANI_JSON_WIDTH="$cs_height_4" 
-	            		ANI_JSON_HEIGHT="$cs_height_4"
-	            		ani_backgroundJSON="$icon_rectangle_230"
-	            		backgroundimage_align_vertical="center"
+	            		BACKGROUNDSVG="$icon_rectangle_230"
+				        BACKGROUNDSVG_DISABLE="$icon_rectangle_230"
+				        BACKGROUNDSVG_HIGHLIGHT="$icon_rectangle_230"
+				        BACKGROUNDSVG_WIDTH="$cs_height_4"
+				        BACKGROUNDSVG_HEIGHT="$cs_height_4"
+				        backgroundimage_align="center"
+				        backgroundimage_align_vertical="center"
 					/>
 
 					<blank width="$cs_width_5"/>
@@ -644,10 +674,13 @@ value="
 					<label
 						width="$cs_width_4"
 						height="$cs_height_22"
-						ANI_JSON_WIDTH="$cs_height_4" 
-	            		ANI_JSON_HEIGHT="$cs_height_4"
-	            		ani_backgroundJSON="$icon_rectangle_230"
-	            		backgroundimage_align_vertical="center"
+						BACKGROUNDSVG="$icon_rectangle_230"
+				        BACKGROUNDSVG_DISABLE="$icon_rectangle_230"
+				        BACKGROUNDSVG_HIGHLIGHT="$icon_rectangle_230"
+				        BACKGROUNDSVG_WIDTH="$cs_height_4"
+				        BACKGROUNDSVG_HEIGHT="$cs_height_4"
+				        backgroundimage_align="center"
+				        backgroundimage_align_vertical="center"
 					/>
 
 					<blank width="$cs_width_5"/>
@@ -706,10 +739,13 @@ value="
 					<label
 						width="$cs_width_4"
 						height="$cs_height_22"
-						ANI_JSON_WIDTH="$cs_height_4" 
-	            		ANI_JSON_HEIGHT="$cs_height_4"
-	            		ani_backgroundJSON="$icon_rectangle_230"
-	            		backgroundimage_align_vertical="center"
+						BACKGROUNDSVG="$icon_rectangle_230"
+				        BACKGROUNDSVG_DISABLE="$icon_rectangle_230"
+				        BACKGROUNDSVG_HIGHLIGHT="$icon_rectangle_230"
+				        BACKGROUNDSVG_WIDTH="$cs_height_4"
+				        BACKGROUNDSVG_HEIGHT="$cs_height_4"
+				        backgroundimage_align="center"
+				        backgroundimage_align_vertical="center"
 					/>
 
 					<blank width="$cs_width_5"/>
@@ -732,10 +768,13 @@ value="
 					<label
 						width="$cs_width_4"
 						height="$cs_height_22"
-						ANI_JSON_WIDTH="$cs_height_4" 
-	            		ANI_JSON_HEIGHT="$cs_height_4"
-	            		ani_backgroundJSON="$icon_rectangle_230"
-	            		backgroundimage_align_vertical="center"
+						BACKGROUNDSVG="$icon_rectangle_230"
+				        BACKGROUNDSVG_DISABLE="$icon_rectangle_230"
+				        BACKGROUNDSVG_HIGHLIGHT="$icon_rectangle_230"
+				        BACKGROUNDSVG_WIDTH="$cs_height_4"
+				        BACKGROUNDSVG_HEIGHT="$cs_height_4"
+				        backgroundimage_align="center"
+				        backgroundimage_align_vertical="center"
 					/>
 
 					<blank width="$cs_width_5"/>
@@ -759,9 +798,13 @@ value="
 				<label
 					width="$cs_height_30" 
 					height="$cs_height_30"
-					ANI_JSON_WIDTH="$cs_height_30" 
-            		ANI_JSON_HEIGHT="$cs_height_30"
-            		ani_backgroundJSON="$icon_icon_4"
+            		BACKGROUNDSVG="$icon_icon_4"
+			        BACKGROUNDSVG_DISABLE="$icon_icon_4"
+			        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_4"
+			        BACKGROUNDSVG_WIDTH="$cs_height_30"
+			        BACKGROUNDSVG_HEIGHT="$cs_height_30"
+			        backgroundimage_align="center"
+			        backgroundimage_align_vertical="center"
 				/>
 				<label
 					width="$this.remain_right"
