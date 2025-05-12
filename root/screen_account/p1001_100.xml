@@ -545,25 +545,80 @@ value="
 				margin_left="$cs_width_21"
 				margin_right="$cs_width_21"
 			>
-				<label
-					width="$cs_height_22"
+				<checkbox id="chk_1001_2gr_all"
+					width="$cs_width_57"
 					height="$this.remain_bottom"
-					BACKGROUNDSVG="$icon_checkbox_check_on"
-					BACKGROUNDSVG_DISABLE="$icon_checkbox_check_on"
-					BACKGROUNDSVG_HIGHLIGHT="$icon_checkbox_check_on"
+					fontsize="$cs_fontsize_14"
+					fontname="$cs_font_400"
+					textcolor="$cs_color_text"
+					margin_left="$result($cs_height_22 + $cs_width_10)"
+					CHECKIMAGESVG="$icon_checkbox_check_on" 
+					UNCHECKIMAGESVG="$icon_checkbox_check_off"
+					CHECKIMAGESVG_DISABLE="$icon_checkbox_check_off"
 					BACKGROUNDSVG_WIDTH="$cs_height_22"
 					BACKGROUNDSVG_HEIGHT="$cs_height_22"
-					backgroundimage_align="center"
+					backgroundimage_align="left"
 					backgroundimage_align_vertical="center"
-				/>
-				<blank width="$cs_width_10"/>
-				<label
-					width="$cs_width_23"
-					height="$this.remain_bottom"
-					fontsize="$cs_fontsize_16"
-					fontname="$cs_font_600"
-					textcolor="232B2B"
 					value="전체"
+					checked="true"
+					onclicked="Act_chk_2gr_all_onclicked"
+				/>
+				<blank width="$cs_width_15"/>
+				<checkbox id="chk_1001_2gr_1"
+					width="$cs_width_60"
+					height="$this.remain_bottom"
+					fontsize="$cs_fontsize_14"
+					fontname="$cs_font_400"
+					textcolor="$cs_color_text"
+					margin_left="$result($cs_height_22 + $cs_width_10)"
+					CHECKIMAGESVG="$icon_checkbox_check_on" 
+					UNCHECKIMAGESVG="$icon_checkbox_check_off"
+					CHECKIMAGESVG_DISABLE="$icon_checkbox_check_off"
+					BACKGROUNDSVG_WIDTH="$cs_height_22"
+					BACKGROUNDSVG_HEIGHT="$cs_height_22"
+					backgroundimage_align="left"
+					backgroundimage_align_vertical="center"
+					value="SMS"
+					checked="true"
+					onclicked="Act_chk_2gr_onclicked"
+				/>
+				<blank width="$cs_width_15"/>
+				<checkbox id="chk_1001_2gr_2"
+					width="$cs_width_57"
+					height="$this.remain_bottom"
+					fontsize="$cs_fontsize_14"
+					fontname="$cs_font_400"
+					textcolor="$cs_color_text"
+					margin_left="$result($cs_height_22 + $cs_width_10)"
+					CHECKIMAGESVG="$icon_checkbox_check_on" 
+					UNCHECKIMAGESVG="$icon_checkbox_check_off"
+					CHECKIMAGESVG_DISABLE="$icon_checkbox_check_off"
+					BACKGROUNDSVG_WIDTH="$cs_height_22"
+					BACKGROUNDSVG_HEIGHT="$cs_height_22"
+					backgroundimage_align="left"
+					backgroundimage_align_vertical="center"
+					value="전화"
+					checked="true"
+					onclicked="Act_chk_2gr_onclicked"
+				/>
+				<blank width="$cs_width_15"/>
+				<checkbox id="chk_1001_2gr_3"
+					width="$cs_width_69"
+					height="$this.remain_bottom"
+					fontsize="$cs_fontsize_14"
+					fontname="$cs_font_400"
+					textcolor="$cs_color_text"
+					margin_left="$result($cs_height_22 + $cs_width_10)"
+					CHECKIMAGESVG="$icon_checkbox_check_on" 
+					UNCHECKIMAGESVG="$icon_checkbox_check_off"
+					CHECKIMAGESVG_DISABLE="$icon_checkbox_check_off"
+					BACKGROUNDSVG_WIDTH="$cs_height_22"
+					BACKGROUNDSVG_HEIGHT="$cs_height_22"
+					backgroundimage_align="left"
+					backgroundimage_align_vertical="center"
+					value="이메일"
+					checked="true"
+					onclicked="Act_chk_2gr_onclicked"
 				/>
 			</viewgroup>
 		</viewgroup>
@@ -587,7 +642,7 @@ value="
 				textcolor_active="$cs_color_black"
 				value="건너뛰기"
 				key="1"
-				onClicked="btn_pop_1001_100_1_confirm_onClicked"
+				onClicked="$callaction(btn_pop_1001_100_1_confirm_onClicked,$this.key);"
 			/>
 			<button id="btn_1001_100_confirm"
 				width="$cs_width_235" 
@@ -602,24 +657,123 @@ value="
 				textcolor_active="$cs_color_white"
 				value="동의해요"
 				key="2"
-				onclicked="btn_pop_1001_100_1_confirm_onClicked"	
+				onClicked="$callaction(btn_pop_1001_100_1_confirm_onClicked,$this.key);"
 			/>
 		</viewgroup>
 	</screen>
 </popscreen>
-<action id="btn_pop_1001_100_1_confirm_onClicked"
+<action id="Act_chk_2gr_all_onclicked"
 value="
+	if($chk_1001_2gr_all.checked){
+		$setvar(
+			chk_1001_2gr_1.checked = true
+			,chk_1001_2gr_2.checked = true
+			,chk_1001_2gr_3.checked = true
+		);
+	}
+	else{
+		$setvar(
+			chk_1001_2gr_1.checked = false
+			,chk_1001_2gr_2.checked = false
+			,chk_1001_2gr_3.checked = false
+		);
+	}
+"/>
+<action id="Act_chk_2gr_onclicked"
+value="
+	if($chk_1001_2gr_1.checked
+	&& $chk_1001_2gr_2.checked
+	&& $chk_1001_2gr_3.checked
+	){
+		$setvar(
+			chk_1001_2gr_all.checked = true
+		);
+	}
+	else{
+		$setvar(
+			chk_1001_2gr_all.checked = false
+		);
+	}
+"/>
+//여기서 전부 필요한 데이터를 다음 화면으로 넘겨야 하기에 정의 되어야한다.
+<action id="btn_pop_1001_100_1_confirm_onClicked"
+params="p_key"
+value="
+	if($p_key == 2){
+		if(!$chk_1001_2gr_1.checked 
+		&& !$chk_1001_2gr_2.checked 
+		&& !$chk_1001_2gr_3.checked
+		){
+			$alert(,,안내 방법을 하나 이상 선택해 주세요.);
+			return;
+		}
+	}
+
+	if($vg_1001_100_agree_kind.selectkey == 2){					// 필수동의서 - 요약동의서
+		$callaction(fnConfig_SetValue,g_IN_AGREE_ITEM1 	,NY); 	// 요약동의서
+	}
+	else{														// 필수동의서 - 전체동의서
+		$callaction(fnConfig_SetValue,g_IN_AGREE_ITEM1 	,YY); 	// 전체동의서
+	}
+
+	$setvar(tmp_mo_f1 = );
+	if($isequal_string($g_IN_AGREE_ITEM1,NY)){
+		$setvar(tmp_mo_f1 = $addstring($tmp_mo_f1,Y)); 		//요약동의서
+	}
+	else{
+		$setvar(tmp_mo_f1 = $addstring($tmp_mo_f1,N)); 		//전체동의서
+	}
+
+	if($btn_4_1.checked){								
+		$setvar(tmp_mo_f1 = $addstring($tmp_mo_f1,Y));		// 개인(신용)정보 수집/이용에 관한 사항 - 선택
+	}
+	else{															
+		$setvar(tmp_mo_f1 = $addstring($tmp_mo_f1,N));
+	}
+
+	if($p_key == 2){
+		$setvar(tmp_mo_f1 = $addstring($tmp_mo_f1,Y));
+	}else{
+		$setvar(tmp_mo_f1 = $addstring($tmp_mo_f1,N));
+	}
+
+	// 정보수신 - 연락방식
+	$setvar(tmp_mo = );
+	if($p_key == 2){
+		if($chk_1001_2gr_1.checked){ 		$setvar(tmp_mo = $addstring($tmp_mo,Y));		}
+		else{								$setvar(tmp_mo = $addstring($tmp_mo,N));		}
+		if($chk_1001_2gr_2.checked){ 		$setvar(tmp_mo = $addstring($tmp_mo,Y));		}
+		else{								$setvar(tmp_mo = $addstring($tmp_mo,N));		}
+		if($chk_1001_2gr_3.checked){ 		$setvar(tmp_mo = $addstring($tmp_mo,Y));		}
+		else{								$setvar(tmp_mo = $addstring($tmp_mo,N));		}
+	}
+	else{
+		$setvar(tmp_mo = $addstring($tmp_mo,NNN));
+	}
+
+	$logvar(tmp_mo);
+
+	$setvar(tmp_mo_f2 = );
+	if($isequal_string($tmp_mo,YYY)){
+		$setvar(tmp_mo_f2 = NYYYN);
+	}
+	elseif($isequal_string($tmp_mo,NNN)){
+		$setvar(tmp_mo_f2 = NNNNY);
+	}
+	else{
+		$setvar(tmp_mo_f2 = $addstring($tmp_mo_f2,N,$tmp_mo,N));
+	}
+
+	$callaction(fnConfig_SetValue,g_IN_AGREE_ITEM2 	,$tmp_mo_f1); 		// 개인정보선택동의 
+	$callaction(fnConfig_SetValue,g_IN_AGREE_ITEM3 	,$tmp_mo_f2); 		// 연락방식- 전체,SMS,전화,이메일,우편:NYYYN
+
+	$log(
+		확인용 : 
+			1001 g_IN_AGREE_ITEM1[$g_IN_AGREE_ITEM1],
+			1001 g_IN_AGREE_ITEM2[$g_IN_AGREE_ITEM2],
+			1001 g_IN_AGREE_ITEM3[$g_IN_AGREE_ITEM3],
+	);
 	$closescreen(pop_1001_100_1);
-
-	if($vg_1001_100_agree_kind.selectkey == 2){										// 필수동의서 - 요약동의서
-		$callaction(fnConfig_SetValue,g_IN_AGREE_ITEM1 	,NY); 			// 요약동의서
-	}
-	else{																// 필수동의서 - 전체동의서
-		$callaction(fnConfig_SetValue,g_IN_AGREE_ITEM1 	,YY); 			// 전체동의서
-	}
-
-	$log(확인용 : g_IN_AGREE_ITEM1[$g_IN_AGREE_ITEM1]);
-
 	$callaction(Act_Open_Account_Popup, 1002);
 "/>
 
@@ -637,35 +791,35 @@ value="
 	if($vg_1001_100_agree_kind.selectkey == 1){ 		//상세동의서
 		$setvar( 	popscreen_html = $addstring(1001_100_,$p_key,_n_htmldata,_d)	);
 		if($isequal_string($p_key,1_1)){
-			$setvar( 	html_pop_height = $h($g_lcdHeight,210)	);
+			$setvar( 	html_pop_height = $h($g_lcdHeight,175)	);
 		}
 		elseif($isequal_string($p_key,2_1)){
-			$setvar( 	html_pop_height = $h($g_lcdHeight,135)	);
+			$setvar( 	html_pop_height = $h($g_lcdHeight,125)	);
 		}
 		elseif($isequal_string($p_key,2_2)){
-			$setvar( 	html_pop_height = $h($g_lcdHeight,160)	);
+			$setvar( 	html_pop_height = $h($g_lcdHeight,145)	);
 		}
 		elseif($isequal_string($p_key,3_1)){
-			$setvar( 	html_pop_height = $h($g_lcdHeight,185)	);
+			$setvar( 	html_pop_height = $h($g_lcdHeight,160)	);
 		}
 		elseif($isequal_string($p_key,4_1)){
-			$setvar( 	html_pop_height = $h($g_lcdHeight,110)	);
+			$setvar( 	html_pop_height = $h($g_lcdHeight,105)	);
 		}
 	}
 	else{												//요약동의서 
 		$setvar(	popscreen_html = $addstring(1001_100_,$p_key,_n_htmldata)	);
 		// htmlview height 지정해야 함.
 		if($isequal_string($p_key,1_1)){
-			$setvar( 	html_pop_height = $h($g_lcdHeight,140)	);
-		}
-		elseif($isequal_string($p_key,2_1)){
 			$setvar( 	html_pop_height = $h($g_lcdHeight,135)	);
 		}
-		elseif($isequal_string($p_key,2_2)){
+		elseif($isequal_string($p_key,2_1)){
 			$setvar( 	html_pop_height = $h($g_lcdHeight,130)	);
 		}
+		elseif($isequal_string($p_key,2_2)){
+			$setvar( 	html_pop_height = $h($g_lcdHeight,125)	);
+		}
 		elseif($isequal_string($p_key,3_1)){
-			$setvar( 	html_pop_height = $h($g_lcdHeight,160)	);
+			$setvar( 	html_pop_height = $h($g_lcdHeight,145)	);
 		}
 		elseif($isequal_string($p_key,4_1)){
 			$setvar( 	html_pop_height = $h($g_lcdHeight,110)	);
