@@ -430,7 +430,7 @@ value="
     $delvar(tmp_img_id,tmp_info_pop_x,tmp_info_pop_y);
     $setvar(
         ,tmp_img_id = $addstring(img_pop_info_,$menu_num)
-        ,$($tmp_img_id).src=$cs_icon_x_mark
+        ,$($tmp_img_id).BACKGROUNDSVG=$icon_cancel
         ,tmp_info_pop_x = $p_x
         ,tmp_info_pop_y = $p_y
 
@@ -525,7 +525,7 @@ value="
     $setvar(
         pop_info_tip_open_check=false
         ,tmp_img_id = $addstring(img_pop_info_,$menu_num)
-        ,$($tmp_img_id).src=$cs_icon_q_mark
+        ,$($tmp_img_id).BACKGROUNDSVG=$icon_question
     );
 " />
 
