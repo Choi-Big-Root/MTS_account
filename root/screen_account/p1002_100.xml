@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *********************************************************************************
+ **
+ ** 화면을 그린 후에 필요한 작업을 한다. 
+ ** - TR을 배열에 담는다. 전송은 특이한 경우가 아니면 basescreen에서 일괄적으로 전송한다.
+ **
+ *********************************************************************************
+ -->
+<actiondata value="
+$readfile(plist/root/html/1002_100_1.html,4102_htmldata_1);
+$readfile(plist/root/html/1002_100_2.html,4102_htmldata_2);
+$readfile(plist/root/html/1002_100_3.html,4102_htmldata_3);
+$readfile(plist/root/html/1002_100_4.html,4102_htmldata_4);
+$readfile(plist/root/html/1002_100_5.html,4102_htmldata_5);
+"/>	
+<action id="screen_contents_onload" value="
+	$log(확인용);
+	$setvar(
+		,img_step_1.hidden=false
+		,img_step_2.hidden=true
+		,img_step_3.hidden=true
+		,img_step_4.hidden=true
+		,img_step_5.hidden=true
+		,img_step_6.hidden=true
+		,img_step_7.hidden=true
+		,img_step_8.hidden=true
+
+		,lbl_account_title_step_1.hidden=true
+		,lbl_account_title_step_2.hidden=false
+		,lbl_account_title_step_3.hidden=false
+		,lbl_account_title_step_4.hidden=false
+		,lbl_account_title_step_5.hidden=false
+		,lbl_account_title_step_6.hidden=false
+		,lbl_account_title_step_7.hidden=false
+		,lbl_account_title_step_8.hidden=false
+
+		,lbl_account_title_step_1.textcolor=$cs_color_disable
+		,lbl_account_title_step_2.textcolor=$cs_color_black
+		,lbl_account_title_step_3.textcolor=$cs_color_disable
+		,lbl_account_title_step_4.textcolor=$cs_color_disable
+		,lbl_account_title_step_5.textcolor=$cs_color_disable
+		,lbl_account_title_step_6.textcolor=$cs_color_disable
+		,lbl_account_title_step_7.textcolor=$cs_color_disable
+		,lbl_account_title_step_8.textcolor=$cs_color_disable
+
+
+		,lbl_account_title_step_1.fontname=$cs_font_400
+		,lbl_account_title_step_2.fontname=$cs_font_600
+		,lbl_account_title_step_3.fontname=$cs_font_400
+		,lbl_account_title_step_4.fontname=$cs_font_400
+		,lbl_account_title_step_5.fontname=$cs_font_400
+		,lbl_account_title_step_6.fontname=$cs_font_400
+		,lbl_account_title_step_7.fontname=$cs_font_400
+		,lbl_account_title_step_8.fontname=$cs_font_400
+
+
+		,vg_open_account_title.backcolor=FFFFFF
+		,popscreen_open_account_history.hidden=false
+		,vg_account_title_step.hidden = false
+
+		,menu_num=1002
+	);
+	//초기화 
+	$callaction(fnConfig_SetValue,g_tf_4102_confirm_2_var,);
+	$callaction(fnConfig_SetValue,g_tf_4102_confirm_2_encvar,);
+	$callaction(fnConfig_SetValue,g_IN_AGREE_RMN_NO,);
+
+"/>
+
+<action id="screen_1002_100_onunload" 
+value="
+	$stopnstimer(TIMER_SMS_INPUT); 
+
+	$delvar(
+		4102_htmldata_1
+		,4102_htmldata_2
+		,4102_htmldata_3
+		,4102_htmldata_4
+		,4102_htmldata_5
+	);
+" />
+<action id="btn_pop_info_1002_100_onClicked"
+value="
+	$setvar(
+		tmp_pop_info_x_cal = $result($img_pop_info_1002.x_abs + $w($g_lcdwidth,0.6))
+		,tmp_pop_imfo_y_cal = $result($img_pop_info_1002.y_abs + $h($g_lcdHeight,2.6))
+	);
+	$callaction(popscreen_open_account_confirm_onclicked,$tmp_pop_info_x_cal,$tmp_pop_imfo_y_cal);
+"/>
+<action id="fnBtnAfConfirmCheck"
+value="
+	if($strlen($tf_4102_confirm_1.value) > 0 
+	&& $strlen($g_tf_4102_confirm_2_var) > 0
+	&& $strlen($tf_4102_confirm_3.value) > 0
+	&& $4102_phone_choice.key != -1
+	){
+		return true;
+	}else{
+		return false;
+	}
+"/>
+<screen id="screen_1002_100"
+	class="cs_screen_contents"
+	backcolor="ffffff"
+	onload="screen_contents_onload"
+	onunload="screen_1002_100_onunload"
+	noscroll_height="true"
+	margin_bottom="$cs_height_20"
+>
+	<br height="$cs_height_15"/>
+	<viewgroup
+		width="$this.remain_right"
+		height="$cs_height_386"
+		margin_left="$cs_width_16"
+		margin_right="$cs_width_16"
+	>
+		<viewgroup
+			width="$this.remain_right"
+			height="$cs_height_98"
+		>
+			<label
+				width="$cs_width_56"
+				height="$cs_height_20"
+				fontsize="$cs_fontsize_15"
+				fontname="$cs_font_400"
+				textcolor="$cs_color_text"
+				align="left"
+				value="본인인증"
+			/>
+			<label 
+	        	id="img_pop_info_1002" 
+	        	width="$cs_height_20"
+	        	height="$cs_height_20"
+	            BACKGROUNDSVG="$icon_question"
+				BACKGROUNDSVG_DISABLE="$icon_question"
+				BACKGROUNDSVG_HIGHLIGHT="$icon_question"
+				BACKGROUNDSVG_WIDTH="$cs_height_20"
+				BACKGROUNDSVG_HEIGHT="$cs_height_20"
+				backgroundimage_align="center"
+				backgroundimage_align_vertical="center"
+				hidden="false"
+	        />
+			<viewgroup 
+				x="$w($g_lcdWidth,0)" 
+				width="$w($g_lcdWidth,25)" 
+				height="$h($g_lcdHeight,4.5)"
+			>
+		        <button id="btn_pop_info_1002_100" class="cs_button_none" onClicked="btn_pop_info_1002_100_onClicked"/>
+	   		</viewgroup>
+	   		<br/>
+	   		<viewgroup
+	   			width="$this.remain_right"
+	   			height="$cs_height_68"
+	   			layout_vertical="bottom"
+	   		>
+	   			<label
+	   				width="$this.remain_right"
+	   				height="$cs_height_34"
+	   				textcolor="$cs_color_black"
+	   				fontsize="$cs_fontsize_24"
+	   				fontname="$cs_font_600"
+	   				value="본인 확인을 위해"
+	   			/>
+	   			<br/>
+	   			<label
+	   				width="$this.remain_right"
+	   				height="$cs_height_34"
+	   				textcolor="$cs_color_black"
+	   				fontsize="$cs_fontsize_24"
+	   				fontname="$cs_font_600"
+	   				value="정보를 입력해 주세요."
+	   			/>
+	   		</viewgroup>
+		</viewgroup>
+		<br height="$cs_height_16" />
+		<viewgroup
+			width="$this.remain_right"
+			height="$this.remain_bottom"
+		>
+			<viewgroup id="vg_1002_100_input_3"
+				width="$this.remain_right"
+				height="$cs_height_76"
+				margin_top="$cs_height_18"
+				margin_bottom="$cs_height_18"
+				margin_left="$cs_width_20"
+				border_radius="$cs_radius_10"
+				border_color="$cs_color_line"
+				hidden="true"
+			>
+				<label
+					width="$this.remain_right"
+					height="$cs_height_14"
+					textcolor="$cs_color_text"
+					fontsize="$cs_fontsize_12"
+					fontname="$cs_font_400"
+					value="휴대폰번호"
+				/>
+				<br height="$cs_height_2" />
+				<label id="4102_phone_choice"
+					width="$cs_width_90" 
+					height="$cs_height_24"
+					textcolor="$cs_color_black"
+					fontsize="$cs_fontsize_16"
+					fontname="$cs_font400"
+					value="통신사"
+					key="-1" 
+					onclicked="1002_phone_onclicked"
+					BACKGROUNDSVG="$icon_polygon_3"
+			        BACKGROUNDSVG_DISABLE="$icon_polygon_3"
+			        BACKGROUNDSVG_HIGHLIGHT="$icon_polygon_3"
+			        BACKGROUNDSVG_WIDTH="$cs_width_10"
+			        BACKGROUNDSVG_HEIGHT="$cs_height_8"
+			        backgroundimage_align="right"
+			        backgroundimage_align_vertical="center"
+				/>
+
+				<blank width="$cs_width_10"/>
+
+				<!-- <label
+					width="$this.remain_right" 
+					height="$cs_height_24"
+					textcolor="$cs_color_black"
+					fontsize="$cs_fontsize_16"
+					fontname="$cs_font400"
+					value="010-0000-0000"
+				/> -->
+				<textfield id="tf_4102_confirm_3"
+					width="$this.remain_right" 
+					height="$cs_height_24"
+					keyboard_type="number"
+					maxlength="11"
+					placeholder="010-1234-5678"
+					textcolor_placeholder="$cs_color_disable"
+					textcolor="$cs_color_black"
+					fontsize="$cs_fontsize_16"
+					fontname="$cs_font400"
+					clearbutton="true"
+					/>
+			</viewgroup>
+			<br height="$cs_height_20" />
+			<viewgroup id="vg_1002_100_input_2"
+				width="$this.remain_right"
+				height="$cs_height_76"
+				margin_top="$cs_height_18"
+				margin_bottom="$cs_height_18"
+				margin_left="$cs_width_20"
+				border_radius="$cs_radius_10"
+				border_color="$cs_color_line"
+				hidden="true"
+
+				x="$vg_1002_100_input_3.x"
+				y="$vg_1002_100_input_3.y"
+			>
+				<label
+					width="$this.remain_right"
+					height="$cs_height_14"
+					textcolor="$cs_color_text"
+					fontsize="$cs_fontsize_12"
+					fontname="$cs_font_400"
+					value="주민등록번호"
+				/>
+				<br/>
+				<textfield_security id="tf_4102_confirm_2"
+					width="$this.remain_right" 
+					height="$cs_height_24"
+					keyboard_type="number"
+					maxlength="13"
+					placeholder="주민등록번호 13자리 ‘-’ 없이 입력"
+					textcolor_placeholder="$cs_color_disable"
+					textcolor="$cs_color_black"
+					fontsize="$cs_fontsize_16"
+					fontname="$cs_font400"
+					valuevar="g_tf_4102_confirm_2_var"
+					valueencvar="g_tf_4102_confirm_2_encvar"
+					valuevar_common="true"
+					input_type="number"
+					align="left"
+					returntype="done"
+					description="주민등록번호"
+					hint="주민등록번호 13자리 ‘-’ 없이 입력"
+					onChanged="tf_4102_confirm_2_onchanged"
+				/>
+			</viewgroup>
+			<br height="$cs_height_20" />
+			<viewgroup id="vg_1002_100_input_1"
+				width="$this.remain_right"
+				height="$cs_height_76"
+				margin_top="$cs_height_18"
+				margin_bottom="$cs_height_18"
+				margin_left="$cs_width_20"
+				border_radius="$cs_radius_10"
+				border_color="$cs_color_line"
+
+				x="$vg_1002_100_input_3.x"
+				y="$vg_1002_100_input_3.y"
+			>
+				<label
+					width="$this.remain_right"
+					height="$cs_height_14"
+					textcolor="$cs_color_text"
+					fontsize="$cs_fontsize_12"
+					fontname="$cs_font_400"
+					value="이름"
+				/>
+				<br/>
+				<textfield id="tf_4102_confirm_1"
+					width="$this.remain_right" 
+					height="$cs_height_24"
+					keyboard_type="text"
+					maxlength="10"
+					placeholder="이름입력"
+					textcolor_placeholder="$cs_color_disable"
+					textcolor="$cs_color_black"
+					fontsize="$cs_fontsize_16"
+					fontname="$cs_font400"
+				/>
+			</viewgroup>
+		</viewgroup>
+	</viewgroup>	
+	<br/>
+	<viewgroup
+		width="$cs_width_343"
+		height="$cs_height_54"
+		layout="center"
+		layout_vertical="bottom"
+	>
+		<button 
+			width="$cs_width_167_5" 
+			height="$this.remain_bottom"
+			layout="left"
+			backcolor="$cs_color_white"
+			border_width="1"
+			border_radius="$cs_height_10"
+			border_color="$cs_color_disable"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_black"
+			textcolor_active="$cs_color_black"
+			value="이전"
+			onClicked="btn_open_account_history_onClicked"
+		/>
+		<button id="btn_4102_af"
+			width="$cs_width_167_5" 
+			height="$this.remain_bottom"
+			layout="right"
+			backcolor="$cs_color_main"
+			backcolor_disable="b9d8fb"
+			border_width="1"
+			border_radius="$cs_height_10"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_white"
+			textcolor_active="$cs_color_white"
+			textcolor_disable="$cs_color_white"
+			value="다음"
+			onclicked="btn_4102_confirm_onclicked"
+			enable="false"
+		/>
+	</viewgroup>
+</screen>
+
+
+<action id="1002_phone_onclicked" 
+value="
+	$log(선택:$this.key);
+	$popscreen(popscreen_4102_phone_choice);
+"/>
+
+<class id="css_4102_td_combo" 
+width="$super.width"
+height="$super.height" 
+align="center"
+fontsize="$g_fontSize_basic" 
+fontname="$g_baseFontName"
+textcolor="bbbbbb"
+textcolor_active="222222"
+/>
+<class id="cs_lbl_1002_100_telecom"
+width="$this.remain_right"
+height="$cs_height_48"
+textcolor="$cs_color_black"
+fontsize="$cs_fontsize_15"
+fontname="$cs_font_400"
+onClicked="lbl_1002_100_telecom_onclciked"
+/>	
+
+<action id="lbl_1002_100_telecom_onclciked"
+value="
+	$setvar(
+		4102_phone_choice_set_key=$this.key
+		,4102_phone_choice_set_val=$this.value
+	);
+
+	$setvar(
+		4102_phone_select_key=$4102_phone_choice_set_key
+		,4102_phone_choice.key=$4102_phone_choice_set_key
+		,4102_phone_choice.value=$4102_phone_choice_set_val
+	);
+
+	$logvar(
+		4102_phone_select_key
+		,4102_phone_choice.value
+	);
+	if($4102_phone_select_key==1){ 		// skt,kt,lg : 1,2,3
+		$memcpy(4102_htmldata_phone,4102_htmldata_2);
+		$setvar(g_4102_html_phone = 4102_htmldata_2);
+	}
+	elseif($4102_phone_select_key==2){ 		
+		$memcpy(4102_htmldata_phone,4102_htmldata_3);
+		$setvar(g_4102_html_phone = 4102_htmldata_3);
+	}
+	elseif($4102_phone_select_key==3){ 		
+		$memcpy(4102_htmldata_phone,4102_htmldata_4);
+		$setvar(g_4102_html_phone = 4102_htmldata_4);
+	}
+	if($4102_phone_select_key==5){ 		// SKT //알뜰폰: 5,6,7
+		$memcpy(4102_htmldata_phone,4102_htmldata_2);
+		$setvar(g_4102_html_phone = 4102_htmldata_2);
+	}
+	elseif($4102_phone_select_key==6){ 	// KT
+		$memcpy(4102_htmldata_phone,4102_htmldata_3);
+		$setvar(g_4102_html_phone = 4102_htmldata_3);
+	}
+	elseif($4102_phone_select_key==7){ 	// LGU+
+		$memcpy(4102_htmldata_phone,4102_htmldata_4);
+		$setvar(g_4102_html_phone = 4102_htmldata_4);
+	}
+
+	$setvar( btn_4102_af.enable = $callaction(fnBtnAfConfirmCheck));
+	$closescreen(popscreen_4102_phone_choice);
+"/>
+
+<action id="popscreen_4102_phone_choice_onload"
+value="
+"/>
+<popscreen id="popscreen_4102_phone_choice"
+	width="$p_lcdWidth"
+	height="$p_lcdHeight"
+	backcolor="00000060"
+	onload="popscreen_4102_phone_choice_onload"
+>
+	<screen id="pop_1002_100_1_screen"
+		width="$this.remain_right"
+		layout="center"
+		layout_vertical="bottom"
+		height="$cs_height_392"
+		background_roundinfo="$cs_color_white,$cs_color_white,$cs_radius_30,1,true,true,false,false"
+	>
+		<br height="$cs_height_30" />
+		<viewgroup
+			width="$this.remain_right"
+			height="$cs_height_333"
+			margin_left="$cs_width_23"
+			margin_right="$cs_width_23"
+		>
+			<label
+				width="$this.remain_right"
+				height="$cs_height_25"
+				textcolor="$cs_color_black"
+				fontsize="$cs_fontsize_18"
+				fontname="$cs_font_700"
+				value="통신사를 선택해주세요"
+				onclicked="$closescreen(popscreen_4102_phone_choice);" 
+			/>
+			<br height="$cs_height_20" />	
+			<label
+				class="cs_lbl_1002_100_telecom"
+				key="1"
+				value="SKT"
+			/>
+			<br/>
+			<label
+				class="cs_lbl_1002_100_telecom"
+				key="2"
+				value="KT"
+			/>
+			<br/>
+			<label
+				class="cs_lbl_1002_100_telecom"
+				key="3"
+				value="LG U+"
+			/>
+			<br/>
+			<label
+				class="cs_lbl_1002_100_telecom"
+				key="5"
+				value="SKT 알뜰폰"
+			/>
+			<br/>
+			<label
+				class="cs_lbl_1002_100_telecom"
+				key="6"
+				value="KT 알뜰폰"
+			/>
+			<br/>
+			<label
+				class="cs_lbl_1002_100_telecom"
+				key="7"
+				value="LG U+ 알뜰폰"
+			/>
+		</viewgroup>
+	</screen>
+	<br/>
+	<label
+		x="$result($popscreen_4102_phone_choice.width - $cs_height_50)" 
+		y="$result($pop_1002_100_1_screen.y)"
+    	width="$cs_height_50"
+    	height="$cs_height_50"
+        BACKGROUNDSVG="$icon_cancel"
+		BACKGROUNDSVG_DISABLE="$icon_cancel"
+		BACKGROUNDSVG_HIGHLIGHT="$icon_cancel"
+		BACKGROUNDSVG_WIDTH="$cs_height_20"
+		BACKGROUNDSVG_HEIGHT="$cs_height_20"	
+		backgroundimage_align="center"
+		backgroundimage_align_vertical="center"
+		onclicked="$closescreen(popscreen_4102_phone_choice);" 
+    />
+</popscreen>
+
+
+//textfield_security 는 textFieldEnd_local를 호출하지 않는다.
+<action id="tf_4102_confirm_2_onchanged" value="
+	//데이터 확인.
+	//$logvar(g_tf_4102_confirm_2_var,g_tf_4102_confirm_2_encvar);
+	$setvar( btn_4102_af.enable = $callaction(fnBtnAfConfirmCheck));
+	if($strlen($g_tf_4102_confirm_2_var) > 0
+	&& $vg_1002_100_input_3.hidden
+	){
+		$setvar(
+			,vg_1002_100_input_2.y = $vg_1002_100_input_1.y
+
+			,vg_1002_100_input_1.y = $result($vg_1002_100_input_1.y + $cs_height_76 + $cs_height_20)
+
+			,vg_1002_100_input_3.hidden = false
+		);
+	}
+"/>
+<action id="textFieldEnd_local" value="
+	$setvar( btn_4102_af.enable = $callaction(fnBtnAfConfirmCheck));
+
+    if($isequal_string($TEXTFIELDEND_LOCAL_PARAM1,tf_4102_confirm_1)){
+    	if($strlen($tf_4102_confirm_1.value) > 0 
+    	&& $vg_1002_100_input_2.hidden
+    	&& $vg_1002_100_input_3.hidden
+    	){
+    		$setvar(
+    			,vg_1002_100_input_1.y = $result($vg_1002_100_input_1.y + $cs_height_76 + $cs_height_20)
+    			,vg_1002_100_input_2.hidden = false
+    		);
+    	}
+    }
+" />
