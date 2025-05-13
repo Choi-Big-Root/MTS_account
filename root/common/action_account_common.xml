@@ -1,5 +1,197 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
+/////////////// keypad Start
+<class id="cs_keypad_blank" width="$cs_width_40" scope="common" />
+<class id="cs_account_keypad_btn" scope="common"
+width="$cs_width_80" 
+height="$cs_height_73"
+fontsize="$cs_fontsize_24"
+fontname="$cs_font_400" 
+textcolor="$cs_color_black"
+textcolor_active="$cs_color_black"
+backcolor="F9FAFA"
+onClicked="$callaction(fnAccountInputKeypad,$tmp_keypad_id,$this.value,$tmp_keypad_type,add);"
+/>
+<action id="fnAccountShowInputKeypad" scope="common"
+params="p_id,p_key_pad_type,p_confirm_action,p_onunload_action"
+value="
+    $delvar_common(
+        tmp_keypad_id,tmp_keypad_type,tmp_keypad_confirm_action,tmp_keypad_onunload_action
+    );
+    $setvar_common(
+        tmp_keypad_id = $p_id
+        ,tmp_keypad_type = $p_key_pad_type
+        ,tmp_keypad_confirm_action = $p_confirm_action
+        ,tmp_keypad_onunload_action = $p_onunload_action
+    );
+
+    $logvar(
+        tmp_keypad_id
+        ,tmp_keypad_type
+        ,tmp_keypad_confirm_action
+        ,tmp_keypad_onunload_action
+    );
+    $popscreen(popscreen_number_keypad);
+"/>
+<action id="fnAccountInputKeypad" scope="common"
+params="p_id,p_value,p_key_pad_type,p_add_del_type"
+value="
+    $logvar(p_value);
+    $delvar(tmp_before_value,tmp_keypad_value,tmp_keypad_value_str_len);
+    $setvar(tmp_before_value = $p_id.value);
+
+    //자리수.
+    if($isequal_string($p_key_pad_type,phone)
+    && $isequal_string($p_add_del_type,add)
+    && $strlen($tmp_before_value) >= 13
+    ){
+        return;
+    }
+
+    if($isequal_string($p_add_del_type,del)){
+        if($strlen($tmp_before_value) > 0){
+            $setvar(
+                ,$($p_id).value = $substring($tmp_before_value,0,$result($strlen($tmp_before_value)-1))
+            );
+        }else{
+            return;
+        }
+    }else{
+        $setvar(
+            ,$($p_id).value = $addstring($tmp_before_value,$p_value)
+        );
+    }
+    $setvar(
+        ,tmp_keypad_value = $p_id.value
+        ,tmp_keypad_value_str_len = $strlen($tmp_keypad_value)
+    );
+
+    $logvar(tmp_before_value,tmp_keypad_value,tmp_keypad_value_str_len,tmp_first_phone_slash_flage);
+
+    if($isequal_string($p_key_pad_type,phone)){
+
+        if($tmp_keypad_value_str_len == 4 && $tmp_first_phone_slash_flage){
+            $setvar(
+                ,$($p_id).value = $formatstring(###-#,$tmp_keypad_value)
+                ,tmp_first_phone_slash_flage = false
+            );
+        }elseif($tmp_keypad_value_str_len == 4 && !$tmp_first_phone_slash_flage){
+            $setvar(
+                ,$($p_id).value = $replace(-,,$tmp_keypad_value)
+                ,tmp_first_phone_slash_flage = true
+            );
+        }elseif($tmp_keypad_value_str_len == 9 && $tmp_second_phone_slash_flage){
+            $setvar( 
+                ,$($p_id).value = $formatstring(###-####-#,$replace(-,,$tmp_keypad_value))
+                ,tmp_second_phone_slash_flage = false
+            );
+        }elseif($tmp_keypad_value_str_len == 9 && !$tmp_second_phone_slash_flage){
+            $setvar(
+                ,$($p_id).value = $formatstring(###-####,$replace(-,,$tmp_keypad_value))
+                ,tmp_second_phone_slash_flage = true
+            );
+        }
+    }
+
+"/>
+<action id="popscreen_number_keypad_onload" scope="common"
+value="
+    $setvar(
+        tmp_first_phone_slash_flage = true,
+        tmp_second_phone_slash_flage = true
+    );
+
+"/>
+<popscreen id="popscreen_number_keypad" scope="common"
+    width="$p_lcdWidth"
+    height="$p_lcdHeight"
+    backcolor="00000000"
+    onload="popscreen_number_keypad_onload"
+    onunload="$callaction($tmp_keypad_onunload_action);"
+>
+    <button 
+        class="cs_button_none"
+        width="$this.remain_right"
+        height="$h($g_lcdHeight,59.2)"
+        onClicked="$closescreen(popscreen_number_keypad);"
+    />
+    <br/>
+    <screen id="popscreen_number_keypad_screen"
+        width="$this.remain_right"
+        layout="center"
+        layout_vertical="bottom"
+        height="$cs_height_332"
+        backcolor="F9FAFA"
+        margin_left="$cs_width_20"
+        margin_right="$cs_width_20"
+        margin_top="$cs_height_20"
+        margin_bottom="$cs_height_20"
+    >
+        <viewgroup id="vg_point_size0" 
+            width="$this.remain_right" 
+            height="$this.remain_bottom"
+            margin_left="$cs_width_7_5"
+            margin_right="$cs_width_7_5"
+            layout="center"
+            layout_vertical="center"
+            backcolor="F9FAFA"
+        >
+            <button class="cs_account_keypad_btn" value="1" />
+            <blank class="cs_keypad_blank" />
+            <button class="cs_account_keypad_btn" value="2" />
+            <blank class="cs_keypad_blank" />
+            <button class="cs_account_keypad_btn" value="3" />
+            <br class="cs_keypad_br" />
+
+            <button class="cs_account_keypad_btn" value="4" />
+            <blank class="cs_keypad_blank" />
+            <button class="cs_account_keypad_btn" value="5" />
+            <blank class="cs_keypad_blank" />
+            <button class="cs_account_keypad_btn" value="6" />
+            <br class="cs_keypad_br" />
+
+            <button class="cs_account_keypad_btn" value="7" />
+            <blank class="cs_keypad_blank" />
+            <button class="cs_account_keypad_btn" value="8" />
+            <blank class="cs_keypad_blank" />
+            <button class="cs_account_keypad_btn" value="9" />
+            <br class="cs_keypad_br" />
+
+            <button class="cs_account_keypad_btn"  value="←"
+            onClicked="$callaction(fnAccountInputKeypad,$tmp_keypad_id,$this.value,$tmp_keypad_type,del);"
+            />
+            <blank class="cs_keypad_blank" />
+            <button class="cs_account_keypad_btn" value="0" />
+            <blank class="cs_keypad_blank" />
+
+            <viewgroup
+                width="$cs_width_80" 
+                height="$cs_height_73"
+                margin_bottom="$cs_height_9_5"
+                margin_top="$cs_height_9_5"
+            >
+                <label
+                    width="$this.remain_right"
+                    height="$this.remain_bottom"
+                    border_radius="$result($this.height/2)"
+                    backcolor="$cs_color_bg"
+                    fontsize="$cs_fontsize_15"
+                    fontname="$cs_font_400"
+                    textcolor="$cs_color_black"
+                    align="center"
+                    value="완료"
+                />
+                <button class="cs_button_none" onClicked="$callaction($tmp_keypad_confirm_action);"/>
+            </viewgroup>
+        </viewgroup>
+    </screen>
+</popscreen>
+/////////////// keypad End
+
+
+
+//html 폰트설정. 아마 안쓸듯.
 <action id="fnHTMLFontSizeSet" scope="common"
 value="
     if($isequal_string($tmpDeviceKind,iPhone OS)){                      //320:480 - 20

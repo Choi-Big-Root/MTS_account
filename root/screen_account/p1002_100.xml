@@ -100,6 +100,26 @@ value="
 		return false;
 	}
 "/>
+<action id="fnAccountKeypad_1002_100_confirm"
+value="
+	$log(최대근**************);
+	$setvar( 
+		tmp_af_result = $callaction(fnBtnAfConfirmCheck)
+		,btn_4102_af.enable = $tmp_af_result
+	);
+
+	$closescreen(popscreen_number_keypad);
+	if($tmp_af_result){
+		$popscreen(popscreen_1002_100_info_open);
+	}else{
+		return;
+	}
+
+"/>
+<action id="fnAccountKeypad_1002_100_onunload"
+value="
+	$setvar( btn_4102_af.enable = $callaction(fnBtnAfConfirmCheck));
+"/>
 <screen id="screen_1002_100"
 	class="cs_screen_contents"
 	backcolor="ffffff"
@@ -216,29 +236,26 @@ value="
 				/>
 
 				<blank width="$cs_width_10"/>
-
-				<label id="tf_4102_confirm_3"
-					width="$this.remain_right" 
-					height="$cs_height_24"
-					textcolor="$cs_color_black"
-					fontsize="$cs_fontsize_16"
-					fontname="$cs_font_400"
-					placeholder="010-1234-5678"
-					textcolor_placeholder="$cs_color_disable"
-					onClicked="$callaction(fnShowNumberKeypad,$this.id);"
-				/>
-				<!-- <textfield id="tf_4102_confirm_3"
+				<textfield id="tf_4102_confirm_3"
 					width="$this.remain_right" 
 					height="$cs_height_24"
 					keyboard_type="number"
-					maxlength="11"
+					maxlength="13"
 					placeholder="010-1234-5678"
 					textcolor_placeholder="$cs_color_disable"
 					textcolor="$cs_color_black"
 					fontsize="$cs_fontsize_16"
 					fontname="$cs_font_400"
 					clearbutton="true"
-					/> -->
+					enable="false"
+				/>
+				<button class="cs_button_none" 
+					x="$tf_4102_confirm_3.x"
+					y="$tf_4102_confirm_3.y"
+					width="$this.remain_right" 
+					height="$cs_height_24"
+					onClicked="$callaction(fnAccountShowInputKeypad,tf_4102_confirm_3,phone,fnAccountKeypad_1002_100_confirm,fnAccountKeypad_1002_100_onunload);"
+				/>
 			</viewgroup>
 			<br height="$cs_height_20" />
 			<viewgroup id="vg_1002_100_input_2"
@@ -356,28 +373,20 @@ value="
 			textcolor_active="$cs_color_white"
 			textcolor_disable="$cs_color_white"
 			value="다음"
-			onclicked="btn_4102_confirm_onclicked"
+			onclicked="$popscreen(popscreen_1002_100_info_open);"
 			enable="false"
 		/>
 	</viewgroup>
 </screen>
 
 
+//통신사 선택 관련
 <action id="1002_phone_onclicked" 
 value="
 	$log(선택:$this.key);
 	$popscreen(popscreen_4102_phone_choice);
 "/>
 
-<class id="css_4102_td_combo" 
-width="$super.width"
-height="$super.height" 
-align="center"
-fontsize="$g_fontSize_basic" 
-fontname="$g_baseFontName"
-textcolor="bbbbbb"
-textcolor_active="222222"
-/>
 <class id="cs_lbl_1002_100_telecom"
 width="$this.remain_right"
 height="$cs_height_48"
@@ -520,112 +529,420 @@ value="
     />
 </popscreen>
 
-
-
-<action id="fnShowNumberKeypad"
-params="p_id"
-value="
-	$setvar(tmp_value_id = $p_id);
-	$popscreen(popscreen_number_keypad);
-"/>
-<action id="fnAddStr_d"
-value="
-	$setvar(
-		tmp_value_id_str_len = $strlen($tmp_value_id.value)
-	);
-	$logvar(tmp_value_id_str_len);
-"/>
-<class id="cs_keypad_blank" width="$cs_width_40" />
-<class id="cs_keypad_btn"
-width="$cs_width_80" 
-height="$cs_height_73"
-fontsize="$cs_fontsize_24"
-fontname="$cs_font_400"	
-textcolor="$cs_color_black"
-textcolor_active="$cs_color_black"
-backcolor="F9FAFA"
-/>
-<popscreen id="popscreen_number_keypad"
+// 휴대폰 인증번호 전송 이전 약관동의 팝업
+<popscreen id="popscreen_1002_100_info_open"
 	width="$p_lcdWidth"
 	height="$p_lcdHeight"
-	backcolor="00000000"
-	onload="popscreen_number_keypad_onload"
+	backcolor="00000060"
+	onload="popscreen_1002_100_info_open_onload"
 >
-	<button 
-		class="cs_button_none"
-		width="$this.remain_right"
-		height="$h($g_lcdHeight,59.2)"
-		onClicked="$closescreen(popscreen_number_keypad);"
-	/>
-	<br/>
-	<screen id="popscreen_number_keypad_screen"
+	<screen id="pop_1002_100_info_open_screen"
 		width="$this.remain_right"
 		layout="center"
 		layout_vertical="bottom"
-		height="$cs_height_332"
-		backcolor="F9FAFA"
-		margin_left="$cs_width_20"
-		margin_right="$cs_width_20"
-		margin_top="$cs_height_20"
+		height="$cs_height_303"
+		margin_top="$cs_height_30"
 		margin_bottom="$cs_height_20"
+		background_roundinfo="$cs_color_white,$cs_color_white,$cs_radius_30,1,true,true,false,false"
 	>
-		<viewgroup id="vg_point_size0" 
-			width="$this.remain_right" 
-			height="$this.remain_bottom"
-			margin_left="$cs_width_7_5"
-			margin_right="$cs_width_7_5"
-			layout="center"
-			layout_vertical="center"
-			backcolor="F9FAFA"
+		<viewgroup
+			width="$this.remain_right"
+			height="$cs_height_177"
+			margin_left="$cs_width_16"
+			margin_right="$cs_width_16"
 		>
-			<button class="cs_keypad_btn" value="1" onClicked="fnAddStr_d"/>
-			<blank class="cs_keypad_blank" />
-			<button class="cs_keypad_btn" value="2" onClicked="fnAddStr_d"/>
-			<blank class="cs_keypad_blank" />
-			<button class="cs_keypad_btn" value="3" onClicked="fnAddStr_d"/>
-			<br class="cs_keypad_br" />
-
-			<button class="cs_keypad_btn" value="4" onClicked="fnAddStr_d"/>
-			<blank class="cs_keypad_blank" />
-			<button class="cs_keypad_btn" value="5" onClicked="fnAddStr_d"/>
-			<blank class="cs_keypad_blank" />
-			<button class="cs_keypad_btn" value="6" onClicked="fnAddStr_d"/>
-			<br class="cs_keypad_br" />
-
-			<button class="cs_keypad_btn" value="7" onClicked="fnAddStr_d"/>
-			<blank class="cs_keypad_blank" />
-			<button class="cs_keypad_btn" value="8" onClicked="fnAddStr_d"/>
-			<blank class="cs_keypad_blank" />
-			<button class="cs_keypad_btn" value="9" onClicked="fnAddStr_d"/>
-			<br class="cs_keypad_br" />
-
-			<button class="cs_keypad_btn"  value="←" onClicked="fnClear_d"/>
-			<blank class="cs_keypad_blank" />
-			<button class="cs_keypad_btn" value="0" onClicked="fnAddStr_d"/>
-			<blank class="cs_keypad_blank" />
-
+			<label
+				width="$this.remain_right"
+				height="$cs_height_25"
+				textcolor="$cs_color_black"
+				fontsize="$cs_fontsize_18"
+				fontname="$cs_font_700"
+				value="약관 동의하기"
+			/>
+			<br/>
 			<viewgroup
-				width="$cs_width_80" 
-				height="$cs_height_73"
-				margin_bottom="$cs_height_9_5"
-				margin_top="$cs_height_9_5"
+				width="$this.remain_right"
+				height="$cs_height_132"
+				layout_vertical="bottom"
+				backcolor="$cs_color_bg"
+				border_radius="$cs_radius_15"
+				margin_left="$cs_width_20"
+				margin_right="$cs_width_20"
+				margin_top="$cs_height_20"
+				margin_bottom="$cs_height_20"
 			>
-				<label
+				<checkbox id="chk_1002_100_all"
 					width="$this.remain_right"
-					height="$this.remain_bottom"
-					border_radius="$result($this.height/2)"
-					backcolor="$cs_color_bg"
+					height="$cs_height_22"
 					fontsize="$cs_fontsize_15"
-					fontname="$cs_font_400"
+					fontname="$cs_font_700"
 					textcolor="$cs_color_black"
-					align="center"
-					value="완료"
+					margin_left="$result($cs_height_22 + $cs_width_10)"
+					CHECKIMAGESVG="$icon_checkbox_check_on" 
+					UNCHECKIMAGESVG="$icon_checkbox_check_off"
+					CHECKIMAGESVG_DISABLE="$icon_checkbox_check_off"
+					BACKGROUNDSVG_WIDTH="$cs_height_22"
+					BACKGROUNDSVG_HEIGHT="$cs_height_22"
+					backgroundimage_align="left"
+					backgroundimage_align_vertical="center"
+					value="전체 동의하기"
+					onClicked="$callaction(btn_1002_confirm_onclicked);"
 				/>
-				<button id="btn_pop_info_1002_100" class="cs_button_none" onClicked="fnConfirm_d"/>
+				<br height="$cs_height_20" />
+				<viewgroup
+					width="$this.remain_right"
+					height="$cs_height_50"
+					margin_left="$cs_width_15"
+				>
+					<checkbox id="chk_1002_100_1"
+						layout_vertical="top"
+						width="$this.remain_right"
+						height="$cs_height_20"
+						fontname="$cs_font_400"
+						fontsize="$cs_fontsize_14"
+						textcolor="$cs_color_text"
+						margin_left="$result($cs_height_20 + $cs_width_10)"
+						CHECKIMAGESVG="$icon_checkbox_on" 
+						UNCHECKIMAGESVG="$icon_checkbox_off"
+						CHECKIMAGESVG_DISABLE="$icon_checkbox_off"
+						BACKGROUNDSVG_WIDTH="$cs_height_20"
+						BACKGROUNDSVG_HEIGHT="$cs_height_20"
+						backgroundimage_align="left"
+						backgroundimage_align_vertical="center"
+						onClicked="$callaction(btn_essential_1002_100_onClicked,1);"
+						key="1"
+						value="(필수) 통신사 이용약관 동의"
+					/>
+					<br/>
+					<checkbox id="chk_1002_100_2"
+						layout_vertical="bottom"
+						width="$this.remain_right"
+						height="$cs_height_20"
+						fontname="$cs_font_400"
+						fontsize="$cs_fontsize_14"
+						textcolor="$cs_color_text"
+						margin_left="$result($cs_height_20 + $cs_width_10)"
+						CHECKIMAGESVG="$icon_checkbox_on" 
+						UNCHECKIMAGESVG="$icon_checkbox_off"
+						CHECKIMAGESVG_DISABLE="$icon_checkbox_off"
+						BACKGROUNDSVG_WIDTH="$cs_height_20"
+						BACKGROUNDSVG_HEIGHT="$cs_height_20"
+						backgroundimage_align="left"
+						backgroundimage_align_vertical="center"
+						onClicked="$callaction(btn_essential_1002_100_onClicked,2);"
+						key="2"
+						value="(필수) 개인(신용)정보의 업무위탁에 관한 사항"
+					/>
+				</viewgroup>
 			</viewgroup>
 		</viewgroup>
+
+		<br/>
+		<viewgroup
+			width="$cs_width_343"
+			height="$cs_height_54"
+			layout="center"
+			layout_vertical="bottom"
+		>
+			<button id="btn_1002_100_confirm"
+				width="$this.remain_right"
+				height="$this.remain_bottom"
+				layout="right"
+				backcolor="$cs_color_main"
+				backcolor_disable="b9d8fb"
+				border_width="1"
+				border_radius="$cs_radius_10"
+				fontsize="$cs_fontsize_16"
+				fontname="$cs_font_700"
+				textcolor="$cs_color_white"
+				textcolor_active="$cs_color_white"
+				textcolor_disable="$cs_color_white"
+				value="인증번호 받을게요"
+				enable="false"
+				onClicked="" //여기부터	
+			/>
+		</viewgroup>
+	</screen>
+	<br/>
+	<label
+		x="$result($popscreen_1002_100_info_open.width - $cs_height_50)" 
+		y="$result($pop_1002_100_info_open_screen.y)"
+    	width="$cs_height_50"
+    	height="$cs_height_50"
+        BACKGROUNDSVG="$icon_cancel"
+		BACKGROUNDSVG_DISABLE="$icon_cancel"
+		BACKGROUNDSVG_HIGHLIGHT="$icon_cancel"
+		BACKGROUNDSVG_WIDTH="$cs_height_20"
+		BACKGROUNDSVG_HEIGHT="$cs_height_20"	
+		backgroundimage_align="center"
+		backgroundimage_align_vertical="center"
+		onclicked="$closescreen(popscreen_1002_100_info_open);" 
+    />
+</popscreen>
+
+<action id="btn_essential_1002_100_onClicked"
+params="p_key"
+value="
+	$log(선택키:$p_key);
+	$log(선택동의서 : $vg_1002_100_agree_kind.selectkey );
+	$delvar(popscreen_html);
+	$setvar(
+		,tmp_btn_id			= $addstring(chk_1002_100_,$p_key)
+		,popscreen_title 	= $tmp_btn_id.value
+		,popscreen_key 		= $p_key
+	);
+
+
+	if($isequal_string($p_key,1)){
+		if($isequal_string($g_4102_html_phone,4102_htmldata_2)){
+			$setvar( 	html_pop_height = $h($g_lcdHeight,700)	);	
+		}
+		if($isequal_string($g_4102_html_phone,4102_htmldata_3)){
+			$setvar( 	html_pop_height = $h($g_lcdHeight,560)	);
+		}
+		if($isequal_string($g_4102_html_phone,4102_htmldata_4)){
+			$setvar( 	html_pop_height = $h($g_lcdHeight,450)	);
+		}
+		$setvar(	popscreen_html = $g_4102_html_phone	);
+	}
+	elseif($isequal_string($p_key,2)){
+		$setvar( 	html_pop_height = $h($g_lcdHeight,460)	);
+		$setvar(	popscreen_html = 4102_htmldata_5	);
+	}
+
+	$popscreen(popscreen_1002_100);
+"/>
+<action id="fnPopScreen_Close_1002" 
+value="
+	// 그냥 닫을 때는 동의 체크를 해제한다.
+	$setvar(
+		tmp_btn_id_agree 	= $addstring(chk_1002_100_,$this.key)
+		,$($tmp_btn_id_agree).checked = false
+	);
+
+	if(!$chk_1002_100_1.checked
+	|| !$chk_1002_100_2.checked
+	){
+		$setvar(
+			,chk_1002_100_all.checked = false
+			,btn_1002_100_confirm.enable=false
+		);
+	}
+
+	$closescreen(popscreen_1002_100);
+" />
+<action id="btn_1002_100_agree_onClicked" 
+value="
+	$closescreen(popscreen_1002_100);
+
+	$callaction(btn_1002_confirm_onclicked); 		// 필수동의서는 자동으로 띄운다.
+"/>
+// 인증번호
+<action id="btn_1002_confirm_onclicked" 
+value="
+	// 필수동의서는 자동으로 띄운다.
+	$setvar(	
+		tmp_isAgree = $callaction(fnAgree_Check_1002_100)	
+		,chk_1002_100_all.checked = $tmp_isAgree
+	);
+
+	if($tmp_isAgree){
+		$setvar(
+			btn_1002_100_confirm.enable = true
+		); 	
+		return true;	
+	}else{
+		return false;
+	}
+	return;
+"/>
+
+<action id="btn_1002_100_agree_bottom_onClicked"
+value="
+	if($tmp_pop_1002_100_flag){
+		$setvar(tmp_this_pos_y_1002 = $screen_html.height , tmp_pop_1002_100_flag = false);
+	}
+	$setvar(
+		,tmp_html_h_1002 = $screen_html.height
+		,tmp_end_of_scroll_y_1002 = $result_double($html_pop.height - $screen_html.height)
+		,tmp_h_share_1002 = $result_floor($tmp_end_of_scroll_y_1002 / $tmp_html_h_1002,0)
+	);
+	
+	if($tmp_h_share_1002 == 0){
+		$setvar(screen_html.scrolloffset_y= $tmp_end_of_scroll_y_1002);
+		return;
+	}
+	for($i = 1; $i <= $tmp_h_share_1002; $i++){
+		$setvar(tmp_cal_h_1002 = $result_double($i * $tmp_html_h_1002));
+		if($tmp_this_pos_y_1002 < $tmp_cal_h_1002){
+			$setvar(screen_html.scrolloffset_y= $tmp_cal_h_1002);
+			return;
+		}
+
+		if($i == $tmp_h_share_1002){
+			$setvar(screen_html.scrolloffset_y= $tmp_end_of_scroll_y_1002);
+			return;
+		}
+	}
+"/>
+<action id="fnAgree_Check_1002_100" 
+value="
+	if(!$chk_1002_100_1.checked){
+		$setvar(chk_1002_100_1.checked = true);
+		$callaction(btn_essential_1002_100_onClicked,1);
+		return false;
+	}
+	elseif(!$chk_1002_100_2.checked){
+		$setvar(chk_1002_100_2.checked = true);
+		$callaction(btn_essential_1002_100_onClicked,2);
+		return false;
+	}
+	
+	$setvar(btn_1002_100_confirm.enable = true); 			// 다음버튼 활성화 
+	return true;
+" />
+<action id="ppopscreen_1002_100_onload" 
+value="
+	$setvar( 
+		tmp_pop_1002_100_flag = true
+		,tmp_this_pos_y_1002 = 
+	);
+"/>
+<action id="SCREEN_1002_100_SCROLLOFFSET_ACTION" 
+params="
+p_ctrl_id
+,p_pos_x
+,p_pos_y
+"
+value="
+	// 스크롤이 제일 끝에 위치하면 활성화 
+	$setvar(
+		tmp_scroll_gap 		= $result($screen_html.SCROLL_HEIGHT - ($p_pos_y + $screen_html.HEIGHT))
+		,tmp_this_pos_y_1002 = $p_pos_y
+	);	
+	$logvar(tmp_scroll_gap);
+	if($tmp_scroll_gap <= 0	){
+		$setvar(
+			btn_1002_100_agree_bottom.hidden = true
+			,btn_1002_100_agree.hidden = false 
+		);			
+
+	}
+	return;
+
+" />
+<popscreen id="popscreen_1002_100"
+width="$g_lcdWidth" 
+height="$p_lcdHeight"
+noscroll_height="true"
+onload="ppopscreen_1002_100_onload"
+onunload="popscreen_1002_100_onunload"
+backcolor="$cs_color_white"
+>
+	<screen 
+	width="$this.remain_right"
+	height="$this.remain_bottom"
+	backcolor="$cs_color_white"
+	margin_bottom="$cs_height_20"
+	>
+		<viewgroup 
+		width="$this.remain_right" 
+		height="$cs_height_50"	
+		backcolor="$cs_color_white" 
+		>
+			<label 
+			width="$result($this.remain_right - $cs_width_56)"
+			height="$this.remain_bottom"
+			fontsize="$cs_fontsize_16" 
+			fontname="$cs_font_700" 
+			align="left"
+			margin_left="$cs_width_16" 
+			valign="center" 
+			textcolor="070A0F"
+			value="$popscreen_title"
+			/>
+			<button 
+				width="$cs_width_56"
+				height="$this.remain_bottom"
+				layout="right" 
+				key="$popscreen_key" 
+				BACKGROUNDSVG="$icon_cancel_2"
+		        BACKGROUNDSVG_DISABLE="$icon_cancel_2"
+		        BACKGROUNDSVG_HIGHLIGHT="$icon_cancel_2"
+		        BACKGROUNDSVG_WIDTH="$cs_height_24"
+		        BACKGROUNDSVG_HEIGHT="$cs_height_24"
+		        backgroundimage_align="center"
+		        backgroundimage_align_vertical="center"
+				onClicked="fnPopScreen_Close_1002"
+			/>
+		</viewgroup>
+		<br/>
+		<screen id="screen_html"
+		width="$this.remain_right"
+		height="$result($this.remain_bottom - $cs_height_74)"
+		backcolor="$cs_color_white"
+		SCROLLOFFSET_ACTION="screen_1002_100_SCROLLOFFSET_ACTION"
+		>
+			<htmlview 
+			id="html_pop"
+			width="$this.remain_right" 
+			layout="center"
+			height="$this.remain_bottom"
+			value_html_var="$popscreen_html"
+			fontsize="$cs_fontsize_14"
+			textcolor="$cs_color_text"
+			backcolor="$cs_color_white"
+			lineheight="$cs_height_20"
+			margin_left="$cs_width_16"
+			margin_right="$cs_width_16"
+			margin_top="$cs_height_15"
+			margin_bottom="$cs_height_15"
+			noscroll_height="true"
+			height="$html_pop_height"
+			/>
+			<label x="$html_pop.x" width="$this.remain_right"  height="$html_pop_height" backcolor="none"/>
+		</screen>
+		<br/>
+		<button id="btn_1002_100_agree"
+		layout="center"
+		layout_vertical="bottom"
+		width="$cs_width_343" 
+		height="$cs_height_54" 
+		backcolor="$cs_color_main"
+		backcolor_active="$cs_color_main"
+		border_radius="$cs_radius_10"
+		textcolor="$cs_color_white"
+		textcolor_active="$cs_color_white"
+		fontsize="$cs_fontsize_16"
+		fontname="$cs_font_700"
+
+		hidden="true"
+		value="확인했고 동의해요" 
+		onclicked="btn_1002_100_agree_onClicked" 
+		/>
+		<button id="btn_1002_100_agree_bottom"
+		x="$btn_1002_100_agree.x"
+		layout="center"
+		layout_vertical="bottom"
+		width="$cs_width_343" 
+		height="$cs_height_54" 
+		backcolor="$cs_color_main"
+		backcolor_active="$cs_color_main"
+		border_radius="$cs_radius_10"
+		textcolor="$cs_color_white"
+		textcolor_active="$cs_color_white"
+		fontsize="$cs_fontsize_16"
+		fontname="$cs_font_700"
+
+		hidden="false"
+		value="아래로 내려보기" 
+		onclicked="btn_1002_100_agree_bottom_onClicked" 
+		/>
 	</screen>
 </popscreen>
+
+
+
 
 
 //textfield_security 는 textFieldEnd_local를 호출하지 않는다.

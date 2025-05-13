@@ -872,7 +872,7 @@ value="
 	return;
 
 " />
-<action id="fnPopScreen_Close" 
+<action id="fnPopScreen_Close_1001" 
 value="
 	// 그냥 닫을 때는 동의 체크를 해제한다.
 	$setvar(
@@ -941,7 +941,7 @@ backcolor="$cs_color_white"
 		        BACKGROUNDSVG_HEIGHT="$cs_height_24"
 		        backgroundimage_align="center"
 		        backgroundimage_align_vertical="center"
-				onClicked="fnPopScreen_Close"
+				onClicked="fnPopScreen_Close_1001"
 			/>
 		</viewgroup>
 		<br/>
