@@ -3,7 +3,7 @@
 <import filename="plist/root/common/network.xml"/>       // 네트워크관련 액션
 <import filename="plist/root/tr/header.xml"/>
 <import filename="plist/root/common/action_common.xml"/>
-<import filename="plist/root/common/action_account_open_common.xml"/>
+<import filename="plist/root/common/action_account_common.xml"/>
 <import filename="plist/root/common/action_dxfeed.xml"/> //dxFeed 전용 함수.
 <import filename="plist/root/common/action_dxfeed_real.xml"/> //dxFeed 실시간전용 함수.
 <import filename="plist/root/common/action_chart.xml"/>
