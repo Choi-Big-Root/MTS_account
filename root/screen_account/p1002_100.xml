@@ -202,7 +202,7 @@ value="
 					height="$cs_height_24"
 					textcolor="$cs_color_black"
 					fontsize="$cs_fontsize_16"
-					fontname="$cs_font400"
+					fontname="$cs_font_400"
 					value="통신사"
 					key="-1" 
 					onclicked="1002_phone_onclicked"
@@ -217,15 +217,17 @@ value="
 
 				<blank width="$cs_width_10"/>
 
-				<!-- <label
+				<label id="tf_4102_confirm_3"
 					width="$this.remain_right" 
 					height="$cs_height_24"
 					textcolor="$cs_color_black"
 					fontsize="$cs_fontsize_16"
-					fontname="$cs_font400"
-					value="010-0000-0000"
-				/> -->
-				<textfield id="tf_4102_confirm_3"
+					fontname="$cs_font_400"
+					placeholder="010-1234-5678"
+					textcolor_placeholder="$cs_color_disable"
+					onClicked="$callaction(fnShowNumberKeypad,$this.id);"
+				/>
+				<!-- <textfield id="tf_4102_confirm_3"
 					width="$this.remain_right" 
 					height="$cs_height_24"
 					keyboard_type="number"
@@ -234,9 +236,9 @@ value="
 					textcolor_placeholder="$cs_color_disable"
 					textcolor="$cs_color_black"
 					fontsize="$cs_fontsize_16"
-					fontname="$cs_font400"
+					fontname="$cs_font_400"
 					clearbutton="true"
-					/>
+					/> -->
 			</viewgroup>
 			<br height="$cs_height_20" />
 			<viewgroup id="vg_1002_100_input_2"
@@ -270,7 +272,7 @@ value="
 					textcolor_placeholder="$cs_color_disable"
 					textcolor="$cs_color_black"
 					fontsize="$cs_fontsize_16"
-					fontname="$cs_font400"
+					fontname="$cs_font_400"
 					valuevar="g_tf_4102_confirm_2_var"
 					valueencvar="g_tf_4102_confirm_2_encvar"
 					valuevar_common="true"
@@ -313,7 +315,7 @@ value="
 					textcolor_placeholder="$cs_color_disable"
 					textcolor="$cs_color_black"
 					fontsize="$cs_fontsize_16"
-					fontname="$cs_font400"
+					fontname="$cs_font_400"
 				/>
 			</viewgroup>
 		</viewgroup>
@@ -516,6 +518,113 @@ value="
 		backgroundimage_align_vertical="center"
 		onclicked="$closescreen(popscreen_4102_phone_choice);" 
     />
+</popscreen>
+
+
+
+<action id="fnShowNumberKeypad"
+params="p_id"
+value="
+	$setvar(tmp_value_id = $p_id);
+	$popscreen(popscreen_number_keypad);
+"/>
+<action id="fnAddStr_d"
+value="
+	$setvar(
+		tmp_value_id_str_len = $strlen($tmp_value_id.value)
+	);
+	$logvar(tmp_value_id_str_len);
+"/>
+<class id="cs_keypad_blank" width="$cs_width_40" />
+<class id="cs_keypad_btn"
+width="$cs_width_80" 
+height="$cs_height_73"
+fontsize="$cs_fontsize_24"
+fontname="$cs_font_400"	
+textcolor="$cs_color_black"
+textcolor_active="$cs_color_black"
+backcolor="F9FAFA"
+/>
+<popscreen id="popscreen_number_keypad"
+	width="$p_lcdWidth"
+	height="$p_lcdHeight"
+	backcolor="00000000"
+	onload="popscreen_number_keypad_onload"
+>
+	<button 
+		class="cs_button_none"
+		width="$this.remain_right"
+		height="$h($g_lcdHeight,59.2)"
+		onClicked="$closescreen(popscreen_number_keypad);"
+	/>
+	<br/>
+	<screen id="popscreen_number_keypad_screen"
+		width="$this.remain_right"
+		layout="center"
+		layout_vertical="bottom"
+		height="$cs_height_332"
+		backcolor="F9FAFA"
+		margin_left="$cs_width_20"
+		margin_right="$cs_width_20"
+		margin_top="$cs_height_20"
+		margin_bottom="$cs_height_20"
+	>
+		<viewgroup id="vg_point_size0" 
+			width="$this.remain_right" 
+			height="$this.remain_bottom"
+			margin_left="$cs_width_7_5"
+			margin_right="$cs_width_7_5"
+			layout="center"
+			layout_vertical="center"
+			backcolor="F9FAFA"
+		>
+			<button class="cs_keypad_btn" value="1" onClicked="fnAddStr_d"/>
+			<blank class="cs_keypad_blank" />
+			<button class="cs_keypad_btn" value="2" onClicked="fnAddStr_d"/>
+			<blank class="cs_keypad_blank" />
+			<button class="cs_keypad_btn" value="3" onClicked="fnAddStr_d"/>
+			<br class="cs_keypad_br" />
+
+			<button class="cs_keypad_btn" value="4" onClicked="fnAddStr_d"/>
+			<blank class="cs_keypad_blank" />
+			<button class="cs_keypad_btn" value="5" onClicked="fnAddStr_d"/>
+			<blank class="cs_keypad_blank" />
+			<button class="cs_keypad_btn" value="6" onClicked="fnAddStr_d"/>
+			<br class="cs_keypad_br" />
+
+			<button class="cs_keypad_btn" value="7" onClicked="fnAddStr_d"/>
+			<blank class="cs_keypad_blank" />
+			<button class="cs_keypad_btn" value="8" onClicked="fnAddStr_d"/>
+			<blank class="cs_keypad_blank" />
+			<button class="cs_keypad_btn" value="9" onClicked="fnAddStr_d"/>
+			<br class="cs_keypad_br" />
+
+			<button class="cs_keypad_btn"  value="←" onClicked="fnClear_d"/>
+			<blank class="cs_keypad_blank" />
+			<button class="cs_keypad_btn" value="0" onClicked="fnAddStr_d"/>
+			<blank class="cs_keypad_blank" />
+
+			<viewgroup
+				width="$cs_width_80" 
+				height="$cs_height_73"
+				margin_bottom="$cs_height_9_5"
+				margin_top="$cs_height_9_5"
+			>
+				<label
+					width="$this.remain_right"
+					height="$this.remain_bottom"
+					border_radius="$result($this.height/2)"
+					backcolor="$cs_color_bg"
+					fontsize="$cs_fontsize_15"
+					fontname="$cs_font_400"
+					textcolor="$cs_color_black"
+					align="center"
+					value="완료"
+				/>
+				<button id="btn_pop_info_1002_100" class="cs_button_none" onClicked="fnConfirm_d"/>
+			</viewgroup>
+		</viewgroup>
+	</screen>
 </popscreen>
 
 
