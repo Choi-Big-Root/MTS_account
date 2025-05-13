@@ -8,11 +8,11 @@
  *********************************************************************************
  -->
 <actiondata value="
-$readfile(plist/root/html/1002_100_1.html,4102_htmldata_1);
-$readfile(plist/root/html/1002_100_2.html,4102_htmldata_2);
-$readfile(plist/root/html/1002_100_3.html,4102_htmldata_3);
-$readfile(plist/root/html/1002_100_4.html,4102_htmldata_4);
-$readfile(plist/root/html/1002_100_5.html,4102_htmldata_5);
+$readfile(plist/root/html/1002_100_1.html,1002_htmldata_1);
+$readfile(plist/root/html/1002_100_2.html,1002_htmldata_2);
+$readfile(plist/root/html/1002_100_3.html,1002_htmldata_3);
+$readfile(plist/root/html/1002_100_4.html,1002_htmldata_4);
+$readfile(plist/root/html/1002_100_5.html,1002_htmldata_5);
 "/>	
 <action id="screen_contents_onload" value="
 	$log(확인용);
@@ -62,8 +62,8 @@ $readfile(plist/root/html/1002_100_5.html,4102_htmldata_5);
 		,menu_num=1002
 	);
 	//초기화 
-	$callaction(fnConfig_SetValue,g_tf_4102_confirm_2_var,);
-	$callaction(fnConfig_SetValue,g_tf_4102_confirm_2_encvar,);
+	$callaction(fnConfig_SetValue,g_tf_1002_confirm_2_var,);
+	$callaction(fnConfig_SetValue,g_tf_1002_confirm_2_encvar,);
 	$callaction(fnConfig_SetValue,g_IN_AGREE_RMN_NO,);
 
 "/>
@@ -73,11 +73,11 @@ value="
 	$stopnstimer(TIMER_SMS_INPUT); 
 
 	$delvar(
-		4102_htmldata_1
-		,4102_htmldata_2
-		,4102_htmldata_3
-		,4102_htmldata_4
-		,4102_htmldata_5
+		1002_htmldata_1
+		,1002_htmldata_2
+		,1002_htmldata_3
+		,1002_htmldata_4
+		,1002_htmldata_5
 	);
 " />
 <action id="btn_pop_info_1002_100_onClicked"
@@ -90,10 +90,10 @@ value="
 "/>
 <action id="fnBtnAfConfirmCheck"
 value="
-	if($strlen($tf_4102_confirm_1.value) > 0 
-	&& $strlen($g_tf_4102_confirm_2_var) > 0
-	&& $strlen($tf_4102_confirm_3.value) > 0
-	&& $4102_phone_choice.key != -1
+	if($strlen($tf_1002_confirm_1.value) > 0 
+	&& $strlen($g_tf_1002_confirm_2_var) > 0
+	&& $strlen($tf_1002_confirm_3.value) > 0
+	&& $1002_phone_choice.key != -1
 	){
 		return true;
 	}else{
@@ -105,7 +105,7 @@ value="
 	$log(최대근**************);
 	$setvar( 
 		tmp_af_result = $callaction(fnBtnAfConfirmCheck)
-		,btn_4102_af.enable = $tmp_af_result
+		,btn_1002_af.enable = $tmp_af_result
 	);
 
 	$closescreen(popscreen_number_keypad);
@@ -118,7 +118,7 @@ value="
 "/>
 <action id="fnAccountKeypad_1002_100_onunload"
 value="
-	$setvar( btn_4102_af.enable = $callaction(fnBtnAfConfirmCheck));
+	$setvar( btn_1002_af.enable = $callaction(fnBtnAfConfirmCheck));
 "/>
 <screen id="screen_1002_100"
 	class="cs_screen_contents"
@@ -217,7 +217,7 @@ value="
 					value="휴대폰번호"
 				/>
 				<br height="$cs_height_2" />
-				<label id="4102_phone_choice"
+				<label id="1002_phone_choice"
 					width="$cs_width_90" 
 					height="$cs_height_24"
 					textcolor="$cs_color_black"
@@ -236,7 +236,7 @@ value="
 				/>
 
 				<blank width="$cs_width_10"/>
-				<textfield id="tf_4102_confirm_3"
+				<textfield id="tf_1002_confirm_3"
 					width="$this.remain_right" 
 					height="$cs_height_24"
 					keyboard_type="number"
@@ -250,11 +250,11 @@ value="
 					enable="false"
 				/>
 				<button class="cs_button_none" 
-					x="$tf_4102_confirm_3.x"
-					y="$tf_4102_confirm_3.y"
+					x="$tf_1002_confirm_3.x"
+					y="$tf_1002_confirm_3.y"
 					width="$this.remain_right" 
 					height="$cs_height_24"
-					onClicked="$callaction(fnAccountShowInputKeypad,tf_4102_confirm_3,phone,fnAccountKeypad_1002_100_confirm,fnAccountKeypad_1002_100_onunload);"
+					onClicked="$callaction(fnAccountShowInputKeypad,tf_1002_confirm_3,phone,fnAccountKeypad_1002_100_confirm,fnAccountKeypad_1002_100_onunload);"
 				/>
 			</viewgroup>
 			<br height="$cs_height_20" />
@@ -280,7 +280,7 @@ value="
 					value="주민등록번호"
 				/>
 				<br/>
-				<textfield_security id="tf_4102_confirm_2"
+				<textfield_security id="tf_1002_confirm_2"
 					width="$this.remain_right" 
 					height="$cs_height_24"
 					keyboard_type="number"
@@ -290,15 +290,15 @@ value="
 					textcolor="$cs_color_black"
 					fontsize="$cs_fontsize_16"
 					fontname="$cs_font_400"
-					valuevar="g_tf_4102_confirm_2_var"
-					valueencvar="g_tf_4102_confirm_2_encvar"
+					valuevar="g_tf_1002_confirm_2_var"
+					valueencvar="g_tf_1002_confirm_2_encvar"
 					valuevar_common="true"
 					input_type="number"
 					align="left"
 					returntype="done"
 					description="주민등록번호"
 					hint="주민등록번호 13자리 ‘-’ 없이 입력"
-					onChanged="tf_4102_confirm_2_onchanged"
+					onChanged="tf_1002_confirm_2_onchanged"
 				/>
 			</viewgroup>
 			<br height="$cs_height_20" />
@@ -323,7 +323,7 @@ value="
 					value="이름"
 				/>
 				<br/>
-				<textfield id="tf_4102_confirm_1"
+				<textfield id="tf_1002_confirm_1"
 					width="$this.remain_right" 
 					height="$cs_height_24"
 					keyboard_type="text"
@@ -359,7 +359,7 @@ value="
 			value="이전"
 			onClicked="btn_open_account_history_onClicked"
 		/>
-		<button id="btn_4102_af"
+		<button id="btn_1002_af"
 			width="$cs_width_167_5" 
 			height="$this.remain_bottom"
 			layout="right"
@@ -384,7 +384,7 @@ value="
 <action id="1002_phone_onclicked" 
 value="
 	$log(선택:$this.key);
-	$popscreen(popscreen_4102_phone_choice);
+	$popscreen(popscreen_1002_phone_choice);
 "/>
 
 <class id="cs_lbl_1002_100_telecom"
@@ -399,57 +399,57 @@ onClicked="lbl_1002_100_telecom_onclciked"
 <action id="lbl_1002_100_telecom_onclciked"
 value="
 	$setvar(
-		4102_phone_choice_set_key=$this.key
-		,4102_phone_choice_set_val=$this.value
+		1002_phone_choice_set_key=$this.key
+		,1002_phone_choice_set_val=$this.value
 	);
 
 	$setvar(
-		4102_phone_select_key=$4102_phone_choice_set_key
-		,4102_phone_choice.key=$4102_phone_choice_set_key
-		,4102_phone_choice.value=$4102_phone_choice_set_val
+		1002_phone_select_key=$1002_phone_choice_set_key
+		,1002_phone_choice.key=$1002_phone_choice_set_key
+		,1002_phone_choice.value=$1002_phone_choice_set_val
 	);
 
 	$logvar(
-		4102_phone_select_key
-		,4102_phone_choice.value
+		1002_phone_select_key
+		,1002_phone_choice.value
 	);
-	if($4102_phone_select_key==1){ 		// skt,kt,lg : 1,2,3
-		$memcpy(4102_htmldata_phone,4102_htmldata_2);
-		$setvar(g_4102_html_phone = 4102_htmldata_2);
+	if($1002_phone_select_key==1){ 		// skt,kt,lg : 1,2,3
+		$memcpy(1002_htmldata_phone,1002_htmldata_2);
+		$setvar(g_1002_html_phone = 1002_htmldata_2);
 	}
-	elseif($4102_phone_select_key==2){ 		
-		$memcpy(4102_htmldata_phone,4102_htmldata_3);
-		$setvar(g_4102_html_phone = 4102_htmldata_3);
+	elseif($1002_phone_select_key==2){ 		
+		$memcpy(1002_htmldata_phone,1002_htmldata_3);
+		$setvar(g_1002_html_phone = 1002_htmldata_3);
 	}
-	elseif($4102_phone_select_key==3){ 		
-		$memcpy(4102_htmldata_phone,4102_htmldata_4);
-		$setvar(g_4102_html_phone = 4102_htmldata_4);
+	elseif($1002_phone_select_key==3){ 		
+		$memcpy(1002_htmldata_phone,1002_htmldata_4);
+		$setvar(g_1002_html_phone = 1002_htmldata_4);
 	}
-	if($4102_phone_select_key==5){ 		// SKT //알뜰폰: 5,6,7
-		$memcpy(4102_htmldata_phone,4102_htmldata_2);
-		$setvar(g_4102_html_phone = 4102_htmldata_2);
+	if($1002_phone_select_key==5){ 		// SKT //알뜰폰: 5,6,7
+		$memcpy(1002_htmldata_phone,1002_htmldata_2);
+		$setvar(g_1002_html_phone = 1002_htmldata_2);
 	}
-	elseif($4102_phone_select_key==6){ 	// KT
-		$memcpy(4102_htmldata_phone,4102_htmldata_3);
-		$setvar(g_4102_html_phone = 4102_htmldata_3);
+	elseif($1002_phone_select_key==6){ 	// KT
+		$memcpy(1002_htmldata_phone,1002_htmldata_3);
+		$setvar(g_1002_html_phone = 1002_htmldata_3);
 	}
-	elseif($4102_phone_select_key==7){ 	// LGU+
-		$memcpy(4102_htmldata_phone,4102_htmldata_4);
-		$setvar(g_4102_html_phone = 4102_htmldata_4);
+	elseif($1002_phone_select_key==7){ 	// LGU+
+		$memcpy(1002_htmldata_phone,1002_htmldata_4);
+		$setvar(g_1002_html_phone = 1002_htmldata_4);
 	}
 
-	$setvar( btn_4102_af.enable = $callaction(fnBtnAfConfirmCheck));
-	$closescreen(popscreen_4102_phone_choice);
+	$setvar( btn_1002_af.enable = $callaction(fnBtnAfConfirmCheck));
+	$closescreen(popscreen_1002_phone_choice);
 "/>
 
-<action id="popscreen_4102_phone_choice_onload"
+<action id="popscreen_1002_phone_choice_onload"
 value="
 "/>
-<popscreen id="popscreen_4102_phone_choice"
+<popscreen id="popscreen_1002_phone_choice"
 	width="$p_lcdWidth"
 	height="$p_lcdHeight"
 	backcolor="00000060"
-	onload="popscreen_4102_phone_choice_onload"
+	onload="popscreen_1002_phone_choice_onload"
 >
 	<screen id="pop_1002_100_1_screen"
 		width="$this.remain_right"
@@ -472,7 +472,7 @@ value="
 				fontsize="$cs_fontsize_18"
 				fontname="$cs_font_700"
 				value="통신사를 선택해주세요"
-				onclicked="$closescreen(popscreen_4102_phone_choice);" 
+				onclicked="$closescreen(popscreen_1002_phone_choice);" 
 			/>
 			<br height="$cs_height_20" />	
 			<label
@@ -514,7 +514,7 @@ value="
 	</screen>
 	<br/>
 	<label
-		x="$result($popscreen_4102_phone_choice.width - $cs_height_50)" 
+		x="$result($popscreen_1002_phone_choice.width - $cs_height_50)" 
 		y="$result($pop_1002_100_1_screen.y)"
     	width="$cs_height_50"
     	height="$cs_height_50"
@@ -525,11 +525,15 @@ value="
 		BACKGROUNDSVG_HEIGHT="$cs_height_20"	
 		backgroundimage_align="center"
 		backgroundimage_align_vertical="center"
-		onclicked="$closescreen(popscreen_4102_phone_choice);" 
+		onclicked="$closescreen(popscreen_1002_phone_choice);" 
     />
 </popscreen>
 
 // 휴대폰 인증번호 전송 이전 약관동의 팝업
+<action id="btn_1002_number_bf_onClicked"
+value="
+	$closescreen(popscreen_1002_100_info_open);
+"/>
 <popscreen id="popscreen_1002_100_info_open"
 	width="$p_lcdWidth"
 	height="$p_lcdHeight"
@@ -644,7 +648,7 @@ value="
 			layout="center"
 			layout_vertical="bottom"
 		>
-			<button id="btn_1002_100_confirm"
+			<button id="btn_1002_number_bf"
 				width="$this.remain_right"
 				height="$this.remain_bottom"
 				layout="right"
@@ -659,7 +663,7 @@ value="
 				textcolor_disable="$cs_color_white"
 				value="인증번호 받을게요"
 				enable="false"
-				onClicked="" //여기부터	
+				onClicked="btn_1002_number_bf_onClicked" //여기부터	
 			/>
 		</viewgroup>
 	</screen>
@@ -694,20 +698,20 @@ value="
 
 
 	if($isequal_string($p_key,1)){
-		if($isequal_string($g_4102_html_phone,4102_htmldata_2)){
+		if($isequal_string($g_1002_html_phone,1002_htmldata_2)){
 			$setvar( 	html_pop_height = $h($g_lcdHeight,700)	);	
 		}
-		if($isequal_string($g_4102_html_phone,4102_htmldata_3)){
+		if($isequal_string($g_1002_html_phone,1002_htmldata_3)){
 			$setvar( 	html_pop_height = $h($g_lcdHeight,560)	);
 		}
-		if($isequal_string($g_4102_html_phone,4102_htmldata_4)){
+		if($isequal_string($g_1002_html_phone,1002_htmldata_4)){
 			$setvar( 	html_pop_height = $h($g_lcdHeight,450)	);
 		}
-		$setvar(	popscreen_html = $g_4102_html_phone	);
+		$setvar(	popscreen_html = $g_1002_html_phone	);
 	}
 	elseif($isequal_string($p_key,2)){
 		$setvar( 	html_pop_height = $h($g_lcdHeight,460)	);
-		$setvar(	popscreen_html = 4102_htmldata_5	);
+		$setvar(	popscreen_html = 1002_htmldata_5	);
 	}
 
 	$popscreen(popscreen_1002_100);
@@ -725,7 +729,7 @@ value="
 	){
 		$setvar(
 			,chk_1002_100_all.checked = false
-			,btn_1002_100_confirm.enable=false
+			,btn_1002_number_bf.enable=false
 		);
 	}
 
@@ -748,7 +752,7 @@ value="
 
 	if($tmp_isAgree){
 		$setvar(
-			btn_1002_100_confirm.enable = true
+			btn_1002_number_bf.enable = true
 		); 	
 		return true;	
 	}else{
@@ -798,7 +802,7 @@ value="
 		return false;
 	}
 	
-	$setvar(btn_1002_100_confirm.enable = true); 			// 다음버튼 활성화 
+	$setvar(btn_1002_number_bf.enable = true); 			// 다음버튼 활성화 
 	return true;
 " />
 <action id="ppopscreen_1002_100_onload" 
@@ -946,11 +950,11 @@ backcolor="$cs_color_white"
 
 
 //textfield_security 는 textFieldEnd_local를 호출하지 않는다.
-<action id="tf_4102_confirm_2_onchanged" value="
+<action id="tf_1002_confirm_2_onchanged" value="
 	//데이터 확인.
-	//$logvar(g_tf_4102_confirm_2_var,g_tf_4102_confirm_2_encvar);
-	$setvar( btn_4102_af.enable = $callaction(fnBtnAfConfirmCheck));
-	if($strlen($g_tf_4102_confirm_2_var) > 0
+	//$logvar(g_tf_1002_confirm_2_var,g_tf_1002_confirm_2_encvar);
+	$setvar( btn_1002_af.enable = $callaction(fnBtnAfConfirmCheck));
+	if($strlen($g_tf_1002_confirm_2_var) > 0
 	&& $vg_1002_100_input_3.hidden
 	){
 		$setvar(
@@ -963,10 +967,10 @@ backcolor="$cs_color_white"
 	}
 "/>
 <action id="textFieldEnd_local" value="
-	$setvar( btn_4102_af.enable = $callaction(fnBtnAfConfirmCheck));
+	$setvar( btn_1002_af.enable = $callaction(fnBtnAfConfirmCheck));
 
-    if($isequal_string($TEXTFIELDEND_LOCAL_PARAM1,tf_4102_confirm_1)){
-    	if($strlen($tf_4102_confirm_1.value) > 0 
+    if($isequal_string($TEXTFIELDEND_LOCAL_PARAM1,tf_1002_confirm_1)){
+    	if($strlen($tf_1002_confirm_1.value) > 0 
     	&& $vg_1002_100_input_2.hidden
     	&& $vg_1002_100_input_3.hidden
     	){
