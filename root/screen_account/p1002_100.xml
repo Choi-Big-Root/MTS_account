@@ -258,7 +258,7 @@ value="
 				/>
 				<br height="$cs_height_2" />
 				<label id="1002_phone_choice"
-					width="$cs_width_90" 
+					width="$cs_width_100" 
 					height="$cs_height_24"
 					textcolor="$cs_color_black"
 					fontsize="$cs_fontsize_16"
@@ -746,18 +746,18 @@ value="
 
 	if($isequal_string($p_key,1)){
 		if($isequal_string($g_1002_html_phone,1002_htmldata_2)){
-			$setvar( 	html_pop_height = $h($g_lcdHeight,700)	);	
+			$setvar( 	html_pop_height = $h($g_lcdHeight,770)	);	
 		}
 		if($isequal_string($g_1002_html_phone,1002_htmldata_3)){
-			$setvar( 	html_pop_height = $h($g_lcdHeight,560)	);
+			$setvar( 	html_pop_height = $h($g_lcdHeight,610)	);
 		}
 		if($isequal_string($g_1002_html_phone,1002_htmldata_4)){
-			$setvar( 	html_pop_height = $h($g_lcdHeight,450)	);
+			$setvar( 	html_pop_height = $h($g_lcdHeight,500)	);
 		}
 		$setvar(	popscreen_html = $g_1002_html_phone	);
 	}
 	elseif($isequal_string($p_key,2)){
-		$setvar( 	html_pop_height = $h($g_lcdHeight,460)	);
+		$setvar( 	html_pop_height = $h($g_lcdHeight,480)	);
 		$setvar(	popscreen_html = 1002_htmldata_5	);
 	}
 
@@ -1779,7 +1779,7 @@ value="
 					/>
 					<br height="$cs_height_2" />
 					<label
-						width="$cs_width_90" 
+						width="$cs_width_100" 
 						height="$cs_height_24"
 						textcolor="$cs_color_black"
 						fontsize="$cs_fontsize_16"
@@ -1968,6 +1968,7 @@ value="
     		$setvar(
     			,vg_1002_100_input_1.y = $result($vg_1002_100_input_1.y + $cs_height_76 + $cs_height_20)
     			,vg_1002_100_input_2.hidden = false
+    			,tf_1002_confirm_2.focus = true
     		);
     	}
     }
