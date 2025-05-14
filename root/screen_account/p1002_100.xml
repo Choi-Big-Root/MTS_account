@@ -533,12 +533,18 @@ value="
 <action id="btn_1002_number_bf_onClicked"
 value="
 	$closescreen(popscreen_1002_100_info_open);
+	$popscreen(popscreen_1002_100_telecom_auth_code);
+	$callaction(Act_RequestTelecomAuthCodeMts,1);
+"/>
+<action id="popscreen_1002_100_info_open_onunload"
+value="
 "/>
 <popscreen id="popscreen_1002_100_info_open"
 	width="$p_lcdWidth"
 	height="$p_lcdHeight"
 	backcolor="00000060"
 	onload="popscreen_1002_100_info_open_onload"
+	onunload="popscreen_1002_100_info_open_onunload"
 >
 	<screen id="pop_1002_100_info_open_screen"
 		width="$this.remain_right"
@@ -590,7 +596,7 @@ value="
 					backgroundimage_align="left"
 					backgroundimage_align_vertical="center"
 					value="전체 동의하기"
-					onClicked="$callaction(btn_1002_confirm_onclicked);"
+					onClicked="$callaction(chk_1002_100_all_onclicked);"
 				/>
 				<br height="$cs_height_20" />
 				<viewgroup
@@ -663,7 +669,7 @@ value="
 				textcolor_disable="$cs_color_white"
 				value="인증번호 받을게요"
 				enable="false"
-				onClicked="btn_1002_number_bf_onClicked" //여기부터	
+				onClicked="btn_1002_number_bf_onClicked"
 			/>
 		</viewgroup>
 	</screen>
@@ -739,10 +745,10 @@ value="
 value="
 	$closescreen(popscreen_1002_100);
 
-	$callaction(btn_1002_confirm_onclicked); 		// 필수동의서는 자동으로 띄운다.
+	$callaction(chk_1002_100_all_onclicked); 		// 필수동의서는 자동으로 띄운다.
 "/>
 // 인증번호
-<action id="btn_1002_confirm_onclicked" 
+<action id="chk_1002_100_all_onclicked" 
 value="
 	// 필수동의서는 자동으로 띄운다.
 	$setvar(	
@@ -945,9 +951,950 @@ backcolor="$cs_color_white"
 	</screen>
 </popscreen>
 
+//휴대폰 인증 번호 화면.
+
+<action id="fnAccountKeypad_1002_100_telecom_auth_code_onunload"
+value="
+	if($strlen($tf_1002_confirm_4.value) == 6 && !$btn_1002_number_bf_resend.enable ){
+		$setvar(btn_1002_confirm.enable = true);
+	}
+"/>
+// SMS 인증요청 
+<action id="Act_RequestTelecomAuthCodeMts" 
+value="
+	if($Act_RequestTelecomAuthCodeMts_param1==1){
+	}
+
+	$delvar(strRequestData, strRequestDataReal);
+    	
+	$log(SMS 이름:$tf_1002_confirm_1.value);
+	$log(SMS 주민:$g_tf_1002_confirm_2_var);
+	$log(SMS 이통사:$1002_phone_select_key);
+	$log(SMS 전화번호:$tf_1002_confirm_3.value);
+
+	$addurlparam(strRequestData,name,$tf_1002_confirm_1.value);
+	$addurlparam(strRequestData,jumin,$g_tf_1002_confirm_2_var);
+	$addurlparam(strRequestData,hp_tp,$1002_phone_select_key);
+	$addurlparam(strRequestData,hp_no,$tf_1002_confirm_3.value);
+
+	$KISA_SEED_CBC_ENCRYPT(strRequestData,strRequestDataEnc);
+
+	$addurlparam(strRequestDataReal,q,$strRequestDataEnc);
+
+	$KISA_SEED_CBC_DECRYPT(strRequestDataEnc,strRequestDataDEC);
+
+	$logvar(strRequestDataDEC);
+
+	$setnstimer(TIMER_SMS_INPUT,1,Act_sms_timer,TRUE);
+
+	$setvar(
+		,tf_1002_confirm_4.value = 
+		,btn_1002_number_bf_resend.enable = false
+		,btn_1002_confirm.enable = false
+	);
+
+	$getRequestData(VAR_GET_Request,$g_sms_request_url,Act_ResponseTelecomAuthCodeMts,strRequestDataReal,TRUE);	
+" />
+<action id="Act_ResponseTelecomAuthCodeMts" 
+params="result,strVarName,strURL"
+value="
+	$logvar($strVarName);
+
+	$setvar(jsonName=json_AuthCode);
+
+	$json_create($jsonName);
+	$json_parsebuffer($jsonname,$strVarName);
+	$json_print($jsonname);
+
+	$setvar(
+		json_result 		= $json_getdata($jsonname,result)
+		,json_selfAuthReqSeq 	= $json_getdata($jsonname,selfAuthReqSeq)
+		,json_selfAuthResSeq 	= $json_getdata($jsonname,selfAuthResSeq)
+		,json_errorMsg 		= $json_getdata($jsonname,errorMsg)
+	);
+	$logvar(
+		json_result 		
+		,json_selfAuthReqSeq 	
+		,json_selfAuthResSeq 	
+		,json_errorMsg 		
+	);
+
+	$json_delete($jsonName);
+
+	$log(SMS 이름:$tf_1002_confirm_1.value); 
+	$log(SMS 이통사:$1002_phone_select_key);
+	$log(SMS 전화번호:$tf_1002_confirm_3.value);
+
+	if(!$isequal_string($json_result,success)){
+		$closescreen(popscreen_1002_100_telecom_auth_code);
+		//$callaction(fnPopover_AlertAction,,$json_errorMsg,,확인);
+		$callaction(fnPopover_AlertAction,,일부 정보가 정확하지 않아요.\n입력하신 정보를 다시 확인해주세요.,,확인);
+	}
+" />
+<action id="Act_sms_timer" 
+value="
+	$setvar(
+		tmp_remain_time = $result($lbl_sms_timer.key - 1)
+		,tmp_remain_min = $result_floor($tmp_remain_time/60,0)
+		,tmp_remain_sec = $result($tmp_remain_time%60)
+	);
+	if($tmp_remain_time == 0){ 
+		$setvar(
+			btn_1002_number_bf_resend.enable = true
+			,tf_1002_confirm_4.value =
+			,btn_1002_confirm.enable = false
+		);		
+		$stopnstimer(TIMER_SMS_INPUT); 	
+	}
+
+	if($tmp_remain_sec < 10){		$setvar(tmp_remain_sec = $addstring(0,$tmp_remain_sec));	}
+	$setvar(
+		tmp_remain_min_sec = $addstring(0,$tmp_remain_min,:,$tmp_remain_sec)
+		,lbl_sms_timer.key = $tmp_remain_time
+		,lbl_sms_timer.value = $tmp_remain_min_sec
+	);
+	$logvar(
+		tmp_remain_time 
+		,tmp_remain_min 
+		,tmp_remain_sec 
+		,tmp_remain_min_sec
+	);
+" />
+<action id="btn_1002_confirm_onclicked"
+value="
+	if($strlen($tf_1002_confirm_4.value)<1){
+		$alert(,,인증번호를 입력해주세요.);
+		return;
+	}
+	$callaction(Act_VerifyTelecomAuthCodeMts);
+"/>
+//인증번호 인증 단계.
+<action id="Act_VerifyTelecomAuthCodeMts" 
+value="
+	$delvar(strVerifyData);
+
+	$addurlparam(strVerifyData,sms_auth_no,$tf_1002_confirm_4.value);
+	$addurlparam(strVerifyData,AuthReqSeq,);
+	$addurlparam(strVerifyData,selfAuthResSeq,$json_selfAuthResSeq);
+
+    $getRequestData(VAR_GET_Verify,$g_sms_verify_url,Act_VerifyTelecomAuthCodeMts_Response,strVerifyData,TRUE);
+" />
+//일단 대기.
+<action id="Act_VerifyTelecomAuthCodeMts_Response" 
+params="result,strVarName,strURL"
+value="
+	$setvar(jsonName=json_VerifyCode);
+	// 복호화 해야 한다.
+	$KISA_SEED_CBC_DECRYPT($strVarName,strVarNameDataDEC);
+	$logvar($strVarName);
+	$logvar(strVarNameDataDEC);
+
+	$json_create($jsonName);
+	$json_parsebuffer($jsonname,$strVarNameDataDEC);
+	$json_print($jsonname);
+	$setvar(
+		json_result 					= $json_getdata($jsonname,result)
+		,json_errorMsg 					= $json_getdata($jsonname,errorMsg)
+		,json_selfAuthReqSeq_confirm 	= $json_getdata($jsonname,selfAuthReqSeq)
+		,json_selfAuthResSeq_confirm 	= $json_getdata($jsonname,selfAuthResSeq) 		// 이값으로 확인 비교한다.
+	);
+	
+	$logvar(
+		json_result 		
+		,json_errorMsg 		
+		,json_selfAuthReqSeq_confirm
+		,json_selfAuthResSeq_confirm
+	);
+	$json_delete($jsonName);
+
+
+	if($isequal_string($json_result,success)){
+		if(!$isequal_string($json_selfAuthResSeq, $json_selfAuthResSeq_confirm)){
+			$setvar(
+				,tf_1002_confirm_4.value =
+				,btn_1002_confirm.enable = false
+			);
+			$callaction(fnPopover_AlertAction,,인증번호가 틀립니다.,,확인);
+			return;
+		}
+
+		$stopnstimer(TIMER_SMS_INPUT);
+
+		$callaction(fnPopover_AlertAction,fnVerifyTelecomAuthCodeSuccess,본인 인증이 완료 되었어요,,확인);
+	}
+	else{
+		$setvar(
+			,tf_1002_confirm_4.value =
+			,btn_1002_confirm.enable = false
+		);
+		$callaction(fnPopover_AlertAction,,$json_errorMsg,,확인);
+		return;
+	}
+" />
+
+<action id="fnVerifyTelecomAuthCodeSuccess"
+value="
+	$setvar(
+		,tf_1002_confirm_1_val = $tf_1002_confirm_1.value 		// 4117_100에서 사용
+		//,tf_1002_confirm_2_val = $g_tf_1002_confirm_2_var 	// 4117_100에서 사용안함.
+		,tf_1002_confirm_3_val = $replace(-,,$tf_1002_confirm_3.value) 		// 4117_100에서 사용
+	);
+
+	$log(주민번호길이:$strlen($g_tf_1002_confirm_2_encvar));
+	$log(주민번호길이:$getvarlen(g_tf_1002_confirm_2_encvar));
+	$callaction(fnConfig_SetValue,g_IN_AGREE_RMN_NO 	,$g_tf_1002_confirm_2_encvar); 	// 주민번호
+	$callaction(fnConfig_SetValue,g_IN_AGREE_CLNT_NM 	,$tf_1002_confirm_1.value);		// 고객명
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_TEL_NUM 	,$tf_1002_confirm_3_val);		// 전화번호
+
+	$setvar(
+ 		,tmp_jumin = $substring($g_tf_1002_confirm_2_var,0,6)
+ 		,tmp_year_gubun = $substring($g_tf_1002_confirm_2_var,6,1)
+ 		,tmp_now = $now(yyyyMMdd)
+ 	);
+
+ 	if($tmp_year_gubun > 2){	$setvar(tmp_jumin = $addstring(20,$tmp_jumin));		}
+ 	else{						$setvar(tmp_jumin = $addstring(19,$tmp_jumin));		}
+
+ 	//$logvar(tmp_jumin,tmp_year_gubun,tmp_now);
+
+ 	$setvar(
+ 		tmp_age_man_remain = $result($tmp_now - $tmp_jumin)
+ 		,tmp_age_man = $substring($tmp_age_man_remain,0,2)
+ 	);
+ 	$logvar(
+ 		tmp_age_man_remain 
+ 		,tmp_age_man 
+ 	);
+ 	$callaction(fnConfig_SetValue,g_IN_REQUEST_AGE 	,$tmp_age_man);		// 만나이
+
+ 	if($g_IN_REQUEST_AGE >= 65) {
+ 		$alert(fnAGEAlertResult,,만 65세 이상의 고령투자자 고객은 비대면 계좌개설을 지원하지 않습니다. 직접 내방을 통해 개설을 부탁드립니다.,확인);
+ 		return;
+ 	}
+ 	$KISA_SEED_CBC_ENCRYPT(g_tf_1002_confirm_2_var,g_tf_1002_confirm_2_kisa_encrypt);
+	$callaction(fnSendSSL_MO_AGREE);
+"/>
+<action id="fnAGEAlertResult" value="
+	$closescreen(popscreen_open_account); 	
+	$setvar(g_is_open_account =); //로그인화면에서 종료위해 초기화
+"/>
+//동의서 등록
+<action id="fnSendSSL_MO_AGREE" 
+value="
+	$popscreen(pop_host_msg,center); 		// 동글뱅이 띄운다.
+	$setvar(	
+		jsonName 		= MO_AGREE 	
+	);
+	$logvar(g_IN_AGREE_CLNT_NM,tmp_doc_data);
+	$json_create($jsonName);
+
+	$json_setdata($jsonName,,HDR,,{});
+	$json_setdata($jsonName,HDR,VER,,1.0); 					// 1.0 : 연동버전
+	$json_setdata($jsonName,HDR,CMD,,$jsonName);			// 
+
+	$json_setdata($jsonName,,BODY,,{});
+	//$json_setdata($jsonName,BODY,RMN_NO,,$g_IN_AGREE_RMN_NO); 		// 주민번호
+	$json_setdata($jsonName,BODY,RMN_NO,,$g_tf_1002_confirm_2_kisa_encrypt); 		// 주민번호
+	$json_setdata($jsonName,BODY,CLNT_NM,,$g_IN_AGREE_CLNT_NM); 	// 고객명
+	$json_setdata($jsonName,BODY,DOC_ID,,P0001); 						// 문서아이디
+	$json_setdata($jsonName,BODY,DOC_DATA,,투자자정보확인서); 						// 입력내용
+
+	$json_setdata($jsonName,BODY,ITEM,,$g_IN_AGREE_ITEM1); 			// 필수동의항목 - YYYY
+	$json_setdata($jsonName,BODY,ITEM2,,$g_IN_AGREE_ITEM2); 		// 선택동의항목 - YYY
+	$json_setdata($jsonName,BODY,ITEM3,,$g_IN_AGREE_ITEM3); 		// 연락방식 	- * 전체,SMS,전화,이메일,우편:NYYYN
+	$json_setdata($jsonName,BODY,IP_ADDR,,0.0.0.0); 						// IP주소
+
+	$json_setdata($jsonName,BODY,MAC_ADDR,,$g_mac_address); 						// 맥어드레스
+	$json_setdata($jsonName,BODY,OS_VER,,$g_os_version); 						// OS버전
+	
+
+	$json_print($jsonName);
+	$delvar(strSSLSendData);
+	$json_getfullstring($jsonName,strSSLSendData);
+	$json_delete($jsonName);
+	$logvar(strSSLSendData);
+	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
+"/>
+<action id="fnRecvSSL_MO_AGREE" 
+value="
+
+	$setvar(
+		recvSSL_hdr_ret 		= $json_getdata($jsonname,HDR.RET)
+		,recvSSL_hdr_msg 		= $json_getdata($jsonname,HDR.MSG)
+		,recvSSL_hdr_err_code	= $json_getdata($jsonname,HDR.ERR_CODE)
+		,recvSSL_body_work_no 	= $json_getdata($jsonname,BODY.WORK_NO)
+
+	);
+	$setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_hdr_err_code));
+
+	$log(========= SSL 받은데이터 ==============);
+	$logvar(
+		recvSSL_hdr_ret 
+		,recvSSL_hdr_msg 
+		,recvSSL_body_work_no 
+	);
+	if(!$isequal_string($recvSSL_hdr_ret,OK)){
+		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
+		$callaction(fnPopover_AlertAction,,$recvSSL_hdr_msg,,확인); 			
+		return;
+	}
+	$callaction(fnConfig_SetValue,g_OUT_AGREE_WORK_NO 	,$recvSSL_body_work_no);
+
+	// 신용등급 조회
+	$callaction(fnSendSSL_MO_CREDIT);
+	return;
+
+"/>
+<action id="fnSendSSL_MO_CREDIT"
+value="	// 비대면 절차개선 - 2020.09.28
+		// 신용등급 조회
+	$setvar(	
+		jsonName 		= MO_CREDIT 	
+	);
+
+	$json_create($jsonName);
+
+	$json_setdata($jsonName,,HDR,,{});
+	$json_setdata($jsonName,HDR,VER,,1.0); 					// 1.0 : 연동버전
+	$json_setdata($jsonName,HDR,CMD,,$jsonName);			// 
+
+	$json_setdata($jsonName,,BODY,,{});
+	$json_setdata($jsonName,BODY,RMN_NO,,$g_tf_1002_confirm_2_kisa_encrypt); 	// 주민번호
+	$json_setdata($jsonName,BODY,WORK_NO,,$g_OUT_AGREE_WORK_NO); 				// 상담번호
+	
+	$json_print($jsonName);
+	$delvar(strSSLSendData);
+	$json_getfullstring($jsonName,strSSLSendData);
+	$json_delete($jsonName);
+	$logvar(strSSLSendData);
+	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
+"/>
+<action id="fnRecvSSL_MO_CREDIT" 
+value="	// 비대면 절차개선 - 2020.09.28
+		// 신용등급 조회
+	$setvar(
+		recvSSL_hdr_ret 		= $json_getdata($jsonname,HDR.RET)
+		,recvSSL_hdr_msg 		= $json_getdata($jsonname,HDR.MSG)
+		,recvSSL_hdr_err_code	= $json_getdata($jsonname,HDR.ERR_CODE)
+		,recvSSL_body_able_yn 	= $json_getdata($jsonname,BODY.ABLE_YN)			// 계좌개설가능여부 Y/N
+		,recvSSL_body_credi_score = $json_getdata($jsonname,BODY.CREDI_SCORE) 	// 신용점수
+		,recvSSL_body_credi_grade = $json_getdata($jsonname,BODY.CREDI_GRADE) 	// 신용등급
+
+	);
+	$setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_hdr_err_code));
+
+	$log(========= SSL 받은데이터 ==============);
+	$logvar(
+		recvSSL_hdr_ret 
+		,recvSSL_hdr_msg 
+		,recvSSL_body_able_yn
+		,recvSSL_body_credi_score
+		,recvSSL_body_credi_grade
+	);
+	if(!$isequal_string($recvSSL_hdr_ret,OK)){
+		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
+		$callaction(fnPopover_AlertAction,,$recvSSL_hdr_msg,,확인);
+		return;
+	}
+	
+
+	//여기먼저 확인 필요.
+	if($isequal_string($recvSSL_body_able_yn,Y)){ 	// 신용등급 확인후 팝업띄움 (서비스 확인필요)
+		$callaction(fnPopover_AlertAction,fnCloseAccountPopUp,귀하의 신용등급이 개설조건에\n만족하지 않아 계좌개설이 불가능합니다.\n확인버튼을 누르시면 초기화면으로 이동합니다.,,확인);
+		return;
+	}
+
+
+	
+	if($isequal_string($g_save_tel_num,$tf_1002_confirm_3.value)){
+		$setvar(tmp_pop_countinu_flag = true);
+	}else{
+		$setvar(tmp_pop_countinu_flag = false);
+	}
+
+	// 인증 완료된 휴대폰번호 - DB에 저장
+	$callaction(fnConfig_SetValue,g_save_tel_num,$tf_1002_confirm_3.value);
+
+	$callaction(fnSendSSL_MO_REQVIEW);
+
+"/>
+//계좌 개설 신청 내역 조회
+<action id="fnSendSSL_MO_REQVIEW" 
+value="	
+	$setvar(	jsonName 		= MO_REQVIEW 	);
+	$json_create($jsonName);
+
+	$json_setdata($jsonName,,HDR,,{});
+	$json_setdata($jsonName,HDR,VER,,1.0); 					// 1.0 : 연동버전
+	$json_setdata($jsonName,HDR,CMD,,$jsonName);			// 
+
+	$json_setdata($jsonName,,BODY,,{});
+	$json_setdata($jsonName,BODY,WORK_NO,,$g_OUT_AGREE_WORK_NO); 	// 상담번호
+	$json_setdata($jsonName,BODY,CLNT_NM,,$g_IN_AGREE_CLNT_NM); 	// 고객명 (40이하)
+	//$json_setdata($jsonName,BODY,RMN_NO,,$g_IN_AGREE_RMN_NO); 	// 고객 주민등록번호
+	$json_setdata($jsonName,BODY,RMN_NO,,$g_tf_1002_confirm_2_kisa_encrypt); 	// 고객 주민등록번호
+	
+
+	$json_print($jsonName);
+	$delvar(strSSLSendData);
+	$json_getfullstring($jsonName,strSSLSendData);
+	$json_delete($jsonName);
+	$logvar(strSSLSendData);
+	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
+" />
+<action id="fnRecvSSL_MO_REQVIEW" 
+value="
+	$setvar(
+		recvSSL_hdr_ret 			= $json_getdata($jsonname,HDR.RET)
+		,recvSSL_hdr_msg 			= $json_getdata($jsonname,HDR.MSG)
+		,recvSSL_body_work_no 		= $json_getdata($jsonname,BODY.WORK_NO)
+		,recvSSL_body_resv_stdt 	= $json_getdata($jsonname,BODY.RESV_STDT)
+		,recvSSL_body_resv_eddt 	= $json_getdata($jsonname,BODY.RESV_EDDT)
+		
+	);
+	$log(========= SSL 받은데이터 ==============);
+	$logvar(
+		recvSSL_hdr_ret 			
+		,recvSSL_hdr_msg 			
+		,recvSSL_body_work_no 		
+		,recvSSL_body_resv_stdt 	
+		,recvSSL_body_resv_eddt 	
+	);
+	$setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_hdr_err_code));
+
+	if(!$isequal_string($recvSSL_hdr_ret,OK)){
+		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
+		//$alertaction(,,$recv_error_msg,확인);
+		//$callaction(fnPopover_AlertAction,,$recv_error_msg,,확인);
+		$callaction(fnPopover_AlertAction,,$recvSSL_hdr_msg,,확인);
+		return;
+	}
+	//$callaction(fnConfig_SetValue,g_open_account_save,2);
+	$closescreen(pop_host_msg); 		// 동글뱅이 멈춤
+	$log(진행단계:$g_open_account_save);
 
 
 
+	$callaction(fnSendSSL_MO_WORKNO);
+" />
+<action id="fnSendSSL_MO_WORKNO"
+value="
+	$setvar(	jsonName 		= MO_WORKNO 	);
+	$json_create($jsonName);
+
+	$json_setdata($jsonName,,HDR,,{});
+	$json_setdata($jsonName,HDR,VER,,1.0); 					// 1.0 : 연동버전
+	$json_setdata($jsonName,HDR,CMD,,$jsonName);			// 
+
+	$json_setdata($jsonName,,BODY,,{});
+	$json_setdata($jsonName,BODY,WORK_NO,,$g_OUT_AGREE_WORK_NO); 	// 상담번호
+	
+	$json_print($jsonName);
+	$delvar(strSSLSendData);
+	$json_getfullstring($jsonName,strSSLSendData);
+	$json_delete($jsonName);
+	$logvar(strSSLSendData);
+	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
+"/>
+<action id="fnRecvSSL_MO_WORKNO"
+value="
+	$setvar(
+		recvSSL_hdr_ret 			= $json_getdata($jsonname,HDR.RET)
+		,recvSSL_hdr_msg 			= $json_getdata($jsonname,HDR.MSG)
+		,recvSSL_body_use_yn		= $json_getdata($jsonname,BODY.USE_YN)
+		,recvSSL_body_dt 	= $json_getdata($jsonname,BODY.DT)		
+	);
+	$log(========= SSL 받은데이터 최대근 ==============);
+	$logvar(
+		recvSSL_hdr_ret 			
+		,recvSSL_hdr_msg 			
+		,recvSSL_body_dt 		
+	);
+	
+	if(!$isequal_string($recvSSL_hdr_ret,OK)){
+		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
+		$callaction(fnPopover_AlertAction,,$recvSSL_hdr_msg,,확인);
+		return;
+	}
+
+	$log(
+		확인용 : 
+			1001 g_IN_AGREE_ITEM1[$g_IN_AGREE_ITEM1],
+			1001 g_IN_AGREE_ITEM2[$g_IN_AGREE_ITEM2],
+			1001 g_IN_AGREE_ITEM3[$g_IN_AGREE_ITEM3],
+			1002 g_save_tel_num[$g_save_tel_num],
+			1002 g_IN_AGREE_RMN_NO[$g_IN_AGREE_RMN_NO],
+			1002 g_IN_AGREE_CLNT_NM[$g_IN_AGREE_CLNT_NM],
+			1002 g_IN_REQUEST_TEL_NUM[$g_IN_REQUEST_TEL_NUM],
+			1002 g_IN_REQUEST_AGE[$g_IN_REQUEST_AGE],
+			1002 g_OUT_AGREE_WORK_NO[$g_OUT_AGREE_WORK_NO],
+	);
+
+
+	$log(최대근******** $getdiffday($g_open_account_save_date,$recvSSL_body_dt));
+
+
+
+
+	//이어하기 처음하기 일단 대기 꼭 확인.
+	$closescreen(popscreen_number_keypad);
+	$closescreen(popscreen_1002_100_telecom_auth_code);
+	$callaction(Act_Open_Account_Move,1003);	// 처음부터 순차진행
+	return;
+
+	//저장 화면이 있고, 7일경과가 아니고, 저장화면을 저장한 날짜가 존재하고, 이전 저장되어 있던 전화번호와 현재 인증된 전화번호가 같다면
+	//mo_workno 의 flag값은 4101에서 휴대폰 인증전에 이미 한번 확인이 되기에
+	if($g_open_account_save > 1 
+		&& $getdiffday($g_open_account_save_date,$recvSSL_body_dt) <= 8
+		&& $strlen($g_open_account_save_date) > 1
+		&& $tmp_pop_countinu_flag
+		&& $isequal_string($recvSSL_body_use_yn,Y)
+	)
+	{
+		$callaction(Act_Open_Account_Move,4103);	// 이어하기,처음부터 선택화면으로..
+	}
+	else{							// 진행중인 내역이 없을경우
+		// 비대면 절차개선 - 2020.09.28
+		// =========== 저장한 전역변수들 초기화 ===========
+		$callaction(fnConfig_SetValue,g_save_acno,);
+		$callaction(fnConfig_SetValue,g_save_cybr_acct_no,);
+		$callaction(fnConfig_SetValue,g_save_acno2,);
+		$callaction(fnConfig_SetValue,g_save_cybr_acct_no2,);
+		$callaction(fnConfig_SetValue,g_save_acno3,);
+		$callaction(fnConfig_SetValue,g_save_hts_id,);
+		$callaction(fnConfig_SetValue,g_save_qustion_1,);
+		$callaction(fnConfig_SetValue,g_save_qustion_2,);
+
+		$callaction(fnConfig_SetValue,g_open_tp_select,);		// 국내,해외 구분
+		$callaction(fnConfig_SetValue,g_save_bank_code,);		// 은행코드
+		$callaction(fnConfig_SetValue,g_save_bank_name,);		// 은행명
+		$callaction(fnConfig_SetValue,g_save_acnt_name,);		// 계좌명
+		$callaction(fnConfig_SetValue,g_save_acnt_no,);			// 계좌번호
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_NEW_PW,);	// 계좌비밀번호
+		//$callaction(fnConfig_SetValue,g_save_tel_num,);			// 전화번호 >> 인증후 조회한 데이터 살아있어야함
+		$callaction(fnConfig_SetValue,g_save_members_nm,);			// 추천직원 이름
+		$callaction(fnConfig_SetValue,g_save_members_no,);			// 추천직원 사번
+		$callaction(fnConfig_SetValue,g_save_frontImageEncryptData_base64,); 	// 신분증 이미지 바이너리
+
+		$callaction(fnConfig_SetValue,g_save_bsns_date,);			// 거래일자
+		$callaction(fnConfig_SetValue,g_save_inout_no,);			// 입출금번호
+		$callaction(fnConfig_SetValue,g_save_mast_acctno,);			// 대표계좌번호
+		
+		$callaction(fnConfig_SetValue,g_save_open_tp,);			// 인증방법 
+		$callaction(fnConfig_SetValue,g_save_result_yn,);		// 진위여부
+		//$callaction(fnConfig_SetValue,g_OUT_AGREE_WORK_NO,);			// 상담번호 >> 인증후 조회한 데이터 살아있어야함
+		
+		//$callaction(fnConfig_SetValue,g_open_account_save,); 			// 마지막 화면번호
+		//$callaction(fnConfig_SetValue,g_menu_code_open_account,); 		// 마지막 화면번호
+
+		$callaction(fnConfig_SetValue,g_open_account_save_date,); 		
+		// ==========================================
+
+		$callaction(Act_Open_Account_Move,4117);	// 처음부터 순차진행
+	}
+"/>
+//재전송
+<action id="btn_1002_number_bf_resend_onclicked"
+value="
+	$setvar(lbl_sms_timer.key = 300);
+	$callaction(Act_RequestTelecomAuthCodeMts);
+"/>
+<action id="popscreen_1002_100_telecom_auth_code_onunload"
+value="
+	$stopnstimer(TIMER_SMS_INPUT); 
+"/>
+<popscreen id="popscreen_1002_100_telecom_auth_code"
+	width="$g_lcdWidth" 
+	height="$p_lcdHeight"
+	noscroll_height="true"
+	onload="popscreen_1002_100_telecom_auth_code_onload"
+	onunload="popscreen_1002_100_telecom_auth_code_onunload"
+	backcolor="ffffff00"
+>
+	<viewgroup 
+        width="$super.width" height="$h($g_lcdHeight,6.2)" backcolor="ffffff00"  
+        margin_left="$w($g_lcdwidth,4.3)"
+        >
+        <viewgroup 
+        	width="$w($g_lcdWidth,12.4)" 
+        	height="$this.remain_bottom" 
+        	hidden="false"
+        >
+            <label 
+	            layout_vertical="center" 
+	            width="$cs_height_24"
+	            height="$cs_height_24" 
+	            BACKGROUNDSVG="$icon_arrow_left"
+	            BACKGROUNDSVG_DISABLE="$icon_arrow_left"
+	            BACKGROUNDSVG_HIGHLIGHT="$icon_arrow_left"
+	            BACKGROUNDSVG_WIDTH="$cs_height_24"
+	            BACKGROUNDSVG_HEIGHT="$cs_height_24"
+	            backgroundimage_align="center"
+	            backgroundimage_align_vertical="center"
+            />
+            <button class="cs_button_none" 
+            	onClicked="$closescreen(popscreen_1002_100_telecom_auth_code);" 
+            />
+        </viewgroup>
+    </viewgroup>
+    <br/>
+	<viewgroup
+		noscroll_height="true"
+		margin_bottom="$cs_height_20"
+		backcolor="$cs_color_white"
+	>
+		<br height="$cs_height_15"/>
+		<viewgroup
+			width="$this.remain_right"
+			height="$cs_height_352"
+			margin_left="$cs_width_16"
+			margin_right="$cs_width_16"
+		>
+			<viewgroup
+				width="$this.remain_right"
+				height="$cs_height_98"
+			>
+				<label
+					width="$cs_width_56"
+					height="$cs_height_20"
+					fontsize="$cs_fontsize_15"
+					fontname="$cs_font_400"
+					textcolor="$cs_color_text"
+					align="left"
+					value="본인인증"
+				/>
+				<label 
+		        	width="$cs_height_20"
+		        	height="$cs_height_20"
+		            BACKGROUNDSVG="$icon_question"
+					BACKGROUNDSVG_DISABLE="$icon_question"
+					BACKGROUNDSVG_HIGHLIGHT="$icon_question"
+					BACKGROUNDSVG_WIDTH="$cs_height_20"
+					BACKGROUNDSVG_HEIGHT="$cs_height_20"
+					backgroundimage_align="center"
+					backgroundimage_align_vertical="center"
+					hidden="false"
+		        />
+				<viewgroup 
+					x="$w($g_lcdWidth,0)" 
+					width="$w($g_lcdWidth,25)" 
+					height="$h($g_lcdHeight,4.5)"
+				>
+			        <button class="cs_button_none" onClicked="btn_pop_info_1002_100_onClicked"/>
+		   		</viewgroup>
+		   		<br/>
+		   		<viewgroup
+		   			width="$this.remain_right"
+		   			height="$cs_height_68"
+		   			layout_vertical="bottom"
+		   		>
+		   			<label
+		   				width="$this.remain_right"
+		   				height="$cs_height_34"
+		   				textcolor="$cs_color_black"
+		   				fontsize="$cs_fontsize_24"
+		   				fontname="$cs_font_600"
+		   				value="본인 확인을 위해"
+		   			/>
+		   			<br/>
+		   			<label
+		   				width="$this.remain_right"
+		   				height="$cs_height_34"
+		   				textcolor="$cs_color_black"
+		   				fontsize="$cs_fontsize_24"
+		   				fontname="$cs_font_600"
+		   				value="정보를 입력해 주세요."
+		   			/>
+		   		</viewgroup>
+			</viewgroup>
+			<br height="$cs_height_16" />
+			<viewgroup
+				width="$this.remain_right"
+				height="$this.remain_bottom"
+			>
+				<viewgroup
+					width="$this.remain_right"
+					height="$cs_height_84"
+					margin_top="$cs_height_18"
+					margin_bottom="$cs_height_18"
+					margin_left="$cs_width_20"
+					margin_right="$cs_width_20"
+					border_radius="$cs_radius_10"
+					border_color="$cs_color_line"
+				>
+					<label
+						width="$this.remain_right"
+						height="$cs_height_24"
+						textcolor="$cs_color_text"
+						fontsize="$cs_fontsize_12"
+						fontname="$cs_font_400"
+						value="인증번호"
+					/>
+					<br/>
+					<textfield id="tf_1002_confirm_4"
+						width="$cs_width_159"
+						height="$cs_height_24"
+						keyboard_type="number"
+						textcolor="$cs_color_black"
+						textcolor_placeholder="$cs_color_disable"
+						fontsize="$cs_fontsize_18"
+						fontsize_placeholder="$cs_fontsize_14"
+						fontname="$cs_font_400"
+						placeholder="인증번호"
+						enable="false"
+					/>
+					<button class="cs_button_none" 
+					x="$tf_1002_confirm_4.x"
+					y="$tf_1002_confirm_4.y"
+					width="$cs_width_159"
+					height="$cs_height_24"
+					onClicked="$callaction(fnAccountShowInputKeypad,tf_1002_confirm_4,authcode,btn_1002_confirm_onclicked,fnAccountKeypad_1002_100_telecom_auth_code_onunload);"
+					/>
+
+					<label id="lbl_sms_timer"
+						width="$cs_width_90"
+						height="$cs_height_24"
+						textcolor="$cs_color_main"
+						fontsize="$cs_fontsize_16"
+						fontname="$cs_font_400"
+						align="right"
+						key="300"
+						value="05:00"
+					/>
+					<blank width="$cs_width_6" />
+					<button id="btn_1002_number_bf_resend"
+						width="$this.remain_right"
+						height="$cs_height_24"
+						textcolor="$cs_color_white"
+						textcolor_active="$cs_color_white"
+						textcolor_disable="$cs_color_white"
+						fontsize="$cs_fontsize_13"
+						fontname="$cs_font_400"
+						align="center"
+						value="재전송"
+						backcolor="$cs_color_main"
+						backcolor_active="$cs_color_main"
+						backcolor_disable="b9d8fb"
+						border_radius="$cs_radius_10"
+						enable="false"
+						onclicked="btn_1002_number_bf_resend_onclicked" 
+					/>
+
+				</viewgroup>
+				<br height="$cs_height_10" />
+				<label
+					width="$cs_width_13"
+					height="$cs_height_44"
+					BACKGROUNDSVG="$icon_rectangle_230"
+			        BACKGROUNDSVG_DISABLE="$icon_rectangle_230"
+			        BACKGROUNDSVG_HIGHLIGHT="$icon_rectangle_230"
+			        BACKGROUNDSVG_WIDTH="$cs_height_4"
+			        BACKGROUNDSVG_HEIGHT="$cs_height_4"
+			        backgroundimage_x="$cs_width_2"
+   					backgroundimage_y="$cs_height_9"
+			        //backgroundimage_align="center"
+			        //backgroundimage_align_vertical="center"
+				/>
+				<viewgroup
+					width="$this.remain_right"
+					height="$cs_height_44"
+				>
+					<label
+						width="$this.remain_right"
+						height="$cs_height_22"
+						textcolor="$cs_color_text"
+						fontsize="$cs_fontsize_14"
+						fontname="$cs_font_400"
+						value="인증번호 수신이 안될 경우, 인증번호 문자가"
+					/>
+					<br/>
+					<label
+						width="$this.remain_right"
+						height="$this.remain_bottom"
+						textcolor="$cs_color_text"
+						fontsize="$cs_fontsize_14"
+						fontname="$cs_font_400"
+						value="차단되어 있는지 확인하여 주세요."
+					/>
+				</viewgroup>
+				<br/>
+				<viewgroup
+					width="$this.remain_right"
+					height="$cs_height_76"
+					margin_top="$cs_height_18"
+					margin_bottom="$cs_height_18"
+					margin_left="$cs_width_20"
+					border_radius="$cs_radius_10"
+					border_color="$cs_color_line"
+					layout_vertical="bottom"
+				>
+					<label
+						width="$this.remain_right"
+						height="$cs_height_14"
+						textcolor="$cs_color_text"
+						fontsize="$cs_fontsize_12"
+						fontname="$cs_font_400"
+						value="휴대폰번호"
+					/>
+					<br height="$cs_height_2" />
+					<label
+						width="$cs_width_90" 
+						height="$cs_height_24"
+						textcolor="$cs_color_black"
+						fontsize="$cs_fontsize_16"
+						fontname="$cs_font_400"
+						value="$1002_phone_choice_set_val"
+						//key="-1" 
+						//onclicked="1002_phone_onclicked"
+						BACKGROUNDSVG="$icon_polygon_3"
+				        BACKGROUNDSVG_DISABLE="$icon_polygon_3"
+				        BACKGROUNDSVG_HIGHLIGHT="$icon_polygon_3"
+				        BACKGROUNDSVG_WIDTH="$cs_width_10"
+				        BACKGROUNDSVG_HEIGHT="$cs_height_8"
+				        backgroundimage_align="right"
+				        backgroundimage_align_vertical="center"
+					/>
+
+					<blank width="$cs_width_10"/>
+					<textfield
+						width="$this.remain_right" 
+						height="$cs_height_24"
+						keyboard_type="number"
+						maxlength="13"
+						placeholder="010-1234-5678"
+						textcolor_placeholder="$cs_color_disable"
+						textcolor="$cs_color_black"
+						fontsize="$cs_fontsize_16"
+						fontname="$cs_font_400"
+						clearbutton="true"
+						enable="false"
+						value="$tf_1002_confirm_3.value"
+					/>
+				</viewgroup>
+			</viewgroup>
+		</viewgroup>	
+		<br/>
+		<viewgroup
+			width="$cs_width_343"
+			height="$cs_height_54"
+			layout="center"
+			layout_vertical="bottom"
+		>
+			<button 
+				width="$cs_width_167_5" 
+				height="$this.remain_bottom"
+				layout="left"
+				backcolor="$cs_color_white"
+				border_width="1"
+				border_radius="$cs_height_10"
+				border_color="$cs_color_disable"
+				fontsize="$cs_fontsize_16"
+				fontname="$cs_font_700"
+				textcolor="$cs_color_black"
+				textcolor_active="$cs_color_black"
+				value="이전"
+				onClicked="$closescreen(popscreen_1002_100_telecom_auth_code);"
+			/>
+			<button id="btn_1002_confirm"
+				width="$cs_width_167_5" 
+				height="$this.remain_bottom"
+				layout="right"
+				backcolor="$cs_color_main"
+				backcolor_disable="b9d8fb"
+				border_width="1"
+				border_radius="$cs_height_10"
+				fontsize="$cs_fontsize_16"
+				fontname="$cs_font_700"
+				textcolor="$cs_color_white"
+				textcolor_active="$cs_color_white"
+				textcolor_disable="$cs_color_white"
+				value="완료"
+				enable="false"
+				onclicked="btn_1002_confirm_onclicked"
+			/>
+		</viewgroup>
+	</viewgroup>
+</popscreen>
+
+
+<popscreen id="pop_caution"
+	width="$g_lcdWidth" 
+	height="$g_lcdHeight"
+	//backcolor="0000ff"
+	modal="true"
+	modalbackcolor="#00000088"
+	layout="center"
+	layout_vertical="center"
+	onload=""
+	onclicked="$closescreen(pop_caution);"
+	key=""
+	>
+	<screen id="screen_comboAccountPopover"
+		width="$w($g_lcdWidth,88.3)"
+		//height="$h($g_lcdHeight,70)"
+		height="$h($g_lcdHeight,49.5)"
+		backcolor="none"
+		layout="center"
+		layout_vertical="center"
+		noscroll_width="true"
+		>
+		<viewgroup 
+			width="$super.width"
+			height="$h($g_lcdHeight,8.6)"
+			backcolor="ffffff"
+			>
+			<label width="$super.width" height="$super.height" align="left" margin_left="$w($g_lcdWidth,3.2)" 
+			fontname="$g_baseFontNameBold"
+			fontsize="$g_fontsize_big2"
+			value="알림" />
+		</viewgroup>
+		<br/><hr backcolor="3c3c3c" /><br/>
+		<viewgroup 
+			width="$super.width"
+			//height="$h($g_lcdHeight,49)"
+			height="$h($g_lcdHeight,15)"
+			backcolor="ffffff"
+			>
+			<viewgroup
+				width="$super.width"
+				height="$h($g_lcdHeight,20)"
+				>
+				<br height="$h($g_lcdHeight,2)" /><blank width="$w($g_lcdWidth,4)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName" 
+					fontsize="$g_fontSize_big1"
+					value="귀하의 신용등급이 개설조건에" />
+				<br /><blank width="$w($g_lcdWidth,4)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName"
+					fontsize="$g_fontSize_big1"
+					value="만족하지 않아 계좌개설이 불가능합니다." />    
+				<br /><blank width="$w($g_lcdWidth,4)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName"
+					fontsize="$g_fontSize_big1"
+					value="확인버튼을 누르시면 초기화면으로 이동합니다." />
+			</viewgroup>
+		</viewgroup>
+		<br />
+		<viewgroup height="$h($g_lcdHeight,10)">
+			<button 
+				width="100%" 
+				height="$super.height" 
+				value="확인" 
+				backcolor="bd3135"
+				backcolor_active="b8240c"
+				fontsize="$g_fontsize_big2"
+				fontname="$g_baseFontNameBold"
+				textcolor="ffffff"
+				textcolor_active="ffffff"
+				onclicked="$closescreen(pop_caution);
+				$closescreen(popscreen_open_account);
+				"
+				/>
+		</viewgroup>
+	</screen>
+</popscreen>
 
 //textfield_security 는 textFieldEnd_local를 호출하지 않는다.
 <action id="tf_1002_confirm_2_onchanged" value="
