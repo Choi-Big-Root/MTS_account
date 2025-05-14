@@ -60,6 +60,9 @@ $readfile(plist/root/html/1002_100_5.html,1002_htmldata_5);
 		,vg_account_title_step.hidden = false
 
 		,menu_num=1002
+
+        ,tmp_first_phone_slash_flage = true
+        ,tmp_second_phone_slash_flage = true
 	);
 	//초기화 
 	$callaction(fnConfig_SetValue,g_tf_1002_confirm_2_var,);
@@ -100,7 +103,44 @@ value="
 		return false;
 	}
 "/>
-<action id="fnAccountKeypad_1002_100_confirm"
+<action id="tf_1002_confirm_3_onChange"
+value="
+	$log($this.value);
+	$delvar(tmp_before_value,tmp_keypad_value,tmp_keypad_value_str_len);
+	$setvar(
+		tmp_id = $this.id
+		,tmp_keypad_value = $tmp_id.value
+		,tmp_keypad_value_str_len = $strlen($tmp_keypad_value)
+	);
+	$logvar(tmp_id, tmp_before_value);
+	if($tmp_keypad_value_str_len >= 13){
+		return;
+	}
+
+	if($tmp_keypad_value_str_len == 4 && $tmp_first_phone_slash_flage){
+        $setvar(
+            ,$($tmp_id).value = $formatstring(###-#,$tmp_keypad_value)
+            ,tmp_first_phone_slash_flage = false
+        );
+    }elseif($tmp_keypad_value_str_len == 4 && !$tmp_first_phone_slash_flage){
+        $setvar(
+            ,$($tmp_id).value = $replace(-,,$tmp_keypad_value)
+            ,tmp_first_phone_slash_flage = true
+        );
+    }elseif($tmp_keypad_value_str_len == 9 && $tmp_second_phone_slash_flage){
+        $setvar( 
+            ,$($tmp_id).value = $formatstring(###-####-#,$replace(-,,$tmp_keypad_value))
+            ,tmp_second_phone_slash_flage = false
+        );
+    }elseif($tmp_keypad_value_str_len == 9 && !$tmp_second_phone_slash_flage){
+        $setvar(
+            ,$($tmp_id).value = $formatstring(###-####,$replace(-,,$tmp_keypad_value))
+            ,tmp_second_phone_slash_flage = true
+        );
+    }
+
+"/>
+<!-- <action id="fnAccountKeypad_1002_100_confirm"
 value="
 	$log(최대근**************);
 	$setvar( 
@@ -119,7 +159,7 @@ value="
 <action id="fnAccountKeypad_1002_100_onunload"
 value="
 	$setvar( btn_1002_af.enable = $callaction(fnBtnAfConfirmCheck));
-"/>
+"/> -->
 <screen id="screen_1002_100"
 	class="cs_screen_contents"
 	backcolor="ffffff"
@@ -247,15 +287,16 @@ value="
 					fontsize="$cs_fontsize_16"
 					fontname="$cs_font_400"
 					clearbutton="true"
-					enable="false"
+					enable="true"
+					onChanged="tf_1002_confirm_3_onChange"
 				/>
-				<button class="cs_button_none" 
+				<!-- <button class="cs_button_none" 
 					x="$tf_1002_confirm_3.x"
 					y="$tf_1002_confirm_3.y"
 					width="$this.remain_right" 
 					height="$cs_height_24"
 					onClicked="$callaction(fnAccountShowInputKeypad,tf_1002_confirm_3,phone,fnAccountKeypad_1002_100_confirm,fnAccountKeypad_1002_100_onunload);"
-				/>
+				/> -->
 			</viewgroup>
 			<br height="$cs_height_20" />
 			<viewgroup id="vg_1002_100_input_2"
@@ -1914,7 +1955,10 @@ value="
 	}
 "/>
 <action id="textFieldEnd_local" value="
-	$setvar( btn_1002_af.enable = $callaction(fnBtnAfConfirmCheck));
+	$setvar( 
+		tmp_textFieldEnd_local_result = $callaction(fnBtnAfConfirmCheck)
+		,btn_1002_af.enable = $tmp_textFieldEnd_local_result
+	);
 
     if($isequal_string($TEXTFIELDEND_LOCAL_PARAM1,tf_1002_confirm_1)){
     	if($strlen($tf_1002_confirm_1.value) > 0 
@@ -1925,6 +1969,17 @@ value="
     			,vg_1002_100_input_1.y = $result($vg_1002_100_input_1.y + $cs_height_76 + $cs_height_20)
     			,vg_1002_100_input_2.hidden = false
     		);
+    	}
+    }
+
+    if($isequal_string($TEXTFIELDEND_LOCAL_PARAM1,tf_1002_conirm_3)){
+    	if($strlen($tf_1002_confirm_3.value) > 0){
+    		$closescreen(popscreen_number_keypad);
+			if($tmp_textFieldEnd_local_result){
+				$popscreen(popscreen_1002_100_info_open);
+			}else{
+				return;
+			}
     	}
     }
 " />
