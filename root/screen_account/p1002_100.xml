@@ -1340,8 +1340,9 @@ value="	// 비대면 절차개선 - 2020.09.28
 	
 
 	//여기먼저 확인 필요.
-	if($isequal_string($recvSSL_body_able_yn,Y)){ 	// 신용등급 확인후 팝업띄움 (서비스 확인필요)
-		$callaction(fnPopover_AlertAction,fnCloseAccountPopUp,귀하의 신용등급이 개설조건에\n만족하지 않아 계좌개설이 불가능합니다.\n확인버튼을 누르시면 초기화면으로 이동합니다.,,확인);
+	if(!$isequal_string($recvSSL_body_able_yn,Y)){ 	// 신용등급 확인후 팝업띄움 (서비스 확인필요)
+		$closescreen(pop_host_msg);
+		$callaction(fnPopover_AlertAction,fnCloseAccountPopUp,귀하의 신용등급이 개설조건에 만족하지 않아 계좌개설이 불가능합니다. 확인버튼을 누르시면 초기화면으로 이동합니다.,,확인);
 		return;
 	}
 
@@ -1676,21 +1677,22 @@ value="
 						width="$cs_width_159"
 						height="$cs_height_24"
 						keyboard_type="number"
+						maxlength="6"
 						textcolor="$cs_color_black"
 						textcolor_placeholder="$cs_color_disable"
 						fontsize="$cs_fontsize_18"
 						fontsize_placeholder="$cs_fontsize_14"
 						fontname="$cs_font_400"
 						placeholder="인증번호"
-						enable="false"
+						enable="true"
 					/>
-					<button class="cs_button_none" 
+					<!-- <button class="cs_button_none" 
 					x="$tf_1002_confirm_4.x"
 					y="$tf_1002_confirm_4.y"
 					width="$cs_width_159"
 					height="$cs_height_24"
 					onClicked="$callaction(fnAccountShowInputKeypad,tf_1002_confirm_4,authcode,btn_1002_confirm_onclicked,fnAccountKeypad_1002_100_telecom_auth_code_onunload);"
-					/>
+					/> -->
 
 					<label id="lbl_sms_timer"
 						width="$cs_width_90"
@@ -1973,7 +1975,7 @@ value="
     	}
     }
 
-    if($isequal_string($TEXTFIELDEND_LOCAL_PARAM1,tf_1002_conirm_3)){
+    if($isequal_string($TEXTFIELDEND_LOCAL_PARAM1,tf_1002_confirm_3)){
     	if($strlen($tf_1002_confirm_3.value) > 0){
     		$closescreen(popscreen_number_keypad);
 			if($tmp_textFieldEnd_local_result){
@@ -1982,5 +1984,14 @@ value="
 				return;
 			}
     	}
+    }
+
+    if($isequal_string($TEXTFIELDEND_LOCAL_PARAM1,tf_1002_confirm_4)){
+    	if($strlen($tf_1002_confirm_4.value) == 6 && !$btn_1002_number_bf_resend.enable ){
+			$setvar(btn_1002_confirm.enable = true);
+			$callaction(btn_1002_confirm_onclicked);
+		}else{
+			$setvar(btn_1002_confirm.enable = false);
+		}
     }
 " />
