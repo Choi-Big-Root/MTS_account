@@ -774,7 +774,7 @@ value="
 			1001 g_IN_AGREE_ITEM3[$g_IN_AGREE_ITEM3],
 	);
 	$closescreen(pop_1001_100_1);
-	$callaction(Act_Open_Account_Popup, 1002);
+	$callaction(Act_Open_Account_Move, 1002);
 "/>
 
 <action id="btn_essential_1001_100_onClicked"
