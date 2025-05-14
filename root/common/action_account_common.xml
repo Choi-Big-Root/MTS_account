@@ -41,7 +41,16 @@ value="
     $delvar(tmp_before_value,tmp_keypad_value,tmp_keypad_value_str_len);
     $setvar(tmp_before_value = $p_id.value);
 
-    //자리수.
+
+    // auth 자리수
+    if($isequal_string($p_key_pad_type,authcode)
+    && $isequal_string($p_add_del_type,add)
+    && $strlen($tmp_before_value) >= 6
+    ){
+        return;
+    }
+
+    // phone 자리수.
     if($isequal_string($p_key_pad_type,phone)
     && $isequal_string($p_add_del_type,add)
     && $strlen($tmp_before_value) >= 13
@@ -768,3 +777,11 @@ onunload="pop_info_tip_onunload"
         </viewgroup>
     </screen>
 </popscreen>
+
+<action id="fnCloseAccountPopUp" scope="common"
+value="
+    $closescreen(pop_host_msg);
+    $closescreen(popscreen_number_keypad);
+    $closescreen(popscreen_1002_100_telecom_auth_code);
+    $closescreen(popscreen_open_account);
+"/>
