@@ -116,6 +116,7 @@
 	 	,cs_width_97 = $w($g_lcdWidth,25.9)
 	 	,cs_width_100 = $w($g_lcdWidth,26.7)
 	 	,cs_width_110 = $w($g_lcdWidth,29.4)
+	 	,cs_width_120 = $w($g_lcdWidth,32)
 	 	,cs_width_159 = $w($g_lcdWidth,42.4)
 	 	,cs_width_167_5 = $w($g_lcdWidth,44.7)
 	 	,cs_width_199 = $w($g_lcdWidth,53.1)

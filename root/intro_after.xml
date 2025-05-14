@@ -176,46 +176,21 @@ value="
 	//return;
 
 	// 1. 백신체크 
-	//$setvar(strPermission=RECORD_AUDIO);
-	//$setvar(strPermission=CAMERA);
-	//$setvar(strPermission=WRITE_EXTERNAL_STORAGE|CAMERA|RECORD_AUDIO|READ_PHONE_STATE|GET_ACCOUNTS);
-	//$setvar(strPermission=WRITE_EXTERNAL_STORAGE|CAMERA|RECORD_AUDIO|READ_PHONE_STATE|GET_ACCOUNTS|READ_SMS|RECEIVE_SMS|READ_CALL_LOG);
-	//$setvar(strPermission=WRITE_EXTERNAL_STORAGE|CAMERA|RECORD_AUDIO|GET_ACCOUNTS);
-	
-	//$setvar(strPermission=WRITE_EXTERNAL_STORAGE|CAMERA|GET_ACCOUNTS|PROCESS_OUTGOING_CALLS|RECORD_AUDIO);
-	//$setvar(strPermission=WRITE_EXTERNAL_STORAGE|CAMERA|GET_ACCOUNTS|RECORD_AUDIO|READ_PHONE_STATE|READ_PHONE_NUMBERS);
-
 	$setvar_common(g_os_version = $getSDKInt());
-	//$setvar(strPermission=WRITE_EXTERNAL_STORAGE|GET_ACCOUNTS|CAMERA|RECORD_AUDIO);
-
-	//2022년 12월 12일 주석처리 POST_NOTIFICATIONS는 Android버전 13일때부터 적용가능이기에 13이 아닌 기기들은 계속 권한관련 팝업이 뜬다.
-	//$setvar(strPermission=GET_ACCOUNTS|CAMERA|RECORD_AUDIO|POST_NOTIFICATIONS);
-
 	//2022년 12월 12일 추가.
 	if(!$g_isAndroid){ //아이폰은 상관없다.
 		$log(****** IOS ***********);
-		$setvar(strPermission=GET_ACCOUNTS|CAMERA|RECORD_AUDIO|POST_NOTIFICATIONS);
+		$setvar(strPermission=GET_ACCOUNTS|CAMERA|RECORD_AUDIO|POST_NOTIFICATIONS|RECEIVE_SMS);
 
 	}elseif($g_isAndroid && $int($deviceinfo(SYSTEMNAME)) >= 13){ //Android버전이 13이상 일때 
 		$log(******Android Version 13 이상 ***********);
-		$setvar(strPermission=GET_ACCOUNTS|CAMERA|RECORD_AUDIO|POST_NOTIFICATIONS);
+		$setvar(strPermission=GET_ACCOUNTS|CAMERA|RECORD_AUDIO|POST_NOTIFICATIONS|RECEIVE_SMS);
 
 	}else{	//Android버전이 13미만일때
 		$log(******Android Version 13 미만 ***********);
 		$setvar(strPermission=GET_ACCOUNTS|CAMERA|RECORD_AUDIO);
 	}
 
-
-	/*
-	if($g_os_version > 29){
-		//$setvar(strPermission=WRITE_EXTERNAL_STORAGE|CAMERA|GET_ACCOUNTS|RECORD_AUDIO|READ_PHONE_NUMBERS);
-		//$setvar(strPermission=WRITE_EXTERNAL_STORAGE|CAMERA|GET_ACCOUNTS|PROCESS_OUTGOING_CALLS|RECORD_AUDIO|READ_PHONE_NUMBERS);
-	}
-	else{
-		//$setvar(strPermission=WRITE_EXTERNAL_STORAGE|CAMERA|GET_ACCOUNTS|RECORD_AUDIO|READ_PHONE_STATE);
-		$setvar(strPermission=WRITE_EXTERNAL_STORAGE|CAMERA|GET_ACCOUNTS|PROCESS_OUTGOING_CALLS|RECORD_AUDIO|READ_PHONE_STATE);
-	}
-	*/
 	$log(OSVERSION = g_os_version);	
 	if(!$isPermission($strPermission)) {
 		$log(**** 퍼미션 없는거 있음. );
