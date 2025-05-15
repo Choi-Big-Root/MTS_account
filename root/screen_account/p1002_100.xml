@@ -1363,7 +1363,8 @@ value="	// 비대면 절차개선 - 2020.09.28
 	}
 
 	// 인증 완료된 휴대폰번호 - DB에 저장
-	$callaction(fnConfig_SetValue,g_save_tel_num,$tf_1002_confirm_3.value);
+	$setvar(tmp_save_tel_num_replace = $replace(-,,$tf_1002_confirm_3.value) );
+	$callaction(fnConfig_SetValue,g_save_tel_num,$tmp_save_tel_num_replace);
 
 	$callaction(fnSendSSL_MO_REQVIEW);
 
