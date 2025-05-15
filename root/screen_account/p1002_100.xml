@@ -1013,17 +1013,21 @@ value="
 	if($Act_RequestTelecomAuthCodeMts_param1==1){
 	}
 
-	$delvar(strRequestData, strRequestDataReal);
+	$delvar(strRequestData, strRequestDataReal,tmp_auth_code_phone);
     	
 	$log(SMS 이름:$tf_1002_confirm_1.value);
 	$log(SMS 주민:$g_tf_1002_confirm_2_var);
 	$log(SMS 이통사:$1002_phone_select_key);
 	$log(SMS 전화번호:$tf_1002_confirm_3.value);
 
+	$setvar(
+		tmp_auth_code_phone = $replace(-,,$tf_1002_confirm_3.value)
+	);
+
 	$addurlparam(strRequestData,name,$tf_1002_confirm_1.value);
 	$addurlparam(strRequestData,jumin,$g_tf_1002_confirm_2_var);
 	$addurlparam(strRequestData,hp_tp,$1002_phone_select_key);
-	$addurlparam(strRequestData,hp_no,$tf_1002_confirm_3.value);
+	$addurlparam(strRequestData,hp_no,$tmp_auth_code_phone);
 
 	$KISA_SEED_CBC_ENCRYPT(strRequestData,strRequestDataEnc);
 
@@ -1354,17 +1358,18 @@ value="	// 비대면 절차개선 - 2020.09.28
 		return;
 	}
 
-
+	$setvar(tmp_save_tel_num_replace = $replace(-,,$tf_1002_confirm_3.value) );
 	
-	if($isequal_string($g_save_tel_num,$tf_1002_confirm_3.value)){
+	if($isequal_string($g_save_tel_num,$tmp_save_tel_num_replace)){
 		$setvar(tmp_pop_countinu_flag = true);
 	}else{
 		$setvar(tmp_pop_countinu_flag = false);
 	}
 
 	// 인증 완료된 휴대폰번호 - DB에 저장
-	$setvar(tmp_save_tel_num_replace = $replace(-,,$tf_1002_confirm_3.value) );
+	
 	$callaction(fnConfig_SetValue,g_save_tel_num,$tmp_save_tel_num_replace);
+	$callaction(fnConfig_SetValue,g_save_tel_num_no_replace,$tf_1002_confirm_3.value);
 
 	$callaction(fnSendSSL_MO_REQVIEW);
 
