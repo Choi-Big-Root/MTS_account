@@ -961,7 +961,7 @@ value="
 		>
 			<viewgroup 
 				width        = "$this.remain_right"
-				height       = "$h($g_lcdHeight,15.4)"
+				height       = "$result($tmp_pop_screen_height - $h($g_lcdHeight,9.3))"
 			>
 				<label 
 					width        = "$this.remain_right"
