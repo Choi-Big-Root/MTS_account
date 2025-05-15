@@ -1,0 +1,611 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<action id="screen_contents_onload" value="
+	// 비대면 절차개선 - 2020.09.28
+	$setvar(
+		,img_step_1.hidden=false
+		,img_step_2.hidden=false
+		,img_step_3.hidden=true
+		,img_step_4.hidden=true
+		,img_step_5.hidden=true
+		,img_step_6.hidden=true
+		,img_step_7.hidden=true
+		,img_step_8.hidden=true
+
+		,lbl_account_title_step_1.hidden=true
+		,lbl_account_title_step_2.hidden=true
+		,lbl_account_title_step_3.hidden=false
+		,lbl_account_title_step_4.hidden=false
+		,lbl_account_title_step_5.hidden=false
+		,lbl_account_title_step_6.hidden=false
+		,lbl_account_title_step_7.hidden=false
+		,lbl_account_title_step_8.hidden=false
+
+		,lbl_account_title_step_1.textcolor=$cs_color_disable
+		,lbl_account_title_step_2.textcolor=$cs_color_disable
+		,lbl_account_title_step_3.textcolor=$cs_color_black
+		,lbl_account_title_step_4.textcolor=$cs_color_disable
+		,lbl_account_title_step_5.textcolor=$cs_color_disable
+		,lbl_account_title_step_6.textcolor=$cs_color_disable
+		,lbl_account_title_step_7.textcolor=$cs_color_disable
+		,lbl_account_title_step_8.textcolor=$cs_color_disable
+
+
+		,lbl_account_title_step_1.fontname=$cs_font_400
+		,lbl_account_title_step_2.fontname=$cs_font_400
+		,lbl_account_title_step_3.fontname=$cs_font_600
+		,lbl_account_title_step_4.fontname=$cs_font_400
+		,lbl_account_title_step_5.fontname=$cs_font_400
+		,lbl_account_title_step_6.fontname=$cs_font_400
+		,lbl_account_title_step_7.fontname=$cs_font_400
+		,lbl_account_title_step_8.fontname=$cs_font_400
+
+
+		,vg_open_account_title.backcolor=FFFFFF
+		,popscreen_open_account_history.hidden=false
+		,vg_account_title_step.hidden = false
+
+		,menu_num=1003
+
+		//확인필요.
+		,4117_choice_key=
+		,4117_check_f=
+		,4117_check_d=
+		,tmp_4117_pass_1=
+		,tmp_4117_pass_2=
+	);
+	$setvar(members_gubun=1);
+	
+"/>
+
+<action id="btn_pop_info_1003_100_onClicked"
+value="
+	$setvar(
+		tmp_pop_info_x_cal = $result($img_pop_info_1003.x_abs + $w($g_lcdwidth,0.6))
+		,tmp_pop_imfo_y_cal = $result($img_pop_info_1003.y_abs + $h($g_lcdHeight,2.6))
+	);
+	$callaction(popscreen_open_account_confirm_onclicked,$tmp_pop_info_x_cal,$tmp_pop_imfo_y_cal);
+"/>
+<screen 
+	id="screen_1003_100"
+	class="cs_screen_contents"
+	backcolor="$cs_color_white"
+	onload="screen_contents_onload"
+	onunload="screen_contents_onunload"
+	noscroll_height="true"
+	margin_bottom="$cs_height_20"
+>
+	<br height="$cs_height_15"/>
+	<viewgroup
+		width="$this.remain_right"
+		height="$result($this.remain_bottom - $cs_height_54)"
+		margin_left="$cs_width_16"
+		margin_right="$cs_width_16"
+	>
+		<viewgroup
+			width="$this.remain_right"
+			height="$cs_height_98"
+		>
+			<label
+				width="$cs_width_86"
+				height="$cs_height_20"
+				fontsize="$cs_fontsize_15"
+				fontname="$cs_font_400"
+				textcolor="$cs_color_text"
+				align="left"
+				value="고객정보입력"
+			/>
+			<label 
+	        	id="img_pop_info_1003" 
+	        	width="$cs_height_20"
+	        	height="$cs_height_20"
+	            BACKGROUNDSVG="$icon_question"
+				BACKGROUNDSVG_DISABLE="$icon_question"
+				BACKGROUNDSVG_HIGHLIGHT="$icon_question"
+				BACKGROUNDSVG_WIDTH="$cs_height_20"
+				BACKGROUNDSVG_HEIGHT="$cs_height_20"
+				backgroundimage_align="center"
+				backgroundimage_align_vertical="center"
+				hidden="false"
+	        />
+			<viewgroup 
+				x="$w($g_lcdWidth,0)" 
+				width="$w($g_lcdWidth,28.3)" 
+				height="$h($g_lcdHeight,4.5)"
+			>
+		        <button id="btn_pop_info_1003_100" class="cs_button_none" onClicked="btn_pop_info_1003_100_onClicked"/>
+	   		</viewgroup>
+	   		<br/>
+	   		<viewgroup
+	   			width="$this.remain_right"
+	   			height="$cs_height_68"
+	   			layout_vertical="bottom"
+	   		>
+	   			<label
+	   				width="$this.remain_right"
+	   				height="$cs_height_34"
+	   				textcolor="$cs_color_black"
+	   				fontsize="$cs_fontsize_24"
+	   				fontname="$cs_font_600"
+	   				value="$addstring($g_IN_AGREE_CLNT_NM,님의 정보를);"
+	   			/>
+	   			<br/>
+	   			<label
+	   				width="$this.remain_right"
+	   				height="$cs_height_34"
+	   				textcolor="$cs_color_black"
+	   				fontsize="$cs_fontsize_24"
+	   				fontname="$cs_font_600"
+	   				value="입력해 주세요."
+	   			/>
+	   		</viewgroup>
+		</viewgroup>
+		<br height="$cs_height_20"/>
+		<viewgroup id="vg_1003_100_contents"
+			width="$this.remain_right"
+			height="$cs_height_220"
+			border_width="1"
+			border_radius="$cs_radius_10"
+			border_color="$cs_color_line"
+			margin_left="$cs_width_20"
+			margin_right="$cs_width_20"
+			margin_top="$cs_height_25"
+			margin_bottom="$cs_height_25"
+		>
+			<label
+				width="$this.remain_right"
+				height="$cs_height_16"
+				fontname="$cs_font_400"
+				fontsize="$cs_fontsize_12"
+				textcolor="$cs_color_text"
+				value="휴대전화번호"
+			/>
+			<br/>
+			<label id="lbl_1003_100_phone"
+				width="$this.remain_right"
+				height="$cs_height_24"
+				fontname="$cs_font_400"
+				fontsize="$cs_fontsize_16"
+				textcolor="$cs_color_black"
+				key="$g_save_tel_num"
+				value="$g_save_tel_num_no_replace"
+			/>
+			<br height="$cs_height_25"/>
+			<viewgroup id="vg_1003_100_juso"
+				width="$this.remain_right"
+				height="$cs_height_40"
+			>
+				<label
+					width="$this.remain_right"
+					height="$cs_height_14"
+					fontname="$cs_font_400"
+					fontsize="$cs_fontsize_12"
+					textcolor="$cs_color_text"
+					value="자택주소"
+					layout_vertical="top"
+				/>
+				<br/>
+				<textfield id="lbl_4117_jatek_1"
+					width="$this.remain_right"
+					height="$cs_height_24"
+					fontname="$cs_font_400"
+					fontsize="$cs_fontsize_16"
+					textcolor="$cs_color_black"
+					textcolor_placeholder="$cs_color_disable"
+					placeholder="자택주소"
+					enable="false"
+					layout_vertical="bottom"
+				/>
+				<label id="lbl_4117_jatek_2"
+					x="$lbl_4117_jatek_1.x"
+					y="$lbl_4117_jatek_1.y"
+					width="$this.remain_right"
+					height="$cs_height_24"
+					fontname="$cs_font_400"
+					fontsize="$cs_fontsize_16"
+					textcolor="$cs_color_black"
+					valign="center"
+					hidden="true"
+				/>
+				<label id="lbl_4117_jatek_3"
+					x="$lbl_4117_jatek_2.x"
+					y="$lbl_4117_jatek_2.y"
+					width="$this.remain_right"
+					height="$cs_height_24"
+					fontname="$cs_font_400"
+					fontsize="$cs_fontsize_16"
+					textcolor="$cs_color_black"
+					hidden="true"
+				/>
+
+				<button id="btn_4117_juso_search"
+					class="cs_button_none" 
+					key="1"
+            		onClicked="btn_4117_number_onclicked" 
+            	/>
+			</viewgroup>
+			<br height="$cs_height_25"/>
+			<viewgroup id="vg_1003_100_email"
+				width="$this.remain_right"
+				height="$cs_height_40"
+			>
+				<label
+					width="$this.remain_right"
+					height="$cs_height_16"
+					fontname="$cs_font_400"
+					fontsize="$cs_fontsize_12"
+					textcolor="$cs_color_text"
+					value="이메일"
+				/>
+				<br/>
+				<label id=""
+					width="$this.remain_right"
+					height="$cs_height_24"
+					fontname="$cs_font_400"
+					fontsize="$cs_fontsize_16"
+					textcolor="$cs_color_black"
+					value="text123@naver.com"
+				/>
+			</viewgroup>
+		</viewgroup>
+	</viewgroup>
+	<br/>
+	<viewgroup
+		width="$cs_width_343"
+		height="$cs_height_54"
+		layout="center"
+		layout_vertical="bottom"
+	>
+		<button 
+			width="$cs_width_167_5" 
+			height="$this.remain_bottom"
+			layout="left"
+			backcolor="$cs_color_white"
+			border_width="1"
+			border_radius="$cs_height_10"
+			border_color="$cs_color_disable"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_black"
+			textcolor_active="$cs_color_black"
+			value="이전"
+			onClicked="btn_open_account_history_onClicked"
+		/>
+		<button 
+			width="$cs_width_167_5" 
+			height="$this.remain_bottom"
+			layout="right"
+			backcolor="$cs_color_main"
+			backcolor_disable="$cs_color_main_disable"
+			border_width="1"
+			border_radius="$cs_height_10"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_white"
+			textcolor_active="$cs_color_white"
+			textcolor_disable="$cs_color_white"
+			value="다음"
+			onclicked=""
+			enable="false"
+		/>
+	</viewgroup>
+</screen>
+
+
+<action id="btn_4117_number_onclicked" 
+value="
+	$setvar(
+		tmp_btn_find_key = $this.key
+	);
+	$popscreen(popscreen_address_find);
+" />
+<action id="btn_address_find_onclicked" 
+value="
+	$cleartablerow(tbl_address_find_4117);
+	$delvar(strPostData);
+    $addurlparam(strPostData,keyword,$txt_address_find.value);
+    $addurlparam(strPostData,currentPage,1);
+    $addurlparam(strPostData,countPerPage,10);
+    $addurlparam(strPostData,confmKey,$g_juso_go_kr_key);	// 이 키는 juso.go.kr 에서 인증을 받아서 넣어야 한다.
+    
+    $addurlparam(strPostData,resultType,json);
+    $logvar(strPostData);
+	$postrequestdata(OPENAPI_TEST,https://www.juso.go.kr/addrlink/addrLinkApiJsonp.do,fnNaverAddressSearch_CallBack,strPostData);
+" />
+<action id="fnNaverAddressSearch_CallBack" params="result,strVarName,strURL" value="
+    $cleartablerow(tbl_address_find_4117);
+	$setvar(jsonName=openAPIJson);
+
+	$json_create($jsonName);
+	$json_parsebuffer($jsonname,$strVarName);
+
+	$json_print($jsonname);
+
+
+	$json_setControl($jsonName,tbl_address_find_4117);
+	$json_delete($jsonName);
+"/>
+<action id="fnHeightWithFontSize"
+params="p_id,p_value,p_fontsize,p_type"
+value="
+	$setvar(
+		tmp_control_width = $p_id.width
+		,tmp_control_height = $cs_height_24
+		,tmp_control_fontsize = $p_fontsize
+		,tmp_control_str_len = $strlen_uni($p_value)
+
+		,tmp_max_len = 28
+		,tmp_add_line_count = $ceil($tmp_control_str_len,$tmp_max_len)
+
+		,tmp_substr_val = 
+
+		,tmp_cal_height = $result($tmp_add_line_count * $tmp_control_height)
+	);
+
+	$logvar(
+		tmp_control_width
+		,tmp_control_height
+		,tmp_control_fontsize
+		,tmp_control_str_len
+		,tmp_max_len
+		,tmp_add_line_count
+		,tmp_cal_height
+	);
+
+	if($isequal_string($p_type,count)){
+		return $tmp_add_line_count;
+	}
+
+	if($isequal_string($p_type,height)){
+		return $tmp_cal_height;
+	}
+
+	if($isequal_string($p_type,value)){
+		for($i = 0; $i < $tmp_add_line_count; $i++ ){
+			$setvar(
+				tmp_idx_1 = $result($i * $tmp_max_len)
+				,tmp_cal_num = $result($i+1)
+				,tmp_idx_2 = $result($tmp_cal_num * $tmp_max_len)
+			);	
+
+			$setvar(
+				tmp_cal_val = $substring_uni($p_value,$tmp_idx_1,$tmp_idx_2)
+			);
+			if($i == 0 ){
+				$setvar(
+					tmp_substr_val = $addstring($tmp_substr_val,$tmp_cal_val)
+				);
+			}else{
+				$setvar(
+					tmp_substr_val = $addstring($tmp_substr_val,\n,$tmp_cal_val)
+				);
+			}
+		}
+		$logvar(tmp_substr_val);
+		return $tmp_substr_val;
+	}
+"/>
+<action id="tbl_address_find_4117_onclicked" 
+value="
+	$setvar(
+		lbl_4117_jatek_1.value = $this.rowkey5 		// 우편번호
+
+		,lbl_4117_jatek_2.hidden = false
+
+		,lbl_4117_jatek_2.height = $callaction(fnHeightWithFontSize,lbl_4117_jatek_2,$this.rowkey16,$cs_fontsize_16,height)
+
+		,lbl_4117_jatek_2.value = $callaction(fnHeightWithFontSize,lbl_4117_jatek_2,$this.rowkey16,$cs_fontsize_16,value)
+
+
+		,lbl_4117_jatek_2.y = $result($lbl_4117_jatek_1.y + $lbl_4117_jatek_1.height)
+
+		,tmp_lbl_4117_jatek_2_line_count = $callaction(fnHeightWithFontSize,lbl_4117_jatek_2,$this.rowkey16,$cs_fontsize_16,count)
+
+		,lbl_4117_jatek_3.hidden = false
+		,lbl_4117_jatek_3.height = $callaction(fnHeightWithFontSize,lbl_4117_jatek_3,$this.rowkey9,$cs_fontsize_16,height)
+		,lbl_4117_jatek_3.value = $callaction(fnHeightWithFontSize,lbl_4117_jatek_3,$this.rowkey9,$cs_fontsize_16,value)
+		,lbl_4117_jatek_3.y = $result($lbl_4117_jatek_2.y + $lbl_4117_jatek_2.height)
+		,tmp_lbl_4117_jatek_3_line_count = $callaction(fnHeightWithFontSize,lbl_4117_jatek_3,$this.rowkey9,$cs_fontsize_16,count)
+
+
+		,tmp_total_cal_count = $result($tmp_lbl_4117_jatek_3_line_count + $tmp_lbl_4117_jatek_2_line_count)
+		,tmp_total_cal_height = $result($tmp_total_cal_count * $cs_height_24 )
+
+		,vg_1003_100_juso.height = $result($cs_height_40 + $tmp_total_cal_height)
+		,btn_4117_juso_search.height = $vg_1003_100_juso.height
+		,vg_1003_100_contents.height = $result($cs_height_220 + $tmp_total_cal_height)
+
+		,vg_1003_100_email.y = $result($vg_1003_100_juso.y + $vg_1003_100_juso.height + $cs_height_25)
+	);
+
+
+
+	$closescreen(popscreen_address_find);	
+	return;
+" />
+<popscreen id="popscreen_address_find"
+	width="$p_lcdWidth" 
+	height="$p_lcdHeight"
+	backcolor="00000060"
+	layout="center"
+	layout_vertical="center"
+	onload="popscreen_address_find_onload"
+>
+	<viewgroup
+		height="$cs_height_50" 
+		backcolor="$cs_color_text"	
+	>
+		<label 
+			width="$this.remain_right"
+			height="$this.remain_bottom"
+			fontsize="$cs_fontsize_16" 
+			fontname="$cs_font_700" 
+			align="center" 
+			valign="center" 
+			textcolor="$cs_color_white" 
+			value="주소찾기"
+		/>
+		<label 
+			x="$result($super.width - $cs_width_56);"
+			width="$cs_width_56"
+			height="$this.remain_bottom"
+			BACKGROUNDSVG="$icon_cancel_3"
+            BACKGROUNDSVG_DISABLE="$icon_cancel_3"
+            BACKGROUNDSVG_HIGHLIGHT="$icon_cancel_3"
+            BACKGROUNDSVG_WIDTH="$cs_height_24"
+            BACKGROUNDSVG_HEIGHT="$cs_height_24"
+            backgroundimage_align="center"
+            backgroundimage_align_vertical="center"
+            onclicked="$closescreen(popscreen_address_find);"
+		/>
+	</viewgroup>
+	<br />
+	<screen 
+		id="screen_address_find"
+		width="$super.width"
+		height="$this.remain_bottom" 
+		backcolor="$cs_color_white"
+		>
+
+			<br height="$cs_height_16"/>
+			<blank width="$cs_width_16"/>
+			<textfield id="txt_address_find"
+				width="$cs_width_258"
+				height="$cs_height_40"
+				keyboard_type="text"
+				border_color="EBEBEB"
+				border_width="1"
+				border_radius="$cs_radius_10"
+				margin_left="$cs_width_15"
+				margin_right="$cs_width_15"
+				textcolor_placeholder="$cs_color_disable"
+				textcolor="$cs_color_black"
+				fontsize="$cs_fontsize_14"
+				fontname="$cs_font_400"
+				placeholder="도로명주소 건물명 또는 지번입력"
+			/>
+			<blank width="$cs_width_5"/>
+			<button id="btn_address_find"
+				width="$cs_width_80" 
+				height="$cs_height_40"
+				value="검색" 
+				border_radius="$cs_radius_6"
+				fontsize="$cs_fontsize_13"
+				fontname="$cs_font_600"
+				textcolor="$cs_color_white"
+				textcolor_active="$cs_color_white"
+				backcolor="$cs_color_text"
+				backcolor_active="$cs_color_text"
+				onclicked="btn_address_find_onclicked"
+			/>
+			<br height="$cs_height_6"/>
+			<table id="tbl_address_find_4117"
+				class="cs_grid"
+				width="$this.remain_right"
+				rowheight="$cs_height_102"
+				json_looparrayname="results.juso"
+				rowkey_count="30"
+			>
+				<tr
+					json_data="
+						detBdNmList:rowkey1:trim
+						~engAddr:rowkey2:trim
+						~rn:rowkey3:trim
+						~emdNm:rowkey4:trim
+						~zipNo:rowkey5:trim
+						~roadAddrPart2:rowkey6:trim
+						~emdNo:rowkey7:trim
+						~sggNm:rowkey8:trim
+						~jibunAddr:rowkey9:trim
+						~siNm:rowkey10:trim
+						~roadAddrPart1:rowkey11:trim
+						~bdNm:rowkey12:trim
+						~admCd:rowkey13:trim
+						~udrtYn:rowkey14:trim
+						~lnbrMnnm:rowkey15:trim
+						~roadAddr:rowkey16:trim
+						~lnbrSlno:rowkey17:trim
+						~buldMnnm:rowkey18:trim
+						~bdKdcd:rowkey19:trim
+						~liNm:rowkey20:trim
+						~rnMgtSn:rowkey21:trim
+						~mtYn:rowkey22:trim
+						~bdMgtSn:rowkey23:trim
+						~buldSlno:rowkey24:trim
+					"
+					onClicked="tbl_address_find_4117_onclicked" 
+				>
+					<td 
+						width="$this.remain_right"
+						height="$this.remain_bottom"
+						margin_top="$cs_height_20"
+						margin_left="$cs_width_16"
+					>
+						<label
+							width="$cs_width_254"
+							height="$cs_height_18"
+							fontname="$cs_font_400"
+							fontsize="$cs_fontsize_16"
+							textcolor="$cs_color_black"
+							align="left"
+							json_data="zipNo:value"
+						/>
+
+						<viewgroup
+							width="$this.remain_right"
+							height="$cs_height_18"
+							hidden="true" //아마 안쓸듯
+						>
+							<label
+								width="$cs_width_58"
+								height="$cs_height_18"
+								align="center"
+								fontname="$cs_font_400"
+								fontsize="$cs_fontsize_12"
+								textcolor="$cs_color_text"
+								value="영문보기"
+							/>
+						
+							<label
+								width="1"
+								height="$cs_height_10"
+								layout_vertical="center"
+								backcolor="$cs_color_gray_box_light"
+							/>
+							<label
+								width="$cs_width_37"
+								height="$cs_height_18"
+								align="center"
+								fontname="$cs_font_400"
+								fontsize="$cs_fontsize_12"
+								textcolor="$cs_color_text"
+								value="지도"
+							/>
+						</viewgroup>
+						<br height="$cs_height_10"/>
+						<label
+							width="$this.remain_right"
+							height="$cs_height_18"
+							margin_right="$cs_width_16"
+							fontname="$cs_font_400"
+							fontsize="$cs_fontsize_13"
+							textcolor="$cs_color_black"
+							align="left"
+							json_data="roadAddr:value"
+						/>
+						<br/>
+						<label
+							width="$this.remain_right"
+							height="$cs_height_16"
+							margin_right="$cs_width_16"
+							fontname="$cs_font_400"
+							fontsize="$cs_fontsize_12"
+							textcolor="$cs_color_black"
+							align="left"
+							json_data="jibunAddr:value"
+						/>
+					</td>
+				</tr>
+			</table>
+	</screen>
+</popscreen>
