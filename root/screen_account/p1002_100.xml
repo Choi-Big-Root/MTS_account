@@ -1545,6 +1545,18 @@ value="
 value="
 	$stopnstimer(TIMER_SMS_INPUT); 
 "/>
+//SMS recev Android만 가능.
+<action id="P_SMS_RECEV_ACTION" scope="common"
+params="p_contents"
+value="
+    //$log(받은 메세지 : $p_contents);
+    if($strlen($p_contents) == 6 && !$btn_1002_number_bf_resend.enable){
+    	$setvar(
+    		tf_1002_confirm_4.value = $p_contents
+    		,btn_1002_confirm.enable = true
+    	);
+    }
+" />
 <popscreen id="popscreen_1002_100_telecom_auth_code"
 	width="$g_lcdWidth" 
 	height="$p_lcdHeight"
