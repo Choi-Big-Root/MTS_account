@@ -405,7 +405,7 @@ value="
 			height="$this.remain_bottom"
 			layout="right"
 			backcolor="$cs_color_main"
-			backcolor_disable="b9d8fb"
+			backcolor_disable="$cs_color_main_disable"
 			border_width="1"
 			border_radius="$cs_height_10"
 			fontsize="$cs_fontsize_16"
@@ -481,8 +481,14 @@ value="
 
 	$setvar( btn_1002_af.enable = $callaction(fnBtnAfConfirmCheck));
 	$closescreen(popscreen_1002_phone_choice);
+	if($1002_phone_choice_set_key != -1 && $strlen($tf_1002_confirm_3.value) <= 0){
+		$setvar(tf_1002_confirm_3.focus = true);
+	}
 "/>
 
+<action id="popscreen_1002_phone_choice_onunload"
+value="
+"/>
 <action id="popscreen_1002_phone_choice_onload"
 value="
 "/>
@@ -491,6 +497,7 @@ value="
 	height="$p_lcdHeight"
 	backcolor="00000060"
 	onload="popscreen_1002_phone_choice_onload"
+	onunload="popscreen_1002_phone_choice_onunload"
 >
 	<screen id="pop_1002_100_1_screen"
 		width="$this.remain_right"
@@ -700,7 +707,7 @@ value="
 				height="$this.remain_bottom"
 				layout="right"
 				backcolor="$cs_color_main"
-				backcolor_disable="b9d8fb"
+				backcolor_disable="$cs_color_main_disable"
 				border_width="1"
 				border_radius="$cs_radius_10"
 				fontsize="$cs_fontsize_16"
@@ -1220,6 +1227,7 @@ value="
 	$setvar(g_is_open_account =); //로그인화면에서 종료위해 초기화
 "/>
 //동의서 등록
+//수정 [MO_AGREE 연동시에 N_TR값에 Y로 해서 주시면 신규 원장으로 처리 예정입니다.]
 <action id="fnSendSSL_MO_AGREE" 
 value="
 	$popscreen(pop_host_msg,center); 		// 동글뱅이 띄운다.
@@ -1478,7 +1486,7 @@ value="
 
 
 
-	//이어하기 처음하기 일단 대기 꼭 확인.
+	//이어하기 처음하기 일단 대기 꼭 확인. //수정.
 	$closescreen(popscreen_number_keypad);
 	$closescreen(popscreen_1002_100_telecom_auth_code);
 	$callaction(Act_Open_Account_Move,1003);	// 처음부터 순차진행
@@ -1729,7 +1737,7 @@ value="
 						value="재전송"
 						backcolor="$cs_color_main"
 						backcolor_active="$cs_color_main"
-						backcolor_disable="b9d8fb"
+						backcolor_disable="$cs_color_main_disable"
 						border_radius="$cs_radius_10"
 						enable="false"
 						onclicked="btn_1002_number_bf_resend_onclicked" 
@@ -1855,7 +1863,7 @@ value="
 				height="$this.remain_bottom"
 				layout="right"
 				backcolor="$cs_color_main"
-				backcolor_disable="b9d8fb"
+				backcolor_disable="$cs_color_main_disable"
 				border_width="1"
 				border_radius="$cs_height_10"
 				fontsize="$cs_fontsize_16"
@@ -1966,6 +1974,7 @@ value="
 
 			,vg_1002_100_input_3.hidden = false
 		);
+		$callaction(1002_phone_onclicked);
 	}
 "/>
 <action id="textFieldEnd_local" value="
