@@ -154,12 +154,13 @@ value="
 		layout="center"
 		layout_vertical="bottom"
 		border_radius="$cs_radius_10"
-		backcolor_disable="$cs_color_line"
+		backcolor_disable="$cs_color_main_disable"
 		backcolor="$cs_color_main"
 		enable="true"
 		fontsize="$cs_fontsize_15"
 		textcolor="$cs_color_white"
 		textcolor_active="$cs_color_white"
+		textcolor_disable="$cs_color_white"
 		fontname="$cs_font_700"
 		value="해외파생상품 계좌 만들게요" 
 		onClicked="btn_1000_account_open_onClicked"
@@ -453,7 +454,7 @@ value="
         $setvar(bRecvServerMultiStart=true);
     }   
 
-    //추후 확인
+    //추후 확인 //수정
     if($tmp_account_menu!=4131){
         $log(4131 아닐경우에만 탐);
         $closescreen(pop_1000_1_2);
