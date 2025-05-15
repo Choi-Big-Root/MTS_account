@@ -24,6 +24,7 @@
 
 		,icon_cancel 			= $callaction(fnGetSvgIconPathName,cancel)
 		,icon_cancel_2 			= $callaction(fnGetSvgIconPathName,cancel-2)
+		,icon_cancel_3 			= $callaction(fnGetSvgIconPathName,cancel-3)
 
 		,icon_step 			= $callaction(fnGetSvgIconPathName,step)
 
