@@ -16,6 +16,7 @@
 	$setvar_common(
 		//cs_color_main = FFEB00,
 		cs_color_main = 177DF2,
+		cs_color_main_disable = b9d8fb,
 		cs_color_black = 060B11,
 		cs_color_gray_dark = 545454,
 		cs_color_white = FFFFFF,
