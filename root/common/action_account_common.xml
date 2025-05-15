@@ -636,10 +636,15 @@ value="
         ,tmp_info_pop_y = $p_y
 
     );
-    if($menu_num < 1009){
+    if($menu_num < 1003){
         $setvar(
             pop_info_tip_lbl=$(고객님의 이름, 주민등록번호 및 휴대폰 인증을 진행해요.주민등록번호는 금융실명거래 및 비밀보장에 관한 법률에 근거하여 확인해요.)
             ,pop_info_tip_height=$cs_height_80
+        )
+    }elseif($menu_num < 1009){
+        $setvar(
+            pop_info_tip_lbl=$(계좌개설을 위한 고객정보를 입력해주세요.)
+            ,pop_info_tip_height=$cs_height_40
         )
     }elseif($menu_num < 4117){
         $setvar(
@@ -772,6 +777,7 @@ onunload="pop_info_tip_onunload"
             fontname="$cs_font_400"
             value="$pop_info_tip_lbl"
             align="left"
+            valign="center"
             textcolor="$cs_color_text"
             />
         </viewgroup>
