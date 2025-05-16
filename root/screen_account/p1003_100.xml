@@ -66,6 +66,39 @@ value="
 	);
 	$callaction(popscreen_open_account_confirm_onclicked,$tmp_pop_info_x_cal,$tmp_pop_imfo_y_cal);
 "/>
+<action id="btn_1003_100_confirm_onClicked"
+value="
+	$setvar(
+		tmp_replace_lf_jaket_val_2 = $replace(%0A,,$lbl_4117_jatek_2.value)
+		,tmp_replace_lf_jaket_val_3 = $replace(%0A,,$lbl_4117_jatek_3.value)
+	);
+
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_HOME_POST_NO 	,$lbl_4117_jatek_1.value);
+	// roadAddr 
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_HOME_ADDR 	,$tmp_replace_lf_jaket_val_2);
+	// roadAddr2 
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_HOME_ADDR2 	,$tmp_replace_lf_jaket_val_3);
+
+
+	$log(
+		확인용 : 
+			1001 g_IN_AGREE_ITEM1[$g_IN_AGREE_ITEM1],
+			1001 g_IN_AGREE_ITEM2[$g_IN_AGREE_ITEM2],
+			1001 g_IN_AGREE_ITEM3[$g_IN_AGREE_ITEM3],
+
+			1002 g_save_tel_num[$g_save_tel_num],
+			1002 g_IN_AGREE_RMN_NO[$g_IN_AGREE_RMN_NO],
+			1002 g_IN_AGREE_CLNT_NM[$g_IN_AGREE_CLNT_NM],
+			1002 g_IN_REQUEST_TEL_NUM[$g_IN_REQUEST_TEL_NUM],
+			1002 g_IN_REQUEST_AGE[$g_IN_REQUEST_AGE],
+			1002 g_OUT_AGREE_WORK_NO[$g_OUT_AGREE_WORK_NO],
+
+			1003 g_IN_REQUEST_HOME_POST_NO[$g_IN_REQUEST_HOME_POST_NO],
+			1003 g_IN_REQUEST_HOME_ADDR[$g_IN_REQUEST_HOME_ADDR],
+			1003 g_IN_REQUEST_HOME_ADDR2[$g_IN_REQUEST_HOME_ADDR2],
+	);
+	
+"/>
 <screen 
 	id="screen_1003_100"
 	class="cs_screen_contents"
@@ -221,11 +254,12 @@ value="
 				<button id="btn_4117_juso_search"
 					class="cs_button_none" 
 					key="1"
-            		onClicked="btn_4117_number_onclicked" 
+            		onClicked="btn_4117_juso_search_onclicked" 
             	/>
 			</viewgroup>
 			<br height="$cs_height_25"/>
 
+			//여기부터 작업
 			<viewgroup id="vg_1003_100_email"
 				width="$this.remain_right"
 				height="$cs_height_40"
@@ -239,13 +273,49 @@ value="
 					value="이메일"
 				/>
 				<br/>
-				<label id=""
-					width="$this.remain_right"
+				<textfield id="tf_4144_email_1"
+					width="$cs_width_53"
+					keyboard_type="text"
 					height="$cs_height_24"
 					fontname="$cs_font_400"
 					fontsize="$cs_fontsize_16"
 					textcolor="$cs_color_black"
-					value="text123@naver.com"
+					textcolor_placeholder="$cs_color_disable"
+					placeholder="ex)adc"
+					value=""
+				/>
+				<label id="lbl_1003_100_email_icon"
+					width="$cs_width_35"
+					height="$cs_height_24"
+					align="center"
+					valign="center"
+					fontname="$cs_font_400"
+					fontsize="$cs_fontsize_16"
+					textcolor="$cs_color_black"
+					value="@"
+				/>
+				<textfield id="tf_4144_email_2"
+					width="$cs_width_103"
+					height="$cs_height_24"
+					keyboard_type="text"
+					height="$cs_height_24"
+					fontname="$cs_font_400"
+					fontsize="$cs_fontsize_16"
+					textcolor="$cs_color_black"
+					textcolor_placeholder="$cs_color_disable"
+					placeholder="eugenefn.com"
+				/>
+				<button id="btn_4144_100_mail_sel"
+					width="$cs_width_30"
+					height="$cs_height_24"
+					BACKGROUNDSVG="$icon_polygon_3"
+			        BACKGROUNDSVG_DISABLE="$icon_polygon_3"
+			        BACKGROUNDSVG_HIGHLIGHT="$icon_polygon_3"
+			        BACKGROUNDSVG_WIDTH="$cs_width_10"
+  					BACKGROUNDSVG_HEIGHT="$cs_height_8"
+			        backgroundimage_align="center"
+			        backgroundimage_align_vertical="center"
+			        backcolor="ff000022"
 				/>
 			</viewgroup>
 		</viewgroup>
@@ -272,7 +342,7 @@ value="
 			value="이전"
 			onClicked="btn_open_account_history_onClicked"
 		/>
-		<button 
+		<button id="btn_1003_100_confirm"
 			width="$cs_width_167_5" 
 			height="$this.remain_bottom"
 			layout="right"
@@ -286,14 +356,14 @@ value="
 			textcolor_active="$cs_color_white"
 			textcolor_disable="$cs_color_white"
 			value="다음"
-			onclicked=""
-			enable="false"
+			onclicked="btn_1003_100_confirm_onClicked"
+			enable="false"		
 		/>
 	</viewgroup>
 </screen>
 
-
-<action id="btn_4117_number_onclicked" 
+//주소 검색팝업.
+<action id="btn_4117_juso_search_onclicked" 
 value="
 	$setvar(
 		tmp_btn_find_key = $this.key
@@ -395,6 +465,23 @@ value="
 	);
 	$popscreen(popscreen_jatek_3_input);
 " />
+<action id="popscreen_address_find_onunload"
+value="
+	$logvar(
+		,tmp_jatek_1_val
+		,tmp_jatek_2_val
+		,tmp_jatek_3_val
+	);
+
+	if($strlen($tmp_jatek_1_val) > 0
+	&& $strlen($tmp_jatek_2_val) > 0
+	&& $strlen($tmp_jatek_3_val) > 0
+	){
+		$setvar(btn_1003_100_confirm.enable = true);
+	}else{
+		$setvar(btn_1003_100_confirm.enable = false);
+	}
+"/>
 <popscreen id="popscreen_address_find"
 	width="$p_lcdWidth" 
 	height="$p_lcdHeight"
@@ -402,6 +489,7 @@ value="
 	layout="center"
 	layout_vertical="center"
 	onload="popscreen_address_find_onload"
+	onunload="popscreen_address_find_onunload"
 >
 	<viewgroup
 		height="$cs_height_50" 
