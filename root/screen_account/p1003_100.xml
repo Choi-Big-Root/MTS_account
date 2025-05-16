@@ -225,6 +225,7 @@ value="
             	/>
 			</viewgroup>
 			<br height="$cs_height_25"/>
+
 			<viewgroup id="vg_1003_100_email"
 				width="$this.remain_right"
 				height="$cs_height_40"
@@ -387,41 +388,12 @@ value="
 "/>
 <action id="tbl_address_find_4117_onclicked" 
 value="
+	$delvar(tmp_jatek_1_val,tmp_jatek_2_val);
 	$setvar(
-		lbl_4117_jatek_1.value = $this.rowkey5 		// 우편번호
-
-		,lbl_4117_jatek_2.hidden = false
-
-		,lbl_4117_jatek_2.height = $callaction(fnHeightWithFontSize,lbl_4117_jatek_2,$this.rowkey16,$cs_fontsize_16,height)
-
-		,lbl_4117_jatek_2.value = $callaction(fnHeightWithFontSize,lbl_4117_jatek_2,$this.rowkey16,$cs_fontsize_16,value)
-
-
-		,lbl_4117_jatek_2.y = $result($lbl_4117_jatek_1.y + $lbl_4117_jatek_1.height)
-
-		,tmp_lbl_4117_jatek_2_line_count = $callaction(fnHeightWithFontSize,lbl_4117_jatek_2,$this.rowkey16,$cs_fontsize_16,count)
-
-		,lbl_4117_jatek_3.hidden = false
-		,lbl_4117_jatek_3.height = $callaction(fnHeightWithFontSize,lbl_4117_jatek_3,$this.rowkey9,$cs_fontsize_16,height)
-		,lbl_4117_jatek_3.value = $callaction(fnHeightWithFontSize,lbl_4117_jatek_3,$this.rowkey9,$cs_fontsize_16,value)
-		,lbl_4117_jatek_3.y = $result($lbl_4117_jatek_2.y + $lbl_4117_jatek_2.height)
-		,tmp_lbl_4117_jatek_3_line_count = $callaction(fnHeightWithFontSize,lbl_4117_jatek_3,$this.rowkey9,$cs_fontsize_16,count)
-
-
-		,tmp_total_cal_count = $result($tmp_lbl_4117_jatek_3_line_count + $tmp_lbl_4117_jatek_2_line_count)
-		,tmp_total_cal_height = $result($tmp_total_cal_count * $cs_height_24 )
-
-		,vg_1003_100_juso.height = $result($cs_height_40 + $tmp_total_cal_height)
-		,btn_4117_juso_search.height = $vg_1003_100_juso.height
-		,vg_1003_100_contents.height = $result($cs_height_220 + $tmp_total_cal_height)
-
-		,vg_1003_100_email.y = $result($vg_1003_100_juso.y + $vg_1003_100_juso.height + $cs_height_25)
+		tmp_jatek_1_val = $this.rowkey5
+		,tmp_jatek_2_val = $this.rowkey16
 	);
-
-
-
-	$closescreen(popscreen_address_find);	
-	return;
+	$popscreen(popscreen_jatek_3_input);
 " />
 <popscreen id="popscreen_address_find"
 	width="$p_lcdWidth" 
@@ -609,3 +581,184 @@ value="
 			</table>
 	</screen>
 </popscreen>
+lbl_pop_jatek_3_input
+<action id="popscreen_jatek_3_input_onload"
+value="
+	$setvar(
+		,lbl_pop_jatek_2_input_text.value = $tmp_jatek_2_val
+		,tf_pop_jatek_3_input.focus = true
+	);
+"/>
+<action id="BTN_POP_JATEK_3_CONFIRM_ONCLICKED"
+value="
+	$delvar(tmp_jatek_3_val)
+	$setvar(
+		tmp_jatek_3_val = $tf_pop_jatek_3_input.value
+	);
+	$logvar(
+		tmp_jatek_1_val
+		,tmp_jatek_2_val
+		,tmp_jatek_3_val
+	);
+
+	$setvar(
+		lbl_4117_jatek_1.value = $tmp_jatek_1_val 		// 우편번호
+
+		,lbl_4117_jatek_2.hidden = false
+
+		,lbl_4117_jatek_2.height = $callaction(fnHeightWithFontSize,lbl_4117_jatek_2,$tmp_jatek_2_val,$cs_fontsize_16,height)
+
+		,lbl_4117_jatek_2.value = $callaction(fnHeightWithFontSize,lbl_4117_jatek_2,$tmp_jatek_2_val,$cs_fontsize_16,value)
+
+
+		,lbl_4117_jatek_2.y = $result($lbl_4117_jatek_1.y + $lbl_4117_jatek_1.height)
+
+		,tmp_lbl_4117_jatek_2_line_count = $callaction(fnHeightWithFontSize,lbl_4117_jatek_2,$tmp_jatek_2_val,$cs_fontsize_16,count)
+
+		,lbl_4117_jatek_3.hidden = false
+		,lbl_4117_jatek_3.height = $callaction(fnHeightWithFontSize,lbl_4117_jatek_3,$tmp_jatek_3_val,$cs_fontsize_16,height)
+		,lbl_4117_jatek_3.value = $callaction(fnHeightWithFontSize,lbl_4117_jatek_3,$tmp_jatek_3_val,$cs_fontsize_16,value)
+		,lbl_4117_jatek_3.y = $result($lbl_4117_jatek_2.y + $lbl_4117_jatek_2.height)
+		,tmp_lbl_4117_jatek_3_line_count = $callaction(fnHeightWithFontSize,lbl_4117_jatek_3,$tmp_jatek_3_val,$cs_fontsize_16,count)
+
+
+		,tmp_total_cal_count = $result($tmp_lbl_4117_jatek_3_line_count + $tmp_lbl_4117_jatek_2_line_count)
+		,tmp_total_cal_height = $result($tmp_total_cal_count * $cs_height_24 )
+
+		,vg_1003_100_juso.height = $result($cs_height_40 + $tmp_total_cal_height)
+		,btn_4117_juso_search.height = $vg_1003_100_juso.height
+		,vg_1003_100_contents.height = $result($cs_height_220 + $tmp_total_cal_height)
+
+		,vg_1003_100_email.y = $result($vg_1003_100_juso.y + $vg_1003_100_juso.height + $cs_height_25)
+	);
+	$closescreen(popscreen_jatek_3_input);
+	$closescreen(popscreen_address_find);
+"/>
+<action id="tf_pop_jatek_3_input_onChanged"
+value="
+	if($strlen($tf_pop_jatek_3_input.value) > 0){
+		$setvar(btn_pop_jatek_3_confirm.enable = true);
+	}else{
+		$setvar(btn_pop_jatek_3_confirm.enable = false);
+	}
+"/>
+<popscreen id="popscreen_jatek_3_input"
+	width="$p_lcdWidth" 
+	height="$p_lcdHeight"
+	backcolor="00000060"
+	layout="center"
+	layout_vertical="center"
+	onload="popscreen_jatek_3_input_onload"
+>
+	<screen id="screen_popscreen_jatek_3_input"
+		width="$cs_width_300"
+		height="$cs_height_224"
+		layout="center"
+		layout_vertical="center"
+		backcolor="$cs_color_white"
+		margin_top="$cs_height_20"
+		margin_bottom="$cs_height_20"
+		margin_right="$cs_width_15"
+		margin_left="$cs_width_15"
+		border_width="1"
+		border_radius="$cs_radius_20"
+	>
+		//여기부터
+		<viewgroup id="vg_pop_jatek_3_input"
+			width="$this.remain_right"
+			height="$cs_height_121"
+		>
+			<label
+				width="$this.remain_right"
+				height="$cs_height_24"
+				align="center"
+				textcolor="$cs_color_black"
+				fontname="$cs_font_600"
+				fontsize="$cs_fontsize_16"
+				value="나머지 주소"
+			/>
+			<br/>
+			<label id="lbl_pop_jatek_2_input_text"
+				width="$this.remain_right"
+				height="$result($this.remain_bottom - $cs_height_40)"
+				align="center"
+				textcolor="$cs_color_black"
+				fontname="$cs_font_400"
+				fontsize="$cs_fontsize_14"
+				multiline="true"
+				value=""
+			/>
+			<br/>
+			<textfield id="tf_pop_jatek_3_input"
+				width="$this.remain_right"
+				height="$cs_height_40"
+				margin_right="$cs_width_15"
+				margin_left="$cs_width_15"
+				keyboard_type="text"
+				border_width="1"
+				border_radius="$cs_radius_10"
+				border_color="EBEBEB"
+				textcolor="$cs_color_black"
+				textcolor_placeholder="$cs_color_disable"
+				fontsize="$cs_fontsize_14"
+				fontsize_placeholder="$cs_fontsize_14"
+				fontname="$cs_font_400"
+				placeholder="나머지 주소를 입력해주세요"
+				layout_vertical="bottom"
+				onChanged="tf_pop_jatek_3_input_onChanged"
+			/>
+		</viewgroup>
+
+		<br/>
+		<viewgroup
+			width="$this.remain_right"
+			height="$cs_height_50"
+			layout="center"
+			layout_vertical="bottom"
+		>
+			<button 
+				width="$cs_width_132" 
+				height="$this.remain_bottom"
+				layout="left"
+				backcolor="$cs_color_line"
+				border_radius="$cs_radius_10"
+				fontsize="$cs_fontsize_14"
+				fontname="$cs_font_500"
+				textcolor="$cs_color_black"
+				textcolor_active="$cs_color_black"
+				value="취소"
+				onClicked="$closescreen(popscreen_jatek_3_input);"
+			/>
+			<button id="btn_pop_jatek_3_confirm"
+				width="$cs_width_132" 
+				height="$this.remain_bottom"
+				layout="right"
+				backcolor="$cs_color_main"
+				backcolor_disable="$cs_color_main_disable"
+				border_width="1"
+				border_radius="$cs_radius_10"
+				fontsize="$cs_fontsize_14"
+				fontname="$cs_font_500"
+				textcolor="$cs_color_white"
+				textcolor_active="$cs_color_white"
+				textcolor_disable="$cs_color_white"
+				value="확인"
+				enable="false"
+				onClicked="btn_pop_jatek_3_confirm_onClicked"	
+			/>
+		</viewgroup>
+
+	</screen>
+
+</popscreen>
+
+<action id="TEXTFIELDEND_LOCAL"
+value="
+	if($isequal_string($TEXTFIELDEND_LOCAL_PARAM1,tf_pop_jatek_3_input)){
+		if($strlen($tf_pop_jatek_3_input.value) > 0){
+			$setvar(btn_pop_jatek_3_confirm.enable = true);
+		}else{
+			$setvar(btn_pop_jatek_3_confirm.enable = false);
+		}
+	}
+"/>
