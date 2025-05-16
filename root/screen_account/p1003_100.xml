@@ -97,6 +97,8 @@ value="
 			1003 g_IN_REQUEST_HOME_ADDR[$g_IN_REQUEST_HOME_ADDR],
 			1003 g_IN_REQUEST_HOME_ADDR2[$g_IN_REQUEST_HOME_ADDR2],
 	);
+
+	$callaction(Act_Open_Account_Move,1004);
 	
 "/>
 <screen 
