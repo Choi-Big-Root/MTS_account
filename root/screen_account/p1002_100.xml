@@ -520,7 +520,6 @@ value="
 				fontsize="$cs_fontsize_18"
 				fontname="$cs_font_700"
 				value="통신사를 선택해주세요"
-				onclicked="$closescreen(popscreen_1002_phone_choice);" 
 			/>
 			<br height="$cs_height_20" />	
 			<label
