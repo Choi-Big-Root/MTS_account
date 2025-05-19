@@ -28,6 +28,8 @@
 
 		,icon_step 			= $callaction(fnGetSvgIconPathName,step)
 
+		,icon_search 			= $callaction(fnGetSvgIconPathName,search)
+
 	);
 " />
 <action id="fnGetSvgIconPathName" scope="common" 
