@@ -48,11 +48,11 @@
 		,menu_num=1003
 
 		//확인필요.
-		,4117_choice_key=
-		,4117_check_f=
-		,4117_check_d=
-		,tmp_4117_pass_1=
-		,tmp_4117_pass_2=
+		,1003_choice_key=
+		,1003_check_f=
+		,1003_check_d=
+		,tmp_1003_pass_1=
+		,tmp_1003_pass_2=
 	);
 	$setvar(members_gubun=1);
 	
@@ -66,18 +66,31 @@ value="
 	);
 	$callaction(popscreen_open_account_confirm_onclicked,$tmp_pop_info_x_cal,$tmp_pop_imfo_y_cal);
 "/>
+<action id="btn_1003_100_mail_sel_onClicked"
+value="
+	$logarrayvar(tmp_email_arr);
+	$popscreen(pop_1003_100_email);
+"/>
 <action id="btn_1003_100_confirm_onClicked"
 value="
 	$setvar(
-		tmp_replace_lf_jaket_val_2 = $replace(%0A,,$lbl_4117_jatek_2.value)
-		,tmp_replace_lf_jaket_val_3 = $replace(%0A,,$lbl_4117_jatek_3.value)
+		tmp_replace_lf_jaket_val_2 = $replace(%0A,,$lbl_1003_jatek_2.value)
+		,tmp_replace_lf_jaket_val_3 = $replace(%0A,,$lbl_1003_jatek_3.value)
 	);
 
-	$callaction(fnConfig_SetValue,g_IN_REQUEST_HOME_POST_NO 	,$lbl_4117_jatek_1.value);
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_HOME_POST_NO 	,$lbl_1003_jatek_1.value);
 	// roadAddr 
 	$callaction(fnConfig_SetValue,g_IN_REQUEST_HOME_ADDR 	,$tmp_replace_lf_jaket_val_2);
 	// roadAddr2 
 	$callaction(fnConfig_SetValue,g_IN_REQUEST_HOME_ADDR2 	,$tmp_replace_lf_jaket_val_3);
+
+	// 이메일주소 
+	if($strlen($tf_1003_email_1.value) > 0 && $strlen($tf_1003_email_2.value) > 0){
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_CLNT_EMAIL 	,$addstring($tf_1003_email_1.value,@,$tf_1003_email_2.value));
+	}
+	else{
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_CLNT_EMAIL 	,);
+	}
 
 
 	$log(
@@ -96,11 +109,29 @@ value="
 			1003 g_IN_REQUEST_HOME_POST_NO[$g_IN_REQUEST_HOME_POST_NO],
 			1003 g_IN_REQUEST_HOME_ADDR[$g_IN_REQUEST_HOME_ADDR],
 			1003 g_IN_REQUEST_HOME_ADDR2[$g_IN_REQUEST_HOME_ADDR2],
+			1003 g_IN_REQUEST_CLNT_EMAIL[$g_IN_REQUEST_CLNT_EMAIL],
 	);
 
 	$callaction(Act_Open_Account_Move,1004);
 	
 "/>
+<!-- <action id="tf_1003_email_1_onChanged"
+value="
+	$log($this.value, $this.width, $cs_width_53, $this.remain_right);
+	$setvar(
+		tmp_tf_1003_email_strlen = $strlen_uni($this.value)
+		,tmp_tf_1003_email_width_val = $result($cs_fontsize_16 * $tmp_tf_1003_email_strlen)
+	);
+	$logvar(tmp_tf_1003_email_strlen, tmp_tf_1003_email_width_val);
+
+	if($tmp_tf_1003_email_width_val > $this.width){
+		$log(자 늘려보자잇); // 가로길이 늘리자잇.
+		$setvar(
+			tf_1003_email_1.width = $tmp_tf_1003_email_width_val
+			,vg_1003_100_email_move.x = $result($tf_1003_email_1.x + $tf_1003_email_1.width)
+		);
+	}
+"/> -->
 <screen 
 	id="screen_1003_100"
 	class="cs_screen_contents"
@@ -220,7 +251,7 @@ value="
 					layout_vertical="top"
 				/>
 				<br/>
-				<textfield id="lbl_4117_jatek_1"
+				<textfield id="lbl_1003_jatek_1"
 					width="$this.remain_right"
 					height="$cs_height_24"
 					fontname="$cs_font_400"
@@ -231,9 +262,9 @@ value="
 					enable="false"
 					layout_vertical="bottom"
 				/>
-				<label id="lbl_4117_jatek_2"
-					x="$lbl_4117_jatek_1.x"
-					y="$lbl_4117_jatek_1.y"
+				<label id="lbl_1003_jatek_2"
+					x="$lbl_1003_jatek_1.x"
+					y="$lbl_1003_jatek_1.y"
 					width="$this.remain_right"
 					height="$cs_height_24"
 					fontname="$cs_font_400"
@@ -242,9 +273,9 @@ value="
 					valign="center"
 					hidden="true"
 				/>
-				<label id="lbl_4117_jatek_3"
-					x="$lbl_4117_jatek_2.x"
-					y="$lbl_4117_jatek_2.y"
+				<label id="lbl_1003_jatek_3"
+					x="$lbl_1003_jatek_2.x"
+					y="$lbl_1003_jatek_2.y"
 					width="$this.remain_right"
 					height="$cs_height_24"
 					fontname="$cs_font_400"
@@ -253,10 +284,10 @@ value="
 					hidden="true"
 				/>
 
-				<button id="btn_4117_juso_search"
+				<button id="btn_1003_juso_search"
 					class="cs_button_none" 
 					key="1"
-            		onClicked="btn_4117_juso_search_onclicked" 
+            		onClicked="btn_1003_juso_search_onclicked" 
             	/>
 			</viewgroup>
 			<br height="$cs_height_25"/>
@@ -275,8 +306,9 @@ value="
 					value="이메일"
 				/>
 				<br/>
-				<textfield id="tf_4144_email_1"
-					width="$cs_width_53"
+				<textfield id="tf_1003_email_1"
+					//width="$result($this.remain_right - $cs_width_35 - $cs_width_103 - $cs_width_30)"
+					width="$cs_width_90"
 					keyboard_type="text"
 					height="$cs_height_24"
 					fontname="$cs_font_400"
@@ -284,41 +316,45 @@ value="
 					textcolor="$cs_color_black"
 					textcolor_placeholder="$cs_color_disable"
 					placeholder="ex)adc"
-					value=""
 				/>
-				<label id="lbl_1003_100_email_icon"
-					width="$cs_width_35"
+				<viewgroup id="vg_1003_100_email_move"
+					width="$this.remain_right"
 					height="$cs_height_24"
-					align="center"
-					valign="center"
-					fontname="$cs_font_400"
-					fontsize="$cs_fontsize_16"
-					textcolor="$cs_color_black"
-					value="@"
-				/>
-				<textfield id="tf_4144_email_2"
-					width="$cs_width_103"
-					height="$cs_height_24"
-					keyboard_type="text"
-					height="$cs_height_24"
-					fontname="$cs_font_400"
-					fontsize="$cs_fontsize_16"
-					textcolor="$cs_color_black"
-					textcolor_placeholder="$cs_color_disable"
-					placeholder="eugenefn.com"
-				/>
-				<button id="btn_4144_100_mail_sel"
-					width="$cs_width_30"
-					height="$cs_height_24"
-					BACKGROUNDSVG="$icon_polygon_3"
-			        BACKGROUNDSVG_DISABLE="$icon_polygon_3"
-			        BACKGROUNDSVG_HIGHLIGHT="$icon_polygon_3"
-			        BACKGROUNDSVG_WIDTH="$cs_width_10"
-  					BACKGROUNDSVG_HEIGHT="$cs_height_8"
-			        backgroundimage_align="center"
-			        backgroundimage_align_vertical="center"
-			        backcolor="ff000022"
-				/>
+				>
+					<label id="lbl_1003_100_email_icon"
+						width="$cs_width_35"
+						height="$cs_height_24"
+						align="center"
+						valign="center"
+						fontname="$cs_font_400"
+						fontsize="$cs_fontsize_16"
+						textcolor="$cs_color_black"
+						value="@"
+					/>
+					<textfield id="tf_1003_email_2"
+						width="$cs_width_103"
+						height="$cs_height_24"
+						keyboard_type="text"
+						height="$cs_height_24"
+						fontname="$cs_font_400"
+						fontsize="$cs_fontsize_16"
+						textcolor="$cs_color_black"
+						textcolor_placeholder="$cs_color_disable"
+						placeholder="eugenefn.com"
+					/>
+					<button id="btn_1003_100_mail_sel"
+						width="$cs_width_30"
+						height="$cs_height_24"
+						BACKGROUNDSVG="$icon_polygon_3"
+				        BACKGROUNDSVG_DISABLE="$icon_polygon_3"
+				        BACKGROUNDSVG_HIGHLIGHT="$icon_polygon_3"
+				        BACKGROUNDSVG_WIDTH="$cs_width_10"
+	  					BACKGROUNDSVG_HEIGHT="$cs_height_8"
+				        backgroundimage_align="center"
+				        backgroundimage_align_vertical="center"
+				        onclicked="btn_1003_100_mail_sel_onClicked"
+					/>
+				</viewgroup>
 			</viewgroup>
 		</viewgroup>
 	</viewgroup>
@@ -365,7 +401,7 @@ value="
 </screen>
 
 //주소 검색팝업.
-<action id="btn_4117_juso_search_onclicked" 
+<action id="btn_1003_juso_search_onclicked" 
 value="
 	$setvar(
 		tmp_btn_find_key = $this.key
@@ -374,7 +410,7 @@ value="
 " />
 <action id="btn_address_find_onclicked" 
 value="
-	$cleartablerow(tbl_address_find_4117);
+	$cleartablerow(tbl_address_find_1003);
 	$delvar(strPostData);
     $addurlparam(strPostData,keyword,$txt_address_find.value);
     $addurlparam(strPostData,currentPage,1);
@@ -386,7 +422,7 @@ value="
 	$postrequestdata(OPENAPI_TEST,https://www.juso.go.kr/addrlink/addrLinkApiJsonp.do,fnNaverAddressSearch_CallBack,strPostData);
 " />
 <action id="fnNaverAddressSearch_CallBack" params="result,strVarName,strURL" value="
-    $cleartablerow(tbl_address_find_4117);
+    $cleartablerow(tbl_address_find_1003);
 	$setvar(jsonName=openAPIJson);
 
 	$json_create($jsonName);
@@ -395,7 +431,7 @@ value="
 	$json_print($jsonname);
 
 
-	$json_setControl($jsonName,tbl_address_find_4117);
+	$json_setControl($jsonName,tbl_address_find_1003);
 	$json_delete($jsonName);
 "/>
 <action id="fnHeightWithFontSize"
@@ -458,7 +494,7 @@ value="
 		return $tmp_substr_val;
 	}
 "/>
-<action id="tbl_address_find_4117_onclicked" 
+<action id="tbl_address_find_1003_onclicked" 
 value="
 	$delvar(tmp_jatek_1_val,tmp_jatek_2_val);
 	$setvar(
@@ -561,7 +597,7 @@ value="
 				onclicked="btn_address_find_onclicked"
 			/>
 			<br height="$cs_height_6"/>
-			<table id="tbl_address_find_4117"
+			<table id="tbl_address_find_1003"
 				class="cs_grid"
 				width="$this.remain_right"
 				rowheight="$cs_height_102"
@@ -595,7 +631,7 @@ value="
 						~bdMgtSn:rowkey23:trim
 						~buldSlno:rowkey24:trim
 					"
-					onClicked="tbl_address_find_4117_onclicked" 
+					onClicked="tbl_address_find_1003_onclicked" 
 				>
 					<td 
 						width="$this.remain_right"
@@ -692,31 +728,31 @@ value="
 	);
 
 	$setvar(
-		lbl_4117_jatek_1.value = $tmp_jatek_1_val 		// 우편번호
+		lbl_1003_jatek_1.value = $tmp_jatek_1_val 		// 우편번호
 
-		,lbl_4117_jatek_2.hidden = false
+		,lbl_1003_jatek_2.hidden = false
 
-		,lbl_4117_jatek_2.height = $callaction(fnHeightWithFontSize,lbl_4117_jatek_2,$tmp_jatek_2_val,$cs_fontsize_16,height)
+		,lbl_1003_jatek_2.height = $callaction(fnHeightWithFontSize,lbl_1003_jatek_2,$tmp_jatek_2_val,$cs_fontsize_16,height)
 
-		,lbl_4117_jatek_2.value = $callaction(fnHeightWithFontSize,lbl_4117_jatek_2,$tmp_jatek_2_val,$cs_fontsize_16,value)
-
-
-		,lbl_4117_jatek_2.y = $result($lbl_4117_jatek_1.y + $lbl_4117_jatek_1.height)
-
-		,tmp_lbl_4117_jatek_2_line_count = $callaction(fnHeightWithFontSize,lbl_4117_jatek_2,$tmp_jatek_2_val,$cs_fontsize_16,count)
-
-		,lbl_4117_jatek_3.hidden = false
-		,lbl_4117_jatek_3.height = $callaction(fnHeightWithFontSize,lbl_4117_jatek_3,$tmp_jatek_3_val,$cs_fontsize_16,height)
-		,lbl_4117_jatek_3.value = $callaction(fnHeightWithFontSize,lbl_4117_jatek_3,$tmp_jatek_3_val,$cs_fontsize_16,value)
-		,lbl_4117_jatek_3.y = $result($lbl_4117_jatek_2.y + $lbl_4117_jatek_2.height)
-		,tmp_lbl_4117_jatek_3_line_count = $callaction(fnHeightWithFontSize,lbl_4117_jatek_3,$tmp_jatek_3_val,$cs_fontsize_16,count)
+		,lbl_1003_jatek_2.value = $callaction(fnHeightWithFontSize,lbl_1003_jatek_2,$tmp_jatek_2_val,$cs_fontsize_16,value)
 
 
-		,tmp_total_cal_count = $result($tmp_lbl_4117_jatek_3_line_count + $tmp_lbl_4117_jatek_2_line_count)
+		,lbl_1003_jatek_2.y = $result($lbl_1003_jatek_1.y + $lbl_1003_jatek_1.height)
+
+		,tmp_lbl_1003_jatek_2_line_count = $callaction(fnHeightWithFontSize,lbl_1003_jatek_2,$tmp_jatek_2_val,$cs_fontsize_16,count)
+
+		,lbl_1003_jatek_3.hidden = false
+		,lbl_1003_jatek_3.height = $callaction(fnHeightWithFontSize,lbl_1003_jatek_3,$tmp_jatek_3_val,$cs_fontsize_16,height)
+		,lbl_1003_jatek_3.value = $callaction(fnHeightWithFontSize,lbl_1003_jatek_3,$tmp_jatek_3_val,$cs_fontsize_16,value)
+		,lbl_1003_jatek_3.y = $result($lbl_1003_jatek_2.y + $lbl_1003_jatek_2.height)
+		,tmp_lbl_1003_jatek_3_line_count = $callaction(fnHeightWithFontSize,lbl_1003_jatek_3,$tmp_jatek_3_val,$cs_fontsize_16,count)
+
+
+		,tmp_total_cal_count = $result($tmp_lbl_1003_jatek_3_line_count + $tmp_lbl_1003_jatek_2_line_count)
 		,tmp_total_cal_height = $result($tmp_total_cal_count * $cs_height_24 )
 
 		,vg_1003_100_juso.height = $result($cs_height_40 + $tmp_total_cal_height)
-		,btn_4117_juso_search.height = $vg_1003_100_juso.height
+		,btn_1003_juso_search.height = $vg_1003_100_juso.height
 		,vg_1003_100_contents.height = $result($cs_height_220 + $tmp_total_cal_height)
 
 		,vg_1003_100_email.y = $result($vg_1003_100_juso.y + $vg_1003_100_juso.height + $cs_height_25)
@@ -840,6 +876,119 @@ value="
 
 	</screen>
 
+</popscreen>
+
+//이메일 선택목록 팝업
+<class id="cs_lbl_1003_100_email"
+width="$this.remain_right"
+height="$cs_height_48"
+textcolor="$cs_color_black"
+fontsize="$cs_fontsize_15"
+fontname="$cs_font_400"
+onClicked="fn_1003_100_email_choice_confirm"
+/>	
+<action id="fn_1003_100_email_choice_confirm"
+value="
+	$log($this.value , $this.key);
+
+	if($this.key == -1){
+		$setvar(tf_1003_email_2.value = );
+	}else{
+		$setvar(tf_1003_email_2.value = $this.value);
+	}
+
+	$closescreen(pop_1003_100_email);
+"/>
+<popscreen id="pop_1003_100_email"
+	width="$p_lcdWidth" 
+	height="$p_lcdHeight"
+	backcolor="00000060"
+	layout="center"
+	layout_vertical="center"
+	onload="pop_1003_100_email_onload"
+>
+	<screen id="screen_pop_1003_100_email"
+		width="$this.remain_right"
+		layout="center"
+		layout_vertical="bottom"
+		height="$cs_height_434"
+		background_roundinfo="$cs_color_white,$cs_color_white,$cs_radius_30,1,true,true,false,false"
+	>
+		<br height="$cs_height_30" />
+		<viewgroup
+			width="$this.remain_right"
+			height="$cs_height_381"
+			margin_left="$cs_width_23"
+			margin_right="$cs_width_23"
+		>
+			<label
+				width="$this.remain_right"
+				height="$cs_height_25"
+				textcolor="$cs_color_black"
+				fontsize="$cs_fontsize_18"
+				fontname="$cs_font_700"
+				value="이메일을 선택해주세요"
+				onclicked="$closescreen(pop_1003_100_email);" 
+			/>
+			<br height="$cs_height_20" />	
+			<label
+				class="cs_lbl_1003_100_email"
+				key="-1"
+				value="직접입력"
+			/>
+			<br/>
+			<label
+				class="cs_lbl_1003_100_email"
+				key="0"
+				value="naver.com"
+			/>
+			<br/>
+			<label
+				class="cs_lbl_1003_100_email"
+				key="1"
+				value="hanmail.net"
+			/>
+			<br/>
+			<label
+				class="cs_lbl_1003_100_email"
+				key="2"
+				value="kakao.com"
+			/>
+			<br/>
+			<label
+				class="cs_lbl_1003_100_email"
+				key="3"
+				value="gmail.com"
+			/>
+			<br/>
+			<label
+				class="cs_lbl_1003_100_email"
+				key="5"
+				value="hotmail.com"
+			/>
+			<br/>
+			<label
+				class="cs_lbl_1003_100_email"
+				key="6"
+				value="nate.com"
+			/>
+		</viewgroup>
+	</screen>
+	<br/>
+	<label
+		x="$result($pop_1003_100_email.width - $cs_height_50)" 
+		y="$result($screen_pop_1003_100_email.y)"
+    	width="$cs_height_50"
+    	height="$cs_height_50"
+        BACKGROUNDSVG="$icon_cancel"
+		BACKGROUNDSVG_DISABLE="$icon_cancel"
+		BACKGROUNDSVG_HIGHLIGHT="$icon_cancel"
+		BACKGROUNDSVG_WIDTH="$cs_height_20"
+		BACKGROUNDSVG_HEIGHT="$cs_height_20"	
+		backgroundimage_align="center"
+		backgroundimage_align_vertical="center"
+		onclicked="$closescreen(pop_1003_100_email);" 
+    />
 </popscreen>
 
 <action id="TEXTFIELDEND_LOCAL"
