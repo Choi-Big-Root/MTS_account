@@ -1,0 +1,576 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<action id="screen_contents_onload" value="
+	// 비대면 절차개선 - 2020.09.28
+	$setvar(
+		,img_step_1.hidden=false
+		,img_step_2.hidden=false
+		,img_step_3.hidden=true
+		,img_step_4.hidden=true
+		,img_step_5.hidden=true
+		,img_step_6.hidden=true
+		,img_step_7.hidden=true
+		,img_step_8.hidden=true
+
+		,lbl_account_title_step_1.hidden=true
+		,lbl_account_title_step_2.hidden=true
+		,lbl_account_title_step_3.hidden=false
+		,lbl_account_title_step_4.hidden=false
+		,lbl_account_title_step_5.hidden=false
+		,lbl_account_title_step_6.hidden=false
+		,lbl_account_title_step_7.hidden=false
+		,lbl_account_title_step_8.hidden=false
+
+		,lbl_account_title_step_1.textcolor=$cs_color_disable
+		,lbl_account_title_step_2.textcolor=$cs_color_disable
+		,lbl_account_title_step_3.textcolor=$cs_color_black
+		,lbl_account_title_step_4.textcolor=$cs_color_disable
+		,lbl_account_title_step_5.textcolor=$cs_color_disable
+		,lbl_account_title_step_6.textcolor=$cs_color_disable
+		,lbl_account_title_step_7.textcolor=$cs_color_disable
+		,lbl_account_title_step_8.textcolor=$cs_color_disable
+
+
+		,lbl_account_title_step_1.fontname=$cs_font_400
+		,lbl_account_title_step_2.fontname=$cs_font_400
+		,lbl_account_title_step_3.fontname=$cs_font_600
+		,lbl_account_title_step_4.fontname=$cs_font_400
+		,lbl_account_title_step_5.fontname=$cs_font_400
+		,lbl_account_title_step_6.fontname=$cs_font_400
+		,lbl_account_title_step_7.fontname=$cs_font_400
+		,lbl_account_title_step_8.fontname=$cs_font_400
+
+
+		,vg_open_account_title.backcolor=FFFFFF
+		,popscreen_open_account_history.hidden=false
+		,vg_account_title_step.hidden = false
+
+		,menu_num=1004
+	);
+
+	//직업 선택 목록
+	$setvar(
+ 		arr_4143_choice=[
+ 			,[6004,기타-무직]
+ 			,[1001,근로소득자-일반기업체]
+			,[1002,근로소득자-공무원]
+			,[1003,근로소득자-교육계]
+			,[1004,근로소득자-금융계]
+			,[1005,근로소득자-언론계]
+			,[1006,근로소득자-공기업]
+			,[1007,근로소득자-전문직]
+			,[1008,근로소득자-기타]
+			,[2001,자영업자-제조업]
+			,[2002,자영업자-도소매업]
+			,[2003,자영업자-서비스업]
+			,[2004,자영업자-건설업]
+			,[2005,자영업자-숙박및음식업]
+			,[2006,자영업자-여행사]
+			,[2007,자영업자-골동품및 예술품 판매업]
+			,[2008,자영업자-보석_귀금속등판매업]
+			,[2009,자영업자-기타]
+			,[2101,자영업전문직-변호사]
+			,[2102,자영업전문직-회계사]
+			,[2103,자영업전문직-세무사]
+			,[2104,자영업전문직-부동산중개업]
+			,[2105,자영업전문직-기타]
+			,[4001,연금생활자-연금생활자]
+			,[5001,자영업자-사행성사업(사행성오락실_카지노사업등)]
+			,[6001,기타-정치인]
+			,[6002,기타-주부]
+			,[6003,기타-학생]
+			,[6005,기타-기타]
+			,[6006,기타-개인투자자]
+			,[6101,기타금융업-환전상]
+			,[6102,기타금융업-전당포]
+			,[6103,기타금융업-대부업]
+			,[6104,기타금융업-투자자문업_투자일임업]
+			,[6105,기타금융업-기타]
+ 		]
+		);
+
+
+	$setvar(members_gubun=1);
+	
+"/>
+
+<action id="btn_pop_info_1004_100_onClicked"
+value="
+	$setvar(
+		tmp_pop_info_x_cal = $result($img_pop_info_1004.x_abs + $w($g_lcdwidth,0.6))
+		,tmp_pop_imfo_y_cal = $result($img_pop_info_1004.y_abs + $h($g_lcdHeight,2.6))
+	);
+	$callaction(popscreen_open_account_confirm_onclicked,$tmp_pop_info_x_cal,$tmp_pop_imfo_y_cal);
+"/>
+
+<screen 
+	id="screen_1004_100"
+	class="cs_screen_contents"
+	backcolor="$cs_color_white"
+	onload="screen_contents_onload"
+	onunload="screen_contents_onunload"
+	noscroll_height="true"
+	margin_bottom="$cs_height_20"
+>
+	<br height="$cs_height_15"/>
+	<viewgroup
+		width="$this.remain_right"
+		height="$result($this.remain_bottom - $cs_height_54)"
+		margin_left="$cs_width_16"
+		margin_right="$cs_width_16"
+	>
+		<viewgroup
+			width="$this.remain_right"
+			height="$cs_height_98"
+		>
+			<label
+				width="$cs_width_86"
+				height="$cs_height_20"
+				fontsize="$cs_fontsize_15"
+				fontname="$cs_font_400"
+				textcolor="$cs_color_text"
+				align="left"
+				value="고객정보입력"
+			/>
+			<label 
+	        	id="img_pop_info_1004" 
+	        	width="$cs_height_20"
+	        	height="$cs_height_20"
+	            BACKGROUNDSVG="$icon_question"
+				BACKGROUNDSVG_DISABLE="$icon_question"
+				BACKGROUNDSVG_HIGHLIGHT="$icon_question"
+				BACKGROUNDSVG_WIDTH="$cs_height_20"
+				BACKGROUNDSVG_HEIGHT="$cs_height_20"
+				backgroundimage_align="center"
+				backgroundimage_align_vertical="center"
+				hidden="false"
+	        />
+			<viewgroup 
+				x="$w($g_lcdWidth,0)" 
+				width="$w($g_lcdWidth,28.3)" 
+				height="$h($g_lcdHeight,4.5)"
+			>
+		        <button id="btn_pop_info_1004_100" class="cs_button_none" onClicked="btn_pop_info_1004_100_onClicked"/>
+	   		</viewgroup>
+	   		<br/>
+	   		<viewgroup
+	   			width="$this.remain_right"
+	   			height="$cs_height_68"
+	   			layout_vertical="bottom"
+	   		>
+	   			<label
+	   				width="$this.remain_right"
+	   				height="$cs_height_34"
+	   				textcolor="$cs_color_black"
+	   				fontsize="$cs_fontsize_24"
+	   				fontname="$cs_font_600"
+	   				value="직업 정보를"
+	   			/>
+	   			<br/>
+	   			<label
+	   				width="$this.remain_right"
+	   				height="$cs_height_34"
+	   				textcolor="$cs_color_black"
+	   				fontsize="$cs_fontsize_24"
+	   				fontname="$cs_font_600"
+	   				value="입력해 주세요."
+	   			/>
+	   		</viewgroup>
+		</viewgroup>
+		<br height="$cs_height_20"/>
+		<viewgroup id="vg_1004_100_contents"
+			width="$this.remain_right"
+			height="$cs_height_220"
+			border_width="1"
+			border_radius="$cs_radius_10"
+			border_color="$cs_color_line"
+			margin_left="$cs_width_20"
+			margin_right="$cs_width_20"
+			margin_top="$cs_height_25"
+			margin_bottom="$cs_height_25"
+		>
+			<label
+				width="$this.remain_right"
+				height="$cs_height_16"
+				fontname="$cs_font_400"
+				fontsize="$cs_fontsize_12"
+				textcolor="$cs_color_text"
+				value="직업"
+			/>
+			<br/>
+			<button id="btn_4143_jikup"
+				width="$this.remain_right" 
+				height="$cs_height_24"
+				fontname="$cs_font_400"
+				fontsize="$cs_fontsize_16"
+				textcolor="$cs_color_disable"
+				textcolor_active="$cs_color_disable"
+				align="left"
+				margin_right="$cs_width_10"
+				BACKGROUNDSVG="$icon_polygon_3"
+		        BACKGROUNDSVG_DISABLE="$icon_polygon_3"
+		        BACKGROUNDSVG_HIGHLIGHT="$icon_polygon_3"
+		        BACKGROUNDSVG_WIDTH="$cs_width_10"
+				BACKGROUNDSVG_HEIGHT="$cs_height_8"
+		        backgroundimage_align="right"
+		        backgroundimage_align_vertical="center"
+				value="선택하세요" 
+				key="0"
+				onclicked="$popscreen(popscreen_4143_choice);"
+			/>
+			<br height="$cs_height_25"/>
+			<viewgroup id="vg_1004_100_juso"
+				width="$this.remain_right"
+				height="$cs_height_40"
+			>
+				<label
+					width="$this.remain_right"
+					height="$cs_height_14"
+					fontname="$cs_font_400"
+					fontsize="$cs_fontsize_12"
+					textcolor="$cs_color_text"
+					value="자택주소"
+					layout_vertical="top"
+				/>
+				<br/>
+				<textfield id="lbl_1004_jatek_1"
+					width="$this.remain_right"
+					height="$cs_height_24"
+					fontname="$cs_font_400"
+					fontsize="$cs_fontsize_16"
+					textcolor="$cs_color_black"
+					textcolor_placeholder="$cs_color_disable"
+					placeholder="자택주소"
+					enable="false"
+					layout_vertical="bottom"
+				/>
+				<label id="lbl_1004_jatek_2"
+					x="$lbl_1004_jatek_1.x"
+					y="$lbl_1004_jatek_1.y"
+					width="$this.remain_right"
+					height="$cs_height_24"
+					fontname="$cs_font_400"
+					fontsize="$cs_fontsize_16"
+					textcolor="$cs_color_black"
+					valign="center"
+					hidden="true"
+				/>
+				<label id="lbl_1004_jatek_3"
+					x="$lbl_1004_jatek_2.x"
+					y="$lbl_1004_jatek_2.y"
+					width="$this.remain_right"
+					height="$cs_height_24"
+					fontname="$cs_font_400"
+					fontsize="$cs_fontsize_16"
+					textcolor="$cs_color_black"
+					hidden="true"
+				/>
+
+				<button id="btn_1004_juso_search"
+					class="cs_button_none" 
+					key="1"
+            		onClicked="btn_1004_juso_search_onclicked" 
+            	/>
+			</viewgroup>
+			<br height="$cs_height_25"/>
+
+			<viewgroup id="vg_1004_100_email"
+				width="$this.remain_right"
+				height="$cs_height_40"
+			>
+				<label
+					width="$this.remain_right"
+					height="$cs_height_16"
+					fontname="$cs_font_400"
+					fontsize="$cs_fontsize_12"
+					textcolor="$cs_color_text"
+					value="이메일"
+				/>
+				<br/>
+				<textfield id="tf_1004_email_1"
+					//width="$result($this.remain_right - $cs_width_35 - $cs_width_103 - $cs_width_30)"
+					width="$cs_width_90"
+					keyboard_type="text"
+					height="$cs_height_24"
+					fontname="$cs_font_400"
+					fontsize="$cs_fontsize_16"
+					textcolor="$cs_color_black"
+					textcolor_placeholder="$cs_color_disable"
+					placeholder="ex)adc"
+				/>
+				<viewgroup id="vg_1004_100_email_move"
+					width="$this.remain_right"
+					height="$cs_height_24"
+				>
+					<label id="lbl_1004_100_email_icon"
+						width="$cs_width_35"
+						height="$cs_height_24"
+						align="center"
+						valign="center"
+						fontname="$cs_font_400"
+						fontsize="$cs_fontsize_16"
+						textcolor="$cs_color_black"
+						value="@"
+					/>
+					<textfield id="tf_1004_email_2"
+						width="$cs_width_103"
+						height="$cs_height_24"
+						keyboard_type="text"
+						height="$cs_height_24"
+						fontname="$cs_font_400"
+						fontsize="$cs_fontsize_16"
+						textcolor="$cs_color_black"
+						textcolor_placeholder="$cs_color_disable"
+						placeholder="eugenefn.com"
+					/>
+					<button id="btn_1004_100_mail_sel"
+						width="$cs_width_30"
+						height="$cs_height_24"
+						BACKGROUNDSVG="$icon_polygon_3"
+				        BACKGROUNDSVG_DISABLE="$icon_polygon_3"
+				        BACKGROUNDSVG_HIGHLIGHT="$icon_polygon_3"
+				        BACKGROUNDSVG_WIDTH="$cs_width_10"
+	  					BACKGROUNDSVG_HEIGHT="$cs_height_8"
+				        backgroundimage_align="center"
+				        backgroundimage_align_vertical="center"
+				        onclicked="btn_1004_100_mail_sel_onClicked"
+					/>
+				</viewgroup>
+			</viewgroup>
+		</viewgroup>
+	</viewgroup>
+	<br/>
+	<viewgroup
+		width="$cs_width_343"
+		height="$cs_height_54"
+		layout="center"
+		layout_vertical="bottom"
+	>
+		<button 
+			width="$cs_width_167_5" 
+			height="$this.remain_bottom"
+			layout="left"
+			backcolor="$cs_color_white"
+			border_width="1"
+			border_radius="$cs_height_10"
+			border_color="$cs_color_disable"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_black"
+			textcolor_active="$cs_color_black"
+			value="이전"
+			onClicked="btn_open_account_history_onClicked"
+		/>
+		<button id="btn_1004_100_confirm"
+			width="$cs_width_167_5" 
+			height="$this.remain_bottom"
+			layout="right"
+			backcolor="$cs_color_main"
+			backcolor_disable="$cs_color_main_disable"
+			border_width="1"
+			border_radius="$cs_height_10"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_white"
+			textcolor_active="$cs_color_white"
+			textcolor_disable="$cs_color_white"
+			value="다음"
+			onclicked="btn_1004_100_confirm_onClicked"
+			enable="false"		
+		/>
+	</viewgroup>
+</screen>
+
+
+//직업 선택 팝업.
+<class id="cs_lbl_1004_100_email"
+x=""
+width="$this.remain_right"
+height="$this.remain_bottom"
+BACKGROUNDSVG="$icon_polygon_3"
+BACKGROUNDSVG_DISABLE="$icon_polygon_3"
+BACKGROUNDSVG_HIGHLIGHT="$icon_cancel"
+BACKGROUNDSVG_WIDTH="$cs_height_20"
+BACKGROUNDSVG_HEIGHT="$cs_height_20"
+backgroundimage_align="center"
+backgroundimage_align_vertical="center"
+backcolor="ff000022"
+value="뭐가잘못된거야"
+/>	
+<action id="popscreen_4143_choice_onload"
+value="
+	$cleartablerow(tbl_pop_1004_job);
+	$setarraydata(tbl_pop_1004_job,arr_4143_choice);
+"/>
+<action id="tr_tbl_pop_1004_job_onclicked"
+value="
+	$log($this.key, $this.rowkey1);
+	$setvar(
+		4143_choice_set_key = $this.key
+		,4143_choice_set_val = $this.rowkey1
+		,btn_4143_jikup.textcolor=$cs_color_black
+		,btn_4143_jikup.textcolor_active=$cs_color_black
+		,btn_4143_jikup.value = $4143_choice_set_val
+		,btn_4143_jikup.key = $4143_choice_set_key
+	);
+	//$callaction(fnCtrl_Show_job);
+	$closescreen(popscreen_4143_choice);
+"/>
+//여기부터 작업.
+<action id="fnCtrl_Show_job"
+value="
+	//여기수정
+	$delvar(tmp_jikup_first_code);
+	$setvar(
+		tmp_jikup_first_code = $substring($btn_4143_jikup.key,0,1)
+	);
+
+	if( $isequal_string($tmp_jikup_first_code,1) ){
+		$setvar(
+			lbl_office_addr.hidden 			= false
+			,lbl_office_jikjang.hidden 		= false
+			,tf_4143_jikjang_num_1.enable 	= true
+			,tf_4143_jikjang_num_2.enable 	= true
+			,tf_4143_jikjang_num_3.enable 	= true
+			,tf_4143_jikjang_1.enable 		= true
+			,tf_4143_jikjang_2.enable 		= true
+			,lbl_4143_jikjang_juso_1.enable = true
+			,btn_4143_number_02.enable 		= true
+			,tf_4143_jikjang_juso_3.enable 	= true
+		);
+	}elseif( 
+		$isequal_string($tmp_jikup_first_code,2) 
+		|| $isequal_string($tmp_jikup_first_code,5) 
+	){
+		$setvar(
+			lbl_office_addr.hidden 			= true
+			,lbl_office_jikjang.hidden 		= true
+			,tf_4143_jikjang_num_1.enable 	= true
+			,tf_4143_jikjang_num_2.enable 	= true
+			,tf_4143_jikjang_num_3.enable 	= true
+			,tf_4143_jikjang_1.enable 		= true
+			,tf_4143_jikjang_2.enable 		= true
+			,lbl_4143_jikjang_juso_1.enable = true
+			,btn_4143_number_02.enable 		= true
+			,tf_4143_jikjang_juso_3.enable 	= true
+		);
+	}else{
+		$setvar(
+			lbl_office_addr.hidden 			= true
+			,lbl_office_jikjang.hidden		= true
+			,tf_4143_jikjang_num_1.enable 	= false
+			,tf_4143_jikjang_num_2.enable 	= false
+			,tf_4143_jikjang_num_3.enable 	= false
+			,tf_4143_jikjang_1.enable 		= false
+			,tf_4143_jikjang_2.enable 		= false
+			,lbl_4143_jikjang_juso_1.enable = false
+			,btn_4143_number_02.enable 		= false
+			,tf_4143_jikjang_juso_3.enable 	= false
+
+			,tf_4143_jikjang_num_1.value 	= 
+			,tf_4143_jikjang_num_2.value 	= 
+			,tf_4143_jikjang_num_3.value 	= 
+			,tf_4143_jikjang_1.value 		= 
+			,lbl_4143_jikjang_juso_2.value 	= 
+			,tf_4143_jikjang_2.value 		= 
+			,lbl_4143_jikjang_juso_1.value 	= 
+			,tf_4143_jikjang_juso_3.value 	= 
+		);
+	}
+" />
+<popscreen id="popscreen_4143_choice"
+	width="$p_lcdWidth" 
+	height="$p_lcdHeight"
+	backcolor="00000060"
+	layout="center"
+	layout_vertical="center"
+	onload="popscreen_4143_choice_onload"
+>
+	<screen id="screen_pop_1004_100_email"
+		width="$this.remain_right"
+		layout="center"
+		layout_vertical="bottom"
+		height="$cs_height_621"
+		margin_bottom="$cs_height_20"
+		background_roundinfo="$cs_color_white,$cs_color_white,$cs_radius_30,1,true,true,false,false"
+	>
+		<br height="$cs_height_30" />
+		<viewgroup
+			width="$this.remain_right"
+			height="$this.remain_bottom"
+		>
+			<label
+				width="$this.remain_right"
+				height="$cs_height_25"
+				margin_left="$cs_width_23"
+				margin_right="$cs_width_23"
+				textcolor="$cs_color_black"
+				fontsize="$cs_fontsize_18"
+				fontname="$cs_font_700"
+				value="이메일을 선택해주세요"
+				onclicked="$closescreen(popscreen_4143_choice);" 
+			/>
+			<br height="$cs_height_20" />
+
+			<table id="tbl_pop_1004_job"
+			width="$this.remain_right"
+			height="$this.remain_bottom"
+			rowheight="$cs_height_48"
+			margin_left=""
+			nsrowline="true"
+			nsrowlinecolor="none"
+			>
+				<tr blank="true"
+				arraydata="0:key~1:rowkey1" 
+				onClicked="tr_tbl_pop_1004_job_onclicked"
+				>
+					<td 
+					width="$this.remain_right"
+					height="$this.remain_bottom"
+					>
+						<label
+							width="$result($this.remain_right - $cs_width_23 -$cs_height_20);"
+							height="$this.remain_bottom"
+							margin_left="$cs_width_23"
+							margin_right="$cs_width_23"
+							textcolor="$cs_color_black"
+							fontsize="$cs_fontsize_15"
+							fontname="$cs_font_400"
+							arraydata="1:value"
+						/>
+						//표시가 안되는 영역.
+						<label
+							width="$this.remain_right"
+							height="$this.remain_bottom"
+							BACKGROUNDSVG="$icon_cancel"
+							BACKGROUNDSVG_DISABLE="$icon_cancel"
+							BACKGROUNDSVG_HIGHLIGHT="$icon_cancel"
+							BACKGROUNDSVG_WIDTH="$cs_height_20"
+							BACKGROUNDSVG_HEIGHT="$cs_height_20"
+							backgroundimage_align="center"
+							backgroundimage_align_vertical="center"
+							backcolor="ff000022"
+							//arraydata="
+							//	0:hidden_all:if:$4143_choice_set_key == ##:false:true
+							//"
+						/>
+					</td>
+				</tr>
+			</table>	
+		</viewgroup>
+	</screen>
+	<br/>
+	<label
+		x="$result($popscreen_4143_choice.width - $cs_height_50)" 
+		y="$result($screen_pop_1004_100_email.y)"
+    	width="$cs_height_50"
+    	height="$cs_height_50"
+        BACKGROUNDSVG="$icon_cancel"
+		BACKGROUNDSVG_DISABLE="$icon_cancel"
+		BACKGROUNDSVG_HIGHLIGHT="$icon_cancel"
+		BACKGROUNDSVG_WIDTH="$cs_height_20"
+		BACKGROUNDSVG_HEIGHT="$cs_height_20"	
+		backgroundimage_align="center"
+		backgroundimage_align_vertical="center"
+		onclicked="$closescreen(popscreen_4143_choice);" 
+    />
+</popscreen>
