@@ -102,6 +102,86 @@ value="
 	$callaction(popscreen_open_account_confirm_onclicked,$tmp_pop_info_x_cal,$tmp_pop_imfo_y_cal);
 "/>
 
+<action id="btn_1004_100_confirm_onClicked"
+value="
+	$setvar(
+		tmp_replace_lf_jikjang_val_2 = $replace(%0A,,$lbl_1004_jikjang_2.value)
+		,tmp_replace_lf_jikjang_val_3 = $replace(%0A,,$lbl_1004_jikjang_3.value)
+	);
+
+
+	// 직업
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_JOB_NM 	,$btn_4143_jikup.key);
+	// 직장명
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_COM_NM 	,$tf_4143_jikjang_1.value);
+	// 부서명
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_COM_DEPART 	,);
+	// 직장전화번호
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_COM_TEL 	,);
+	// 우편번호 
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_COM_POST_NO 	,$lbl_1004_jikjang_1.value);
+	// roadAddr 
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_COM_ADDR 	,$tmp_replace_lf_jikjang_val_2);
+	// roadAddr2 
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_COM_ADDR2 	,$tmp_replace_lf_jikjang_val_3);
+
+
+	$log(
+		확인용 : 
+			1001 g_IN_AGREE_ITEM1[$g_IN_AGREE_ITEM1],
+			1001 g_IN_AGREE_ITEM2[$g_IN_AGREE_ITEM2],
+			1001 g_IN_AGREE_ITEM3[$g_IN_AGREE_ITEM3],
+
+			1002 g_save_tel_num[$g_save_tel_num],
+			1002 g_IN_AGREE_RMN_NO[$g_IN_AGREE_RMN_NO],
+			1002 g_IN_AGREE_CLNT_NM[$g_IN_AGREE_CLNT_NM],
+			1002 g_IN_REQUEST_TEL_NUM[$g_IN_REQUEST_TEL_NUM],
+			1002 g_IN_REQUEST_AGE[$g_IN_REQUEST_AGE],
+			1002 g_OUT_AGREE_WORK_NO[$g_OUT_AGREE_WORK_NO],
+
+			1003 g_IN_REQUEST_HOME_POST_NO[$g_IN_REQUEST_HOME_POST_NO],
+			1003 g_IN_REQUEST_HOME_ADDR[$g_IN_REQUEST_HOME_ADDR],
+			1003 g_IN_REQUEST_HOME_ADDR2[$g_IN_REQUEST_HOME_ADDR2],
+			1003 g_IN_REQUEST_CLNT_EMAIL[$g_IN_REQUEST_CLNT_EMAIL],
+
+			1004 g_IN_REQUEST_JOB_NM[$g_IN_REQUEST_JOB_NM],
+			1004 g_IN_REQUEST_COM_NM[$g_IN_REQUEST_COM_NM],
+			1004 g_IN_REQUEST_COM_DEPART[$g_IN_REQUEST_COM_DEPART],
+			1004 g_IN_REQUEST_COM_TEL[$g_IN_REQUEST_COM_TEL],
+			1004 g_IN_REQUEST_COM_POST_NO[$g_IN_REQUEST_COM_POST_NO],
+			1004 g_IN_REQUEST_COM_ADDR[$g_IN_REQUEST_COM_ADDR],
+			1004 g_IN_REQUEST_COM_ADDR2[$g_IN_REQUEST_COM_ADDR2],
+	);
+
+
+	$callaction(Act_Open_Account_Move,1005);
+"/>
+
+<action id="fnInputDataCheck_1004_100"
+value="
+	$delvar(tmp_jikup_first_code);
+	$setvar(
+		tmp_jikup_first_code = $substring($btn_4143_jikup.key,0,1)
+		,tmp_input_data_check = true
+	);
+	$logvar(tmp_jikup_first_code);
+
+	if( $isequal_string($tmp_jikup_first_code,1) ){
+		if(
+			$strlen($tf_4143_jikjang_1.value) < 1
+			|| $strlen($lbl_1004_jikjang_1.value) < 1
+			|| $strlen($lbl_1004_jikjang_3.value) < 1
+		){
+			$setvar(tmp_input_data_check = false);
+		}
+	}
+
+
+	$setvar(
+		btn_1004_100_confirm.enable = $tmp_input_data_check
+	);
+"/>
+
 <screen 
 	id="screen_1004_100"
 	class="cs_screen_contents"
@@ -218,62 +298,7 @@ value="
 				onclicked="$popscreen(popscreen_4143_choice);"
 			/>
 			<br height="$cs_height_25"/>
-			<viewgroup id="vg_1004_100_juso"
-				width="$this.remain_right"
-				height="$cs_height_40"
-			>
-				<label
-					width="$this.remain_right"
-					height="$cs_height_14"
-					fontname="$cs_font_400"
-					fontsize="$cs_fontsize_12"
-					textcolor="$cs_color_text"
-					value="자택주소"
-					layout_vertical="top"
-				/>
-				<br/>
-				<textfield id="lbl_1004_jatek_1"
-					width="$this.remain_right"
-					height="$cs_height_24"
-					fontname="$cs_font_400"
-					fontsize="$cs_fontsize_16"
-					textcolor="$cs_color_black"
-					textcolor_placeholder="$cs_color_disable"
-					placeholder="자택주소"
-					enable="false"
-					layout_vertical="bottom"
-				/>
-				<label id="lbl_1004_jatek_2"
-					x="$lbl_1004_jatek_1.x"
-					y="$lbl_1004_jatek_1.y"
-					width="$this.remain_right"
-					height="$cs_height_24"
-					fontname="$cs_font_400"
-					fontsize="$cs_fontsize_16"
-					textcolor="$cs_color_black"
-					valign="center"
-					hidden="true"
-				/>
-				<label id="lbl_1004_jatek_3"
-					x="$lbl_1004_jatek_2.x"
-					y="$lbl_1004_jatek_2.y"
-					width="$this.remain_right"
-					height="$cs_height_24"
-					fontname="$cs_font_400"
-					fontsize="$cs_fontsize_16"
-					textcolor="$cs_color_black"
-					hidden="true"
-				/>
-
-				<button id="btn_1004_juso_search"
-					class="cs_button_none" 
-					key="1"
-            		onClicked="btn_1004_juso_search_onclicked" 
-            	/>
-			</viewgroup>
-			<br height="$cs_height_25"/>
-
-			<viewgroup id="vg_1004_100_email"
+			<viewgroup
 				width="$this.remain_right"
 				height="$cs_height_40"
 			>
@@ -283,58 +308,85 @@ value="
 					fontname="$cs_font_400"
 					fontsize="$cs_fontsize_12"
 					textcolor="$cs_color_text"
-					value="이메일"
+					value="직장명"
 				/>
 				<br/>
-				<textfield id="tf_1004_email_1"
-					//width="$result($this.remain_right - $cs_width_35 - $cs_width_103 - $cs_width_30)"
-					width="$cs_width_90"
-					keyboard_type="text"
+				<textfield id="tf_4143_jikjang_1"
+					width="$this.remain_right" 
+					height="$cs_height_24"
+					fontname="$cs_font_400"
+					fontsize="$cs_fontsize_16"
+					textcolor="$cs_color_black"
+					textcolor_active="$cs_color_black"
+					textcolor_disable="$cs_color_black"
+					textcolor_placeholder="$cs_color_disable"
+					align="left"
+					placeholder="직장명"
+					enable="false"
+				/>
+				<button id="btn_popscreen_4143_choice_jikjang"  
+					class="cs_button_none"
+					enable="false"
+					backcolor_disable=""
+					onclicked="$popscreen(popscreen_4143_choice_jikjang);"
+				/>
+			</viewgroup>
+			<br height="$cs_height_25"/>
+
+			<viewgroup id="vg_1004_100_jikjang_juso"
+			width="$this.remain_right"
+			height="$cs_height_40"
+			>
+				<label
+					width="$this.remain_right"
+					height="$cs_height_14"
+					fontname="$cs_font_400"
+					fontsize="$cs_fontsize_12"
+					textcolor="$cs_color_text"
+					value="직장주소"
+					layout_vertical="top"
+				/>
+				<br/>
+				<textfield id="lbl_1004_jikjang_1"
+					width="$this.remain_right"
 					height="$cs_height_24"
 					fontname="$cs_font_400"
 					fontsize="$cs_fontsize_16"
 					textcolor="$cs_color_black"
 					textcolor_placeholder="$cs_color_disable"
-					placeholder="ex)adc"
+					placeholder="직장주소"
+					enable="false"
+					layout_vertical="bottom"
 				/>
-				<viewgroup id="vg_1004_100_email_move"
+				<label id="lbl_1004_jikjang_2"
+					x="$lbl_1004_jikjang_1.x"
+					y="$lbl_1004_jikjang_1.y"
 					width="$this.remain_right"
 					height="$cs_height_24"
-				>
-					<label id="lbl_1004_100_email_icon"
-						width="$cs_width_35"
-						height="$cs_height_24"
-						align="center"
-						valign="center"
-						fontname="$cs_font_400"
-						fontsize="$cs_fontsize_16"
-						textcolor="$cs_color_black"
-						value="@"
-					/>
-					<textfield id="tf_1004_email_2"
-						width="$cs_width_103"
-						height="$cs_height_24"
-						keyboard_type="text"
-						height="$cs_height_24"
-						fontname="$cs_font_400"
-						fontsize="$cs_fontsize_16"
-						textcolor="$cs_color_black"
-						textcolor_placeholder="$cs_color_disable"
-						placeholder="eugenefn.com"
-					/>
-					<button id="btn_1004_100_mail_sel"
-						width="$cs_width_30"
-						height="$cs_height_24"
-						BACKGROUNDSVG="$icon_polygon_3"
-				        BACKGROUNDSVG_DISABLE="$icon_polygon_3"
-				        BACKGROUNDSVG_HIGHLIGHT="$icon_polygon_3"
-				        BACKGROUNDSVG_WIDTH="$cs_width_10"
-	  					BACKGROUNDSVG_HEIGHT="$cs_height_8"
-				        backgroundimage_align="center"
-				        backgroundimage_align_vertical="center"
-				        onclicked="btn_1004_100_mail_sel_onClicked"
-					/>
-				</viewgroup>
+					fontname="$cs_font_400"
+					fontsize="$cs_fontsize_16"
+					textcolor="$cs_color_black"
+					valign="center"
+					hidden="true"
+				/>
+				<label id="lbl_1004_jikjang_3"
+					x="$lbl_1004_jikjang_2.x"
+					y="$lbl_1004_jikjang_2.y"
+					width="$this.remain_right"
+					height="$cs_height_24"
+					fontname="$cs_font_400"
+					fontsize="$cs_fontsize_16"
+					textcolor="$cs_color_black"
+					hidden="true"
+				/>
+
+				<button id="btn_1004_jikjang_juso_search"
+					class="cs_button_none" 
+					enable="false"
+					backcolor_disable=""
+					key="1"
+            		onClicked="btn_1004_jikjang_juso_search_onclicked" 
+            	/>
 			</viewgroup>
 		</viewgroup>
 	</viewgroup>
@@ -375,105 +427,540 @@ value="
 			textcolor_disable="$cs_color_white"
 			value="다음"
 			onclicked="btn_1004_100_confirm_onClicked"
-			enable="false"		
+			enable="false"
 		/>
 	</viewgroup>
 </screen>
 
+//직장 주소 팝업. 직업,직장명 관련해서 아직 끝나지않았다.
+//주소 검색팝업.
+<action id="btn_1004_jikjang_juso_search_onclicked" 
+value="
+	$setvar(
+		tmp_btn_find_key = $this.key
+	);
+	$popscreen(popscreen_jikjang_address_find);
+" />
+<action id="btn_jikjang_address_find_onclicked" 
+value="
+	$cleartablerow(tbl_jikjang_address_find_1004);
+	$delvar(strPostData);
+    $addurlparam(strPostData,keyword,$txt_jikjang_address_find.value);
+    $addurlparam(strPostData,currentPage,1);
+    $addurlparam(strPostData,countPerPage,10);
+    $addurlparam(strPostData,confmKey,$g_juso_go_kr_key);	// 이 키는 juso.go.kr 에서 인증을 받아서 넣어야 한다.
+    
+    $addurlparam(strPostData,resultType,json);
+    $logvar(strPostData);
+	$postrequestdata(OPENAPI_TEST,https://www.juso.go.kr/addrlink/addrLinkApiJsonp.do,fnNaverAddressSearch_CallBack_1004,strPostData);
+" />
+<action id="fnNaverAddressSearch_CallBack_1004" params="result,strVarName,strURL" value="
+    $cleartablerow(tbl_jikjang_address_find_1004);
+	$setvar(jsonName=openAPIJson);
+
+	$json_create($jsonName);
+	$json_parsebuffer($jsonname,$strVarName);
+
+	$json_print($jsonname);
+
+
+	$json_setControl($jsonName,tbl_jikjang_address_find_1004);
+	$json_delete($jsonName);
+"/>
+<action id="fnHeightWithFontSize"
+params="p_id,p_value,p_fontsize,p_type"
+value="
+	$setvar(
+		tmp_control_width = $p_id.width
+		,tmp_control_height = $cs_height_24
+		,tmp_control_fontsize = $p_fontsize
+		,tmp_control_str_len = $strlen_uni($p_value)
+
+		,tmp_max_len = 28
+		,tmp_add_line_count = $ceil($tmp_control_str_len,$tmp_max_len)
+
+		,tmp_substr_val = 
+
+		,tmp_cal_height = $result($tmp_add_line_count * $tmp_control_height)
+	);
+
+	$logvar(
+		tmp_control_width
+		,tmp_control_height
+		,tmp_control_fontsize
+		,tmp_control_str_len
+		,tmp_max_len
+		,tmp_add_line_count
+		,tmp_cal_height
+	);
+
+	if($isequal_string($p_type,count)){
+		return $tmp_add_line_count;
+	}
+
+	if($isequal_string($p_type,height)){
+		return $tmp_cal_height;
+	}
+
+	if($isequal_string($p_type,value)){
+		for($i = 0; $i < $tmp_add_line_count; $i++ ){
+			$setvar(
+				tmp_idx_1 = $result($i * $tmp_max_len)
+				,tmp_cal_num = $result($i+1)
+				,tmp_idx_2 = $result($tmp_cal_num * $tmp_max_len)
+			);	
+
+			$setvar(
+				tmp_cal_val = $substring_uni($p_value,$tmp_idx_1,$tmp_idx_2)
+			);
+			if($i == 0 ){
+				$setvar(
+					tmp_substr_val = $addstring($tmp_substr_val,$tmp_cal_val)
+				);
+			}else{
+				$setvar(
+					tmp_substr_val = $addstring($tmp_substr_val,\n,$tmp_cal_val)
+				);
+			}
+		}
+		$logvar(tmp_substr_val);
+		return $tmp_substr_val;
+	}
+"/>
+<action id="tbl_jikjang_address_find_1004_onclicked" 
+value="
+	$delvar(tmp_jikjang_1_val,tmp_jikjang_2_val);
+	$setvar(
+		tmp_jikjang_1_val = $this.rowkey5
+		,tmp_jikjang_2_val = $this.rowkey16
+	);
+	$popscreen(popscreen_jikjang_3_input);
+" />
+<action id="popscreen_jikjang_address_find_onunload"
+value="
+	$logvar(
+		,tmp_jikjang_1_val
+		,tmp_jikjang_2_val
+		,tmp_jikjang_3_val
+	);
+
+	$callaction(fnInputDataCheck_1004_100);
+"/>
+<popscreen id="popscreen_jikjang_address_find"
+	width="$p_lcdWidth" 
+	height="$p_lcdHeight"
+	backcolor="00000060"
+	layout="center"
+	layout_vertical="center"
+	onload="popscreen_jikjang_address_find_onload"
+	onunload="popscreen_jikjang_address_find_onunload"
+>
+	<viewgroup
+		height="$cs_height_50" 
+		backcolor="$cs_color_text"	
+	>
+		<label 
+			width="$this.remain_right"
+			height="$this.remain_bottom"
+			fontsize="$cs_fontsize_16" 
+			fontname="$cs_font_700" 
+			align="center" 
+			valign="center" 
+			textcolor="$cs_color_white" 
+			value="주소찾기"
+		/>
+		<label 
+			x="$result($super.width - $cs_width_56);"
+			width="$cs_width_56"
+			height="$this.remain_bottom"
+			BACKGROUNDSVG="$icon_cancel_3"
+            BACKGROUNDSVG_DISABLE="$icon_cancel_3"
+            BACKGROUNDSVG_HIGHLIGHT="$icon_cancel_3"
+            BACKGROUNDSVG_WIDTH="$cs_height_24"
+            BACKGROUNDSVG_HEIGHT="$cs_height_24"
+            backgroundimage_align="center"
+            backgroundimage_align_vertical="center"
+            onclicked="$closescreen(popscreen_jikjang_address_find);"
+		/>
+	</viewgroup>
+	<br />
+	<screen 
+		width="$super.width"
+		height="$this.remain_bottom" 
+		backcolor="$cs_color_white"
+		>
+
+			<br height="$cs_height_16"/>
+			<blank width="$cs_width_16"/>
+			<textfield id="txt_jikjang_address_find"
+				width="$cs_width_258"
+				height="$cs_height_40"
+				keyboard_type="text"
+				border_color="EBEBEB"
+				border_width="1"
+				border_radius="$cs_radius_10"
+				margin_left="$cs_width_15"
+				margin_right="$cs_width_15"
+				textcolor_placeholder="$cs_color_disable"
+				textcolor="$cs_color_black"
+				fontsize="$cs_fontsize_14"
+				fontname="$cs_font_400"
+				placeholder="도로명주소 건물명 또는 지번입력"
+			/>
+			<blank width="$cs_width_5"/>
+			<button id="btn_address_find"
+				width="$cs_width_80" 
+				height="$cs_height_40"
+				value="검색" 
+				border_radius="$cs_radius_6"
+				fontsize="$cs_fontsize_13"
+				fontname="$cs_font_600"
+				textcolor="$cs_color_white"
+				textcolor_active="$cs_color_white"
+				backcolor="$cs_color_text"
+				backcolor_active="$cs_color_text"
+				onclicked="btn_jikjang_address_find_onclicked"
+			/>
+			<br height="$cs_height_6"/>
+			<table id="tbl_jikjang_address_find_1004"
+				class="cs_grid"
+				width="$this.remain_right"
+				rowheight="$cs_height_102"
+				json_looparrayname="results.juso"
+				rowkey_count="30"
+			>
+				<tr
+					json_data="
+						detBdNmList:rowkey1:trim
+						~engAddr:rowkey2:trim
+						~rn:rowkey3:trim
+						~emdNm:rowkey4:trim
+						~zipNo:rowkey5:trim
+						~roadAddrPart2:rowkey6:trim
+						~emdNo:rowkey7:trim
+						~sggNm:rowkey8:trim
+						~jibunAddr:rowkey9:trim
+						~siNm:rowkey10:trim
+						~roadAddrPart1:rowkey11:trim
+						~bdNm:rowkey12:trim
+						~admCd:rowkey13:trim
+						~udrtYn:rowkey14:trim
+						~lnbrMnnm:rowkey15:trim
+						~roadAddr:rowkey16:trim
+						~lnbrSlno:rowkey17:trim
+						~buldMnnm:rowkey18:trim
+						~bdKdcd:rowkey19:trim
+						~liNm:rowkey20:trim
+						~rnMgtSn:rowkey21:trim
+						~mtYn:rowkey22:trim
+						~bdMgtSn:rowkey23:trim
+						~buldSlno:rowkey24:trim
+					"
+					onClicked="tbl_jikjang_address_find_1004_onclicked" 
+				>
+					<td 
+						width="$this.remain_right"
+						height="$this.remain_bottom"
+						margin_top="$cs_height_20"
+						margin_left="$cs_width_16"
+					>
+						<label
+							width="$cs_width_254"
+							height="$cs_height_18"
+							fontname="$cs_font_400"
+							fontsize="$cs_fontsize_16"
+							textcolor="$cs_color_black"
+							align="left"
+							json_data="zipNo:value"
+						/>
+
+						<viewgroup
+							width="$this.remain_right"
+							height="$cs_height_18"
+							hidden="true" //아마 안쓸듯
+						>
+							<label
+								width="$cs_width_58"
+								height="$cs_height_18"
+								align="center"
+								fontname="$cs_font_400"
+								fontsize="$cs_fontsize_12"
+								textcolor="$cs_color_text"
+								value="영문보기"
+							/>
+						
+							<label
+								width="1"
+								height="$cs_height_10"
+								layout_vertical="center"
+								backcolor="$cs_color_gray_box_light"
+							/>
+							<label
+								width="$cs_width_37"
+								height="$cs_height_18"
+								align="center"
+								fontname="$cs_font_400"
+								fontsize="$cs_fontsize_12"
+								textcolor="$cs_color_text"
+								value="지도"
+							/>
+						</viewgroup>
+						<br height="$cs_height_10"/>
+						<label
+							width="$this.remain_right"
+							height="$cs_height_18"
+							margin_right="$cs_width_16"
+							fontname="$cs_font_400"
+							fontsize="$cs_fontsize_13"
+							textcolor="$cs_color_black"
+							align="left"
+							json_data="roadAddr:value"
+						/>
+						<br/>
+						<label
+							width="$this.remain_right"
+							height="$cs_height_16"
+							margin_right="$cs_width_16"
+							fontname="$cs_font_400"
+							fontsize="$cs_fontsize_12"
+							textcolor="$cs_color_black"
+							align="left"
+							json_data="jibunAddr:value"
+						/>
+					</td>
+				</tr>
+			</table>
+	</screen>
+</popscreen>
+<action id="popscreen_jikjang_3_input_onload"
+value="
+	$setvar(
+		,lbl_pop_jikjang_2_input_text.value = $tmp_jikjang_2_val
+		,tf_pop_jikjang_3_input.focus = true
+	);
+"/>
+<action id="BTN_POP_JIKJANG_3_CONFIRM_ONCLICKED"
+value="
+	$delvar(tmp_jikjang_3_val)
+	$setvar(
+		tmp_jikjang_3_val = $tf_pop_jikjang_3_input.value
+	);
+	$logvar(
+		tmp_jikjang_1_val
+		,tmp_jikjang_2_val
+		,tmp_jikjang_3_val
+	);
+
+	$setvar(
+		lbl_1004_jikjang_1.value = $tmp_jikjang_1_val 		// 우편번호
+
+		,lbl_1004_jikjang_2.hidden = false
+
+		,lbl_1004_jikjang_2.height = $callaction(fnHeightWithFontSize,lbl_1004_jikjang_2,$tmp_jikjang_2_val,$cs_fontsize_16,height)
+
+		,lbl_1004_jikjang_2.value = $callaction(fnHeightWithFontSize,lbl_1004_jikjang_2,$tmp_jikjang_2_val,$cs_fontsize_16,value)
+
+
+		,lbl_1004_jikjang_2.y = $result($lbl_1004_jikjang_1.y + $lbl_1004_jikjang_1.height)
+
+		,tmp_lbl_1004_jikjang_2_line_count = $callaction(fnHeightWithFontSize,lbl_1004_jikjang_2,$tmp_jikjang_2_val,$cs_fontsize_16,count)
+
+		,lbl_1004_jikjang_3.hidden = false
+		,lbl_1004_jikjang_3.height = $callaction(fnHeightWithFontSize,lbl_1004_jikjang_3,$tmp_jikjang_3_val,$cs_fontsize_16,height)
+		,lbl_1004_jikjang_3.value = $callaction(fnHeightWithFontSize,lbl_1004_jikjang_3,$tmp_jikjang_3_val,$cs_fontsize_16,value)
+		,lbl_1004_jikjang_3.y = $result($lbl_1004_jikjang_2.y + $lbl_1004_jikjang_2.height)
+		,tmp_lbl_1004_jikjang_3_line_count = $callaction(fnHeightWithFontSize,lbl_1004_jikjang_3,$tmp_jikjang_3_val,$cs_fontsize_16,count)
+
+
+		,tmp_total_cal_count = $result($tmp_lbl_1004_jikjang_3_line_count + $tmp_lbl_1004_jikjang_2_line_count)
+		,tmp_total_cal_height = $result($tmp_total_cal_count * $cs_height_24 )
+
+		,vg_1004_100_jikjang_juso.height = $result($cs_height_40 + $tmp_total_cal_height)
+		,btn_1004_jikjang_juso_search.height = $vg_1004_100_jikjang_juso.height
+		,vg_1004_100_contents.height = $result($cs_height_220 + $tmp_total_cal_height)
+	);
+	$closescreen(popscreen_jikjang_3_input);
+	$closescreen(popscreen_jikjang_address_find);
+"/>
+<action id="tf_pop_jikjang_3_input_onChanged"
+value="
+	if($strlen($tf_pop_jikjang_3_input.value) > 0){
+		$setvar(btn_pop_jikjang_3_confirm.enable = true);
+	}else{
+		$setvar(btn_pop_jikjang_3_confirm.enable = false);
+	}
+"/>
+<popscreen id="popscreen_jikjang_3_input"
+	width="$p_lcdWidth" 
+	height="$p_lcdHeight"
+	backcolor="00000060"
+	layout="center"
+	layout_vertical="center"
+	onload="popscreen_jikjang_3_input_onload"
+>
+	<screen id="screen_popscreen_jikjang_3_input"
+		width="$cs_width_300"
+		height="$cs_height_224"
+		layout="center"
+		layout_vertical="center"
+		backcolor="$cs_color_white"
+		margin_top="$cs_height_20"
+		margin_bottom="$cs_height_20"
+		margin_right="$cs_width_15"
+		margin_left="$cs_width_15"
+		border_width="1"
+		border_radius="$cs_radius_20"
+	>
+		//여기부터
+		<viewgroup id="vg_pop_jikjang_3_input"
+			width="$this.remain_right"
+			height="$cs_height_121"
+		>
+			<label
+				width="$this.remain_right"
+				height="$cs_height_24"
+				align="center"
+				textcolor="$cs_color_black"
+				fontname="$cs_font_600"
+				fontsize="$cs_fontsize_16"
+				value="나머지 주소"
+			/>
+			<br/>
+			<label id="lbl_pop_jikjang_2_input_text"
+				width="$this.remain_right"
+				height="$result($this.remain_bottom - $cs_height_40)"
+				align="center"
+				textcolor="$cs_color_black"
+				fontname="$cs_font_400"
+				fontsize="$cs_fontsize_14"
+				multiline="true"
+				value=""
+			/>
+			<br/>
+			<textfield id="tf_pop_jikjang_3_input"
+				width="$this.remain_right"
+				height="$cs_height_40"
+				margin_right="$cs_width_15"
+				margin_left="$cs_width_15"
+				keyboard_type="text"
+				border_width="1"
+				border_radius="$cs_radius_10"
+				border_color="EBEBEB"
+				textcolor="$cs_color_black"
+				textcolor_placeholder="$cs_color_disable"
+				fontsize="$cs_fontsize_14"
+				fontsize_placeholder="$cs_fontsize_14"
+				fontname="$cs_font_400"
+				placeholder="나머지 주소를 입력해주세요"
+				layout_vertical="bottom"
+				onChanged="tf_pop_jikjang_3_input_onChanged"
+			/>
+		</viewgroup>
+
+		<br/>
+		<viewgroup
+			width="$this.remain_right"
+			height="$cs_height_50"
+			layout="center"
+			layout_vertical="bottom"
+		>
+			<button 
+				width="$cs_width_132" 
+				height="$this.remain_bottom"
+				layout="left"
+				backcolor="$cs_color_line"
+				border_radius="$cs_radius_10"
+				fontsize="$cs_fontsize_14"
+				fontname="$cs_font_500"
+				textcolor="$cs_color_black"
+				textcolor_active="$cs_color_black"
+				value="취소"
+				onClicked="$closescreen(popscreen_jikjang_3_input);"
+			/>
+			<button id="btn_pop_jikjang_3_confirm"
+				width="$cs_width_132" 
+				height="$this.remain_bottom"
+				layout="right"
+				backcolor="$cs_color_main"
+				backcolor_disable="$cs_color_main_disable"
+				border_width="1"
+				border_radius="$cs_radius_10"
+				fontsize="$cs_fontsize_14"
+				fontname="$cs_font_500"
+				textcolor="$cs_color_white"
+				textcolor_active="$cs_color_white"
+				textcolor_disable="$cs_color_white"
+				value="확인"
+				enable="false"
+				onClicked="btn_pop_jikjang_3_confirm_onClicked"	
+			/>
+		</viewgroup>
+
+	</screen>
+
+</popscreen>
+
 
 //직업 선택 팝업.
-<class id="cs_lbl_1004_100_email"
-x=""
-width="$this.remain_right"
-height="$this.remain_bottom"
-BACKGROUNDSVG="$icon_polygon_3"
-BACKGROUNDSVG_DISABLE="$icon_polygon_3"
-BACKGROUNDSVG_HIGHLIGHT="$icon_cancel"
-BACKGROUNDSVG_WIDTH="$cs_height_20"
-BACKGROUNDSVG_HEIGHT="$cs_height_20"
-backgroundimage_align="center"
-backgroundimage_align_vertical="center"
-backcolor="ff000022"
-value="뭐가잘못된거야"
-/>	
 <action id="popscreen_4143_choice_onload"
 value="
+	$setvar(
+		4143_choice_set_key = $btn_4143_jikup.key
+		,4143_choice_set_val = $btn_4143_jikup.value
+	);
 	$cleartablerow(tbl_pop_1004_job);
 	$setarraydata(tbl_pop_1004_job,arr_4143_choice);
+"/>
+<action id="popscreen_4143_choice_onunload"
+value="
+	$callaction(fnInputDataCheck_1004_100);
 "/>
 <action id="tr_tbl_pop_1004_job_onclicked"
 value="
 	$log($this.key, $this.rowkey1);
 	$setvar(
-		4143_choice_set_key = $this.key
-		,4143_choice_set_val = $this.rowkey1
 		,btn_4143_jikup.textcolor=$cs_color_black
 		,btn_4143_jikup.textcolor_active=$cs_color_black
-		,btn_4143_jikup.value = $4143_choice_set_val
-		,btn_4143_jikup.key = $4143_choice_set_key
+		,btn_4143_jikup.value = $this.rowkey1
+		,btn_4143_jikup.key = $this.key
 	);
-	//$callaction(fnCtrl_Show_job);
+	$callaction(fnCtrl_Show_job);
 	$closescreen(popscreen_4143_choice);
 "/>
 //여기부터 작업.
 <action id="fnCtrl_Show_job"
 value="
-	//여기수정
 	$delvar(tmp_jikup_first_code);
 	$setvar(
 		tmp_jikup_first_code = $substring($btn_4143_jikup.key,0,1)
 	);
+	$logvar(tmp_jikup_first_code);
 
 	if( $isequal_string($tmp_jikup_first_code,1) ){
 		$setvar(
-			lbl_office_addr.hidden 			= false
-			,lbl_office_jikjang.hidden 		= false
-			,tf_4143_jikjang_num_1.enable 	= true
-			,tf_4143_jikjang_num_2.enable 	= true
-			,tf_4143_jikjang_num_3.enable 	= true
-			,tf_4143_jikjang_1.enable 		= true
-			,tf_4143_jikjang_2.enable 		= true
-			,lbl_4143_jikjang_juso_1.enable = true
-			,btn_4143_number_02.enable 		= true
-			,tf_4143_jikjang_juso_3.enable 	= true
+			,btn_popscreen_4143_choice_jikjang.enable 	= true
+			,btn_1004_jikjang_juso_search.enable 		= true
 		);
 	}elseif( 
 		$isequal_string($tmp_jikup_first_code,2) 
 		|| $isequal_string($tmp_jikup_first_code,5) 
 	){
 		$setvar(
-			lbl_office_addr.hidden 			= true
-			,lbl_office_jikjang.hidden 		= true
-			,tf_4143_jikjang_num_1.enable 	= true
-			,tf_4143_jikjang_num_2.enable 	= true
-			,tf_4143_jikjang_num_3.enable 	= true
-			,tf_4143_jikjang_1.enable 		= true
-			,tf_4143_jikjang_2.enable 		= true
-			,lbl_4143_jikjang_juso_1.enable = true
-			,btn_4143_number_02.enable 		= true
-			,tf_4143_jikjang_juso_3.enable 	= true
+			,btn_popscreen_4143_choice_jikjang.enable 	= true
+			,btn_1004_jikjang_juso_search.enable 		= true
+
 		);
 	}else{
 		$setvar(
-			lbl_office_addr.hidden 			= true
-			,lbl_office_jikjang.hidden		= true
-			,tf_4143_jikjang_num_1.enable 	= false
-			,tf_4143_jikjang_num_2.enable 	= false
-			,tf_4143_jikjang_num_3.enable 	= false
-			,tf_4143_jikjang_1.enable 		= false
-			,tf_4143_jikjang_2.enable 		= false
-			,lbl_4143_jikjang_juso_1.enable = false
-			,btn_4143_number_02.enable 		= false
-			,tf_4143_jikjang_juso_3.enable 	= false
+			,btn_popscreen_4143_choice_jikjang.enable 	= false
+			,btn_1004_jikjang_juso_search.enable 		= false
 
-			,tf_4143_jikjang_num_1.value 	= 
-			,tf_4143_jikjang_num_2.value 	= 
-			,tf_4143_jikjang_num_3.value 	= 
 			,tf_4143_jikjang_1.value 		= 
-			,lbl_4143_jikjang_juso_2.value 	= 
-			,tf_4143_jikjang_2.value 		= 
-			,lbl_4143_jikjang_juso_1.value 	= 
-			,tf_4143_jikjang_juso_3.value 	= 
+			,lbl_1004_jikjang_1.value 		= 
+			,lbl_1004_jikjang_2.value 		= 
+			,lbl_1004_jikjang_3.value 		= 
+			,vg_1004_100_contents.height = $cs_height_220
+			,vg_1004_100_jikjang_juso.height = $cs_height_40
 		);
 	}
 " />
@@ -484,6 +971,7 @@ value="
 	layout="center"
 	layout_vertical="center"
 	onload="popscreen_4143_choice_onload"
+	onunload="popscreen_4143_choice_onunload"
 >
 	<screen id="screen_pop_1004_100_email"
 		width="$this.remain_right"
@@ -537,21 +1025,19 @@ value="
 							fontname="$cs_font_400"
 							arraydata="1:value"
 						/>
-						//표시가 안되는 영역.
 						<label
 							width="$this.remain_right"
 							height="$this.remain_bottom"
-							BACKGROUNDSVG="$icon_cancel"
-							BACKGROUNDSVG_DISABLE="$icon_cancel"
-							BACKGROUNDSVG_HIGHLIGHT="$icon_cancel"
+							BACKGROUNDSVG="$icon_checkbox_on"
+							BACKGROUNDSVG_DISABLE="$icon_checkbox_on"
+							BACKGROUNDSVG_HIGHLIGHT="$icon_checkbox_on"
 							BACKGROUNDSVG_WIDTH="$cs_height_20"
 							BACKGROUNDSVG_HEIGHT="$cs_height_20"
 							backgroundimage_align="center"
 							backgroundimage_align_vertical="center"
-							backcolor="ff000022"
-							//arraydata="
-							//	0:hidden_all:if:$4143_choice_set_key == ##:false:true
-							//"
+							arraydata="
+								0:hidden_all:if:$4143_choice_set_key == ##:false:true
+							"
 						/>
 					</td>
 				</tr>
@@ -573,4 +1059,98 @@ value="
 		backgroundimage_align_vertical="center"
 		onclicked="$closescreen(popscreen_4143_choice);" 
     />
+</popscreen>
+
+//직장명 선택 팝업.
+<action id="popscreen_4143_choice_jikjang_onunload"
+value="
+	$setvar(
+		tf_4143_jikjang_1.value = $tf_popscreen_4143_choice_jikjang.value
+	);
+
+	$callaction(fnInputDataCheck_1004_100);
+"/>
+<popscreen id="popscreen_4143_choice_jikjang"
+	width="$p_lcdWidth" 
+	height="$p_lcdHeight"
+	backcolor="$cs_color_white"
+	layout="center"
+	layout_vertical="center"
+	onload="popscreen_4143_choice_jikjang_onload"
+	onunload="popscreen_4143_choice_jikjang_onunload"
+>
+	<viewgroup 
+        width="$super.width" height="$h($g_lcdHeight,6.2)" backcolor="$cs_color_white"  
+        margin_left="$w($g_lcdwidth,4.3)"
+    >
+    	<viewgroup width="$w($g_lcdWidth,12.4)" height="$this.remain_bottom" hidden="false">
+            <label 
+            layout_vertical="center" 
+            width="$cs_height_24"
+            height="$cs_height_24" 
+            BACKGROUNDSVG="$icon_arrow_left"
+            BACKGROUNDSVG_DISABLE="$icon_arrow_left"
+            BACKGROUNDSVG_HIGHLIGHT="$icon_arrow_left"
+            BACKGROUNDSVG_WIDTH="$cs_height_24"
+            BACKGROUNDSVG_HEIGHT="$cs_height_24"
+            backgroundimage_align="center"
+            backgroundimage_align_vertical="center"
+            />
+            <button class="cs_button_none" 
+            onClicked="
+            $closescreen(popscreen_4143_choice_jikjang);
+            " />
+        </viewgroup>
+	</viewgroup>
+	<br height="$cs_height_15" />
+	<viewgroup
+		width="$this.remain_right"
+		height="$this.remain_bottom" 
+		margin_right="$cs_width_16"
+		margin_left="$cs_width_16"
+	>
+		<label 
+			width="$this.remain_right"
+			height="$cs_height_34"
+			fontsize="$cs_fontsize_24" 
+			fontname="$cs_font_600" 
+			textcolor="$cs_color_black" 
+			value="직장명을 입력해주세요"
+		/>
+		<br height="$cs_height_20" />
+		<textfield id="tf_popscreen_4143_choice_jikjang"
+			width="$this.remain_right"
+			height="$cs_height_50"
+			margin_left="$cs_width_43"
+			margin_right="$cs_width_15"
+			BACKGROUNDSVG="$icon_search"
+            BACKGROUNDSVG_DISABLE="$icon_search"
+            BACKGROUNDSVG_HIGHLIGHT="$icon_search"
+            BACKGROUNDSVG_WIDTH="$cs_height_24"
+            BACKGROUNDSVG_HEIGHT="$cs_height_24"
+            backgroundimage_x="$cs_width_15"
+            backgroundimage_align="left"
+            backgroundimage_align_vertical="center"
+            textcolor_placeholder="$cs_color_disable"
+            textcolor="$cs_color_black"
+            fontname="$cs_font_400"
+            fontsize="$cs_fontsize_14"
+            placeholder="예) 카카오페이"
+		/>
+		<br height="$cs_height_20" />
+		<button
+			layout="center"
+			width="$cs_width_127"
+			height="$cs_height_50"
+			value="직접 입력하기"
+			border_width="1"
+			border_radius="$cs_radius_10"
+			border_color="$cs_color_disable"
+			textcolor="$cs_color_black"
+			textcolor_active="$cs_color_black"
+			fontsize="$cs_fontsize_14"
+			fontname="$cs_font_500"
+			onClicked="수정 필요."
+		/>
+	</viewgroup>
 </popscreen>
