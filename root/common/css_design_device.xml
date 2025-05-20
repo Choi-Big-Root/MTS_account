@@ -29,6 +29,7 @@
     $logvar(g_device_width,g_device_height);
     $callaction(set_base_ratio, $g_design_width, $g_design_height, $g_device_width, $g_device_height);
     $callaction(set_font_size, $g_design_width, $g_design_height, $g_device_width, $g_device_height);
+    $callaction(set_image_path);
 
     if( $g_iBottomVar > 0) {
         $setvar_common(
@@ -165,11 +166,101 @@ value="
     }
 "/>
 
+<action id="set_image_path" scope="common" 
+paramlog="true"
+value="
+	$setvar(
+		g_deviceinfo_NAME = $deviceinfo(NAME),
+		g_deviceinfo_MODEL = $deviceinfo(MODEL),
+		g_deviceinfo_SYSTEMNAME = $deviceinfo(SYSTEMNAME),		
+	);
+	$logvar(
+		g_deviceinfo_NAME, 
+		g_deviceinfo_MODEL, 
+		g_deviceinfo_SYSTEMNAME,
+		g_device_width,
+		g_device_height,
+	);
+	$logvar(iTopVar,iBottomVar,iLeftVar,iRightVar);
+	
+	if($isequal_string($g_deviceinfo_MODEL,iPhone)){
+		if($p_lcdheight>=716) { return 3x;  }
+		else{					return 1x;  }
+
+		if($p_lcdheight<0)    {   return Error; }
+		elseif($p_lcdheight>=1004) { return iPad OS;  }   //iPad          (768:1004 - 20)
+		elseif($p_lcdheight>=716) { return 3x;  }   //iPhone6S Plus 포함          (414:736 - 20)
+		else{
+			return 2x;
+		}
+
+	}
+	else{
+		if($p_lcdwidth<0)      {        return Error; }
+		elseif($p_lcdwidth>=1440){      return QHD;  }
+		elseif($p_lcdwidth>=1080){      return FULLHD;  }
+		elseif($p_lcdwidth>=720){       return HD;      }
+		elseif($p_lcdwidth>=480){       return WVGA;    }
+	}
 
 
+	return;
+	
+	$setvar(
+		tmp_device_model = $deviceinfo(MODEL)
+	);
+	$logvar(tmp_device_model);
+	
+	$logvar(g_deviceName);
+	 
+	$setvar_common(tmpDeviceKind=$fnSetIconDir_param1);
+	if($isequal_string($g_deviceName, iPhone6Plus OS)){		$setvar(tmp_ext=@3x.png );	}
+	else{													$setvar(tmp_ext=@2x.png );	}
+	return $addstring($g_path_image_icon,$fnGetIconPathName_param1,$tmp_ext);
+" />
+<action id="fnSetIconDir" 
+value="
 
-
-
+	$setvar_common(tmpDeviceKind=$fnSetIconDir_param1);
+	$log(tmpDeviceKind[$tmpDeviceKind]);
+	if($isequal_string($tmpDeviceKind,iPhone OS)){                      //320:480 - 20
+		$callaction(fnSetVarCommon,g_DeviceIconDir,iphone4g/,아이콘폴더);
+		$callaction(fnSetVarCommon,g_DeviceIconDir_prefix,iphone4g_,접두사);
+	}
+	elseif($isequal_string($tmpDeviceKind,iPhone5 OS)){                 //320:568 - 20
+		$callaction(fnSetVarCommon,g_DeviceIconDir,iphone5/,아이콘폴더);
+		$callaction(fnSetVarCommon,g_DeviceIconDir_prefix,iphone5_,접두사);
+	}
+	elseif($isequal_string($tmpDeviceKind,iPhone6 OS)){                 //375:667 - 20(750*1334)
+		$callaction(fnSetVarCommon,g_DeviceIconDir,iphone6/,아이콘폴더);
+		$callaction(fnSetVarCommon,g_DeviceIconDir_prefix,iphone6_,접두사);
+	}
+	elseif($isequal_string($tmpDeviceKind,iPhone6Plus OS)){             //414:736 - 20(1242*2208)
+		$callaction(fnSetVarCommon,g_DeviceIconDir,iphone6plus/,아이콘폴더);
+		$callaction(fnSetVarCommon,g_DeviceIconDir_prefix,iphone6plus_,접두사);
+	}
+	elseif($isequal_string($tmpDeviceKind,iPad OS)){             //414:736 - 20(1242*2208)
+		$callaction(fnSetVarCommon,g_DeviceIconDir,fullhd/,아이콘폴더);
+		$callaction(fnSetVarCommon,g_DeviceIconDir_prefix,fullhd_,접두사);
+	}
+	
+	elseif($isequal_string($tmpDeviceKind,HD)){
+		$callaction(fnSetVarCommon,g_DeviceIconDir,hd/,아이콘폴더);
+		$callaction(fnSetVarCommon,g_DeviceIconDir_prefix,hd_,접두사);
+	}
+	elseif($isequal_string($tmpDeviceKind,FULLHD)){
+		$callaction(fnSetVarCommon,g_DeviceIconDir,fullhd/,아이콘폴더);
+		$callaction(fnSetVarCommon,g_DeviceIconDir_prefix,fullhd_,접두사);
+	}
+	elseif($isequal_string($tmpDeviceKind,QHD)){
+		$callaction(fnSetVarCommon,g_DeviceIconDir,qhd/,아이콘폴더);
+		$callaction(fnSetVarCommon,g_DeviceIconDir_prefix,qhd_,접두사);
+	}
+	elseif($isequal_string($tmpDeviceKind,WVGA)){
+		$callaction(fnSetVarCommon,g_DeviceIconDir,wvga/,아이콘폴더);
+		$callaction(fnSetVarCommon,g_DeviceIconDir_prefix,wvga_,접두사);
+	}
+" />
 
 
 

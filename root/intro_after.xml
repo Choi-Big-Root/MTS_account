@@ -22,58 +22,17 @@
 <import filename="plist/root/common/action_download.xml"/>
 <import filename="plist/root/common/action_download_process.xml"/>
 
+<import filename="plist/root/common/css_design_device.xml"/>
+
 <actiondata value="
-	//231005 dxFeed 초기 종목명,옵션명 설정 : TEST
-	//$callaction(fnSet_DxFeed_Item_TEST); 
-
-	//230608 클라우드 콜백 액션
-	$cloudnpki_init(FnAcquireUserInfoAction, FnAcknowledgeConditionsOfUse, FnOnPhoneNumberProofTransactionStart);
-
 	$checkPushData(fn_push_receive);
-
 	$logvar(p_APNS_RegKey);
-
 	$setvar_common(
-		g_is_prescreen_login = 
-		,g_file_name = intro_after
-		,g_reconnect_processing = 
-	);
-	$setvar(l_intro_after = true ); // 백그라운드에서 확인. - intro.xml로 보내기 위해 사용 
-
-	$setvar_common(
-		g_is_master_relading = 
-		,g_is_not_connect_DOMESTIC = false
-		,g_is_not_connect = false
-	); //  마스터 리로딩시 사용 - 초기화 
-
-	$setvar_common(g_recv_account_intro_after = true);
-	
-	$log(인트로이미지:p_introimage:[$p_introimage],p_lcdheight[$p_lcdheight]);
-
-	$setvar_common(
-		arr_item_product = [
-			,[00,전   체] 	
-			,[10,통   화] 	
-			,[20,금   리] 	
-			,[30,지   수] 	
-			,[50,금   속] 	
-			//,[51,비철금속] 	
-			,[60,에너지] 	
-			,[40,농산물] 				
-		]
-	);
-	// 해외 마스터 파일 추가시 추가되어야 함.
-	$setvar_common(
-		g_arr_datFile = [
-			[fucode] 	
-			,[opcode]	
-			,[opitem]
-			,[optick]
-			,[oprcode]
-			,[bqtcode]	
-		]
+		g_file_name = intro_after
 	);
 	$setvar_common(g_is_background = false);
+	$logvar(icon_intro);
+	$logvar(g_deviceName);
 " />
 
 <screen id="screen_intro_after"
@@ -85,64 +44,90 @@
 	height="$p_lcdHeight"
 	onLoad="screen_intro_after_onload"
 	>
-	<br height="$h($p_lcdheight,2)" />
-	<viewgroup  width="$w($p_lcdWidth,97)" height="$h($p_lcdheight,5)">
-		<label id="lbl_version" 
-		width="$super.width" 
-		height="$h($p_lcdheight,5)"  
-		align="right" 
-		value="$versionStr" 
-		fontsize="$p_fontSize_basic"
-		textcolor="b8240c"  />
+    <br/>
+    <viewgroup
+    width="$cs_width_375" 
+    height="$cs_height_560"
+    //BACKGROUNDSVG="$icon_frame_48096229"
+    //BACKGROUNDSVG_WIDTH="$cs_width_375"
+    //BACKGROUNDSVG_HEIGHT="$cs_height_560"
+    //backgroundimage_align="center"
+    //backgroundimage_align_vertical="center"
+    //layout="center"
+    //backgroundimage="$icon_intro"
+    //backgroundimage="plist/root/resource/image/3x/intro_1@3x.png"
+    //backgroundimage="plist/root/resource/image/3x/intro_2@3x.png"
+    //backgroundimage="plist/root/resource/image/3x/intro_3@3x.png"
+    backgroundimage="plist/root/resource/image/3x/intro_4@3x.png"
+    //backgroundimage="plist/root/resource/image/2x/intro@2x.png"
+    backgroundfull="true"
+	backgroundrepeat="false"
+
+    >
 	</viewgroup>
-	<br height="$h($p_lcdheight,53)" />
-	<viewgroup id="vg_progress_out"
-		width="$w($p_lcdWidth,50)"
-		height="$h($p_lcdheight,2)"
-		layout="center"
-		backcolor="dcdcdc"
-		//border_color="464b4d"
-		border_width="1"
+	<br/>
+    <viewgroup
+    width="$cs_width_375" 
+    height="$cs_height_158"
+    //backcolor="00ff00"
+    layout_vertical="bottom"
+    >
+    	<br height="$cs_height_25" />
+    	<blank width="$cs_width_90" />
+    	<label 
+    	width="$cs_width_194" 
+    	height="$cs_height_40"
+    	value="신규 상장 종목 등이 조회되지 않을 경우\n다시 실행해주세요." 
+        fontname="$cs_font_100"
+        fontsize="$cs_fontsize_13" 
+        textcolor="737679"
+    	/>
+    	<br height="$cs_height_25" />
+    	<viewgroup
+	    width="$cs_width_335" 
+	    height="$cs_height_8"
+	    backcolor="D7D8D9"
+	    layout="center"
+	    border_width="1"
 		border_radius="$result($this.height/2)"
-		hidden="true"
-		>
-		<viewgroup id="vg_progress_guide"
-			width="$super.width"
-			height="$super.height"
-			layout_vertical="center"
-			layout="left"
-			//backcolor="b8240c"
-			>
-			<viewgroup id="vg_progress_inner"
-				width="$w($super.width,0)" 
-				//width="$w($super.width,50)" 
-				height="$super.height"
-				layout_vertical="center" 
-				backcolor="b8240c" 
-				>
-			</viewgroup>
+	    >
 		</viewgroup>
+		<br height="$cs_height_18" />
+		<label 
+    	width="$cs_width_335" 
+    	height="$cs_height_20"
+    	value="V 0.0.1" 
+    	align="center"
+    	layout="center"
+        fontname="$cs_font_100"
+        fontsize="$cs_fontsize_13" 
+        textcolor="737679"
+    	/>
+
 	</viewgroup>
-	<br height="$h($p_lcdheight,2)"/>
-	<label id="lbl_prcessing" width="$super.width" height="$h($p_lcdheight,5)"  align="center" value="" textcolor="000000" 
-		hidden="true"
-		fontsize="$p_fontSize_basic"
-		/>
-
-	<br height="$h($p_lcdheight,10)" />
-
-	<viewgroup
-		width="$super.width"
-		height="$h($p_lcdheight,8)">
-		<img src="$p_icon_logo" layout="center" layout_vertical="center"/>
-	</viewgroup>
-
-	<br />
+	<br/>
+	<label
+	x="$cs_width_227"
+	y="$cs_width_13"
+    width="$cs_width_132" 
+    height="$cs_height_27"
+    //BACKGROUNDSVG="$icon_ci"
+    //BACKGROUNDSVG_WIDTH="$cs_width_132"
+    //BACKGROUNDSVG_HEIGHT="$cs_height_28"
+    //backgroundimage_align="right"
+    //backgroundimage_align_vertical="center"
+    //backgroundimage_x="$cs_width_14"
+    //backgroundimage_y="$cs_height_13"
+    backgroundimage="plist/root/resource/image/3x/ci@3x.png"
+    backgroundfull="true"
+	backgroundrepeat="false"
+	//backcolor="00ff00"
+    onClicked="$reopenfile();"
+    />
 </screen>
 
 <action id="fnAppVersionDown_confirm_NEW"  scope="common"
 value="
-	
 	if($fnAppVersionDown_confirm_NEW_param1 == 1){
 		if($g_isAndroid){
 			$setvar(
@@ -167,6 +152,8 @@ value="
 " />
 
 <action id="screen_intro_after_onload" value="
+	return;
+
 	$log(여기서 호출);
 	//$openfile(plist/root/main.xml);
 	//return;
@@ -1065,12 +1052,14 @@ value="
 " />
 <action id="fnGoLoginScreen_ConnectAfter"  scope="common"
 value="
+	//$openfile(plist/root/main.xml);
 	$openfile(plist/root/login.xml);
 " />
 // 로그인 또는 저장된 화면으로 이동 
 //확인
 <action id="Act_intro_after_Complete"  scope="common"
 value="
+	//$openfile(plist/root/main.xml);
 	$openfile(plist/root/login.xml);
 	return;
 	

@@ -60,6 +60,9 @@
 		,icon_buy_small			= $callaction(fnGetIconPathName,icon_buy_small)	
 		,icon_sell_small		= $callaction(fnGetIconPathName,icon_sell_small)	
 		,icon_clock 			= $callaction(fnGetIconPathName,icon_clock)	
+
+		// intro_after.xml
+		,icon_intro_1	 		= $callaction(fnGetIconPathName,intro_1)				
 			
 	);
     $logvar(

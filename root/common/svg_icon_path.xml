@@ -37,6 +37,10 @@
 		,icon_acount_open_1 		= $callaction(fnGetSvgIconPathName,acount_open_1)
 		,icon_acount_open_2 		= $callaction(fnGetSvgIconPathName,acount_open_2)
 		,icon_next 					= $callaction(fnGetSvgIconPathName,next)
+		// intro_after.xml 
+		,icon_graph 				= $callaction(fnGetSvgIconPathName,graph)
+		,icon_frame_48096229 		= $callaction(fnGetSvgIconPathName,frame_48096229)
+		
 		
 
 	);
