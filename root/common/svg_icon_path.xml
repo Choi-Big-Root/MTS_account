@@ -28,6 +28,7 @@
 
 		,icon_step 			= $callaction(fnGetSvgIconPathName,step)
 
+		,icon_search 			= $callaction(fnGetSvgIconPathName,search)
 
 		// login.xml 
 		,icon_ci 					= $callaction(fnGetSvgIconPathName,ci_1)
