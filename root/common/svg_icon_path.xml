@@ -28,12 +28,14 @@
 
 		,icon_step 			= $callaction(fnGetSvgIconPathName,step)
 
-		,icon_search 			= $callaction(fnGetSvgIconPathName,search)
+
 		// login.xml 
 		,icon_ci 					= $callaction(fnGetSvgIconPathName,ci_1)
 		,bg_frame_48096450 			= $callaction(fnGetSvgIconPathName,frame_48096450)
+		,bg_frame_48096451 			= $callaction(fnGetSvgIconPathName,frame_48096451)
 		,icon_acount_open_1 		= $callaction(fnGetSvgIconPathName,acount_open_1)
 		,icon_acount_open_2 		= $callaction(fnGetSvgIconPathName,acount_open_2)
+		,icon_next 					= $callaction(fnGetSvgIconPathName,next)
 		
 
 	);

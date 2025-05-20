@@ -89,27 +89,29 @@
 	);	
 
 	/*
-	,전체스크린 하단 마진 
+
+	,전체스크린 상단 마진
+	,전체스크린 하단 마진
+	,전체스크린 왼,오 마진
 
 	,하단 하나의 버튼 가로
 	,하단 두개의 버튼 가로
 	,하단 버튼의 높이
 
-	,내부 컨텐츠 높이 : 남은길이 - 하단 버튼의 높이
-	,내부 컨텐츠 왼쪽 마진
-	,내부 컨텐츠 오른쪽 마진
+	,내부 컨텐츠 높이 : 
 
 	,상단 뒤로가기 영역 높이
 	*/
 	$setvar_common(
+		,cs_screen_top_margin 			= $cs_height_15
 		,cs_screen_bottom_margin        = $cs_height_20
+		,cs_screen_left_right_margin    = $cs_width_16
 
 		,cs_bottom_one_button_width 	= $cs_width_343
 		,cs_bottom_two_button_width 	= $cs_width_167
 		,cs_bottom_button_height 		= $cs_height_54
 
 		,cs_contents_height 				= $result($this.remain_bottom - $cs_height_54)
-		,cs_contents_left_right_margin 		= $cs_width_16
 
 		,cs_top_nav_height 				= $cs_height_50
 	);

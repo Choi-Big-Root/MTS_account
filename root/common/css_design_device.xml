@@ -28,9 +28,52 @@
 
     $logvar(g_device_width,g_device_height);
     $callaction(set_base_ratio, $g_design_width, $g_design_height, $g_device_width, $g_device_height);
+    $callaction(set_font_size, $g_design_width, $g_design_height, $g_device_width, $g_device_height);
+
+    if( $g_iBottomVar > 0) {
+        $setvar_common(
+                g_lcdWidth                     = $p_lcdwidth
+               ,g_lcdHeight                    = $result_double($p_lcdheight -$g_iBottomVar)
+               ,g_lcdWidth_ori                 = $result_double($p_lcdwidth_ori - $g_iTopVar -$g_iBottomVar)
+               ,g_lcdHeight_ori                = $p_lcdheight_ori
+
+               ,g_lcdBaseX = 0
+                ,g_lcdBaseY = 0
+                ,g_lcdBaseX_ori = $g_iTopVar
+                ,g_lcdBaseY_ori = 0
+        );
+    }
+    else{
+    	if($g_isAndroid){
+    		$setvar_common(
+	                g_lcdWidth                     = $p_lcdwidth
+	               ,g_lcdHeight                    = $p_lcdheight
+	               ,g_lcdWidth_ori                 = $g_lcdHeight
+	               ,g_lcdHeight_ori                = $result($g_lcdWidth - $getstatusbar_height())
+	               ,g_lcdBaseX = 0
+	                ,g_lcdBaseY = 0
+	                ,g_lcdBaseX_ori = 0
+	                ,g_lcdBaseY_ori = 0
+	        );
+    	}
+    	else{
+
+    	    $setvar_common(
+	                g_lcdWidth                     = $p_lcdwidth
+	               ,g_lcdHeight                    = $p_lcdheight
+	               ,g_lcdWidth_ori                 = $p_lcdwidth_ori
+	               ,g_lcdHeight_ori                = $p_lcdheight_ori
+	               ,g_lcdBaseX = 0
+	                ,g_lcdBaseY = 0
+	                ,g_lcdBaseX_ori = 0
+	                ,g_lcdBaseY_ori = 0
+	        );
+	    }
+    }
+
 " />
 // 화면 비율을 셋팅한다.
-<action id="set_base_ratio" 
+<action id="set_base_ratio" scope="common"
 params="
 p_design_width, 
 p_design_height,
@@ -41,7 +84,7 @@ value="
     $setvar(
         w_ratio_name = w_ratio,
         w_size_name = cs_width,       // 변수명 
-        h_ratio_name = h_ratio,$p_name,
+        h_ratio_name = h_ratio,
         h_size_name = cs_height,
     );
     // width 계산 
@@ -84,3 +127,53 @@ value="
         $log(세로비율변수명:[$var_name] = $var_ratio, 세로크기변수명:[$var_size_name] = $var_size);
     }    
 " />
+<action id="set_font_size" scope="common"
+params="
+p_design_width, 
+p_design_height,
+p_device_width,
+p_device_height
+"
+value="
+	$setvar(
+		font_name = cs_fontsize
+	);
+	
+	$setvar(
+        font_ratio_name = font_ratio,
+        font_size_name = cs_fontsize,       // 변수명 
+    );
+    // width 계산 
+    for($i = 1; $i <= 100; $i++ ){
+        $setvar(
+            var_name = $addstring($font_ratio_name,_,$i),
+            var_size_name = $addstring($font_size_name,_,$i),
+            var_ratio = $result_double($i/$p_design_width*100),
+        );
+        $setvar_common(
+            $($var_name) = $var_ratio
+        );
+        $setvar(
+            //var_size = $result_double($getvar($var_name) * $p_design_width / 100)
+            var_size = $result_double($getvar($var_name) * $p_device_width / 100)           // 기기비율로 계산
+        );
+        $setvar_common(
+            $($var_size_name) = $var_size
+        )
+        $log(폰트비율변수명:[$var_name] = $var_ratio, 포트크기변수명:[$var_size_name] = $var_size);
+        
+    }
+"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
