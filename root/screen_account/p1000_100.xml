@@ -499,7 +499,7 @@ value="
 			layout="center"
 		>
 			<img
-				src="plist/root/resource/image/image-210.png"
+				src="$icon_account_time"
 				width="$cs_height_80"
 				height="$cs_height_80"
 				layout="center"
