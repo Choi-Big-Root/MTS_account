@@ -100,6 +100,12 @@ onLoad="screen_login_onload"
         backgroundimage_align="left"
         //backgroundimage_x="$cs_width_151"
         />
+        <button class="cs_btn_none" 
+        onClicked="
+        //$callaction(Act_Open_Web, https://dev-options.eugenefutures.com/wts/login/egcloud);
+        $callaction(Act_Open_Web, https://dev-options.eugenefutures.com/wts/);
+        "
+        /> 
     </viewgroup>
     <br height="$cs_height_10"/>
     <viewgroup
@@ -138,8 +144,9 @@ onLoad="screen_login_onload"
         backgroundimage_align="left"
         //backgroundimage_x="$cs_width_151"
         />
-        
-        <button class="cs_btn_none" onClicked="$callaction(Act_Open_Account_Popup, 1000);"/> 
+        <button class="cs_btn_none" onClicked="
+        $callaction(Act_Open_Account_Popup, 1000);
+        "/> 
     </viewgroup>
     <br height="$cs_height_10"/>
     <viewgroup
@@ -172,10 +179,7 @@ onLoad="screen_login_onload"
         <button class="cs_btn_login_cert"
         value="클라우드 공동인증서 관리" 
         />
-        
-
     </viewgroup>
-    
 </screen>
 
 // 뒤로가기 버튼 클릭 
@@ -192,8 +196,26 @@ value="
 
     $callaction(popscreen_open_account_onload);
 " />
+<action id="Act_Open_Web" scope="common"
+params="p_url"
+value="
+    $setvar_common(tmp_current_url = $p_url);
+    $openfile(plist/root/webview.xml);
+" />
 
-
+<action id="android_keymap" scope="common" 
+value="
+    if($android_keymap_param1 == 1 && $android_keymap_param2 == 4) {
+        $logvar(g_is_open_account,g_menuCode);
+        if($g_is_open_account){
+            $callaction(BTN_OPEN_ACCOUNT_HISTORY_ONCLICKED);
+            return;
+        }
+        else{
+            $callaction(fnPopover_AlertAction,fn_android_key_callback,SMART 챔피언 FUTURES를 종료하시겠습니까?,취소,확인);
+        }
+    }
+" />
 
 
 
