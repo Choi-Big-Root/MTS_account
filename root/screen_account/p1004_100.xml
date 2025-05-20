@@ -189,14 +189,14 @@ value="
 	onload="screen_contents_onload"
 	onunload="screen_contents_onunload"
 	noscroll_height="true"
-	margin_bottom="$cs_height_20"
+	margin_bottom="$cs_screen_bottom_margin"
 >
 	<br height="$cs_height_15"/>
 	<viewgroup
 		width="$this.remain_right"
-		height="$result($this.remain_bottom - $cs_height_54)"
-		margin_left="$cs_width_16"
-		margin_right="$cs_width_16"
+		height="$cs_contents_height"
+		margin_left="$cs_contents_left_right_margin"
+		margin_right="$cs_contents_left_right_margin"
 	>
 		<viewgroup
 			width="$this.remain_right"
@@ -398,7 +398,7 @@ value="
 		layout_vertical="bottom"
 	>
 		<button 
-			width="$cs_width_167" 
+			width="$cs_bottom_two_button_width" 
 			height="$this.remain_bottom"
 			layout="left"
 			backcolor="$cs_color_white"
@@ -413,7 +413,7 @@ value="
 			onClicked="btn_open_account_history_onClicked"
 		/>
 		<button id="btn_1004_100_confirm"
-			width="$cs_width_167" 
+			width="$cs_bottom_two_button_width" 
 			height="$this.remain_bottom"
 			layout="right"
 			backcolor="$cs_color_main"
@@ -941,6 +941,7 @@ value="
 			,btn_popscreen_4143_choice_jikjang.enable 	= true
 			,btn_1004_jikjang_juso_search.enable 		= true
 		);
+		$popscreen(popscreen_4143_choice_jikjang);
 	}elseif( 
 		$isequal_string($tmp_jikup_first_code,2) 
 		|| $isequal_string($tmp_jikup_first_code,5) 
