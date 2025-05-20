@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actiondata value="
+    //375 X 812
+    $log(안테나: $getstatusbar_height());
+    $getSafeArea(iTopVar,iBottomVar,iLeftVar,iRightVar);
+    $logvar(iTopVar,iBottomVar,iLeftVar,iRightVar);
+    // 762(p_lcdHeight) + 50(iTopVar) = 디자인된 크기 
+    // 762(p_lcdHeight) - 34(iBottomVar) = 728(g_lcdHeight)
+    // 상단 노치 포함된 크기 
+    $log(p_lcdWidth: [$p_lcdWidth]);
+    $log(p_lcdHeight:[$p_lcdHeight]);
+
+    $logvar(icon_ci);
+    // 기준 해상도로 작업 
+    $setvar_common(
+        g_design_width = 375,
+        g_design_height = 812,
+
+        g_device_width = $result($p_lcdWidth),
+        g_device_height = $result($p_lcdHeight + $iTopVar),
+
+        g_lcdWidth = $g_device_width,
+        g_lcdHeight = $g_device_height
+
+    );
+    $log(g_lcdWidth: [$g_lcdWidth]);
+    $log(g_lcdHeight:[$g_lcdHeight]);
+
+    $logvar(g_device_width,g_device_height);
+    $callaction(set_base_ratio, $g_design_width, $g_design_height, $g_device_width, $g_device_height);
+" />
+// 화면 비율을 셋팅한다.
+<action id="set_base_ratio" 
+params="
+p_design_width, 
+p_design_height,
+p_device_width,
+p_device_height
+"
+value="
+    $setvar(
+        w_ratio_name = w_ratio,
+        w_size_name = cs_width,       // 변수명 
+        h_ratio_name = h_ratio,$p_name,
+        h_size_name = cs_height,
+    );
+    // width 계산 
+    for($i = 1; $i <= $p_design_width; $i++ ){
+        $setvar(
+            var_name = $addstring($w_ratio_name,_,$i),
+            var_size_name = $addstring($w_size_name,_,$i),
+            var_ratio = $result_double($i/$p_design_width*100),
+        );
+        $setvar_common(
+            $($var_name) = $var_ratio
+        );
+        $setvar(
+            //var_size = $result_double($getvar($var_name) * $p_design_width / 100)
+            var_size = $result_double($getvar($var_name) * $p_device_width / 100)           // 기기비율로 계산
+        );
+        $setvar_common(
+            $($var_size_name) = $var_size
+        )
+        $log(가로비율변수명:[$var_name] = $var_ratio, 가로크기변수명:[$var_size_name] = $var_size);
+        
+    }
+    // height 계산 
+    for($i = 1; $i <= $p_design_height; $i++ ){
+        $setvar(
+            var_name = $addstring($h_ratio_name,_,$i),
+            var_size_name = $addstring($h_size_name,_,$i),
+            var_ratio = $result_double($i/$p_design_height*100),
+        );
+        $setvar_common(
+            $($var_name) = $var_ratio
+        );
+        $setvar(
+            //var_size = $result_double($getvar($var_name) * $p_design_height / 100)
+            var_size = $result_double($getvar($var_name) * $p_device_height / 100)              // 기기비율로 계산
+        );
+        $setvar_common(
+            $($var_size_name) = $var_size
+        )
+        $log(세로비율변수명:[$var_name] = $var_ratio, 세로크기변수명:[$var_size_name] = $var_size);
+    }    
+" />

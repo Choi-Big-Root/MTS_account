@@ -239,31 +239,29 @@ value="
 	$callaction(fnSetVarCommon,g_deviceaddress,$getdeviceaddress());
 	
 	// 기본이 되는 해상도는 WVGA이다.
-	$callaction(fnSetVarCommon,g_baseWidth,480);
-	$callaction(fnSetVarCommon,g_baseHeight,$result(800 - $getstatusbar_height()));
-	$callaction(fnSetVarCommon,g_baseWidth_ori,800);
-	$callaction(fnSetVarCommon,g_baseHeight_ori,$result(480 - $getstatusbar_height()));
+	//$callaction(fnSetVarCommon,g_baseWidth,480);
+	//$callaction(fnSetVarCommon,g_baseHeight,$result(800 - $getstatusbar_height()));
+	//$callaction(fnSetVarCommon,g_baseWidth_ori,800);
+	//$callaction(fnSetVarCommon,g_baseHeight_ori,$result(480 - $getstatusbar_height()));
+
+	// 기본이 되는 해상도는 375 * 812 이다.
+	$callaction(fnSetVarCommon,g_baseWidth,375);
+	$callaction(fnSetVarCommon,g_baseHeight,812);
+	$callaction(fnSetVarCommon,g_baseWidth_ori,812);
+	$callaction(fnSetVarCommon,g_baseHeight_ori,375);
 
 	$callaction(fnSetVarCommon,g_deviceName,$callaction(fnGetDeviceName),해상도별로 구분함);
-
 	// 기기별 화면 화면구성 크기지정:타이틀바, 메뉴 등
-	$callaction(fnSetDeviceSize,$g_deviceName);
-
+	//$callaction(fnSetDeviceSize,$g_deviceName);
 	// 기기별 Default 폰트 및 크기 지정
 	$callaction(fnSetDeviceFont,$g_deviceName);
-
 	// 기기별 Icon 폴더 설정
 	$callaction(fnSetIconDir,$g_deviceName);
-
 	$callaction(fnSetInitPath);
-
 	$callaction(fnSetIconPath);         // 아이콘 경로 셋팅 
-
 	$callaction(fnSetJsonIconPath);         // Json 아이콘 경로 셋팅 
 	$callaction(fnSetSvgIconPath);         // Svg 아이콘 경로 셋팅 
-
 	$callaction(fnSetInitContorlSize);
-
 
 	$callaction(fnSetVarCommon,g_widthRatio,$result_double($g_lcdWidth/$g_baseWidth),라티오);
 	$callaction(fnSetVarCommon,g_heightRatio,$result_double($g_lcdHeight/$g_baseHeight),라티오);
@@ -427,6 +425,7 @@ value="
 
     
 	$setvar(tmpDeviceKind=$fnSetDeviceSize_param1);
+	/*
 	$callaction(fnSetVarCommon,g_lcdWidth,$p_lcdwidth,가로크기);
 	$callaction(fnSetVarCommon,g_lcdHeight,$p_lcdheight,세로크기);
 	$callaction(fnSetVarCommon,g_lcdWidth_ori,$p_lcdwidth_ori,세로크기);
@@ -484,7 +483,7 @@ value="
 		$logvar(tmp_width_ori);
 		$callaction(fnSetVarCommon,g_lcdWidth_ori,$tmp_width_ori,세로크기);
 	}
-
+	*/
 	// 액티비티 사이즈 셋팅 
 	$callaction(fnSetActivitySize);     
 "/>

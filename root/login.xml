@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<import filename="plist/root/common/css.xml"/>
+
+<action id="screen_login_onload" 
+value="
+    
+" />
+<screen id="screen_login"
+backcolor="ffffff"
+width="$g_lcdWidth"
+height="$g_lcdHeight"
+onLoad="screen_login_onload"
+>
+    <label
+    width="$super.width" 
+    height="$cs_height_50"
+    BACKGROUNDSVG="$icon_ci"
+    //BACKGROUNDSVG="$icon_arrow_left"
+    BACKGROUNDSVG_WIDTH="$cs_width_132"
+    BACKGROUNDSVG_HEIGHT="$cs_height_28"
+    backgroundimage_align="right"
+    backgroundimage_align_vertical="center"
+    backgroundimage_x="$cs_width_14"
+    backgroundimage_y="$cs_height_13"
+    //layout="center"
+    //backcolor="ff0000"
+    />
+    <br height="20"/>
+    <label 
+    width="$cs_width_343"
+    height="$cs_height_68"
+    layout="center"
+    value="건강한 생활%2C\n건강한 투자를 응원합니다." 
+    fontname="$cs_font_600"
+    fontsize="$cs_fontsize_24"
+    textcolor="000000"
+    />
+    <br height="$cs_height_15"/>
+    <viewgroup
+    width="$cs_width_343" 
+    height="$cs_height_250"
+    BACKGROUNDSVG="$bg_frame_48096450"
+    BACKGROUNDSVG_WIDTH="$cs_width_343"
+    BACKGROUNDSVG_HEIGHT="$cs_height_250"
+    backgroundimage_align="center"
+    backgroundimage_align_vertical="center"
+    layout="center"
+    >
+        <br height="$cs_height_22"/>
+        <blank width="$cs_width_21" />
+        <label 
+        width="$cs_width_144"
+        height="$cs_width_56"
+        value="클라우드\n공동인증서 로그인" 
+        fontname="$cs_font_600"
+        fontsize="$cs_fontsize_22" 
+        textcolor="060B11"
+        //fontname="Pretendard-Medium"
+        />
+        <br/>
+        <label 
+        width="$cs_width_174"
+        height="$cs_height_174"
+        BACKGROUNDSVG="$icon_acount_open_1"
+        BACKGROUNDSVG_WIDTH="$cs_width_174"                     
+        BACKGROUNDSVG_HEIGHT="$cs_height_174"                   // 정사각형 이미지의 경우 가로 세로 크기가 같아야 함.
+        //BACKGROUNDSVG_HEIGHT="$cs_width_174" 
+        />
+    </viewgroup>
+    
+    <br/>
+    <button 
+    width="$w($g_lcdwidth,20)" 
+    height="$h($g_lcdHeight,7)" 
+    value="새로고침" 
+    layout="right"
+    layout_vertical="top"
+    backcolor="00ff0022"
+
+    onClicked="$reopenfile();"
+    />
+</screen>
