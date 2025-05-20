@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screen id="webview"
+backcolor="ffffff"
+width="$g_lcdWidth"
+height="$g_lcdHeight"
+onLoad="screen_login_onload"
+>	
+	// 에이전트 값에 eugene_champion 추가해야함.
+	<webview id="trading_webview" width="$super.width" height="$this.remain_bottom"
+        href="$tmp_current_url"
+        ios_user_agent_flag="true"      // 사파리의 경우 SignKorea에서 UserAgent 값으로 구분함.
+        //debug="true" // vConsole 적용
+    /> 
+    <br/>
+<if condition="!$g_isAndroid">
+    <button 
+    	width="$cs_height_50"
+		height="$cs_height_50"
+		border_radius="$result($this.height/2)"
+		value="뒤로" 
+		layout="left"
+		layout_vertical="top"
+		backcolor="00ff0022"
+		onClicked="
+		//$callaction(fnWebView_GoBack);
+		$openfile(plist/root/login.xml);
+		"
+
+	/>
+</if>
+
+</screen>
+<action id="android_keymap" scope="common"
+value="
+    if($android_keymap_param1 == 1 && $android_keymap_param2 == 4) {
+        $log(안드로이드 뒤로가기 webview);
+        $callaction(fnWebView_GoBack);
+        
+    }
+"/>
+<action id="fnWebView_GoBack" 
+value="
+	$setvar(
+    	b_is_goback = $webview_goback(trading_webview)
+    );
+    $setvar(trading_webview.goback = true);
+    $logvar(b_is_goback);
+    if(!$b_is_goback){
+    	$openfile(plist/root/login.xml);
+    }
+" />
