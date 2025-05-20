@@ -1065,13 +1065,13 @@ value="
 " />
 <action id="fnGoLoginScreen_ConnectAfter"  scope="common"
 value="
-	$openfile(plist/root/main.xml);
+	$openfile(plist/root/login.xml);
 " />
 // 로그인 또는 저장된 화면으로 이동 
 //확인
 <action id="Act_intro_after_Complete"  scope="common"
 value="
-	$openfile(plist/root/main.xml);
+	$openfile(plist/root/login.xml);
 	return;
 	
 	$log(************** Act_intro_after_Complete);

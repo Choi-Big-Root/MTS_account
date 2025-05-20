@@ -558,7 +558,7 @@ value="
 
 	$delarrayvar(arr_screenHistory);
 	$setvar_common(g_menuCode=1920);
-	$openfile(plist/root/main.xml);
+	$openfile(plist/root/login.xml);
 " />
 <!--
  *********************************************************************************

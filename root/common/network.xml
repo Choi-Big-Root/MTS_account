@@ -749,8 +749,7 @@ value="
 // 재접속 확인.
 <action id="fnDisconnect_Confirm" scope="common" value="
 	
-	//$openfile(plist/root/intro.xml); 
-	$openfile(plist/root/main.xml); 
+	$openfile(plist/root/login.xml);
 " />
 
 <action id="FNNETWORK_SISESOCKET_DOMESTIC_GETREQUESTID" scope="common" 
