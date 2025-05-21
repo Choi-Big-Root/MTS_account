@@ -426,8 +426,8 @@ value="
 		<br height="$cs_height_8" />
 		<button id="btn_4144_month"
 			class="cs_btn_1005_100_select_2"
-			key="3"
-			value="HTS"
+			key="1"
+			value="자택"
 			onClicked="$callaction(popscreen_4144_choice_onclicked,7);"
 		/>
 		<label
@@ -449,8 +449,8 @@ value="
 		<br height="$cs_height_8" />
 		<button id="btn_4144_meme"
 			class="cs_btn_1005_100_select_2"
-			key="3"
-			value="HTS"
+			key="5"
+			value="E-mail"
 			onClicked="$callaction(popscreen_4144_choice_onclicked,6);"
 		/>
 		<label
@@ -701,7 +701,6 @@ value="
 	elseif( $isequal_string($popscreen_4144_choice_onclicked_param1,6) ){
 		$setvar(
  			arr_4144_choice=[
- 				[3,HTS]
  				,[5,E-mail]
  			]
  		);
@@ -714,13 +713,22 @@ value="
 	}
 	//월간거래통지
 	elseif( $isequal_string($popscreen_4144_choice_onclicked_param1,7) ){
-		$setvar(
-	 		arr_4144_choice=[
-	 			[1,자택]
-	 			,[2,직장]
-	 			,[3,HTS]
-	 		]
- 		);
+		$logvar(g_IN_REQUEST_COM_POST_NO);
+		if($strlen($g_IN_REQUEST_COM_POST_NO) > 0){
+			$setvar(
+	 			arr_4144_choice=[
+	 				[1,자택]
+	 				,[2,직장]
+	 			]
+ 			);
+		}else{
+			$setvar(
+	 			arr_4144_choice=[
+	 				[1,자택]
+	 			]
+ 			);
+		}
+
  		$setvar(
  			,tmp_1005_title = $(매매 체결 통보)
  			,1005_choice_key = 7
@@ -802,7 +810,6 @@ onload="popscreen_4144_choice_onload"
 				fontsize="$cs_fontsize_18"
 				fontname="$cs_font_700"
 				value="$tmp_1005_title"
-				onclicked="$closescreen(popscreen_1004_choice);" 
 			/>
 			<br height="$cs_height_20" />
 			<table id="tbl_pop_1005_100_choice"
