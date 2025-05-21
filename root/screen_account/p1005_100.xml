@@ -160,12 +160,12 @@ value="
 	);
 	$callaction(popscreen_open_account_confirm_onclicked,$tmp_pop_info_x_cal,$tmp_pop_imfo_y_cal);
 "/>
-<action id="btn_4144_jagum_onClicked"
+<action id="btn_1005_jagum_onClicked"
 	value="
 		$setvar(
 			screen_1005_100.scrolloffset_y = 9999
 		);
-		$callaction(popscreen_4144_choice_onclicked,5);
+		$callaction(popscreen_1005_choice_onclicked,5);
 "/>
 <action id="fn1005_100_GroupCheck"
 params="p_vg_gr_id"
@@ -285,11 +285,11 @@ value="
 			value="거래의 목적"
 		/>
 		<br height="$cs_height_5" />
-		<button id="btn_4144_purpose"
+		<button id="btn_1005_purpose"
 			class="cs_btn_1005_100_select_1"
 			key="0"
 			value="선택하세요."
-			onClicked="$callaction(popscreen_4144_choice_onclicked,4);"
+			onClicked="$callaction(popscreen_1005_choice_onclicked,4);"
 		/>
 		<br height="$cs_height_20" />
 		<label id="lbl_1005_100_jagum"
@@ -297,11 +297,11 @@ value="
 			value="자금의 출처"
 		/>
 		<br height="$cs_height_5" />
-		<button id="btn_4144_jagum"
+		<button id="btn_1005_jagum"
 			class="cs_btn_1005_100_select_1"
 			key="0"
 			value="선택하세요."
-			onClicked="btn_4144_jagum_onClicked"
+			onClicked="btn_1005_jagum_onClicked"
 		/>
 		<br height="$cs_height_20" />
 		<label
@@ -424,11 +424,11 @@ value="
 			value="월간 거래내역이나 잔고 통보는"
 		/>
 		<br height="$cs_height_8" />
-		<button id="btn_4144_month"
+		<button id="btn_1005_month"
 			class="cs_btn_1005_100_select_2"
 			key="1"
 			value="자택"
-			onClicked="$callaction(popscreen_4144_choice_onclicked,7);"
+			onClicked="$callaction(popscreen_1005_choice_onclicked,7);"
 		/>
 		<label
 			width="$this.remain_right"
@@ -447,11 +447,11 @@ value="
 			value="매체 체결 통보는"
 		/>
 		<br height="$cs_height_8" />
-		<button id="btn_4144_meme"
+		<button id="btn_1005_meme"
 			class="cs_btn_1005_100_select_2"
 			key="5"
 			value="E-mail"
-			onClicked="$callaction(popscreen_4144_choice_onclicked,6);"
+			onClicked="$callaction(popscreen_1005_choice_onclicked,6);"
 		/>
 		<label
 			width="$this.remain_right"
@@ -525,27 +525,27 @@ value="
 		return;
 	}
 
-	if($btn_4144_purpose.key == 0){
+	if($btn_1005_purpose.key == 0){
 		$callaction(fnPopover_AlertAction,,거래목적을 선택하세요.,,확인);
 		return;
 	}
 
 	//자금의 원천
-	if($btn_4144_jagum.key == 0){
+	if($btn_1005_jagum.key == 0){
 		$callaction(fnPopover_AlertAction,,자금의 원천 및 출처를 선택하세요.,,확인);
 		return;
 	}
-	if($btn_4144_jagum.key == 1 && $isequal_string($g_IN_REQUEST_JOB_NM,6004)){
+	if($btn_1005_jagum.key == 1 && $isequal_string($g_IN_REQUEST_JOB_NM,6004)){
 		$callaction(fnPopover_AlertAction,,무직의경우 자금의 원천 및 출처를 \n 근로소득으로 선택할 수 없습니다.,,확인);
 		return;
 		
 	}
-	if($btn_4144_jagum.key == 1 && $isequal_string($g_IN_REQUEST_JOB_NM,6002)){
+	if($btn_1005_jagum.key == 1 && $isequal_string($g_IN_REQUEST_JOB_NM,6002)){
 		$callaction(fnPopover_AlertAction,,주부의경우 자금의 원천 및 출처를 \n 근로소득으로 선택할 수 없습니다.,,확인);
 		return;
 		
 	}
-	if($btn_4144_jagum.key == 1 && $isequal_string($g_IN_REQUEST_JOB_NM,6003)){
+	if($btn_1005_jagum.key == 1 && $isequal_string($g_IN_REQUEST_JOB_NM,6003)){
 		$callaction(fnPopover_AlertAction,,학생의경우 자금의 원천 및 출처를 \n 근로소득으로 선택할 수 없습니다.,,확인);
 		return;
 		
@@ -553,11 +553,11 @@ value="
 
 
 	//매매 거래 통지 관련
-	if($btn_4144_meme.key == 0){
+	if($btn_1005_meme.key == 0){
 		$callaction(fnPopover_AlertAction,,매매거래통지를 선택하세요.,,확인);
 		return;
 	}
-	if($btn_4144_meme.key == 5){  // E-mail
+	if($btn_1005_meme.key == 5){  // E-mail
 		if($strlen($g_IN_REQUEST_CLNT_EMAIL) < 1){
 			$logvar(g_IN_REQUEST_CLNT_EMAIL);
 			$callaction(fnPopover_AlertAction,,[변경예정]E-mail을 입력하세요.,,확인);
@@ -567,11 +567,11 @@ value="
 
 
 	//월간 거래 통지 관련
-	if($btn_4144_month.key == 0){
+	if($btn_1005_month.key == 0){
 		$callaction(fnPopover_AlertAction,,월간거래통지를 선택하세요.,,확인);
 		return;
 	}
-	if($btn_4144_month.key == 2){  // 직장
+	if($btn_1005_month.key == 2){  // 직장
 		if($strlen($g_IN_REQUEST_COM_POST_NO) < 1 ) {
 			$callaction(fnPopover_AlertAction,,월간 거래 통지 직장 선택시\n이전 단계로 돌아가서 직장주소를 입력하세요.,,확인);
 			return;
@@ -583,10 +583,10 @@ value="
 	}
 
 	//거래의 목적
-	$callaction(fnConfig_SetValue,g_IN_REQUEST_TRD_PPO 	,$btn_4144_purpose.key);
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_TRD_PPO 	,$btn_1005_purpose.key);
 
 	//자금의 출처
-	$callaction(fnConfig_SetValue,g_IN_REQUEST_FUNDS 	,$btn_4144_jagum.key);
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_FUNDS 	,$btn_1005_jagum.key);
 
 	//미국인 여부
 	$callaction(fnConfig_SetValue,g_IN_REQUEST_AMERICAN_YN 	,N);
@@ -601,10 +601,10 @@ value="
 	$callaction(fnConfig_SetValue,g_IN_REQUEST_OWN_YN 	,Y);
 
 	//월간거래내역 잔고통보
-	$callaction(fnConfig_SetValue,g_IN_REQUEST_DEAL 	,$btn_4144_month.key);
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_DEAL 	,$btn_1005_month.key);
 
 	//매매 체결 통보
-	$callaction(fnConfig_SetValue,g_IN_REQUEST_TRADE 	,$btn_4144_meme.key);
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_TRADE 	,$btn_1005_meme.key);
 
 	/*
 	$log(
@@ -649,14 +649,14 @@ value="
 
 
 // 거래목적,자금출처,월간,매매 팝업
-<action id="popscreen_4144_choice_onclicked" value="
-	$delarrayvar(arr_4144_choice);
+<action id="popscreen_1005_choice_onclicked" value="
+	$delarrayvar(arr_1005_choice);
 	$delvar(1005_choice_set_val,1005_choice_set_key,tmp_1005_title,1005_choice_key);
 
  	//거래목적
- 	if( $isequal_string($popscreen_4144_choice_onclicked_param1,4) ){
+ 	if( $isequal_string($popscreen_1005_choice_onclicked_param1,4) ){
 		$setvar(
-	 		arr_4144_choice=[
+	 		arr_1005_choice=[
 	 			[1,급여 및 생활비]
 	 			,[2,사업상거래]
 	 			,[3,저축 및 투자]
@@ -670,15 +670,15 @@ value="
  		$setvar(
  			,tmp_1005_title = $(계좌는 주로 어떤 목적으로 쓰시나요?)
  			,1005_choice_key = 4
-			,1005_choice_set_key = $btn_4144_purpose.key
-			,1005_choice_set_val = $btn_4144_purpose.value
+			,1005_choice_set_key = $btn_1005_purpose.key
+			,1005_choice_set_val = $btn_1005_purpose.value
 		);
  		
 	}
 	//자금의 원천 및 출처
-	elseif( $isequal_string($popscreen_4144_choice_onclicked_param1,5) ){
+	elseif( $isequal_string($popscreen_1005_choice_onclicked_param1,5) ){
 		$setvar(
-	 		arr_4144_choice=[
+	 		arr_1005_choice=[
 	 			[1,근로 및 연금소득]
 	 			,[2,사업소득]
 	 			,[3,부동산 임대소득]
@@ -693,37 +693,37 @@ value="
  		$setvar(
  			,tmp_1005_title = $(거래되는 돈은 출처가 어디인가요?)
  			,1005_choice_key = 5
-			,1005_choice_set_key = $btn_4144_jagum.key
-			,1005_choice_set_val = $btn_4144_jagum.value
+			,1005_choice_set_key = $btn_1005_jagum.key
+			,1005_choice_set_val = $btn_1005_jagum.value
 		);
 	}
 	//매매거래통지
-	elseif( $isequal_string($popscreen_4144_choice_onclicked_param1,6) ){
+	elseif( $isequal_string($popscreen_1005_choice_onclicked_param1,6) ){
 		$setvar(
- 			arr_4144_choice=[
+ 			arr_1005_choice=[
  				,[5,E-mail]
  			]
  		);
  		$setvar(
  			,tmp_1005_title = $(매매 체결 통보)
  			,1005_choice_key = 6
-			,1005_choice_set_key = $btn_4144_meme.key
-			,1005_choice_set_val = $btn_4144_meme.value
+			,1005_choice_set_key = $btn_1005_meme.key
+			,1005_choice_set_val = $btn_1005_meme.value
 		);
 	}
 	//월간거래통지
-	elseif( $isequal_string($popscreen_4144_choice_onclicked_param1,7) ){
+	elseif( $isequal_string($popscreen_1005_choice_onclicked_param1,7) ){
 		$logvar(g_IN_REQUEST_COM_POST_NO);
 		if($strlen($g_IN_REQUEST_COM_POST_NO) > 0){
 			$setvar(
-	 			arr_4144_choice=[
+	 			arr_1005_choice=[
 	 				[1,자택]
 	 				,[2,직장]
 	 			]
  			);
 		}else{
 			$setvar(
-	 			arr_4144_choice=[
+	 			arr_1005_choice=[
 	 				[1,자택]
 	 			]
  			);
@@ -732,61 +732,61 @@ value="
  		$setvar(
  			,tmp_1005_title = $(매매 체결 통보)
  			,1005_choice_key = 7
-			,1005_choice_set_key = $btn_4144_month.key
-			,1005_choice_set_val = $btn_4144_month.value
+			,1005_choice_set_key = $btn_1005_month.key
+			,1005_choice_set_val = $btn_1005_month.value
 		);
 	}
 
 	$setvar(
-		tmp_tbl_row_count = $getarrayvarcount(arr_4144_choice)
+		tmp_tbl_row_count = $getarrayvarcount(arr_1005_choice)
 		,tmp_tbl_height = $result($cs_height_50 * $tmp_tbl_row_count)
 		,tmp_screen_height = $result($cs_height_100 + $tmp_tbl_height)
 
 	);
 
 
- 	$popscreen(popscreen_4144_choice);
+ 	$popscreen(popscreen_1005_choice);
 "/>
-<action id="popscreen_4144_choice_onload" value="
+<action id="popscreen_1005_choice_onload" value="
 	$cleartablerow(tbl_pop_1005_100_choice);
 
-	$setarraydata(tbl_pop_1005_100_choice,arr_4144_choice);
+	$setarraydata(tbl_pop_1005_100_choice,arr_1005_choice);
 "/>
 <action id="tr_tbl_pop_1005_onClicked"
 value="
 	$log($this.key, $this.rowkey1);
 	if( $isequal_string($1005_choice_key,4) ){
 		$setvar(
-			,btn_4144_purpose.value = $this.rowkey1
-			,btn_4144_purpose.key = $this.key
+			,btn_1005_purpose.value = $this.rowkey1
+			,btn_1005_purpose.key = $this.key
 		);
 
 	}
 	elseif( $isequal_string($1005_choice_key,5) ){
 		$setvar(
-			,btn_4144_jagum.value = $this.rowkey1
-			,btn_4144_jagum.key = $this.key
+			,btn_1005_jagum.value = $this.rowkey1
+			,btn_1005_jagum.key = $this.key
 		);
 	}
 	elseif( $isequal_string($1005_choice_key,6) ){
 		$setvar(
-			,btn_4144_meme.value = $this.rowkey1
-			,btn_4144_meme.key = $this.key
+			,btn_1005_meme.value = $this.rowkey1
+			,btn_1005_meme.key = $this.key
 		);
 	}
 	elseif( $isequal_string($1005_choice_key,7) ){
 		$setvar(
-			,btn_4144_month.value = $this.rowkey1
-			,btn_4144_month.key = $this.key
+			,btn_1005_month.value = $this.rowkey1
+			,btn_1005_month.key = $this.key
 		);
 	}
-	$closescreen(popscreen_4144_choice);
+	$closescreen(popscreen_1005_choice);
 "/>
-<popscreen id="popscreen_4144_choice"
+<popscreen id="popscreen_1005_choice"
 width="$p_lcdWidth"
 height="$p_lcdHeight"
 backcolor="00000060"
-onload="popscreen_4144_choice_onload"
+onload="popscreen_1005_choice_onload"
 >
 	<screen id="screen_pop_1005_100_choice"
 		width="$this.remain_right"
@@ -858,7 +858,7 @@ onload="popscreen_4144_choice_onload"
 	</screen>
 	<br/>
 	<label
-		x="$result($popscreen_4144_choice.width - $cs_height_50)" 
+		x="$result($popscreen_1005_choice.width - $cs_height_50)" 
 		y="$result($screen_pop_1005_100_choice.y)"
     	width="$cs_height_50"
     	height="$cs_height_50"
@@ -869,7 +869,7 @@ onload="popscreen_4144_choice_onload"
 		BACKGROUNDSVG_HEIGHT="$cs_height_20"	
 		backgroundimage_align="center"
 		backgroundimage_align_vertical="center"
-		onclicked="$closescreen(popscreen_4144_choice);" 
+		onclicked="$closescreen(popscreen_1005_choice);" 
     />
 </popscreen>
 

@@ -1194,6 +1194,7 @@ value="
 
 	$log(주민번호길이:$strlen($g_tf_1002_confirm_2_encvar));
 	$log(주민번호길이:$getvarlen(g_tf_1002_confirm_2_encvar));
+	$callaction(fnConfig_SetValue,g_IN_AGREE_RMN_NO_VAR 	,$g_tf_1002_confirm_2_var); 	// 주민번호
 	$callaction(fnConfig_SetValue,g_IN_AGREE_RMN_NO 	,$g_tf_1002_confirm_2_encvar); 	// 주민번호
 	$callaction(fnConfig_SetValue,g_IN_AGREE_CLNT_NM 	,$tf_1002_confirm_1.value);		// 고객명
 	$callaction(fnConfig_SetValue,g_IN_REQUEST_TEL_NUM 	,$tf_1002_confirm_3_val);		// 전화번호

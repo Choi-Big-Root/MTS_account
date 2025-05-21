@@ -956,7 +956,7 @@ value="
 		<viewgroup
 		margin_left="$w($g_lcdWidth,6.7)"
 		margin_right="$w($g_lcdWidth,6.7)"
-		margin_top="$h($g_lcdHeight,1.9)"
+		margin_top="$h($g_lcdHeight,1)"
 		margin_bottom="$h($g_lcdHeight,3.1)"
 		>
 			<viewgroup 
