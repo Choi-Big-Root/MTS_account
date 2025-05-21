@@ -1,0 +1,812 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class id="cs_lbl_1005_100_title_1"
+width="$this.remain_right"
+height="$cs_height_24"
+fontname="$cs_font_700"
+fontsize="$cs_fontsize_14"
+textcolor="$cs_color_black"
+/>
+<class id="cs_btn_1005_100_select_1"
+width="$this.remain_right"
+height="$cs_height_50"
+margin_left="$cs_width_15"
+margin_right="$cs_width_32"
+fontname="$cs_font_400"
+fontsize="$cs_fontsize_15"
+textcolor="$cs_color_black"
+textcolor_active="$cs_color_black"
+textcolor_disable="$cs_color_black"
+border_width="1"
+border_radius="$cs_radius_10"
+border_color="$cs_color_line"
+align="left"
+BACKGROUNDSVG="$icon_next"
+BACKGROUNDSVG_DISABLE="$icon_next"
+BACKGROUNDSVG_HIGHLIGHT="$icon_next"
+BACKGROUNDSVG_WIDTH="$cs_height_14"
+BACKGROUNDSVG_HEIGHT="$cs_height_14"
+backgroundimage_align="right"
+backgroundimage_align_vertical="center"
+backgroundimage_x="$cs_width_14"
+/>
+<class id="cs_btn_1005_100_select_2"
+width="$cs_width_270"
+height="$cs_height_50"
+margin_left="$cs_width_15"
+margin_right="$cs_width_32"
+fontname="$cs_font_400"
+fontsize="$cs_fontsize_15"
+textcolor="$cs_color_black"
+textcolor_active="$cs_color_black"
+textcolor_disable="$cs_color_black"
+border_width="1"
+border_radius="$cs_radius_10"
+border_color="$cs_color_line"
+align="left"
+BACKGROUNDSVG="$icon_polygon_3"
+BACKGROUNDSVG_DISABLE="$icon_polygon_3"
+BACKGROUNDSVG_HIGHLIGHT="$icon_polygon_3"
+BACKGROUNDSVG_WIDTH="$cs_width_14"
+BACKGROUNDSVG_HEIGHT="$cs_height_11"
+backgroundimage_align="right"
+backgroundimage_align_vertical="center"
+backgroundimage_x="$cs_width_19"
+/>
+<class id="cs_vg_group_index_2"
+width="$this.remain_right"
+height="$cs_height_40"
+backcolor="$cs_color_line"
+border_width="1"
+border_radius="$cs_height_7"
+margin_left="$cs_width_3"
+margin_right="$cs_width_3"
+margin_top="$cs_height_3"
+margin_bottom="$cs_height_3"
+/>
+<class id="cs_gr_index_2_btn_left"
+width="$result($super.width/2)"
+height="$this.remain_bottom"
+backcolor="$cs_color_line"
+backcolor_active="$cs_color_white"
+fontname="$cs_font_500"
+fontsize="$cs_fontsize_14"
+textcolor="$cs_color_text"
+textcolor_active="$cs_color_black"
+border_width="1"
+border_radius="$cs_height_5"
+key="0"
+/>
+<class id="cs_gr_index_2_btn_right"
+width="$this.remain_right"
+height="$this.remain_bottom"
+backcolor="$cs_color_line"
+backcolor_active="$cs_color_white"
+fontname="$cs_font_500"
+fontsize="$cs_fontsize_14"
+textcolor="$cs_color_text"
+textcolor_active="$cs_color_black"
+border_width="1"
+border_radius="$cs_height_5"
+key="1"
+/>
+<class id="cs_gr_index_3_btn"
+width="$result($super.width/3)"
+height="$this.remain_bottom"
+backcolor="$cs_color_line"
+backcolor_active="$cs_color_white"
+fontname="$cs_font_500"
+fontsize="$cs_fontsize_14"
+textcolor="$cs_color_text"
+textcolor_active="$cs_color_black"
+border_width="1"
+border_radius="$cs_height_5"
+/>
+
+<action id="screen_contents_onload" value="
+	$setvar(
+		,img_step_1.hidden=false
+		,img_step_2.hidden=false
+		,img_step_3.hidden=true
+		,img_step_4.hidden=true
+		,img_step_5.hidden=true
+		,img_step_6.hidden=true
+		,img_step_7.hidden=true
+		,img_step_8.hidden=true
+
+		,lbl_account_title_step_1.hidden=true
+		,lbl_account_title_step_2.hidden=true
+		,lbl_account_title_step_3.hidden=false
+		,lbl_account_title_step_4.hidden=false
+		,lbl_account_title_step_5.hidden=false
+		,lbl_account_title_step_6.hidden=false
+		,lbl_account_title_step_7.hidden=false
+		,lbl_account_title_step_8.hidden=false
+
+		,lbl_account_title_step_1.textcolor=$cs_color_disable
+		,lbl_account_title_step_2.textcolor=$cs_color_disable
+		,lbl_account_title_step_3.textcolor=$cs_color_black
+		,lbl_account_title_step_4.textcolor=$cs_color_disable
+		,lbl_account_title_step_5.textcolor=$cs_color_disable
+		,lbl_account_title_step_6.textcolor=$cs_color_disable
+		,lbl_account_title_step_7.textcolor=$cs_color_disable
+		,lbl_account_title_step_8.textcolor=$cs_color_disable
+
+
+		,lbl_account_title_step_1.fontname=$cs_font_400
+		,lbl_account_title_step_2.fontname=$cs_font_400
+		,lbl_account_title_step_3.fontname=$cs_font_600
+		,lbl_account_title_step_4.fontname=$cs_font_400
+		,lbl_account_title_step_5.fontname=$cs_font_400
+		,lbl_account_title_step_6.fontname=$cs_font_400
+		,lbl_account_title_step_7.fontname=$cs_font_400
+		,lbl_account_title_step_8.fontname=$cs_font_400
+
+
+		,vg_open_account_title.backcolor=FFFFFF
+		,popscreen_open_account_history.hidden=false
+		,vg_account_title_step.hidden = false
+
+		,1005_choice_key=
+
+		,menu_num=1005
+	);
+"/>
+
+<action id="btn_pop_info_1005_100_onClicked"
+value="
+	$setvar(
+		tmp_pop_info_x_cal = $result($img_pop_info_1005.x_abs + $w($g_lcdwidth,0.6))
+		,tmp_pop_imfo_y_cal = $result($img_pop_info_1005.y_abs + $h($g_lcdHeight,2.6))
+	);
+	$callaction(popscreen_open_account_confirm_onclicked,$tmp_pop_info_x_cal,$tmp_pop_imfo_y_cal);
+"/>
+<action id="btn_4144_jagum_onClicked"
+	value="
+		$setvar(
+			screen_1005_100.scrolloffset_y = 9999
+		);
+		$callaction(popscreen_4144_choice_onclicked,5);
+"/>
+<action id="fn1005_100_GroupCheck"
+params="p_vg_gr_id"
+value="
+	$log(******$vg_gr_1005_100_1.selectkey);
+
+	if( $isequal_string($p_vg_gr_id,vg_gr_1005_100_1 )
+		&& $vg_gr_1005_100_1.selectkey != 0
+	){
+		$setvar(
+			tmp_alert_warring_keyword = %5B미국인인%5D
+		);
+	}
+	elseif( $isequal_string($p_vg_gr_id,vg_gr_1005_100_2 )
+		&& $vg_gr_1005_100_2.selectkey != 0
+	){
+		$setvar(
+			tmp_alert_warring_keyword = %5B내국인이 아닌%5D
+		);
+	}
+	elseif( $isequal_string($p_vg_gr_id,vg_gr_1005_100_3 )
+		&& $vg_gr_1005_100_3.selectkey != 0
+	){
+		$setvar(
+			tmp_alert_warring_keyword = %5B국내거주가 아닌%5D
+		);
+	}
+	elseif( $isequal_string($p_vg_gr_id,vg_gr_1005_100_4 )
+		&& $vg_gr_1005_100_4.selectkey != 0
+	){
+		$setvar(
+			tmp_alert_warring_keyword = %5B실소유자 아닌%5D
+		);
+	}
+	$callaction(fnPopover_AlertAction_1005_100,$tmp_alert_warring_keyword);
+
+"/>
+<screen 
+	id="screen_1005_100"
+	class="cs_screen_contents"
+	backcolor="$cs_color_white"
+	onload="screen_contents_onload"
+	onunload="screen_contents_onunload"
+	noscroll_height="false"
+	margin_top="$cs_screen_top_margin"
+	margin_bottom="$cs_screen_bottom_margin"
+	margin_left="$cs_screen_left_right_margin"
+	margin_right="$cs_screen_left_right_margin"
+>
+	<viewgroup id="vg_1005_100_contents_title"
+		width="$this.remain_right"
+		height="$cs_height_98"
+	>
+		<label
+			width="$cs_width_86"
+			height="$cs_height_20"
+			fontsize="$cs_fontsize_15"
+			fontname="$cs_font_400"
+			textcolor="$cs_color_text"
+			align="left"
+			value="고객정보입력"
+		/>
+		<label 
+        	id="img_pop_info_1005" 
+        	width="$cs_height_20"
+        	height="$cs_height_20"
+            BACKGROUNDSVG="$icon_question"
+			BACKGROUNDSVG_DISABLE="$icon_question"
+			BACKGROUNDSVG_HIGHLIGHT="$icon_question"
+			BACKGROUNDSVG_WIDTH="$cs_height_20"
+			BACKGROUNDSVG_HEIGHT="$cs_height_20"
+			backgroundimage_align="center"
+			backgroundimage_align_vertical="center"
+			hidden="false"
+        />
+		<viewgroup 
+			x="$w($g_lcdWidth,0)" 
+			width="$w($g_lcdWidth,28.3)" 
+			height="$h($g_lcdHeight,4.5)"
+		>
+	        <button id="btn_pop_info_1005_100" class="cs_button_none" onClicked="btn_pop_info_1005_100_onClicked"/>
+   		</viewgroup>
+   		<br/>
+   		<viewgroup
+   			width="$this.remain_right"
+   			height="$cs_height_68"
+   			layout_vertical="bottom"
+   		>
+   			<label
+   				width="$this.remain_right"
+   				height="$cs_height_34"
+   				textcolor="$cs_color_black"
+   				fontsize="$cs_fontsize_24"
+   				fontname="$cs_font_600"
+   				value="안전한 금융거래를 위해"
+   			/>
+   			<br/>
+   			<label
+   				width="$this.remain_right"
+   				height="$cs_height_34"
+   				textcolor="$cs_color_black"
+   				fontsize="$cs_fontsize_24"
+   				fontname="$cs_font_600"
+   				value="아래 내용을 확인해주세요"
+   			/>
+   		</viewgroup>
+	</viewgroup>
+	<br/>
+	<viewgroup
+		width="$this.remain_right"
+		height="$cs_height_795"
+	>
+		<br height="$cs_height_20" />
+		<label
+			class="cs_lbl_1005_100_title_1"
+			value="거래의 목적"
+		/>
+		<br height="$cs_height_5" />
+		<button id="btn_4144_purpose"
+			class="cs_btn_1005_100_select_1"
+			key="-1"
+			value="선택하세요."
+			onClicked="$callaction(popscreen_4144_choice_onclicked,4);"
+		/>
+		<br height="$cs_height_20" />
+		<label id="lbl_1005_100_jagum"
+			class="cs_lbl_1005_100_title_1"
+			value="자금의 출처"
+		/>
+		<br height="$cs_height_5" />
+		<button id="btn_4144_jagum"
+			class="cs_btn_1005_100_select_1"
+			key="-1"
+			value="선택하세요."
+			onClicked="btn_4144_jagum_onClicked"
+		/>
+		<br height="$cs_height_20" />
+		<label
+			class="cs_lbl_1005_100_title_1"
+			value="미국인 여부"
+		/>
+		<br height="$cs_height_8" />
+		<viewgroup id="vg_gr_1005_100_1"
+			class="cs_vg_group_index_2"
+		>
+			<button
+				class="cs_gr_index_2_btn_left"
+				groupid="gr_1005_100_1"
+				select="true"
+				value="아니오"
+			/>
+			<button
+				class="cs_gr_index_2_btn_right"
+				groupid="gr_1005_100_1"
+				value="예"
+				onClicked="$callaction(fn1005_100_GroupCheck,vg_gr_1005_100_1);"
+			/>
+		</viewgroup>
+
+		<br height="$cs_height_20" />
+		<label
+			class="cs_lbl_1005_100_title_1"
+			value="내국인 여부"
+		/>
+		<br height="$cs_height_8" />
+		<viewgroup id="vg_gr_1005_100_2"
+			width="$this.remain_right"
+			height="$cs_height_40"
+			backcolor="$cs_color_line"
+			border_width="1"
+			border_radius="$cs_height_7"
+			margin_left="$cs_width_3"
+			margin_right="$cs_width_3"
+			margin_top="$cs_height_3"
+			margin_bottom="$cs_height_3"
+		>
+			<button
+				class="cs_gr_index_3_btn"
+
+				key="0"
+				groupid="gr_1005_100_2"
+				select="true"
+				value="내국인"
+			/>
+			<button
+				class="cs_gr_index_3_btn"
+
+				key="1"
+				groupid="gr_1005_100_2"
+				value="재외국인"
+				onClicked="$callaction(fn1005_100_GroupCheck,vg_gr_1005_100_2);"
+			/>
+			<button
+				class="cs_gr_index_3_btn"
+
+				width="$this.remain_right"
+				key="2"
+				groupid="gr_1005_100_2"
+				value="외국인"
+				onClicked="$callaction(fn1005_100_GroupCheck,vg_gr_1005_100_2);"
+			/>
+
+		</viewgroup>
+		<br height="$cs_height_20" />
+		<label
+			class="cs_lbl_1005_100_title_1"
+			value="국내거주 여부"
+		/>
+		<br height="$cs_height_8" />
+		<viewgroup id="vg_gr_1005_100_3"
+			class="cs_vg_group_index_2"
+		>
+			<button
+				class="cs_gr_index_2_btn_left"
+				groupid="gr_1005_100_3"
+				select="true"
+				value="예"
+			/>
+			<button
+				class="cs_gr_index_2_btn_right"
+				groupid="gr_1005_100_3"
+				value="아니오"
+
+				onClicked="$callaction(fn1005_100_GroupCheck,vg_gr_1005_100_3);"
+			/>
+		</viewgroup>
+
+		<br height="$cs_height_20" />
+		<label
+			class="cs_lbl_1005_100_title_1"
+			value="실소유자 여부"
+		/>
+		<br height="$cs_height_8" />
+		<viewgroup id="vg_gr_1005_100_4"
+			class="cs_vg_group_index_2"
+		>
+			<button
+				class="cs_gr_index_2_btn_left"
+				groupid="gr_1005_100_4"
+				select="true"
+				value="예"
+			/>
+			<button
+				class="cs_gr_index_2_btn_right"
+				groupid="gr_1005_100_4"
+				value="아니오"
+
+				onClicked="$callaction(fn1005_100_GroupCheck,vg_gr_1005_100_4);"
+			/>
+		</viewgroup>
+
+		<br height="$cs_height_20" />
+		<label
+			class="cs_lbl_1005_100_title_1"
+			value="월간 거래내역이나 잔고 통보는"
+		/>
+		<br height="$cs_height_8" />
+		<button id="btn_4144_month"
+			class="cs_btn_1005_100_select_2"
+			key="3"
+			value="HTS"
+			onClicked="$callaction(popscreen_4144_choice_onclicked,7);"
+		/>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_50"
+			margin_left="$cs_width_10"
+			align="left"
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_14"
+			textcolor="$cs_color_black"
+			value="할게요"
+		/>
+
+		<br height="$cs_height_20" />
+		<label
+			class="cs_lbl_1005_100_title_1"
+			value="매체 체결 통보는"
+		/>
+		<br height="$cs_height_8" />
+		<button id="btn_4144_meme"
+			class="cs_btn_1005_100_select_2"
+			key="3"
+			value="HTS"
+			onClicked="$callaction(popscreen_4144_choice_onclicked,6);"
+		/>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_50"
+			margin_left="$cs_width_10"
+			align="left"
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_14"
+			textcolor="$cs_color_black"
+			value="할게요"
+		/>
+	</viewgroup>
+	<br/>
+	<viewgroup
+		width="$cs_bottom_one_button_width"
+		height="$cs_bottom_button_height"
+		layout="center"
+	>
+		<button 
+			width="$cs_bottom_two_button_width" 
+			height="$this.remain_bottom"
+			layout="left"
+			backcolor="$cs_color_white"
+			border_width="1"
+			border_radius="$cs_height_10"
+			border_color="$cs_color_disable"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_black"
+			textcolor_active="$cs_color_black"
+			value="이전"
+			onClicked="btn_open_account_history_onClicked"
+		/>
+
+		<button id="btn_1005_100_confirm"
+			width="$cs_bottom_two_button_width" 
+			height="$this.remain_bottom"
+			layout="right"
+			backcolor="$cs_color_main"
+			backcolor_disable="$cs_color_main_disable"
+			border_width="1"
+			border_radius="$cs_height_10"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_white"
+			textcolor_active="$cs_color_white"
+			textcolor_disable="$cs_color_white"
+			value="다음"
+			onclicked="btn_1005_100_confirm_onClicked"
+			enable="false"		
+		/>
+	</viewgroup>
+	<br height="$cs_screen_bottom_margin" />
+</screen>	
+
+<action id="popscreen_4144_choice_onclicked" value="
+	$delarrayvar(arr_4144_choice);
+	$delvar(1005_choice_set_val,1005_choice_set_key,tmp_1005_title,1005_choice_key);
+
+ 	//거래목적
+ 	if( $isequal_string($popscreen_4144_choice_onclicked_param1,4) ){
+		$setvar(
+	 		arr_4144_choice=[
+	 			[1,급여 및 생활비]
+	 			,[2,사업상거래]
+	 			,[3,저축 및 투자]
+	 			,[4,물품대금결제]
+	 			,[5,상속]
+	 			,[6,증여]
+	 			,[7,부채상환]
+	 			,[8,기타]
+	 		]
+ 		);
+ 		$setvar(
+ 			,tmp_1005_title = $(계좌는 주로 어떤 목적으로 쓰시나요?)
+ 			,1005_choice_key = 4
+			,1005_choice_set_key = $btn_4144_purpose.key
+			,1005_choice_set_val = $btn_4144_purpose.value
+		);
+ 		
+	}
+	//자금의 원천 및 출처
+	elseif( $isequal_string($popscreen_4144_choice_onclicked_param1,5) ){
+		$setvar(
+	 		arr_4144_choice=[
+	 			[1,근로 및 연금소득]
+	 			,[2,사업소득]
+	 			,[3,부동산 임대소득]
+	 			,[4,금융소득]
+	 			,[5,상속/증여]
+	 			,[6,부동산 양도소득]
+	 			,[7,일시 재산양도로 인한 소득]
+	 			,[8,퇴직소득]
+	 			,[9,기타]
+	 		]
+ 		);
+ 		$setvar(
+ 			,tmp_1005_title = $(거래되는 돈은 출처가 어디인가요?)
+ 			,1005_choice_key = 5
+			,1005_choice_set_key = $btn_4144_jagum.key
+			,1005_choice_set_val = $btn_4144_jagum.value
+		);
+	}
+	//매매거래통지
+	elseif( $isequal_string($popscreen_4144_choice_onclicked_param1,6) ){
+		$setvar(
+ 			arr_4144_choice=[
+ 				[3,HTS]
+ 				,[5,E-mail]
+ 			]
+ 		);
+ 		$setvar(
+ 			,tmp_1005_title = $(매매 체결 통보)
+ 			,1005_choice_key = 6
+			,1005_choice_set_key = $btn_4144_meme.key
+			,1005_choice_set_val = $btn_4144_meme.value
+		);
+	}
+	//월간거래통지
+	elseif( $isequal_string($popscreen_4144_choice_onclicked_param1,7) ){
+		$setvar(
+	 		arr_4144_choice=[
+	 			[1,자택]
+	 			,[2,직장]
+	 			,[3,HTS]
+	 		]
+ 		);
+ 		$setvar(
+ 			,tmp_1005_title = $(매매 체결 통보)
+ 			,1005_choice_key = 7
+			,1005_choice_set_key = $btn_4144_month.key
+			,1005_choice_set_val = $btn_4144_month.value
+		);
+	}
+
+	$setvar(
+		tmp_tbl_row_count = $getarrayvarcount(arr_4144_choice)
+		,tmp_tbl_height = $result($cs_height_50 * $tmp_tbl_row_count)
+		,tmp_screen_height = $result($cs_height_100 + $tmp_tbl_height)
+
+	);
+
+
+ 	$popscreen(popscreen_4144_choice);
+"/>
+<action id="popscreen_4144_choice_onload" value="
+	$cleartablerow(tbl_pop_1005_100_choice);
+
+	$setarraydata(tbl_pop_1005_100_choice,arr_4144_choice);
+"/>
+<action id="tr_tbl_pop_1005_onClicked"
+value="
+	$log($this.key, $this.rowkey1);
+	if( $isequal_string($1005_choice_key,4) ){
+		$setvar(
+			,btn_4144_purpose.value = $this.rowkey1
+			,btn_4144_purpose.key = $this.key
+		);
+
+	}
+	elseif( $isequal_string($1005_choice_key,5) ){
+		$setvar(
+			,btn_4144_jagum.value = $this.rowkey1
+			,btn_4144_jagum.key = $this.key
+		);
+	}
+	elseif( $isequal_string($1005_choice_key,6) ){
+		$setvar(
+			,btn_4144_meme.value = $this.rowkey1
+			,btn_4144_meme.key = $this.key
+		);
+	}
+	elseif( $isequal_string($1005_choice_key,7) ){
+		$setvar(
+			,btn_4144_month.value = $this.rowkey1
+			,btn_4144_month.key = $this.key
+		);
+	}
+	$closescreen(popscreen_4144_choice);
+"/>
+<popscreen id="popscreen_4144_choice"
+width="$p_lcdWidth"
+height="$p_lcdHeight"
+backcolor="00000060"
+onload="popscreen_4144_choice_onload"
+>
+	<screen id="screen_pop_1005_100_choice"
+		width="$this.remain_right"
+		layout="center"
+		layout_vertical="bottom"
+		height="$tmp_screen_height"
+		margin_top="$cs_height_30"
+		margin_bottom="$cs_height_20"
+		margin_left="$cs_width_16"
+		margin_right="$cs_width_16"
+		background_roundinfo="$cs_color_white,$cs_color_white,$cs_radius_30,1,true,true,false,false"
+	>
+		<viewgroup
+			width="$this.remain_right"
+			height="$this.remain_bottom"
+		>
+			<label
+				width="$this.remain_right"
+				height="$cs_height_25"
+				textcolor="$cs_color_black"
+				fontsize="$cs_fontsize_18"
+				fontname="$cs_font_700"
+				value="$tmp_1005_title"
+				onclicked="$closescreen(popscreen_1004_choice);" 
+			/>
+			<br height="$cs_height_20" />
+			<table id="tbl_pop_1005_100_choice"
+			width="$this.remain_right"
+			height="$this.remain_bottom"
+			rowheight="$cs_height_50"
+			margin_left=""
+			nsrowline="true"
+			nsrowlinecolor="none"
+			>
+				<tr blank="true"
+				arraydata="0:key~1:rowkey1" 
+				onClicked="tr_tbl_pop_1005_onClicked"
+				>
+					<td 
+					width="$this.remain_right"
+					height="$this.remain_bottom"
+					>
+						<label
+							width="$result($this.remain_right - $cs_width_23 -$cs_height_20);"
+							height="$this.remain_bottom"
+							textcolor="$cs_color_black"
+							fontsize="$cs_fontsize_15"
+							fontname="$cs_font_400"
+							arraydata="1:value"
+						/>
+						<label
+							width="$this.remain_right"
+							height="$this.remain_bottom"
+							BACKGROUNDSVG="$icon_checkbox_on"
+							BACKGROUNDSVG_DISABLE="$icon_checkbox_on"
+							BACKGROUNDSVG_HIGHLIGHT="$icon_checkbox_on"
+							BACKGROUNDSVG_WIDTH="$cs_height_20"
+							BACKGROUNDSVG_HEIGHT="$cs_height_20"
+							backgroundimage_align="center"
+							backgroundimage_align_vertical="center"
+							arraydata="
+								0:hidden_all:if:$1005_choice_set_key == ##:false:true
+							"
+						/>
+					</td>
+				</tr>
+			</table>
+		</viewgroup>
+
+	</screen>
+	<br/>
+	<label
+		x="$result($popscreen_4144_choice.width - $cs_height_50)" 
+		y="$result($screen_pop_1005_100_choice.y)"
+    	width="$cs_height_50"
+    	height="$cs_height_50"
+        BACKGROUNDSVG="$icon_cancel"
+		BACKGROUNDSVG_DISABLE="$icon_cancel"
+		BACKGROUNDSVG_HIGHLIGHT="$icon_cancel"
+		BACKGROUNDSVG_WIDTH="$cs_height_20"
+		BACKGROUNDSVG_HEIGHT="$cs_height_20"	
+		backgroundimage_align="center"
+		backgroundimage_align_vertical="center"
+		onclicked="$closescreen(popscreen_4144_choice);" 
+    />
+</popscreen>
+
+
+
+
+
+// 고객정보입력 8_2 alert popup 기존 fnPopover_AlertAction 를 이번 신규 디자인 시안에 맞게 작업했으나
+// 해당 화면에서 표시하는 alert 는 문구별 text의 폰트부터 다른점이 있어 직접 작성하여 진행.
+<action id="fnPopover_AlertAction_1005_100"
+params="p_text"
+value="
+	$delvar(tmp_popscreen_1005_100_alert_keyword);
+	$setvar(
+		tmp_popscreen_1005_100_alert_keyword = $p_text
+	);
+	$popscreen(popscreen_1005_100_alert);
+"/>
+<action id="popscreen_1005_100_alert_onload"
+value="
+	
+"/>
+<popscreen id="popscreen_1005_100_alert"
+width="$p_lcdWidth"
+height="$p_lcdHeight"
+backcolor="00000060"
+onload="popscreen_1005_100_alert_onload"
+>
+	<screen id="screen_pop_1005_100_choice"
+		width="$cs_width_300"
+		height="$cs_height_224"
+		layout="center"
+		layout_vertical="center"
+		margin_top="$cs_height_40"
+		margin_bottom="$cs_height_20"
+		margin_left="$cs_width_16"
+		margin_right="$cs_width_16"
+		border_width="1"
+		border_radius="$cs_radius_30"
+		backcolor="$cs_color_white"
+	>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_24"
+			align="center"
+			fontname="$cs_font_700"
+			fontsize="$cs_fontsize_16"
+			textcolor="$cs_color_black"
+			value="$tmp_popscreen_1005_100_alert_keyword 경우엔"
+		/>
+		<br/>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_24"
+			align="center"
+			fontname="$cs_font_700"
+			fontsize="$cs_fontsize_16"
+			textcolor="$cs_color_black"
+			value="비대면계좌개설이 불가능해요"
+		/>
+		<br height="$cs_height_10"/>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_18"
+			align="center"
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_14"
+			textcolor="$cs_color_black"
+			value="유진투자선물 본점에 방문해 개설할 수 있어요"
+		/>
+		<br/>
+		<button
+			width="$this.remain_right"
+			height="$cs_height_50"
+			border_width="1"
+			border_radius="$cs_radius_10"
+			layout="center"
+			layout_vertical="bottom"
+			backcolor="$cs_color_main"
+			backcolor_active="$cs_color_main"
+			fontname="$cs_font_500"
+			fontsize="$cs_fontsize_14"
+			textcolor="$cs_color_white"
+			textcolor_active="$cs_color_white"
+			value="확인"
+			onClicked="$closescreen($popscreen_1005_100_alert);"
+		/>
+	</screen>
+
+</popscreen>
