@@ -37,9 +37,6 @@
 
 <screen id="screen_intro_after"
 	backcolor="ffffff"
-	//    imagesizefit="true"
-	//    wideimage="false"
-	backgroundimage="$p_introimage"
 	width="$p_lcdWidth"
 	height="$p_lcdHeight"
 	onLoad="screen_intro_after_onload"
@@ -47,19 +44,11 @@
     <br/>
     <viewgroup
     width="$cs_width_375" 
-    height="$cs_height_560"
-    //BACKGROUNDSVG="$icon_frame_48096229"
-    //BACKGROUNDSVG_WIDTH="$cs_width_375"
-    //BACKGROUNDSVG_HEIGHT="$cs_height_560"
-    //backgroundimage_align="center"
-    //backgroundimage_align_vertical="center"
-    //layout="center"
-    //backgroundimage="$icon_intro"
+    height="$cs_height_560"    
     //backgroundimage="plist/root/resource/image/3x/intro_1@3x.png"
     //backgroundimage="plist/root/resource/image/3x/intro_2@3x.png"
     //backgroundimage="plist/root/resource/image/3x/intro_3@3x.png"
     backgroundimage="plist/root/resource/image/3x/intro_4@3x.png"
-    //backgroundimage="plist/root/resource/image/2x/intro@2x.png"
     backgroundfull="true"
 	backgroundrepeat="false"
 
@@ -91,6 +80,13 @@
 	    border_width="1"
 		border_radius="$result($this.height/2)"
 	    >
+	    	<viewgroup id="vg_progress_inner"
+				width="$cs_width_40" 
+				height="$super.height"
+				layout_vertical="center" 
+				backcolor="177DF2" 
+				>
+			</viewgroup>
 		</viewgroup>
 		<br height="$cs_height_18" />
 		<label 
@@ -111,17 +107,9 @@
 	y="$cs_width_13"
     width="$cs_width_132" 
     height="$cs_height_27"
-    //BACKGROUNDSVG="$icon_ci"
-    //BACKGROUNDSVG_WIDTH="$cs_width_132"
-    //BACKGROUNDSVG_HEIGHT="$cs_height_28"
-    //backgroundimage_align="right"
-    //backgroundimage_align_vertical="center"
-    //backgroundimage_x="$cs_width_14"
-    //backgroundimage_y="$cs_height_13"
     backgroundimage="plist/root/resource/image/3x/ci@3x.png"
     backgroundfull="true"
 	backgroundrepeat="false"
-	//backcolor="00ff00"
     onClicked="$reopenfile();"
     />
 </screen>
@@ -152,14 +140,6 @@ value="
 " />
 
 <action id="screen_intro_after_onload" value="
-	$log(여기서 호출);
-	//$openfile(plist/root/main.xml);
-	//return;
-	//$openfile(plist/root/cloud_sample.xml);
-	//return;
-	//$openfile(plist/root/dxfeed_sample.xml);
-	//return;
-
 	// 1. 백신체크 
 	$setvar_common(g_os_version = $getSDKInt());
 	//2022년 12월 12일 추가.

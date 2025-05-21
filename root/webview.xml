@@ -12,7 +12,7 @@ onLoad="screen_login_onload"
         //debug="true" // vConsole 적용
     /> 
     <br/>
-<if condition="!$g_isAndroid">
+<!-- <if condition="!$g_isAndroid">
     <button 
     	width="$cs_height_50"
 		height="$cs_height_50"
@@ -27,7 +27,7 @@ onLoad="screen_login_onload"
 		"
 
 	/>
-</if>
+</if> -->
 
 </screen>
 <action id="android_keymap" scope="common"

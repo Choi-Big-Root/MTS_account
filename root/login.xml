@@ -41,7 +41,7 @@ width="$g_lcdWidth"
 height="$g_lcdHeight"
 onLoad="screen_login_onload"
 >
-    <label
+    <!-- <label
     width="$super.width" 
     height="$cs_height_50"
     BACKGROUNDSVG="$icon_ci"
@@ -55,7 +55,22 @@ onLoad="screen_login_onload"
     //layout="center"
     //backcolor="ff0000"
     onClicked="$reopenfile();"
-    />
+    /> -->
+    <viewgroup
+    width="$super.width" 
+    height="$cs_height_50"
+    >
+        <label
+        x="$cs_width_227"
+        y="$cs_width_13"
+        width="$cs_width_132" 
+        height="$cs_height_27"
+        backgroundimage="plist/root/resource/image/3x/ci@3x.png"
+        backgroundfull="true"
+        backgroundrepeat="false"
+        onClicked="$reopenfile();"
+        />
+    </viewgroup>
     <br height="$cs_height_20"/>
     <label 
     width="$cs_width_343"
@@ -94,16 +109,14 @@ onLoad="screen_login_onload"
         <label 
         width="$cs_height_174"
         height="$cs_height_174"
-        BACKGROUNDSVG="$icon_acount_open_1"
-        BACKGROUNDSVG_WIDTH="$cs_height_174"                     
-        BACKGROUNDSVG_HEIGHT="$cs_height_174"                   // 정사각형 이미지의 경우 가로 세로 크기가 같아야 함.
-        backgroundimage_align="left"
-        //backgroundimage_x="$cs_width_151"
+        backgroundimage="plist/root/resource/image/3x/login_acount_open_1@3x.png"
+        backgroundfull="true"
+        backgroundrepeat="false"
         />
         <button class="cs_btn_none" 
         onClicked="
-        //$callaction(Act_Open_Web, https://dev-options.eugenefutures.com/wts/login/egcloud);
-        $callaction(Act_Open_Web, https://dev-options.eugenefutures.com/wts/);
+        $callaction(Act_Open_Web, https://dev-options.eugenefutures.com/wts/login/egcloud);
+        //$callaction(Act_Open_Web, https://dev-options.eugenefutures.com/wts/);
         "
         /> 
     </viewgroup>
@@ -138,11 +151,10 @@ onLoad="screen_login_onload"
         y="$cs_height_15"
         width="$cs_height_120"
         height="$cs_height_120"
-        BACKGROUNDSVG="$icon_acount_open_2"
-        BACKGROUNDSVG_WIDTH="$cs_height_120"                     
-        BACKGROUNDSVG_HEIGHT="$cs_height_120"                   // 정사각형 이미지의 경우 가로 세로 크기가 같아야 함.
-        backgroundimage_align="left"
-        //backgroundimage_x="$cs_width_151"
+        backgroundimage="plist/root/resource/image/3x/login_acount_open_2@3x.png"
+        backgroundfull="true"
+        backgroundrepeat="false"
+
         />
         <button class="cs_btn_none" onClicked="
         $callaction(Act_Open_Account_Popup, 1000);
@@ -164,20 +176,33 @@ onLoad="screen_login_onload"
         textcolor="060B11"
         />
         <br height="$cs_height_10"/>
+        
         <button class="cs_btn_login_cert"
         value="클라우드 공동인증서 발급" 
+        onClicked="
+        $callaction(Act_Open_Web, https://dev-options.eugenefutures.com/wts/works/PV_0101);
+        "
         />
         <br height="$cs_height_10"/>
         <button class="cs_btn_login_cert"
         value="타금융사 클라우드 공동인증서 등록" 
+        onClicked="
+        $callaction(Act_Open_Web, https://dev-options.eugenefutures.com/wts/works/PV_0201);
+        "
         />
         <br height="$cs_height_10"/>
         <button class="cs_btn_login_cert"
         value="클라우드 공동인증서 갱신" 
+        onClicked="
+        $callaction(Act_Open_Web, https://dev-options.eugenefutures.com/wts/works/PV_0301);
+        "
         />
         <br height="$cs_height_10"/>
         <button class="cs_btn_login_cert"
         value="클라우드 공동인증서 관리" 
+        onClicked="
+        $callaction(Act_Open_Web, https://dev-options.eugenefutures.com/wts/works/PV_0401);
+        "
         />
     </viewgroup>
 </screen>
