@@ -3,11 +3,14 @@
 	<menu>
 		<!-- 비대면 신규 -->
 		<menucode groupid="1" id="1000" name="비대면 계좌개설" enable="true" file="plist/root/screen_account/p1000_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+
 		<menucode groupid="1" id="1001" name="본인인증" enable="true" file="plist/root/screen_account/p1001_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
 		<menucode groupid="1" id="1002" name="본인인증" enable="true" file="plist/root/screen_account/p1002_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+
 		<menucode groupid="1" id="1003" name="고객정보입력" enable="true" file="plist/root/screen_account/p1003_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
 		<menucode groupid="1" id="1004" name="고객정보입력" enable="true" file="plist/root/screen_account/p1004_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
 		<menucode groupid="1" id="1005" name="고객정보입력" enable="true" file="plist/root/screen_account/p1005_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="1" id="1006" name="고객정보입력" enable="true" file="plist/root/screen_account/p1006_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
 
 
 

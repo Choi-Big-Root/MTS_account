@@ -1230,7 +1230,6 @@ value="
 	$setvar(g_is_open_account =); //로그인화면에서 종료위해 초기화
 "/>
 //동의서 등록
-//수정 [MO_AGREE 연동시에 N_TR값에 Y로 해서 주시면 신규 원장으로 처리 예정입니다.]
 <action id="fnSendSSL_MO_AGREE" 
 value="
 	$popscreen(pop_host_msg,center); 		// 동글뱅이 띄운다.
@@ -1259,6 +1258,9 @@ value="
 	$json_setdata($jsonName,BODY,MAC_ADDR,,$g_mac_address); 						// 맥어드레스
 	$json_setdata($jsonName,BODY,OS_VER,,$g_os_version); 						// OS버전
 	
+	// 신규 비대면 N_TR 추가. 이후 WORK_NO로 진행.
+	// 예상: N_TR을 추가하면 기존과 다른 WORK_NO가 생기고 그럼 해당 WORK_NO로 구분지을것으로 보임.
+	$json_setdata($jsonName,BODY,N_TR,,Y); 
 
 	$json_print($jsonName);
 	$delvar(strSSLSendData);
