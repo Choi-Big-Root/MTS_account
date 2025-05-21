@@ -152,8 +152,6 @@ value="
 " />
 
 <action id="screen_intro_after_onload" value="
-	return;
-
 	$log(여기서 호출);
 	//$openfile(plist/root/main.xml);
 	//return;
