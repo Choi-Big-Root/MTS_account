@@ -271,6 +271,7 @@ value="
 			        BACKGROUNDSVG_HIGHLIGHT="$icon_polygon_3"
 			        BACKGROUNDSVG_WIDTH="$cs_width_10"
 			        BACKGROUNDSVG_HEIGHT="$cs_height_8"
+			        backgroundimage_x="$cs_width_10"
 			        backgroundimage_align="right"
 			        backgroundimage_align_vertical="center"
 				/>

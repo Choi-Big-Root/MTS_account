@@ -71,6 +71,29 @@ value="
 	$logarrayvar(tmp_email_arr);
 	$popscreen(pop_1003_100_email);
 "/>
+<action id="tf_1003_email_1_onChange"
+value="
+	$setvar(btn_1003_100_confirm.enable = $callaction(fnDataInputCheck_1003_100));
+"/>
+<action id="tf_1003_email_2_onChange"
+value="
+	$setvar(btn_1003_100_confirm.enable = $callaction(fnDataInputCheck_1003_100));
+"/>
+<action id="fnDataInputCheck_1003_100"
+value="
+	if(
+		$strlen($g_save_tel_num_no_replace) > 0
+		&& $strlen($lbl_1003_jatek_1.value) > 0
+		&& $strlen($lbl_1003_jatek_2.value) > 0
+		&& $strlen($lbl_1003_jatek_3.value) > 0
+		&& $strlen($tf_1003_email_1.value) > 0
+		&& $strlen($tf_1003_email_2.value) > 0
+	){
+		return true;
+	}
+	return false;
+
+"/>
 <action id="btn_1003_100_confirm_onClicked"
 value="
 	$setvar(
@@ -316,6 +339,7 @@ value="
 					textcolor="$cs_color_black"
 					textcolor_placeholder="$cs_color_disable"
 					placeholder="ex)adc"
+					onChanged="tf_1003_email_1_onChange"
 				/>
 				<viewgroup id="vg_1003_100_email_move"
 					width="$this.remain_right"
@@ -341,6 +365,7 @@ value="
 						textcolor="$cs_color_black"
 						textcolor_placeholder="$cs_color_disable"
 						placeholder="eugenefn.com"
+						onChanged="tf_1003_email_2_onChange"
 					/>
 					<button id="btn_1003_100_mail_sel"
 						width="$cs_width_30"
@@ -511,6 +536,9 @@ value="
 		,tmp_jatek_3_val
 	);
 
+	$setvar(btn_1003_100_confirm.enable = $callaction(fnDataInputCheck_1003_100));
+
+	/*
 	if($strlen($tmp_jatek_1_val) > 0
 	&& $strlen($tmp_jatek_2_val) > 0
 	&& $strlen($tmp_jatek_3_val) > 0
@@ -519,6 +547,9 @@ value="
 	}else{
 		$setvar(btn_1003_100_confirm.enable = false);
 	}
+	*/
+
+
 "/>
 <popscreen id="popscreen_address_find"
 	width="$p_lcdWidth" 
