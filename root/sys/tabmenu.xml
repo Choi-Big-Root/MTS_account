@@ -14,8 +14,7 @@
 
 		<menucode groupid="1" id="1007" name="약관승인 및 위험고지 확인" enable="true" file="plist/root/screen_account/p1007_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
 		<menucode groupid="1" id="1008" name="약관승인 및 위험고지 확인" enable="true" file="plist/root/screen_account/p1008_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
-
-
+		<menucode groupid="1" id="1009" name="약관승인 및 위험고지 확인" enable="true" file="plist/root/screen_account/p1009_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
 
 		
 		<!-- 비대면 -->
