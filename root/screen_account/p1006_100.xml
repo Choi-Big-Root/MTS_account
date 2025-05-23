@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<action id="screen_contents_onload" value="
+	$setvar(
+		,img_step_1.hidden=false
+		,img_step_2.hidden=false
+		,img_step_3.hidden=true
+		,img_step_4.hidden=true
+		,img_step_5.hidden=true
+		,img_step_6.hidden=true
+		,img_step_7.hidden=true
+		,img_step_8.hidden=true
+
+		,lbl_account_title_step_1.hidden=true
+		,lbl_account_title_step_2.hidden=true
+		,lbl_account_title_step_3.hidden=false
+		,lbl_account_title_step_4.hidden=false
+		,lbl_account_title_step_5.hidden=false
+		,lbl_account_title_step_6.hidden=false
+		,lbl_account_title_step_7.hidden=false
+		,lbl_account_title_step_8.hidden=false
+
+		,lbl_account_title_step_1.textcolor=$cs_color_disable
+		,lbl_account_title_step_2.textcolor=$cs_color_disable
+		,lbl_account_title_step_3.textcolor=$cs_color_black
+		,lbl_account_title_step_4.textcolor=$cs_color_disable
+		,lbl_account_title_step_5.textcolor=$cs_color_disable
+		,lbl_account_title_step_6.textcolor=$cs_color_disable
+		,lbl_account_title_step_7.textcolor=$cs_color_disable
+		,lbl_account_title_step_8.textcolor=$cs_color_disable
+
+
+		,lbl_account_title_step_1.fontname=$cs_font_400
+		,lbl_account_title_step_2.fontname=$cs_font_400
+		,lbl_account_title_step_3.fontname=$cs_font_600
+		,lbl_account_title_step_4.fontname=$cs_font_400
+		,lbl_account_title_step_5.fontname=$cs_font_400
+		,lbl_account_title_step_6.fontname=$cs_font_400
+		,lbl_account_title_step_7.fontname=$cs_font_400
+		,lbl_account_title_step_8.fontname=$cs_font_400
+
+
+		,vg_open_account_title.backcolor=FFFFFF
+		,popscreen_open_account_history.hidden=false
+		,vg_account_title_step.hidden = false
+
+		,menu_num=1006
+	);
+"/>
+
+<action id="tf_1006_pass_1_onchanged"
+value="
+	if($strlen($tf_1006_pass_1.value) >= 4){
+		$setvar(btn_1006_100_confirm.enable = true);
+		$callaction(btn_1006_100_confirm_onClicked,1);
+	}else{
+		$setvar(btn_1006_100_confirm.enable = false);
+	}
+"/>
+<action id="btn_pop_info_1006_100_onClicked"
+value="
+	$setvar(
+		tmp_pop_info_x_cal = $result($img_pop_info_1006.x_abs + $w($g_lcdwidth,0.6))
+		,tmp_pop_imfo_y_cal = $result($img_pop_info_1006.y_abs + $h($g_lcdHeight,2.6))
+	);
+	$callaction(popscreen_open_account_confirm_onclicked,$tmp_pop_info_x_cal,$tmp_pop_imfo_y_cal);
+"/>
+<screen 
+	id="screen_1006_100"
+	class="cs_screen_contents"
+	backcolor="$cs_color_white"
+	onload="screen_contents_onload"
+	onunload="screen_contents_onunload"
+	noscroll_height="false"
+	margin_top="$cs_screen_top_margin"
+	margin_bottom="$cs_screen_bottom_margin"
+	margin_left="$cs_screen_left_right_margin"
+	margin_right="$cs_screen_left_right_margin"
+>
+	<viewgroup
+		width="$this.remain_right"
+		height="$result($this.remain_bottom - $cs_height_54)"
+	>
+		<viewgroup
+			width="$this.remain_right"
+			height="$cs_height_98"
+		>
+			<label
+				width="$cs_width_86"
+				height="$cs_height_20"
+				fontsize="$cs_fontsize_15"
+				fontname="$cs_font_400"
+				textcolor="$cs_color_text"
+				align="left"
+				value="고객정보입력"
+			/>
+			<label 
+	        	id="img_pop_info_1006" 
+	        	width="$cs_height_20"
+	        	height="$cs_height_20"
+	            BACKGROUNDSVG="$icon_question"
+				BACKGROUNDSVG_DISABLE="$icon_question"
+				BACKGROUNDSVG_HIGHLIGHT="$icon_question"
+				BACKGROUNDSVG_WIDTH="$cs_height_20"
+				BACKGROUNDSVG_HEIGHT="$cs_height_20"
+				backgroundimage_align="center"
+				backgroundimage_align_vertical="center"
+				hidden="false"
+	        />
+			<viewgroup 
+				x="$w($g_lcdWidth,0)" 
+				width="$w($g_lcdWidth,28.3)" 
+				height="$h($g_lcdHeight,4.5)"
+			>
+		        <button id="btn_pop_info_1006_100" class="cs_button_none" onClicked="btn_pop_info_1006_100_onClicked"/>
+	   		</viewgroup>
+	   		<br/>
+	   		<viewgroup
+	   			width="$this.remain_right"
+	   			height="$cs_height_68"
+	   			layout_vertical="bottom"
+	   		>
+	   			<label
+	   				width="$this.remain_right"
+	   				height="$cs_height_34"
+	   				textcolor="$cs_color_black"
+	   				fontsize="$cs_fontsize_24"
+	   				fontname="$cs_font_600"
+	   				value="계좌의 비밀번호를"
+	   			/>
+	   			<br/>
+	   			<label
+	   				width="$this.remain_right"
+	   				height="$cs_height_34"
+	   				textcolor="$cs_color_black"
+	   				fontsize="$cs_fontsize_24"
+	   				fontname="$cs_font_600"
+	   				value="설정해주세요"
+	   			/>
+	   		</viewgroup>
+		</viewgroup>
+		<br height="$cs_height_34"/>
+		<viewgroup
+			width="$this.remain_right"
+			height="$cs_height_111"
+		>
+			<textfield_security id="tf_1006_pass_1"
+				layout="center"
+				width="$this.remain_right"
+				height="$cs_height_75"
+				keyboard_type="number"
+				maxlength="4"
+				placeholder="● ● ● ●"
+				textcolor_placeholder="$cs_color_disable"
+				textcolor="$cs_color_black"
+				fontsize="$cs_fontsize_30"
+				fontname="$cs_font_700"
+				valuevar="tmp_1006_pass_1"
+				valueencvar="tmp_1006_pass_1_encvar"
+				valuevar_common="true"
+				input_type="number"
+				align="center"
+				returntype="done"
+				description="계좌비밀번호"
+				hint="계좌비밀번호"
+				onChanged="tf_1006_pass_1_onchanged"
+			/>
+			<br/>
+			<label
+				width="$this.remain_right"
+				height="$cs_height_18"
+				align="center"
+				fontname="$cs_font_400"
+				fontsize="$cs_fontsize_13"
+				textcolor="$cs_color_text"
+				value="주민등록번호/연속된 숫자/고객정보와"
+			/>
+			<br/>
+			<label
+				width="$this.remain_right"
+				height="$cs_height_18"
+				align="center"
+				fontname="$cs_font_400"
+				fontsize="$cs_fontsize_13"
+				textcolor="$cs_color_text"
+				value="유사한 숫자는 사용이 불가능합니다."
+			/>
+		</viewgroup>
+	</viewgroup>
+	<br/>
+	<viewgroup
+		width="$cs_width_343"
+		height="$cs_height_54"
+		layout="center"
+		layout_vertical="bottom"
+	>
+		<button 
+			width="$cs_bottom_two_button_width" 
+			height="$this.remain_bottom"
+			layout="left"
+			backcolor="$cs_color_white"
+			border_width="1"
+			border_radius="$cs_height_10"
+			border_color="$cs_color_disable"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_black"
+			textcolor_active="$cs_color_black"
+			value="이전"
+			onClicked="btn_open_account_history_onClicked"
+		/>
+		<button id="btn_1006_100_confirm"
+			width="$cs_bottom_two_button_width" 
+			height="$this.remain_bottom"
+			layout="right"
+			backcolor="$cs_color_main"
+			backcolor_disable="$cs_color_main_disable"
+			border_width="1"
+			border_radius="$cs_height_10"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_white"
+			textcolor_active="$cs_color_white"
+			textcolor_disable="$cs_color_white"
+			value="다음"
+			onclicked="$callaction(btn_1006_100_confirm_onClicked,1);"
+			enable="false"
+		/>
+	</viewgroup>
+</screen>
+
+<action id="btn_1006_100_confirm_onClicked"
+params="p_key"
+value="
+	$delvar(tmp_phone_middel_4_num,tmp_phone_last_4_num)
+	$setvar(
+		,tmp_phone_middel_4_num = $substring($g_IN_REQUEST_TEL_NUM,3,4) 
+		,tmp_phone_last_4_num = $substring($g_IN_REQUEST_TEL_NUM,7,-1) 
+	);
+
+	if($p_key == 1){
+		$setvar( tmp_check_pwd_val = $tmp_1006_pass_1 );
+	}else{
+		$setvar( tmp_check_pwd_val = $tmp_1006_pass_2 );
+	}
+
+	if($p_key == 1){
+		if($strlen($tmp_check_pwd_val) < 4){
+			$callaction(fnPopover_AlertAction,,비밀번호는 4자리로 입력해 주세요.,,확인);
+			return;
+		}
+
+		if(!$isnumcheck($tmp_check_pwd_val,3,true,true,true)
+		|| $find($tmp_phone_middel_4_num,$tmp_check_pwd_val) > -1
+		|| $find($tmp_phone_last_4_num,$tmp_check_pwd_val) > -1
+		|| $find($g_IN_AGREE_RMN_NO_VAR,$tmp_check_pwd_val) > -1
+		){
+			$callaction(fnPopover_AlertAction,,비밀번호는 3자리 이상 동일숫자$2C\n연속숫자 및 고객정보 관련 숫자는\n사용할 수 없어요,,확인);
+			return;
+		}
+	
+		$popscreen(popscreen_1006_100_pwd_check);
+		return;
+	}
+
+
+	// 여기부턴 p_key 2
+	if( !$isequal_string($tmp_1006_pass_1,$tmp_1006_pass_2) ){
+		$callaction(fnPopover_AlertAction,,입력한 비밀번호가 서로 다릅니다.,,확인);
+		return;
+	}
+
+	// 계좌개설 국내선물:“10”, 해외선물:“20” (중복 선택인 경우 이어 붙인다. “1020”, “10”)
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_PD1,20);
+
+	$callaction(fnConfig_SetValue,g_chk_4117_5gr_1 	,false); 		//국내
+	$callaction(fnConfig_SetValue,g_chk_4117_5gr_2 	,true); 		//해외
+
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_NEW_PW 	,$tmp_1006_pass_1_encvar);
+
+	$callaction(fnConfig_SetValue,g_save_members_nm,최용호);
+	$callaction(fnConfig_SetValue,g_save_members_no,51140800);
+
+	$callaction(fnConfig_SetValue,g_open_tp_select,1); // g_open_tp_select 해외:1, 국내:2
+
+	/*
+	$log(
+		확인용 : 
+			1001 g_IN_AGREE_ITEM1[$g_IN_AGREE_ITEM1],
+			1001 g_IN_AGREE_ITEM2[$g_IN_AGREE_ITEM2],
+			1001 g_IN_AGREE_ITEM3[$g_IN_AGREE_ITEM3],
+
+			1002 g_save_tel_num[$g_save_tel_num],
+			1002 g_IN_AGREE_RMN_NO[$g_IN_AGREE_RMN_NO],
+			1002 g_IN_AGREE_CLNT_NM[$g_IN_AGREE_CLNT_NM],
+			1002 g_IN_REQUEST_TEL_NUM[$g_IN_REQUEST_TEL_NUM],
+			1002 g_IN_REQUEST_AGE[$g_IN_REQUEST_AGE],
+			1002 g_OUT_AGREE_WORK_NO[$g_OUT_AGREE_WORK_NO],
+
+			1003 g_IN_REQUEST_HOME_POST_NO[$g_IN_REQUEST_HOME_POST_NO],
+			1003 g_IN_REQUEST_HOME_ADDR[$g_IN_REQUEST_HOME_ADDR],
+			1003 g_IN_REQUEST_HOME_ADDR2[$g_IN_REQUEST_HOME_ADDR2],
+			1003 g_IN_REQUEST_CLNT_EMAIL[$g_IN_REQUEST_CLNT_EMAIL],
+
+			1004 g_IN_REQUEST_JOB_NM[$g_IN_REQUEST_JOB_NM],
+			1004 g_IN_REQUEST_COM_NM[$g_IN_REQUEST_COM_NM],
+			1004 g_IN_REQUEST_COM_DEPART[$g_IN_REQUEST_COM_DEPART],
+			1004 g_IN_REQUEST_COM_TEL[$g_IN_REQUEST_COM_TEL],
+			1004 g_IN_REQUEST_COM_POST_NO[$g_IN_REQUEST_COM_POST_NO],
+			1004 g_IN_REQUEST_COM_ADDR[$g_IN_REQUEST_COM_ADDR],
+			1004 g_IN_REQUEST_COM_ADDR2[$g_IN_REQUEST_COM_ADDR2],
+
+			1005 g_IN_REQUEST_TRD_PPO[$g_IN_REQUEST_TRD_PPO],
+			1005 g_IN_REQUEST_FUNDS[$g_IN_REQUEST_FUNDS],
+			1005 g_IN_REQUEST_AMERICAN_YN[$g_IN_REQUEST_AMERICAN_YN],
+			1005 g_IN_REQUEST_LOCAL_YN[$g_IN_REQUEST_LOCAL_YN],
+			1005 g_IN_REQUEST_ABODE_NM[$g_IN_REQUEST_ABODE_NM],
+			1005 g_IN_REQUEST_OWN_YN[$g_IN_REQUEST_OWN_YN],
+			1005 g_IN_REQUEST_DEAL[$g_IN_REQUEST_DEAL],
+			1005 g_IN_REQUEST_TRADE[$g_IN_REQUEST_TRADE],
+
+			1006 g_IN_REQUEST_PD1[$g_IN_REQUEST_PD1],
+			1006 g_chk_4117_5gr_1[$g_chk_4117_5gr_1],
+			1006 g_chk_4117_5gr_2[$g_chk_4117_5gr_2],
+			1006 g_IN_REQUEST_NEW_PW[$g_IN_REQUEST_NEW_PW],
+			1006 g_save_members_nm[$g_save_members_nm],
+			1006 g_save_members_no[$g_save_members_no],
+			1006 g_open_tp_select[$g_open_tp_select],
+	);
+	*/
+
+	$closescreen(popscreen_1006_100_pwd_check);
+	$callaction(Act_Open_Account_Move,1007);
+"/>
+<popscreen id="popscreen_1006_100_pwd_check"
+width="$g_lcdWidth" 
+height="$p_lcdHeight"
+noscroll_height="true"
+backcolor="ffffff00"
+margin_bottom="$cs_screen_bottom_margin"
+>
+	<viewgroup 
+        width="$super.width" height="$cs_height_50" backcolor="ffffff00"  
+        margin_left="$w($g_lcdwidth,4.3)"
+        >
+        <viewgroup 
+        	width="$w($g_lcdWidth,12.4)" 
+        	height="$this.remain_bottom" 
+        	hidden="false"
+        >
+            <label 
+	            layout_vertical="center" 
+	            width="$cs_height_24"
+	            height="$cs_height_24" 
+	            BACKGROUNDSVG="$icon_arrow_left"
+	            BACKGROUNDSVG_DISABLE="$icon_arrow_left"
+	            BACKGROUNDSVG_HIGHLIGHT="$icon_arrow_left"
+	            BACKGROUNDSVG_WIDTH="$cs_height_24"
+	            BACKGROUNDSVG_HEIGHT="$cs_height_24"
+	            backgroundimage_align="center"
+	            backgroundimage_align_vertical="center"
+            />
+            <button class="cs_button_none" 
+            	onClicked="$closescreen(popscreen_1006_100_pwd_check);" 
+            />
+        </viewgroup>
+    </viewgroup>
+    <br/>
+	<viewgroup
+		width="$this.remain_right"
+		margin_top="$cs_screen_top_margin"
+		margin_left="$cs_screen_left_right_margin"
+		margin_right="$cs_screen_left_right_margin"
+		backcolor="$cs_color_white"
+		height="$result($this.remain_bottom - $cs_height_54)"
+	>
+		<viewgroup
+			width="$this.remain_right"
+			height="$cs_height_98"
+		>
+			<label
+				width="$cs_width_86"
+				height="$cs_height_20"
+				fontsize="$cs_fontsize_15"
+				fontname="$cs_font_400"
+				textcolor="$cs_color_text"
+				align="left"
+				value="고객정보입력"
+			/>
+			<label 
+	        	id="img_pop_info_1006_2" 
+	        	width="$cs_height_20"
+	        	height="$cs_height_20"
+	            BACKGROUNDSVG="$icon_question"
+				BACKGROUNDSVG_DISABLE="$icon_question"
+				BACKGROUNDSVG_HIGHLIGHT="$icon_question"
+				BACKGROUNDSVG_WIDTH="$cs_height_20"
+				BACKGROUNDSVG_HEIGHT="$cs_height_20"
+				backgroundimage_align="center"
+				backgroundimage_align_vertical="center"
+				hidden="false"
+	        />
+			<viewgroup 
+				x="$w($g_lcdWidth,0)" 
+				width="$w($g_lcdWidth,28.3)" 
+				height="$h($g_lcdHeight,4.5)"
+			>
+		        <button id="btn_pop_info_1006_100_2" class="cs_button_none" onClicked="btn_pop_info_1006_100_onClicked_2"/>
+	   		</viewgroup>
+	   		<br/>
+	   		<viewgroup
+	   			width="$this.remain_right"
+	   			height="$cs_height_68"
+	   			layout_vertical="bottom"
+	   		>
+	   			<label
+	   				width="$this.remain_right"
+	   				height="$cs_height_34"
+	   				textcolor="$cs_color_black"
+	   				fontsize="$cs_fontsize_24"
+	   				fontname="$cs_font_600"
+	   				value="계좌비밀번호를"
+	   			/>
+	   			<br/>
+	   			<label
+	   				width="$this.remain_right"
+	   				height="$cs_height_34"
+	   				textcolor="$cs_color_black"
+	   				fontsize="$cs_fontsize_24"
+	   				fontname="$cs_font_600"
+	   				value="다시 한 번 입력해주세요"
+	   			/>
+	   		</viewgroup>
+		</viewgroup>
+		<br height="$cs_height_34"/>
+		<viewgroup
+			width="$this.remain_right"
+			height="$cs_height_111"
+		>
+			<textfield_security id="tf_1006_pass_2"
+				layout="center"
+				width="$this.remain_right"
+				height="$cs_height_75"
+				keyboard_type="number"
+				maxlength="4"
+				placeholder="● ● ● ●"
+				textcolor_placeholder="$cs_color_disable"
+				textcolor="$cs_color_black"
+				fontsize="$cs_fontsize_30"
+				fontname="$cs_font_700"
+				valuevar="tmp_1006_pass_2"
+				valueencvar="tmp_1006_pass_2_encvar"
+				valuevar_common="true"
+				input_type="number"
+				align="center"
+				returntype="done"
+				description="계좌비밀번호"
+				hint="계좌비밀번호"
+				onChanged="tf_1006_pass_2_onchanged"
+			/>
+		</viewgroup>
+	</viewgroup>
+	<br/>
+	<viewgroup
+		width="$cs_width_343"
+		height="$cs_height_54"
+		layout="center"
+		layout_vertical="bottom"
+	>
+		<button 
+			width="$cs_bottom_two_button_width" 
+			height="$this.remain_bottom"
+			layout="left"
+			backcolor="$cs_color_white"
+			border_width="1"
+			border_radius="$cs_height_10"
+			border_color="$cs_color_disable"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_black"
+			textcolor_active="$cs_color_black"
+			value="이전"
+			onClicked="$closescreen(popscreen_1006_100_pwd_check);"
+		/>
+		<button id="btn_1006_100_confirm_2"
+			width="$cs_bottom_two_button_width" 
+			height="$this.remain_bottom"
+			layout="right"
+			backcolor="$cs_color_main"
+			backcolor_disable="$cs_color_main_disable"
+			border_width="1"
+			border_radius="$cs_height_10"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_white"
+			textcolor_active="$cs_color_white"
+			textcolor_disable="$cs_color_white"
+			value="다음"
+			onclicked="$callaction(btn_1006_100_confirm_onClicked,2);"
+			enable="false"
+		/>
+	</viewgroup>
+</popscreen>
+<action id="btn_pop_info_1006_100_onClicked_2"
+value="
+	$setvar(
+		tmp_pop_info_x_cal = $result($img_pop_info_1006_2.x_abs + $w($g_lcdwidth,0.6))
+		,tmp_pop_imfo_y_cal = $result($img_pop_info_1006_2.y_abs + $h($g_lcdHeight,2.6))
+	);
+	$callaction(popscreen_open_account_confirm_onclicked,$tmp_pop_info_x_cal,$tmp_pop_imfo_y_cal);
+"/>
+<action id="tf_1006_pass_2_onchanged"
+value="
+	if($strlen($tf_1006_pass_2.value) >= 4){
+		$setvar(btn_1006_100_confirm_2.enable = true);
+		$callaction(btn_1006_100_confirm_onClicked,2);
+	}else{
+		$setvar(btn_1006_100_confirm_2.enable = false);
+	}
+"/>
