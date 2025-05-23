@@ -3908,7 +3908,7 @@ value="
 	
 " /> // 종목검색
 <action id="Act_Open_itemSearch" scope="common" 
-params="p_after_action, p_title" 
+params="p_after_action, p_title"
 value="
 	$callaction(Act_RealData_StartNStop,false); 		// 실시간을 끊는다. 
 	
@@ -3963,12 +3963,13 @@ value="
 "/>
 
 <action id="EnterBackGround" scope="common" 
-paramlog="false"
+//paramlog="false"
 params="
 p_date
 ,p_hour
 ,p_minute" 
 value="
+	$webview_background(trading_webview); 		// 미국주식옵션에서 사용되는 웹뷰 컨트롤
 	// 새버전 적용
 	return; 		
 
@@ -4031,11 +4032,13 @@ $logvar(g_login_id);
 
 " />
 <action id="BecomeActive" scope="common" 
-paramlog="false"
+//paramlog="false"
 parmas="p_day, p_hour, p_min, p_duration" 
 value="
-	// 새버전 적용 
+	// 새버전 적용
+	$webview_active(trading_webview);  		// 미국주식옵션에서 사용되는 웹뷰 컨트롤
 	return;
+
 	/*
 	$log(=============== BecomeActive ===============);
 	$setvar(vg_4100_background.hidden = true );

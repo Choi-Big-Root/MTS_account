@@ -117,6 +117,8 @@ onLoad="screen_login_onload"
         onClicked="
         $callaction(Act_Open_Web, https://dev-options.eugenefutures.com/wts/login/egcloud);
         //$callaction(Act_Open_Web, https://dev-options.eugenefutures.com/wts/);
+        //$callaction(Act_Open_Web, http://localhost:3000);
+        //$callaction(Act_Open_Web, http://192.168.0.115:3000);
         "
         /> 
     </viewgroup>
@@ -157,7 +159,9 @@ onLoad="screen_login_onload"
 
         />
         <button class="cs_btn_none" onClicked="
-        $callaction(Act_Open_Account_Popup, 1000);
+        //$callaction(Act_Open_Account_Popup, 1000);
+        //$callaction(Act_Open_Account_Popup, 1002);
+        //$callaction(Act_Open_Account_Popup, 1002);
         "/> 
     </viewgroup>
     <br height="$cs_height_10"/>

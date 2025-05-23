@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <import filename="plist/root/common/css_design_device.xml"/>
+
 <actiondata value="
+
 	$setvar_common(
 		g_file_name = intro
 		,g_is_background = 

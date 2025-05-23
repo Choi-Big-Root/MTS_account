@@ -527,7 +527,7 @@ value="
 <action id="N_Act_Download_XML_Start" scope="common" 
 params="p_completeAction"
 value="
-	$log(*********** N_Act_Download_XML_Start CDG : [$p_completeAction],[$g_strVersionFilePath_XML],[$g_strVersionFileName_XML]);
+	$log(*********** N_Act_Download_XML_Start : [$p_completeAction]);
 	$setvar(
 		tmp_down_complete_action 	= $p_completeAction
 	);

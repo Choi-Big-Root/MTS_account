@@ -1032,6 +1032,7 @@ value="
 value="
 	//$openfile(plist/root/main.xml);
 	$openfile(plist/root/login.xml);
+	//$openfile(plist/root/jsonani_sample.xml);
 " />
 // 로그인 또는 저장된 화면으로 이동 
 //확인

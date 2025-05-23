@@ -30,6 +30,16 @@ onLoad="screen_login_onload"
 </if> -->
 
 </screen>
+// 웹에서 호출되는 액션 
+<action id="_webview_interface_call" 
+params="
+p_cmd
+"
+value="
+	if($isequal_string($p_cmd, back)){
+		$openfile(plist/root/login.xml);
+	}
+" />
 <action id="android_keymap" scope="common"
 value="
     if($android_keymap_param1 == 1 && $android_keymap_param2 == 4) {
