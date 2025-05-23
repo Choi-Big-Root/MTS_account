@@ -1,0 +1,616 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class id="cs_btn_essential_1007_100"
+width="$this.remain_right"
+height="$cs_height_22"
+fontname="$cs_font_400"
+fontsize="$cs_fontsize_14"
+textcolor="232B2B"
+margin_left="$cs_width_24"
+CHECKIMAGESVG="$icon_checkbox_on" 
+UNCHECKIMAGESVG="$icon_checkbox_off"
+CHECKIMAGESVG_DISABLE="$icon_checkbox_off"
+BACKGROUNDSVG_WIDTH="$cs_height_18"
+BACKGROUNDSVG_HEIGHT="$cs_height_18"
+backgroundimage_align="left"
+backgroundimage_align_vertical="center"
+onClicked="$callaction(btn_4118_100_onClicked,$this.key);"
+/>	
+<action id="screen_contents_onload" value="
+	$setvar(
+		tmp_array_4118_htmldata = [
+			[1,4118_htmldata_4,4]
+			,[2,4118_htmldata_5,5]
+			,[3,4118_htmldata_6,6]
+			,[4,4118_htmldata_8,8]
+			,[5,4118_htmldata_9,9]
+			,[10,4118_htmldata_11,11]
+			,[11,4118_htmldata_12,12]
+			,[12,4118_htmldata_13,13]
+			,[15,4118_htmldata_16,16]
+			,[16,4118_htmldata_18,18]
+		]
+	);
+
+	$setvar(
+		,img_step_1.hidden=false
+		,img_step_2.hidden=false
+		,img_step_3.hidden=false
+		,img_step_4.hidden=true
+		,img_step_5.hidden=true
+		,img_step_6.hidden=true
+		,img_step_7.hidden=true
+		,img_step_8.hidden=true
+
+		,lbl_account_title_step_1.hidden=true
+		,lbl_account_title_step_2.hidden=true
+		,lbl_account_title_step_3.hidden=true
+		,lbl_account_title_step_4.hidden=false
+		,lbl_account_title_step_5.hidden=false
+		,lbl_account_title_step_6.hidden=false
+		,lbl_account_title_step_7.hidden=false
+		,lbl_account_title_step_8.hidden=false
+
+		,lbl_account_title_step_1.textcolor=$cs_color_disable
+		,lbl_account_title_step_2.textcolor=$cs_color_disable
+		,lbl_account_title_step_3.textcolor=$cs_color_disable
+		,lbl_account_title_step_4.textcolor=$cs_color_black
+		,lbl_account_title_step_5.textcolor=$cs_color_disable
+		,lbl_account_title_step_6.textcolor=$cs_color_disable
+		,lbl_account_title_step_7.textcolor=$cs_color_disable
+		,lbl_account_title_step_8.textcolor=$cs_color_disable
+
+
+		,lbl_account_title_step_1.fontname=$cs_font_400
+		,lbl_account_title_step_2.fontname=$cs_font_400
+		,lbl_account_title_step_3.fontname=$cs_font_400
+		,lbl_account_title_step_4.fontname=$cs_font_600
+		,lbl_account_title_step_5.fontname=$cs_font_400
+		,lbl_account_title_step_6.fontname=$cs_font_400
+		,lbl_account_title_step_7.fontname=$cs_font_400
+		,lbl_account_title_step_8.fontname=$cs_font_400
+
+
+		,vg_open_account_title.backcolor=FFFFFF
+		,popscreen_open_account_history.hidden=false
+		,vg_account_title_step.hidden = false
+
+		,menu_num=1007
+	);
+"/>
+<action id="screen_4118_100_onunload" value="
+	$delvar(
+		,4118_htmldata_4
+		,4118_htmldata_5
+		,4118_htmldata_6
+		,4118_htmldata_8
+		,4118_htmldata_9
+		,4118_htmldata_11
+		,4118_htmldata_12
+		,4118_htmldata_13
+		,4118_htmldata_16
+		,4118_htmldata_18
+	);
+"/>
+<action id="btn_pop_info_1007_100_onClicked"
+value="
+	$setvar(
+		tmp_pop_info_x_cal = $result($img_pop_info_1007.x_abs + $w($g_lcdwidth,0.6))
+		,tmp_pop_imfo_y_cal = $result($img_pop_info_1007.y_abs + $h($g_lcdHeight,2.6))
+	);
+	$callaction(popscreen_open_account_confirm_onclicked,$tmp_pop_info_x_cal,$tmp_pop_imfo_y_cal);
+"/>
+
+<screen 
+	id="screen_1007_100"
+	class="cs_screen_contents"
+	backcolor="$cs_color_white"
+	onload="screen_contents_onload"
+	onunload="screen_contents_onunload"
+	noscroll_height="false"
+	margin_top="$cs_screen_top_margin"
+	margin_bottom="$cs_screen_bottom_margin"
+	margin_left="$cs_screen_left_right_margin"
+	margin_right="$cs_screen_left_right_margin"
+>
+	<viewgroup id="vg_1007_100_contents_title"
+		width="$this.remain_right"
+		height="$cs_height_98"
+	>
+		<label
+			width="$cs_width_162"
+			height="$cs_height_20"
+			fontsize="$cs_fontsize_15"
+			fontname="$cs_font_400"
+			textcolor="$cs_color_text"
+			align="left"
+			value="약관승인 및 위험고지 확인"
+		/>
+		<label 
+        	id="img_pop_info_1007" 
+        	width="$cs_height_20"
+        	height="$cs_height_20"
+            BACKGROUNDSVG="$icon_question"
+			BACKGROUNDSVG_DISABLE="$icon_question"
+			BACKGROUNDSVG_HIGHLIGHT="$icon_question"
+			BACKGROUNDSVG_WIDTH="$cs_height_20"
+			BACKGROUNDSVG_HEIGHT="$cs_height_20"
+			backgroundimage_align="center"
+			backgroundimage_align_vertical="center"
+			hidden="false"
+        />
+		<viewgroup 
+			x="0" 
+			width="$cs_width_182" 
+			height="$cs_height_20"
+		>
+	        <button id="btn_pop_info_1007_100" class="cs_button_none" onClicked="btn_pop_info_1007_100_onClicked"/>
+   		</viewgroup>
+   		<br/>
+   		<viewgroup
+   			width="$this.remain_right"
+   			height="$cs_height_68"
+   			layout_vertical="bottom"
+   		>
+   			<label
+   				width="$this.remain_right"
+   				height="$cs_height_34"
+   				textcolor="$cs_color_black"
+   				fontsize="$cs_fontsize_24"
+   				fontname="$cs_font_600"
+   				value="약관을 확인하고"
+   			/>
+   			<br/>
+   			<label
+   				width="$this.remain_right"
+   				height="$cs_height_34"
+   				textcolor="$cs_color_black"
+   				fontsize="$cs_fontsize_24"
+   				fontname="$cs_font_600"
+   				value="동의해 주세요."
+   			/>
+   		</viewgroup>
+	</viewgroup>
+	<br height="$cs_height_20" />
+	<viewgroup
+		width="$this.remain_right"
+		height="$cs_height_249"
+		border_width="1"
+		border_radius="$cs_radius_15"
+		backcolor="$cs_color_bg"
+		margin_left="$cs_width_20"
+		margin_right="$cs_width_20"
+		margin_bottom="$cs_height_20"
+		margin_top="$cs_height_20"
+	>
+		<checkbox id="chk_1006_100_1_all"
+			width="$this.remain_right"
+			height="$cs_height_24"
+			margin_left="$cs_width_30"
+			CHECKIMAGESVG="$icon_checkbox_check_on" 
+			UNCHECKIMAGESVG="$icon_checkbox_check_off"
+			CHECKIMAGESVG_DISABLE="$icon_checkbox_check_off"
+			BACKGROUNDSVG_WIDTH="$cs_height_24"
+			BACKGROUNDSVG_HEIGHT="$cs_height_24"
+			backgroundimage_align="left"
+			backgroundimage_align_vertical="center"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_600"
+			textcolor="232B2B" //디자인정의 안되어있는 색상.
+			value="약관승인"
+		/>
+		<br height="$cs_height_15" />
+		<hr width="$this.remain_right" backcolor="$cs_color_line"/>
+		<br height="$cs_height_15" />
+		<viewgroup
+			width="$this.remain_right"
+			height="$this.remain_bottom"
+		>		
+			<checkbox id="btn_1"
+				class="cs_btn_essential_1007_100"
+				key="1"
+				value="계좌간 자금대체약관"
+			/>
+			<br height="$cs_height_11" />
+			<checkbox id="btn_2"
+				class="cs_btn_essential_1007_100"
+				key="2"
+				value="HTS이용약관"
+			/>
+			<br height="$cs_height_11" />
+			<checkbox id="btn_3"
+				class="cs_btn_essential_1007_100"
+				key="3"
+				value="전자금융거래이용에관한약관"
+			/>
+			<br height="$cs_height_11" />
+			<checkbox id="btn_4"
+				class="cs_btn_essential_1007_100"
+				key="4"
+				value="(해외)파생상품총괄계좌설정약관"
+			/>
+			<br height="$cs_height_11" />
+			<checkbox id="btn_5"
+				class="cs_btn_essential_1007_100"
+				key="5"
+				value="(해외)파생상품입출금약관"
+			/>
+		</viewgroup>
+	</viewgroup>
+	<br height="$cs_height_20" />
+	<viewgroup
+		width="$this.remain_right"
+		height="$cs_height_183"
+		border_width="1"
+		border_radius="$cs_radius_15"
+		backcolor="$cs_color_bg"
+		margin_left="$cs_width_20"
+		margin_right="$cs_width_20"
+		margin_bottom="$cs_height_20"
+		margin_top="$cs_height_20"
+	>
+		<checkbox id="chk_1006_100_2_all"
+			width="$this.remain_right"
+			height="$cs_height_24"
+			margin_left="$cs_width_30"
+			CHECKIMAGESVG="$icon_checkbox_check_on" 
+			UNCHECKIMAGESVG="$icon_checkbox_check_off"
+			CHECKIMAGESVG_DISABLE="$icon_checkbox_check_off"
+			BACKGROUNDSVG_WIDTH="$cs_height_24"
+			BACKGROUNDSVG_HEIGHT="$cs_height_24"
+			backgroundimage_align="left"
+			backgroundimage_align_vertical="center"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_600"
+			textcolor="232B2B" //디자인정의 안되어있는 색상.
+			value="위험고지 확인"
+		/>
+		<br height="$cs_height_15" />
+		<hr width="$this.remain_right" backcolor="$cs_color_line"/>
+		<br height="$cs_height_15" />
+		<viewgroup
+			width="$this.remain_right"
+			height="$this.remain_bottom"
+		>		
+			<checkbox id="btn_10"
+				class="cs_btn_essential_1007_100"
+				key="10"
+				value="(해외)파생상품거래 위험고지서"
+			/>
+			<br height="$cs_height_11" />
+			<checkbox id="btn_11"
+				class="cs_btn_essential_1007_100"
+				key="11"
+				value="일중거래위험고지서"
+			/>
+			<br height="$cs_height_11" />
+			<checkbox id="btn_12"
+				class="cs_btn_essential_1007_100"
+				key="12"
+				value="시스템매매위험고지서"
+			/>
+		</viewgroup>
+	</viewgroup>
+	<br height="$cs_height_20" />
+	<viewgroup
+		width="$this.remain_right"
+		height="$cs_height_150"
+		border_width="1"
+		border_radius="$cs_radius_15"
+		backcolor="$cs_color_bg"
+		margin_left="$cs_width_20"
+		margin_right="$cs_width_20"
+		margin_bottom="$cs_height_20"
+		margin_top="$cs_height_20"
+	>
+		<checkbox id="chk_1006_100_3_all"
+			width="$this.remain_right"
+			height="$cs_height_24"
+			margin_left="$cs_width_30"
+			CHECKIMAGESVG="$icon_checkbox_check_on" 
+			UNCHECKIMAGESVG="$icon_checkbox_check_off"
+			CHECKIMAGESVG_DISABLE="$icon_checkbox_check_off"
+			BACKGROUNDSVG_WIDTH="$cs_height_24"
+			BACKGROUNDSVG_HEIGHT="$cs_height_24"
+			backgroundimage_align="left"
+			backgroundimage_align_vertical="center"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_600"
+			textcolor="232B2B" //디자인정의 안되어있는 색상.
+			value="위험고지 확인"
+		/>
+		<br height="$cs_height_15" />
+		<hr width="$this.remain_right" backcolor="$cs_color_line"/>
+		<br height="$cs_height_15" />
+		<viewgroup
+			width="$this.remain_right"
+			height="$this.remain_bottom"
+		>		
+			<checkbox id="btn_15"
+				class="cs_btn_essential_1007_100"
+				key="15"
+				value="(해외)장중추가증거금 관리 안내"
+			/>
+			<br height="$cs_height_11" />
+			<checkbox id="btn_16"
+				class="cs_btn_essential_1007_100"
+				key="16"
+				value="불법차명거래금지 및 자금세탁방지에 대한 안내"
+			/>
+		</viewgroup>
+	</viewgroup>
+	<br height="$cs_height_13" />
+	<viewgroup
+		width="$cs_bottom_one_button_width"
+		height="$cs_bottom_button_height"
+		layout="center"
+	>
+		<button 
+			width="$cs_bottom_two_button_width" 
+			height="$this.remain_bottom"
+			layout="left"
+			backcolor="$cs_color_white"
+			border_width="1"
+			border_radius="$cs_height_10"
+			border_color="$cs_color_disable"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_black"
+			textcolor_active="$cs_color_black"
+			value="이전"
+			onClicked="btn_open_account_history_onClicked"
+		/>
+
+		<button id="btn_4118_af"
+			width="$cs_bottom_two_button_width" 
+			height="$this.remain_bottom"
+			layout="right"
+			backcolor="$cs_color_main"
+			backcolor_disable="$cs_color_main_disable"
+			border_width="1"
+			border_radius="$cs_height_10"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_white"
+			textcolor_active="$cs_color_white"
+			textcolor_disable="$cs_color_white"
+			value="약관보기"
+			onclicked="$callaction(fnAgree_Check_4118_100);"
+		/>
+	</viewgroup>
+	<br height="$cs_screen_bottom_margin" />
+</screen>
+
+<action id="btn_4118_100_onClicked"
+params="p_key"
+value="
+	$logarrayvar(tmp_array_4118_htmldata);
+	
+	$setvar(
+		,tmp_btn_id					= $addstring(btn_,$p_key)
+		,popscreen_title 			= $tmp_btn_id.value
+		,popscreen_key 				= $p_key
+		,tmp_html_idx 				= $getarrayindex(tmp_array_4118_htmldata,0,$p_key)
+		,popscreen_html 			= $getarrayvar(tmp_array_4118_htmldata,$tmp_html_idx,1)
+		,tmp_html_height_idx_val 	= $getarrayvar(tmp_array_4118_htmldata,$tmp_html_idx,2)
+		
+	);
+	$logvar(popscreen_html,tmp_html_height_idx_val,tmp_pop_height_idx);
+
+	$popscreen(popscreen_4118_100);
+"/>
+
+//약관 팝업
+<action id="ppopscreen_4118_100_onload"
+value="
+	//최대근 추가 : 빠르게 pos_y 값이 변경되면 화면이 새로 열려도 0부터 시작이 아닌 이전값이 계속해서 들어옴.
+	$setvar( tmp_pop_4118_100_flag = true, tmp_this_pos_y_4118 = );
+	
+	// 아이폰용 
+	$log(컨텐츠 사이즈:$html_pop.height);
+	$log(컨텐츠 사이즈:$html_pop.SCROLL_HEIGHT);	
+	if($html_pop.SCROLL_HEIGHT < $html_pop.height){
+		$setvar(
+			btn_4118_100_agree.hidden = false
+			,btn_4118_100_agree_bottom.hidden = true
+		);
+	}
+	// 컨텐츠 크기만큼 height 를 다시 조정한다. 
+	$setvar(
+		lbl_html_pop.height 		= $html_pop.SCROLL_HEIGHT
+		,html_pop.height 			= $html_pop.SCROLL_HEIGHT
+		,screen_html.SCROLL_HEIGHT 	= $html_pop.SCROLL_HEIGHT
+	);
+	$reloadcontrol(lbl_html_pop);
+	$reloadcontrol(screen_html);
+"/>
+<popscreen id="popscreen_4118_100"
+width="$g_lcdWidth" 
+height="$p_lcdHeight"
+noscroll_height="true"
+onload="ppopscreen_4118_100_onload"
+backcolor="$cs_color_white"
+>
+	<screen 
+	width="$this.remain_right"
+	height="$this.remain_bottom"
+	backcolor="$cs_color_white"
+	margin_bottom="$cs_height_20"
+	>
+		<viewgroup 
+		width="$this.remain_right" 
+		height="$cs_height_50"	
+		backcolor="$cs_color_white" 
+		>
+			<label 
+			width="$result($this.remain_right - $cs_width_56)"
+			height="$this.remain_bottom"
+			fontsize="$cs_fontsize_16" 
+			fontname="$cs_font_700" 
+			align="left"
+			margin_left="$cs_width_16" 
+			valign="center" 
+			textcolor="070A0F"
+			value="$popscreen_title"
+			/>
+			<button 
+				width="$cs_width_56"
+				height="$this.remain_bottom"
+				layout="right" 
+				key="$popscreen_key" 
+				BACKGROUNDSVG="$icon_cancel_2"
+		        BACKGROUNDSVG_DISABLE="$icon_cancel_2"
+		        BACKGROUNDSVG_HIGHLIGHT="$icon_cancel_2"
+		        BACKGROUNDSVG_WIDTH="$cs_height_24"
+		        BACKGROUNDSVG_HEIGHT="$cs_height_24"
+		        backgroundimage_align="center"
+		        backgroundimage_align_vertical="center"
+				onClicked="fnPopScreen_Close_1007"
+			/>
+		</viewgroup>
+		<br/>
+		<screen id="screen_html"
+		width="$this.remain_right"
+		height="$result($this.remain_bottom - $cs_height_74)"
+		backcolor="ffffff"
+		SCROLLOFFSET_ACTION="screen_4118_100_SCROLLOFFSET_ACTION"
+		>
+			<htmlview 
+			id="html_pop"
+			width="$this.remain_right" 
+			height="$this.remain_bottom"
+			layout="center"
+			value_html_var="$popscreen_html"
+			fontsize="$cs_fontsize_14"
+			textcolor="$cs_color_text"
+			backcolor="$cs_color_white"
+			lineheight="$cs_height_20"
+			margin_left="$cs_width_16"
+			margin_right="$cs_width_16"
+			margin_top="$cs_height_15"
+			margin_bottom="$cs_height_15"
+			NOSCROLL_HEIGHT="false"
+			/>
+			<label id="lbl_html_pop" x="$html_pop.x" width="$this.remain_right"  backcolor="none"/>
+		</screen>
+		<br/>
+		<button id="btn_4118_100_agree"
+		layout="center"
+		layout_vertical="bottom"
+		width="$cs_width_343" 
+		height="$cs_height_54" 
+		backcolor="$cs_color_main"
+		backcolor_active="$cs_color_main"
+		border_radius="$cs_radius_10"
+		textcolor="$cs_color_white"
+		textcolor_active="$cs_color_white"
+		fontsize="$cs_fontsize_16"
+		fontname="$cs_font_700"
+
+		hidden="true"
+		value="확인했고 동의해요" 
+		onclicked="btn_4118_100_agree_onClicked" 
+		/>
+		<button id="btn_4118_100_agree_bottom"
+		x="$btn_4118_100_agree.x"
+		layout="center"
+		layout_vertical="bottom"
+		width="$cs_width_343" 
+		height="$cs_height_54" 
+		backcolor="$cs_color_main"
+		backcolor_active="$cs_color_main"
+		border_radius="$cs_radius_10"
+		textcolor="$cs_color_white"
+		textcolor_active="$cs_color_white"
+		fontsize="$cs_fontsize_16"
+		fontname="$cs_font_700"
+
+		hidden="false"
+		value="아래로 내려보기" 
+		onclicked="btn_4118_100_agree_bottom_onClicked" 
+		/>
+	</screen>
+</popscreen>
+<action id="screen_4118_100_SCROLLOFFSET_ACTION" 
+params="
+p_ctrl_id
+,p_pos_x
+,p_pos_y
+"
+value="
+	// 스크롤이 제일 끝에 위치하면 활성화 
+	$setvar(
+		tmp_scroll_gap 		= $result($screen_html.SCROLL_HEIGHT - ($p_pos_y + $screen_html.HEIGHT))
+		,tmp_this_pos_y_4118 = $p_pos_y
+	);	
+	$logvar(tmp_scroll_gap);
+	if($tmp_scroll_gap <= 0	){
+		$setvar(
+			btn_4118_100_agree_bottom.hidden = true
+			,btn_4118_100_agree.hidden = false 
+		);	
+	}
+	
+" />
+<action id="btn_4118_100_agree_onClicked" 
+value="
+	$closescreen(popscreen_4118_100);
+	$callaction(fnAgree_Check_4118_100); 		// 필수동의서는 자동으로 띄운다.
+"/>
+<action id="btn_4118_100_agree_bottom_onClicked"
+value="
+	if($tmp_pop_4118_100_flag){
+		$setvar(tmp_this_pos_y_4118 = $screen_html.height , tmp_pop_4118_100_flag = false);
+	}
+	$setvar(
+		,tmp_html_h_4118 = $screen_html.height
+		,tmp_end_of_scroll_y_4118 = $result_double($html_pop.height - $screen_html.height)
+		,tmp_h_share_4118 = $result_floor($tmp_end_of_scroll_y_4118 / $tmp_html_h_4118,0)
+	);
+	if($tmp_h_share_4118 == 0){
+		$setvar(screen_html.scrolloffset_y= $tmp_end_of_scroll_y_4118);
+		return;
+	}
+	for($i = 1; $i <= $tmp_h_share_4118; $i++){
+		$setvar(tmp_cal_h_4118 = $result_double($i * $tmp_html_h_4118));
+		if($tmp_this_pos_y_4118 < $tmp_cal_h_4118){
+			$setvar(screen_html.scrolloffset_y= $tmp_cal_h_4118);
+			return;
+		}
+
+		if($i == $tmp_h_share_4118){
+			$setvar(screen_html.scrolloffset_y= $tmp_end_of_scroll_y_4118);
+			return;
+		}
+	}
+"/>
+
+<action id="fnPopScreen_Close_1007" 
+value="
+	// 그냥 닫을 때는 동의 체크를 해제한다.
+	$setvar(
+		tmp_btn_id_agree 				= $addstring(btn_,$this.key)
+		,$($tmp_btn_id_agree).checked 	= false
+	);
+	$logvar(tmp_btn_id_agree);
+	$closescreen(popscreen_4118_100)
+" />
+
+
+<action id="fnAgree_Check_4118_100" 
+value="
+	$logarrayvar(tmp_array_4118_htmldata);
+	
+	for($i=0; $i<$getarrayvarcount(tmp_array_4118_htmldata); $i++ ){
+		$setvar(
+			4118_top_cnt	= $getarrayvar(tmp_array_4118_htmldata,$i,0)
+			,tmp_btn_id = $addstring(btn_,$4118_top_cnt)
+			,tmp_checked = $tmp_btn_id.checked 
+		);
+		$logvar(tmp_btn_id,tmp_checked);
+		if(!$tmp_checked){
+			$setvar($($tmp_btn_id).checked = true);
+			$callaction(btn_4118_100_onClicked,$4118_top_cnt);
+			return false;
+		}
+	}
+"/>
