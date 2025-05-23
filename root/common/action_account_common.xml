@@ -646,15 +646,15 @@ value="
             pop_info_tip_lbl=$(계좌개설을 위한 고객정보를 입력해주세요.)
             ,pop_info_tip_height=$cs_height_40
         )
-    }elseif($menu_num < 1009){
+    }elseif($menu_num < 1010){
         $setvar(
             pop_info_tip_lbl=$(약관 승인 및 위험고지 내용을. 확인해주세요)
             ,pop_info_tip_height=$cs_height_40
         )
-    }elseif($menu_num < 4118){
+    }elseif($menu_num < 1015){
         $setvar(
-            pop_info_tip_lbl=계좌개설을 위한 고객정보를 입력해주세요.
-            ,pop_info_tip_height=$h($g_lcdHeight,10)
+            pop_info_tip_lbl=$(계좌 개설 신청자 명의의 은행(또는 증권사) 계좌정보를 입력해주세요.)
+            ,pop_info_tip_height=$cs_height_80
         )
     }elseif($menu_num < 4119){
         $setvar(
