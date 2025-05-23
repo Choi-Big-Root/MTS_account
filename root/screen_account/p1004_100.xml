@@ -1343,7 +1343,7 @@ value="
 value="
 	$cleartablerow(tbl_jikjang_addrees);
 	$delvar(strPostData);
-    $addurlparam(strPostData,enpnm,$tf_popscreen_1004_choice_jikjang.value); //수정.
+    $addurlparam(strPostData,enpnm,$tf_popscreen_1004_choice_jikjang.value);
     $addurlparam(strPostData,page,1);
     $addurlparam(strPostData,pagerowcn,30);
     $addurlparam(strPostData,format,JSON);
