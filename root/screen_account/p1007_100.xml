@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<actiondata value="
+	$readfile(plist/root/html/1007_100_4.html,1007_htmldata_4);
+	$readfile(plist/root/html/1007_100_5.html,1007_htmldata_5);
+	$readfile(plist/root/html/1007_100_6.html,1007_htmldata_6);
+	$readfile(plist/root/html/1007_100_8.html,1007_htmldata_8);
+	$readfile(plist/root/html/1007_100_9.html,1007_htmldata_9);
+	$readfile(plist/root/html/1007_100_11.html,1007_htmldata_11);
+	$readfile(plist/root/html/1007_100_12.html,1007_htmldata_12);
+	$readfile(plist/root/html/1007_100_13.html,1007_htmldata_13);
+	$readfile(plist/root/html/1007_100_16.html,1007_htmldata_16);
+	$readfile(plist/root/html/1007_100_18.html,1007_htmldata_18);
+"/>
 <class id="cs_btn_essential_1007_100"
 width="$this.remain_right"
 height="$cs_height_22"
@@ -13,21 +25,40 @@ BACKGROUNDSVG_WIDTH="$cs_height_18"
 BACKGROUNDSVG_HEIGHT="$cs_height_18"
 backgroundimage_align="left"
 backgroundimage_align_vertical="center"
-onClicked="$callaction(btn_4118_100_onClicked,$this.key);"
+onClicked="$callaction(btn_1007_100_onClicked,$this.key);"
 />	
 <action id="screen_contents_onload" value="
 	$setvar(
-		tmp_array_4118_htmldata = [
-			[1,4118_htmldata_4,4]
-			,[2,4118_htmldata_5,5]
-			,[3,4118_htmldata_6,6]
-			,[4,4118_htmldata_8,8]
-			,[5,4118_htmldata_9,9]
-			,[10,4118_htmldata_11,11]
-			,[11,4118_htmldata_12,12]
-			,[12,4118_htmldata_13,13]
-			,[15,4118_htmldata_16,16]
-			,[16,4118_htmldata_18,18]
+		tmp_array_1007_htmldata = [
+			[1,1007_htmldata_4,4]
+			,[2,1007_htmldata_5,5]
+			,[3,1007_htmldata_6,6]
+			,[4,1007_htmldata_8,8]
+			,[5,1007_htmldata_9,9]
+			,[10,1007_htmldata_11,11]
+			,[11,1007_htmldata_12,12]
+			,[12,1007_htmldata_13,13]
+			,[15,1007_htmldata_16,16]
+			,[16,1007_htmldata_18,18]
+		]
+
+		,tmp_array_1007_htmldata_top = [
+			[1,1007_htmldata_4,4]
+			,[2,1007_htmldata_5,5]
+			,[3,1007_htmldata_6,6]
+			,[4,1007_htmldata_8,8]
+			,[5,1007_htmldata_9,9]
+		]
+
+		,tmp_array_1007_htmldata_middel = [
+			,[10,1007_htmldata_11,11]
+			,[11,1007_htmldata_12,12]
+			,[12,1007_htmldata_13,13]
+		]
+
+		,tmp_array_1007_htmldata_bottom = [
+			,[15,1007_htmldata_16,16]
+			,[16,1007_htmldata_18,18]
 		]
 	);
 
@@ -77,18 +108,18 @@ onClicked="$callaction(btn_4118_100_onClicked,$this.key);"
 		,menu_num=1007
 	);
 "/>
-<action id="screen_4118_100_onunload" value="
+<action id="screen_1007_100_onunload" value="
 	$delvar(
-		,4118_htmldata_4
-		,4118_htmldata_5
-		,4118_htmldata_6
-		,4118_htmldata_8
-		,4118_htmldata_9
-		,4118_htmldata_11
-		,4118_htmldata_12
-		,4118_htmldata_13
-		,4118_htmldata_16
-		,4118_htmldata_18
+		,1007_htmldata_4
+		,1007_htmldata_5
+		,1007_htmldata_6
+		,1007_htmldata_8
+		,1007_htmldata_9
+		,1007_htmldata_11
+		,1007_htmldata_12
+		,1007_htmldata_13
+		,1007_htmldata_16
+		,1007_htmldata_18
 	);
 "/>
 <action id="btn_pop_info_1007_100_onClicked"
@@ -182,7 +213,7 @@ value="
 		margin_bottom="$cs_height_20"
 		margin_top="$cs_height_20"
 	>
-		<checkbox id="chk_1006_100_1_all"
+		<checkbox id="chk_1007_100_1_all"
 			width="$this.remain_right"
 			height="$cs_height_24"
 			margin_left="$cs_width_30"
@@ -197,6 +228,7 @@ value="
 			fontname="$cs_font_600"
 			textcolor="232B2B" //디자인정의 안되어있는 색상.
 			value="약관승인"
+			onclicked="$callaction(fnAgree_Check_1007_100,1);"
 		/>
 		<br height="$cs_height_15" />
 		<hr width="$this.remain_right" backcolor="$cs_color_line"/>
@@ -248,7 +280,7 @@ value="
 		margin_bottom="$cs_height_20"
 		margin_top="$cs_height_20"
 	>
-		<checkbox id="chk_1006_100_2_all"
+		<checkbox id="chk_1007_100_2_all"
 			width="$this.remain_right"
 			height="$cs_height_24"
 			margin_left="$cs_width_30"
@@ -263,6 +295,7 @@ value="
 			fontname="$cs_font_600"
 			textcolor="232B2B" //디자인정의 안되어있는 색상.
 			value="위험고지 확인"
+			onclicked="$callaction(fnAgree_Check_1007_100,10);"
 		/>
 		<br height="$cs_height_15" />
 		<hr width="$this.remain_right" backcolor="$cs_color_line"/>
@@ -302,7 +335,7 @@ value="
 		margin_bottom="$cs_height_20"
 		margin_top="$cs_height_20"
 	>
-		<checkbox id="chk_1006_100_3_all"
+		<checkbox id="chk_1007_100_3_all"
 			width="$this.remain_right"
 			height="$cs_height_24"
 			margin_left="$cs_width_30"
@@ -316,7 +349,8 @@ value="
 			fontsize="$cs_fontsize_16"
 			fontname="$cs_font_600"
 			textcolor="232B2B" //디자인정의 안되어있는 색상.
-			value="위험고지 확인"
+			value="고객 유의사항"
+			onclicked="$callaction(fnAgree_Check_1007_100,15);"
 		/>
 		<br height="$cs_height_15" />
 		<hr width="$this.remain_right" backcolor="$cs_color_line"/>
@@ -345,7 +379,7 @@ value="
 		layout="center"
 	>
 		<button 
-			width="$cs_bottom_two_button_width" 
+			width="$cs_width_100" 
 			height="$this.remain_bottom"
 			layout="left"
 			backcolor="$cs_color_white"
@@ -360,8 +394,8 @@ value="
 			onClicked="btn_open_account_history_onClicked"
 		/>
 
-		<button id="btn_4118_af"
-			width="$cs_bottom_two_button_width" 
+		<button id="btn_1007_af"
+			width="$cs_width_235" 
 			height="$this.remain_bottom"
 			layout="right"
 			backcolor="$cs_color_main"
@@ -373,45 +407,79 @@ value="
 			textcolor="$cs_color_white"
 			textcolor_active="$cs_color_white"
 			textcolor_disable="$cs_color_white"
-			value="약관보기"
-			onclicked="$callaction(fnAgree_Check_4118_100);"
+			value="약관 확인할게요"
+			onclicked="$callaction(fnAgree_Check_1007_100,0);"
 		/>
 	</viewgroup>
 	<br height="$cs_screen_bottom_margin" />
 </screen>
 
-<action id="btn_4118_100_onClicked"
+<action id="btn_1007_100_onClicked"
 params="p_key"
 value="
-	$logarrayvar(tmp_array_4118_htmldata);
-	
 	$setvar(
 		,tmp_btn_id					= $addstring(btn_,$p_key)
 		,popscreen_title 			= $tmp_btn_id.value
 		,popscreen_key 				= $p_key
-		,tmp_html_idx 				= $getarrayindex(tmp_array_4118_htmldata,0,$p_key)
-		,popscreen_html 			= $getarrayvar(tmp_array_4118_htmldata,$tmp_html_idx,1)
-		,tmp_html_height_idx_val 	= $getarrayvar(tmp_array_4118_htmldata,$tmp_html_idx,2)
+		,tmp_html_idx 				= $getarrayindex(tmp_array_1007_htmldata,0,$p_key)
+		,popscreen_html 			= $getarrayvar(tmp_array_1007_htmldata,$tmp_html_idx,1)
+		,tmp_html_height_idx_val 	= $getarrayvar(tmp_array_1007_htmldata,$tmp_html_idx,2)
 		
 	);
-	$logvar(popscreen_html,tmp_html_height_idx_val,tmp_pop_height_idx);
 
-	$popscreen(popscreen_4118_100);
+	$setvar( $($tmp_btn_id).checked = true ); //일단 다시 누르면 무조건 true
+	//$logvar(popscreen_html,tmp_html_height_idx_val,tmp_pop_height_idx);
+
+	if($p_key <= 5){
+		$setvar(
+			tmp_arr_var_name = tmp_array_1007_htmldata_top
+		);
+	}elseif($p_key < 15){
+		$setvar(
+			tmp_arr_var_name = tmp_array_1007_htmldata_middel
+		);
+	}else{
+		$setvar(
+			tmp_arr_var_name = tmp_array_1007_htmldata_bottom
+		);
+	}
+
+	$setvar(tmp_kind_checked_count = );
+	for($i=0; $i<$getarrayvarcount($tmp_arr_var_name); $i++ ){
+		$setvar(
+			1007_top_cnt	= $getarrayvar($tmp_arr_var_name,$i,0)
+			,tmp_btn_id = $addstring(btn_,$1007_top_cnt)
+			,tmp_checked = $tmp_btn_id.checked 
+		);
+		if($tmp_checked){
+			$setvar(tmp_kind_checked_count = $result($tmp_kind_checked_count + 1));
+		}
+	}
+
+	$logvar(tmp_kind_checked_count);
+
+	$setvar(
+		,tmp_total_count = $getarrayvarcount($tmp_arr_var_name)
+		,tmp_confirm_text = $addstring(확인했고 동의해요 ,%28,$tmp_kind_checked_count,/,$tmp_total_count,%29)
+	);
+
+
+	$popscreen(popscreen_1007_100);
 "/>
 
 //약관 팝업
-<action id="ppopscreen_4118_100_onload"
+<action id="ppopscreen_1007_100_onload"
 value="
 	//최대근 추가 : 빠르게 pos_y 값이 변경되면 화면이 새로 열려도 0부터 시작이 아닌 이전값이 계속해서 들어옴.
-	$setvar( tmp_pop_4118_100_flag = true, tmp_this_pos_y_4118 = );
+	$setvar( tmp_pop_1007_100_flag = true, tmp_this_pos_y_1007 = );
 	
 	// 아이폰용 
 	$log(컨텐츠 사이즈:$html_pop.height);
 	$log(컨텐츠 사이즈:$html_pop.SCROLL_HEIGHT);	
 	if($html_pop.SCROLL_HEIGHT < $html_pop.height){
 		$setvar(
-			btn_4118_100_agree.hidden = false
-			,btn_4118_100_agree_bottom.hidden = true
+			btn_1007_100_agree.hidden = false
+			,btn_1007_100_agree_bottom.hidden = true
 		);
 	}
 	// 컨텐츠 크기만큼 height 를 다시 조정한다. 
@@ -423,11 +491,11 @@ value="
 	$reloadcontrol(lbl_html_pop);
 	$reloadcontrol(screen_html);
 "/>
-<popscreen id="popscreen_4118_100"
+<popscreen id="popscreen_1007_100"
 width="$g_lcdWidth" 
 height="$p_lcdHeight"
 noscroll_height="true"
-onload="ppopscreen_4118_100_onload"
+onload="ppopscreen_1007_100_onload"
 backcolor="$cs_color_white"
 >
 	<screen 
@@ -472,7 +540,7 @@ backcolor="$cs_color_white"
 		width="$this.remain_right"
 		height="$result($this.remain_bottom - $cs_height_74)"
 		backcolor="ffffff"
-		SCROLLOFFSET_ACTION="screen_4118_100_SCROLLOFFSET_ACTION"
+		SCROLLOFFSET_ACTION="screen_1007_100_SCROLLOFFSET_ACTION"
 		>
 			<htmlview 
 			id="html_pop"
@@ -493,7 +561,7 @@ backcolor="$cs_color_white"
 			<label id="lbl_html_pop" x="$html_pop.x" width="$this.remain_right"  backcolor="none"/>
 		</screen>
 		<br/>
-		<button id="btn_4118_100_agree"
+		<button id="btn_1007_100_agree"
 		layout="center"
 		layout_vertical="bottom"
 		width="$cs_width_343" 
@@ -507,11 +575,11 @@ backcolor="$cs_color_white"
 		fontname="$cs_font_700"
 
 		hidden="true"
-		value="확인했고 동의해요" 
-		onclicked="btn_4118_100_agree_onClicked" 
+		value="$tmp_confirm_text" 
+		onclicked="$callaction(btn_1007_100_agree_onClicked,$popscreen_key);" 
 		/>
-		<button id="btn_4118_100_agree_bottom"
-		x="$btn_4118_100_agree.x"
+		<button id="btn_1007_100_agree_bottom"
+		x="$btn_1007_100_agree.x"
 		layout="center"
 		layout_vertical="bottom"
 		width="$cs_width_343" 
@@ -526,11 +594,11 @@ backcolor="$cs_color_white"
 
 		hidden="false"
 		value="아래로 내려보기" 
-		onclicked="btn_4118_100_agree_bottom_onClicked" 
+		onclicked="btn_1007_100_agree_bottom_onClicked" 
 		/>
 	</screen>
 </popscreen>
-<action id="screen_4118_100_SCROLLOFFSET_ACTION" 
+<action id="screen_1007_100_SCROLLOFFSET_ACTION" 
 params="
 p_ctrl_id
 ,p_pos_x
@@ -540,45 +608,46 @@ value="
 	// 스크롤이 제일 끝에 위치하면 활성화 
 	$setvar(
 		tmp_scroll_gap 		= $result($screen_html.SCROLL_HEIGHT - ($p_pos_y + $screen_html.HEIGHT))
-		,tmp_this_pos_y_4118 = $p_pos_y
+		,tmp_this_pos_y_1007 = $p_pos_y
 	);	
 	$logvar(tmp_scroll_gap);
 	if($tmp_scroll_gap <= 0	){
 		$setvar(
-			btn_4118_100_agree_bottom.hidden = true
-			,btn_4118_100_agree.hidden = false 
+			btn_1007_100_agree_bottom.hidden = true
+			,btn_1007_100_agree.hidden = false 
 		);	
 	}
 	
 " />
-<action id="btn_4118_100_agree_onClicked" 
+<action id="btn_1007_100_agree_onClicked" 
+params="p_key"
 value="
-	$closescreen(popscreen_4118_100);
-	$callaction(fnAgree_Check_4118_100); 		// 필수동의서는 자동으로 띄운다.
+	$closescreen(popscreen_1007_100);
+	$callaction(fnAgree_Check_1007_100,$p_key); 		// 필수동의서는 자동으로 띄운다.
 "/>
-<action id="btn_4118_100_agree_bottom_onClicked"
+<action id="btn_1007_100_agree_bottom_onClicked"
 value="
-	if($tmp_pop_4118_100_flag){
-		$setvar(tmp_this_pos_y_4118 = $screen_html.height , tmp_pop_4118_100_flag = false);
+	if($tmp_pop_1007_100_flag){
+		$setvar(tmp_this_pos_y_1007 = $screen_html.height , tmp_pop_1007_100_flag = false);
 	}
 	$setvar(
-		,tmp_html_h_4118 = $screen_html.height
-		,tmp_end_of_scroll_y_4118 = $result_double($html_pop.height - $screen_html.height)
-		,tmp_h_share_4118 = $result_floor($tmp_end_of_scroll_y_4118 / $tmp_html_h_4118,0)
+		,tmp_html_h_1007 = $screen_html.height
+		,tmp_end_of_scroll_y_1007 = $result_double($html_pop.height - $screen_html.height)
+		,tmp_h_share_1007 = $result_floor($tmp_end_of_scroll_y_1007 / $tmp_html_h_1007,0)
 	);
-	if($tmp_h_share_4118 == 0){
-		$setvar(screen_html.scrolloffset_y= $tmp_end_of_scroll_y_4118);
+	if($tmp_h_share_1007 == 0){
+		$setvar(screen_html.scrolloffset_y= $tmp_end_of_scroll_y_1007);
 		return;
 	}
-	for($i = 1; $i <= $tmp_h_share_4118; $i++){
-		$setvar(tmp_cal_h_4118 = $result_double($i * $tmp_html_h_4118));
-		if($tmp_this_pos_y_4118 < $tmp_cal_h_4118){
-			$setvar(screen_html.scrolloffset_y= $tmp_cal_h_4118);
+	for($i = 1; $i <= $tmp_h_share_1007; $i++){
+		$setvar(tmp_cal_h_1007 = $result_double($i * $tmp_html_h_1007));
+		if($tmp_this_pos_y_1007 < $tmp_cal_h_1007){
+			$setvar(screen_html.scrolloffset_y= $tmp_cal_h_1007);
 			return;
 		}
 
-		if($i == $tmp_h_share_4118){
-			$setvar(screen_html.scrolloffset_y= $tmp_end_of_scroll_y_4118);
+		if($i == $tmp_h_share_1007){
+			$setvar(screen_html.scrolloffset_y= $tmp_end_of_scroll_y_1007);
 			return;
 		}
 	}
@@ -591,26 +660,79 @@ value="
 		tmp_btn_id_agree 				= $addstring(btn_,$this.key)
 		,$($tmp_btn_id_agree).checked 	= false
 	);
+
+	if($this.key <= 5){
+		$setvar(chk_all_id = chk_1007_100_1_all);
+	}elseif($this.key < 15){
+		$setvar(chk_all_id = chk_1007_100_2_all);
+	}else{
+		$setvar(chk_all_id = chk_1007_100_3_all);
+	}
+	$setvar( $($chk_all_id).checked = false ); 
+	$setvar(btn_1007_af.value = 약관 확인할게요);
 	$logvar(tmp_btn_id_agree);
-	$closescreen(popscreen_4118_100)
+	$closescreen(popscreen_1007_100)
 " />
 
 
-<action id="fnAgree_Check_4118_100" 
+<action id="fnAgree_Check_1007_100" 
+params="p_key"
 value="
-	$logarrayvar(tmp_array_4118_htmldata);
-	
-	for($i=0; $i<$getarrayvarcount(tmp_array_4118_htmldata); $i++ ){
+	$logvar(p_key);
+
+	if($p_key == 0){
 		$setvar(
-			4118_top_cnt	= $getarrayvar(tmp_array_4118_htmldata,$i,0)
-			,tmp_btn_id = $addstring(btn_,$4118_top_cnt)
+			tmp_arr_var_name = tmp_array_1007_htmldata
+		);
+	}elseif($p_key <= 5){
+		$setvar(
+			tmp_arr_var_name = tmp_array_1007_htmldata_top
+		);
+	}elseif($p_key < 15){
+		$setvar(
+			tmp_arr_var_name = tmp_array_1007_htmldata_middel
+		);
+	}else{
+		$setvar(
+			tmp_arr_var_name = tmp_array_1007_htmldata_bottom
+		);
+	}
+
+	$logarrayvar($tmp_arr_var_name);
+	
+	for($i=0; $i<$getarrayvarcount($tmp_arr_var_name); $i++ ){
+		$delvar(chk_all_id);
+		$setvar(
+			1007_top_cnt	= $getarrayvar($tmp_arr_var_name,$i,0)
+			,tmp_btn_id = $addstring(btn_,$1007_top_cnt)
 			,tmp_checked = $tmp_btn_id.checked 
 		);
+		if($1007_top_cnt <= 5){
+			$setvar(chk_all_id = chk_1007_100_1_all);
+		}elseif($p_key < 15){
+			$setvar(chk_all_id = chk_1007_100_2_all);
+		}else{
+			$setvar(chk_all_id = chk_1007_100_3_all);
+		}
 		$logvar(tmp_btn_id,tmp_checked);
 		if(!$tmp_checked){
 			$setvar($($tmp_btn_id).checked = true);
-			$callaction(btn_4118_100_onClicked,$4118_top_cnt);
+			$callaction(btn_1007_100_onClicked,$1007_top_cnt);
 			return false;
 		}
+		$setvar( $($chk_all_id).checked = true ); 
+	}
+
+	if($chk_1007_100_1_all.checked
+	&& $chk_1007_100_2_all.checked
+	&& $chk_1007_100_3_all.checked
+	){
+		$setvar(btn_1007_af.value = 다음);
+	}else{
+		$setvar(btn_1007_af.value = 약관 확인할게요);
+	}
+
+	if($p_key == 0){
+		$callaction(Act_Open_Account_Move,1008);
 	}
 "/>
