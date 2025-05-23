@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<action id="screen_contents_onload"
+value="
+	$setvar(
+		,img_step_1.hidden=false
+		,img_step_2.hidden=false
+		,img_step_3.hidden=false
+		,img_step_4.hidden=true
+		,img_step_5.hidden=true
+		,img_step_6.hidden=true
+		,img_step_7.hidden=true
+		,img_step_8.hidden=true
+
+		,lbl_account_title_step_1.hidden=true
+		,lbl_account_title_step_2.hidden=true
+		,lbl_account_title_step_3.hidden=true
+		,lbl_account_title_step_4.hidden=false
+		,lbl_account_title_step_5.hidden=false
+		,lbl_account_title_step_6.hidden=false
+		,lbl_account_title_step_7.hidden=false
+		,lbl_account_title_step_8.hidden=false
+
+		,lbl_account_title_step_1.textcolor=$cs_color_disable
+		,lbl_account_title_step_2.textcolor=$cs_color_disable
+		,lbl_account_title_step_3.textcolor=$cs_color_disable
+		,lbl_account_title_step_4.textcolor=$cs_color_black
+		,lbl_account_title_step_5.textcolor=$cs_color_disable
+		,lbl_account_title_step_6.textcolor=$cs_color_disable
+		,lbl_account_title_step_7.textcolor=$cs_color_disable
+		,lbl_account_title_step_8.textcolor=$cs_color_disable
+
+
+		,lbl_account_title_step_1.fontname=$cs_font_400
+		,lbl_account_title_step_2.fontname=$cs_font_400
+		,lbl_account_title_step_3.fontname=$cs_font_400
+		,lbl_account_title_step_4.fontname=$cs_font_600
+		,lbl_account_title_step_5.fontname=$cs_font_400
+		,lbl_account_title_step_6.fontname=$cs_font_400
+		,lbl_account_title_step_7.fontname=$cs_font_400
+		,lbl_account_title_step_8.fontname=$cs_font_400
+
+
+		,vg_open_account_title.backcolor=FFFFFF
+		,popscreen_open_account_history.hidden=false
+		,vg_account_title_step.hidden = false
+
+		,menu_num=1008
+	);
+"/>
+<action id="btn_pop_info_1008_100_onClicked"
+value="
+	$setvar(
+		tmp_pop_info_x_cal = $result($img_pop_info_1008.x_abs + $w($g_lcdwidth,0.6))
+		,tmp_pop_imfo_y_cal = $result($img_pop_info_1008.y_abs + $h($g_lcdHeight,2.6))
+	);
+	$callaction(popscreen_open_account_confirm_onclicked,$tmp_pop_info_x_cal,$tmp_pop_imfo_y_cal);
+"/>
+<screen 
+	id="screen_1008_100"
+	class="cs_screen_contents"
+	backcolor="$cs_color_white"
+	onload="screen_contents_onload"
+	onunload="screen_contents_onunload"
+	noscroll_height="false"
+	margin_top="$cs_screen_top_margin"
+	margin_bottom="$cs_screen_bottom_margin"
+	margin_left="$cs_screen_left_right_margin"
+	margin_right="$cs_screen_left_right_margin"
+>
+	<viewgroup
+		width="$this.remain_right"
+		height="$result($this.remain_bottom - $cs_height_54)"
+	>
+		<viewgroup
+			width="$this.remain_right"
+			height="$cs_height_98"
+		>
+			<label
+				width="$cs_width_162"
+				height="$cs_height_20"
+				fontsize="$cs_fontsize_15"
+				fontname="$cs_font_400"
+				textcolor="$cs_color_text"
+				align="left"
+				value="약관승인 및 위험고지 확인"
+			/>
+			<label 
+	        	id="img_pop_info_1008" 
+	        	width="$cs_height_20"
+	        	height="$cs_height_20"
+	            BACKGROUNDSVG="$icon_question"
+				BACKGROUNDSVG_DISABLE="$icon_question"
+				BACKGROUNDSVG_HIGHLIGHT="$icon_question"
+				BACKGROUNDSVG_WIDTH="$cs_height_20"
+				BACKGROUNDSVG_HEIGHT="$cs_height_20"
+				backgroundimage_align="center"
+				backgroundimage_align_vertical="center"
+				hidden="false"
+	        />
+			<viewgroup 
+				x="0" 
+				width="$cs_width_182" 
+				height="$cs_height_20"
+			>
+		        <button id="btn_pop_info_1008_100" class="cs_button_none" onClicked="btn_pop_info_1008_100_onClicked"/>
+	   		</viewgroup>
+	   		<br/>
+	   		<viewgroup
+	   			width="$this.remain_right"
+	   			height="$cs_height_68"
+	   			layout_vertical="bottom"
+	   		>
+	   			<label
+	   				width="$this.remain_right"
+	   				height="$cs_height_34"
+	   				textcolor="$cs_color_black"
+	   				fontsize="$cs_fontsize_24"
+	   				fontname="$cs_font_600"
+	   				value="파생상품 위험고지"
+	   			/>
+	   			<br/>
+	   			<label
+	   				width="$result($this.remain_right - $cs_width_85)"
+	   				height="$cs_height_34"
+	   				textcolor="$cs_color_black"
+	   				fontsize="$cs_fontsize_24"
+	   				fontname="$cs_font_600"
+	   				value="재확인해주세요"
+	   			/>
+	   			<checkbox id="chk_allcheck"
+					width="$this.remain_right"
+					height="$cs_height_34"
+					margin_left="$cs_width_30"
+					CHECKIMAGESVG="$icon_checkbox_check_on" 
+					UNCHECKIMAGESVG="$icon_checkbox_check_off"
+					CHECKIMAGESVG_DISABLE="$icon_checkbox_check_off"
+					BACKGROUNDSVG_WIDTH="$cs_height_24"
+					BACKGROUNDSVG_HEIGHT="$cs_height_24"
+					backgroundimage_align="left"
+					backgroundimage_align_vertical="center"
+					fontsize="$cs_fontsize_16"
+					fontname="$cs_font_600"
+					textcolor="232B2B" //디자인정의 안되어있는 색상.
+					value="전체동의"
+					onclicked="$callaction(Act_CheckYesNo_onClicked,0,0)"
+				/>
+	   		</viewgroup>
+		</viewgroup>
+		<br height="$cs_height_20"/>
+		<viewgroup
+			width="$this.remain_right"
+			height="$cs_height_112"
+			margin_top="$cs_height_15"
+			margin_bottom="$cs_height_15"
+			margin_left="$cs_width_20"
+			margin_right="$cs_width_20"
+			backcolor="$cs_color_bg"
+			border_width="1"
+			border_radius="$cs_radius_15"
+		>
+			<label
+				width="$cs_width_16"
+				height="$cs_height_40"
+				align="left"
+				valign="top"
+				textcolor="$cs_color_black"
+				fontname="$cs_font_700"
+				fontsize="$cs_fontsize_15"
+				multiline="true"
+				value="1."
+			/>
+			<label
+				width="$this.remain_right"
+				height="$cs_height_40"
+				align="left"
+				valign="top"
+				textcolor="$cs_color_text"
+				fontname="$cs_font_400"
+				fontsize="$cs_fontsize_15"
+				multiline="true"
+				value="본인명의의 계좌로 본인이 직접 거래하는 것이 맞습니까?"
+			/>
+			<br/>
+			<viewgroup id="vg_qustion1_check" 
+				width="$cs_width_146" 
+				height="$cs_height_22" 
+				layout_vertical="bottom"
+			>
+				<checkbox id="chk_radio1_1"
+					width="$cs_width_75"
+					height="$this.remain_bottom"
+					margin_left="$cs_width_32"
+					textcolor_active="$cs_color_black"
+					textcolor="$cs_color_text"
+					fontname="$cs_font_400" 
+					fontsize="$cs_fontsize_15"
+					CHECKIMAGESVG="$icon_radio_on" 
+					UNCHECKIMAGESVG="$icon_radio_off"
+					CHECKIMAGESVG_DISABLE="$icon_radio_off"
+					BACKGROUNDSVG_WIDTH="$cs_height_22"
+					BACKGROUNDSVG_HEIGHT="$cs_height_22"
+					backgroundimage_align="left"
+					backgroundimage_align_vertical="center"
+					checked="false"
+					value="예"
+					onclicked="$callaction(Act_CheckYesNo_onClicked,1,Y)"
+					/>
+				<checkbox id="chk_radio1_2"
+					width="$this.remain_right"
+					height="$this.remain_bottom"
+					margin_left="$cs_width_32"
+					textcolor_active="$cs_color_black"
+					textcolor="$cs_color_text"
+					fontname="$cs_font_400" 
+					fontsize="$cs_fontsize_15"
+					CHECKIMAGESVG="$icon_radio_on" 
+					UNCHECKIMAGESVG="$icon_radio_off"
+					CHECKIMAGESVG_DISABLE="$icon_radio_off"
+					BACKGROUNDSVG_WIDTH="$cs_height_22"
+					BACKGROUNDSVG_HEIGHT="$cs_height_22"
+					backgroundimage_align="left"
+					backgroundimage_align_vertical="center"
+					checked="false"
+					value="아니오"
+					onclicked="$callaction(Act_CheckYesNo_onClicked,1,N)"
+					/>
+			</viewgroup>
+		</viewgroup>
+		<br height="$cs_height_20"/>
+		<viewgroup
+			width="$this.remain_right"
+			height="$cs_height_132"
+			margin_top="$cs_height_15"
+			margin_bottom="$cs_height_15"
+			margin_left="$cs_width_20"
+			margin_right="$cs_width_20"
+			backcolor="$cs_color_bg"
+			border_width="1"
+			border_radius="$cs_radius_15"
+		>
+			<label
+				width="$cs_width_16"
+				height="$cs_height_60"
+				align="left"
+				valign="top"
+				textcolor="$cs_color_black"
+				fontname="$cs_font_700"
+				fontsize="$cs_fontsize_15"
+				multiline="true"
+				value="2."
+			/>
+			<label
+				width="$this.remain_right"
+				height="$cs_height_60"
+				align="left"
+				valign="top"
+				textcolor="$cs_color_text"
+				fontname="$cs_font_400"
+				fontsize="$cs_fontsize_15"
+				multiline="true"
+				value="파생상품거래는 원금이상 손실이 발생할 가능성이 있고 초고 위험투자상품이라는 사실을 인지하고 있습니까?"
+			/>
+			<br/>
+			<viewgroup id="vg_qustion2_check" 
+				width="$cs_width_146" 
+				height="$cs_height_22" 
+				layout_vertical="bottom"
+			>
+				<checkbox id="chk_radio2_1"
+					width="$cs_width_75"
+					height="$this.remain_bottom"
+					margin_left="$cs_width_32"
+					textcolor_active="$cs_color_black"
+					textcolor="$cs_color_text"
+					fontname="$cs_font_400" 
+					fontsize="$cs_fontsize_15"
+					CHECKIMAGESVG="$icon_radio_on" 
+					UNCHECKIMAGESVG="$icon_radio_off"
+					CHECKIMAGESVG_DISABLE="$icon_radio_off"
+					BACKGROUNDSVG_WIDTH="$cs_height_22"
+					BACKGROUNDSVG_HEIGHT="$cs_height_22"
+					backgroundimage_align="left"
+					backgroundimage_align_vertical="center"
+					checked="false"
+					value="예"
+					onclicked="$callaction(Act_CheckYesNo_onClicked,2,Y)"
+					/>
+				<checkbox id="chk_radio2_2"
+					width="$this.remain_right"
+					height="$this.remain_bottom"
+					margin_left="$cs_width_32"
+					textcolor_active="$cs_color_black"
+					textcolor="$cs_color_text"
+					fontname="$cs_font_400" 
+					fontsize="$cs_fontsize_15"
+					CHECKIMAGESVG="$icon_radio_on" 
+					UNCHECKIMAGESVG="$icon_radio_off"
+					CHECKIMAGESVG_DISABLE="$icon_radio_off"
+					BACKGROUNDSVG_WIDTH="$cs_height_22"
+					BACKGROUNDSVG_HEIGHT="$cs_height_22"
+					backgroundimage_align="left"
+					backgroundimage_align_vertical="center"
+					checked="false"
+					value="아니오"
+					onclicked="$callaction(Act_CheckYesNo_onClicked,2,N)"
+					/>
+			</viewgroup>
+		</viewgroup>
+		<br height="$cs_height_20"/>
+		<viewgroup
+			width="$this.remain_right"
+			height="$cs_height_112"
+			margin_top="$cs_height_15"
+			margin_bottom="$cs_height_15"
+			margin_left="$cs_width_20"
+			margin_right="$cs_width_20"
+			backcolor="$cs_color_bg"
+			border_width="1"
+			border_radius="$cs_radius_15"
+		>
+			<label
+				width="$cs_width_16"
+				height="$cs_height_40"
+				align="left"
+				valign="top"
+				textcolor="$cs_color_black"
+				fontname="$cs_font_700"
+				fontsize="$cs_fontsize_15"
+				multiline="true"
+				value="3."
+			/>
+			<label
+				width="$this.remain_right"
+				height="$cs_height_40"
+				align="left"
+				valign="top"
+				textcolor="$cs_color_text"
+				fontname="$cs_font_400"
+				fontsize="$cs_fontsize_15"
+				multiline="true"
+				value="파생상품거래 위험고지서와 설명서, 약관을 교부 받고 주요 내용을 설명 들으셨습니까?"
+			/>
+			<br/>
+			<viewgroup id="vg_qustion3_check" 
+				width="$cs_width_146" 
+				height="$cs_height_22" 
+				layout_vertical="bottom"
+			>
+				<checkbox id="chk_radio3_1"
+					width="$cs_width_75"
+					height="$this.remain_bottom"
+					margin_left="$cs_width_32"
+					textcolor_active="$cs_color_black"
+					textcolor="$cs_color_text"
+					fontname="$cs_font_400" 
+					fontsize="$cs_fontsize_15"
+					CHECKIMAGESVG="$icon_radio_on" 
+					UNCHECKIMAGESVG="$icon_radio_off"
+					CHECKIMAGESVG_DISABLE="$icon_radio_off"
+					BACKGROUNDSVG_WIDTH="$cs_height_22"
+					BACKGROUNDSVG_HEIGHT="$cs_height_22"
+					backgroundimage_align="left"
+					backgroundimage_align_vertical="center"
+					checked="false"
+					value="예"
+					onclicked="$callaction(Act_CheckYesNo_onClicked,3,Y)"
+					/>
+				<checkbox id="chk_radio3_2"
+					width="$this.remain_right"
+					height="$this.remain_bottom"
+					margin_left="$cs_width_32"
+					textcolor_active="$cs_color_black"
+					textcolor="$cs_color_text"
+					fontname="$cs_font_400" 
+					fontsize="$cs_fontsize_15"
+					CHECKIMAGESVG="$icon_radio_on" 
+					UNCHECKIMAGESVG="$icon_radio_off"
+					CHECKIMAGESVG_DISABLE="$icon_radio_off"
+					BACKGROUNDSVG_WIDTH="$cs_height_22"
+					BACKGROUNDSVG_HEIGHT="$cs_height_22"
+					backgroundimage_align="left"
+					backgroundimage_align_vertical="center"
+					checked="false"
+					value="아니오"
+					onclicked="$callaction(Act_CheckYesNo_onClicked,3,N)"
+					/>
+			</viewgroup>
+		</viewgroup>
+		<br height="$cs_height_20"/>
+		<viewgroup
+			width="$this.remain_right"
+			height="$cs_height_112"
+			margin_top="$cs_height_15"
+			margin_bottom="$cs_height_15"
+			margin_left="$cs_width_20"
+			margin_right="$cs_width_20"
+			backcolor="$cs_color_bg"
+			border_width="1"
+			border_radius="$cs_radius_15"
+		>
+			<label
+				width="$cs_width_16"
+				height="$cs_height_40"
+				align="left"
+				valign="top"
+				textcolor="$cs_color_black"
+				fontname="$cs_font_700"
+				fontsize="$cs_fontsize_15"
+				multiline="true"
+				value="4."
+			/>
+			<label
+				width="$this.remain_right"
+				height="$cs_height_40"
+				align="left"
+				valign="top"
+				textcolor="$cs_color_text"
+				fontname="$cs_font_400"
+				fontsize="$cs_fontsize_15"
+				multiline="true"
+				value="파생상품거래 위험고지서와 설명서, 약관의 내용을 확인하고 이해하셨습니까?"
+			/>
+			<br/>
+			<viewgroup id="vg_qustion4_check" 
+				width="$cs_width_146" 
+				height="$cs_height_22" 
+				layout_vertical="bottom"
+			>
+				<checkbox id="chk_radio4_1"
+					width="$cs_width_75"
+					height="$this.remain_bottom"
+					margin_left="$cs_width_32"
+					textcolor_active="$cs_color_black"
+					textcolor="$cs_color_text"
+					fontname="$cs_font_400" 
+					fontsize="$cs_fontsize_15"
+					CHECKIMAGESVG="$icon_radio_on" 
+					UNCHECKIMAGESVG="$icon_radio_off"
+					CHECKIMAGESVG_DISABLE="$icon_radio_off"
+					BACKGROUNDSVG_WIDTH="$cs_height_22"
+					BACKGROUNDSVG_HEIGHT="$cs_height_22"
+					backgroundimage_align="left"
+					backgroundimage_align_vertical="center"
+					checked="false"
+					value="예"
+					onclicked="$callaction(Act_CheckYesNo_onClicked,4,Y)"
+					/>
+				<checkbox id="chk_radio4_2"
+					width="$this.remain_right"
+					height="$this.remain_bottom"
+					margin_left="$cs_width_32"
+					textcolor_active="$cs_color_black"
+					textcolor="$cs_color_text"
+					fontname="$cs_font_400" 
+					fontsize="$cs_fontsize_15"
+					CHECKIMAGESVG="$icon_radio_on" 
+					UNCHECKIMAGESVG="$icon_radio_off"
+					CHECKIMAGESVG_DISABLE="$icon_radio_off"
+					BACKGROUNDSVG_WIDTH="$cs_height_22"
+					BACKGROUNDSVG_HEIGHT="$cs_height_22"
+					backgroundimage_align="left"
+					backgroundimage_align_vertical="center"
+					checked="false"
+					value="아니오"
+					onclicked="$callaction(Act_CheckYesNo_onClicked,4,N)"
+					/>
+			</viewgroup>
+		</viewgroup>
+	</viewgroup>	
+	<br/>
+	<viewgroup
+		width="$cs_width_343"
+		height="$cs_height_54"
+		layout="center"
+		layout_vertical="bottom"
+	>
+		<button 
+			width="$cs_bottom_two_button_width" 
+			height="$this.remain_bottom"
+			layout="left"
+			backcolor="$cs_color_white"
+			border_width="1"
+			border_radius="$cs_height_10"
+			border_color="$cs_color_disable"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_black"
+			textcolor_active="$cs_color_black"
+			value="이전"
+			onClicked="btn_open_account_history_onClicked"
+		/>
+		<button id="btn_1008_100_confirm"
+			width="$cs_bottom_two_button_width" 
+			height="$this.remain_bottom"
+			layout="right"
+			backcolor="$cs_color_main"
+			backcolor_disable="$cs_color_main_disable"
+			border_width="1"
+			border_radius="$cs_height_10"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_white"
+			textcolor_active="$cs_color_white"
+			textcolor_disable="$cs_color_white"
+			value="다음"
+			onclicked="btn_1008_confirm_onclicked"
+		/>
+	</viewgroup>
+</screen>
+
+<action id="Act_CheckYesNo_onClicked"
+value="
+$log($Act_CheckYesNo_onClicked_param1, $Act_CheckYesNo_onClicked_param2);
+	if($Act_CheckYesNo_onClicked_param1==0){	// 전체동의 클릭
+		if($chk_allcheck.checked){
+			$setvar(
+				chk_radio1_1.checked = true
+				,chk_radio2_1.checked = true
+				,chk_radio3_1.checked = true
+				,chk_radio4_1.checked = true
+				,chk_radio1_2.checked = false
+				,chk_radio2_2.checked = false
+				,chk_radio3_2.checked = false
+				,chk_radio4_2.checked = false
+			);
+		}else{
+			$setvar(
+				chk_radio1_1.checked = false
+				,chk_radio2_1.checked = false
+				,chk_radio3_1.checked = false
+				,chk_radio4_1.checked = false
+				,chk_radio1_2.checked = true
+				,chk_radio2_2.checked = true
+				,chk_radio3_2.checked = true
+				,chk_radio4_2.checked = true
+			);
+		}
+	}
+	// 하단질문 라디오 액션
+	if($Act_CheckYesNo_onClicked_param1==1){	
+		if($isequal_string($Act_CheckYesNo_onClicked_param2,Y)){
+			$setvar( 
+				chk_radio1_1.checked = true 
+				,chk_radio1_2.checked = false 
+			);
+			if($chk_radio1_1.checked && $chk_radio2_1.checked && $chk_radio3_1.checked && $chk_radio4_1.checked){
+				$setvar( 
+					chk_allcheck.checked = true
+				);	
+			}
+		}elseif($isequal_string($Act_CheckYesNo_onClicked_param2,N)){
+			$setvar(
+				chk_radio1_1.checked = false
+				,chk_radio1_2.checked = true 
+				,chk_allcheck.checked = false
+			);
+		}
+	}elseif($Act_CheckYesNo_onClicked_param1==2){
+		if($isequal_string($Act_CheckYesNo_onClicked_param2,Y)){
+			$setvar( 
+				chk_radio2_1.checked = true 
+				,chk_radio2_2.checked = false 
+			);
+			if($chk_radio1_1.checked && $chk_radio2_1.checked && $chk_radio3_1.checked && $chk_radio4_1.checked){
+				$setvar( 
+					chk_allcheck.checked = true
+				);	
+			}
+		}elseif($isequal_string($Act_CheckYesNo_onClicked_param2,N)){
+			$setvar(
+				chk_radio2_1.checked = false
+				,chk_radio2_2.checked = true 
+				,chk_allcheck.checked = false
+			);
+		}
+	}elseif($Act_CheckYesNo_onClicked_param1==3){
+		if($isequal_string($Act_CheckYesNo_onClicked_param2,Y)){
+			$setvar( 
+				chk_radio3_1.checked = true 
+				,chk_radio3_2.checked = false 
+			);
+			if($chk_radio1_1.checked && $chk_radio2_1.checked && $chk_radio3_1.checked && $chk_radio4_1.checked){
+				$setvar( 
+					chk_allcheck.checked = true
+				);	
+			}
+		}elseif($isequal_string($Act_CheckYesNo_onClicked_param2,N)){
+			$setvar(
+				chk_radio3_1.checked = false
+				,chk_radio3_2.checked = true 
+				,chk_allcheck.checked = false
+			);
+		}
+	}elseif($Act_CheckYesNo_onClicked_param1==4){
+		if($isequal_string($Act_CheckYesNo_onClicked_param2,Y)){
+			$setvar( 
+				chk_radio4_1.checked = true 
+				,chk_radio4_2.checked = false 
+			);
+			if($chk_radio1_1.checked && $chk_radio2_1.checked && $chk_radio3_1.checked && $chk_radio4_1.checked){
+				$setvar( 
+					chk_allcheck.checked = true
+				);	
+			}
+		}elseif($isequal_string($Act_CheckYesNo_onClicked_param2,N)){
+			$setvar(
+				chk_radio4_1.checked = false
+				,chk_radio4_2.checked = true 
+				,chk_allcheck.checked = false
+			);
+		}
+	}
+
+" />
+
+
+<action id="btn_1008_confirm_onclicked"
+value="
+	if($chk_radio1_1.checked && $chk_radio2_1.checked && $chk_radio3_1.checked && $chk_radio4_1.checked){
+		$callaction(Act_Open_Account_Move,4141);
+	}
+	else{
+		$callaction(fnPopover_AlertAction,,파생상품 위험고지 동의여부를 확인해 주세요.,,확인);
+		return;
+	}
+" />
