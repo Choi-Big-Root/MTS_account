@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <import filename="plist/root/common/css_design_device.xml"/>
+<import filename="plist/root/common/device_info.xml"/>   // 하드웨어 정보
 
 <actiondata value="
-
 	$setvar_common(
 		g_file_name = intro
 		,g_is_background = 
 	);
-
-	//PolicyList 적용
-	$cert_setOidFilter(1.2.410.200005.1.1.1|1.2.410.200005.1.1.5|1.2.410.200004.5.1.1.5|1.2.410.200004.5.1.1.7|1.2.410.200004.5.1.1.10|1.2.410.200004.5.1.1.9|1.2.410.200004.5.1.1.9.4|1.2.410.200004.5.4.1.1|1.2.410.200004.5.4.1.2|1.2.410.200004.5.2.1.2|1.2.410.200012.1.1.1|1.2.410.200012.1.1.3|1.2.410.200004.5.5.1.1|1.2.410.200004.5.5.1.2|1.2.410.200004.5.2.1.7.2|1.2.410.200004.5.4.1.102|1.2.410.200012.1.1.103|1.2.410.200004.2.1|1.2.410.200004.5.2.1.1|1.2.410.200004.5.3.1.2
-);
-
 
 	// 앱 설치 시 plist 새로 적용.
 	if($g_isAndroid) {      $setvar(tmp_app_short_version = $bundleinfo(BUNDLESHORTVERSION));   }
@@ -28,18 +23,21 @@
             ,g_bundleinfo_BUILDVERSION    
             ,g_app_short_version  
         );
-        $removesubfolder(/plist/);
-		$resource_copyfile(/plist/down/version.dat, /plist/down/version.dat); 	// APK에 있는 버전파일을 복사한다.
+        if(!$g_plist_not_del_flag){
+        	$removesubfolder(/plist/);
+			$resource_copyfile(/plist/down/version.dat, /plist/down/version.dat); 	// APK에 있는 버전파일을 복사한다.
+        }
 		$config_setvalue(cf_g_app_short_version,$tmp_app_short_version,g_app_short_version);    // Config 파일에 저장
 		$config_getvalue(cf_g_app_short_version,g_app_short_version);
-
 		$config_setvalue(cf_g_3galarm,false,g_3galarm);	//Config 파일에 저장 //db파일에 저장후
 		$config_getvalue_common(cf_g_3galarm,g_3galarm); //config에 셋팅되어있는 cf_g_3galarm값을 가져와 g_3galarm값으로 대입 후 전역변수로 만든다.
     }
-
 " />
 
-<import filename="plist/root/common/device_info.xml"/>   // 하드웨어 정보
+<action id="screen_intro_onload" value="
+	$openfile(plist/root/intro_after.xml);           
+" />
+
 <screen id="screen_intro"
 	backcolor="ffffff"
 	//imagesizefit="true"
@@ -86,45 +84,15 @@
 
 	<br />
 </screen>
-<action id="screen_intro_exit" value="
-        $exit();
-"/>
-<action id="screen_intro_onload" value="
-if(!$g_isAndroid){
-    $logvar(p_sRiskResultMsg,p_sRiskResultCode);
-    if($p_sRiskResultCode > 0){
-        $alertaction(screen_intro_exit,,$p_sRiskResultMsg,확인);
-        return;
-    }
-}
-
-	//20231116 권한 불필요 함으로 제거 (XML상에서 제거)
-	/*
-	if($g_isAndroid){
-		$setvar(_permission_usagestaus = $checkPermission_UsageStats());
-		$logvar(_permission_usagestaus);
-		if(!$isequal_string($_permission_usagestaus,true)){
-			$callaction(fnSetUsageStus_Alarm);
-			return;
-		}
-	}
-	*/
 
 
-	if($g_debug_master_flag){
-		$openfile(plist/root/test/index.xml);           
-		return;
-	}
-	$openfile(plist/root/intro_after.xml);           
-" />
-//20231116 권한 불필요 함으로 제거 (XML상에서 제거)
-<!-- <action id="fnSetUsageStus_Alarm" scope="common"
-value="
-	$alertaction(fnSetUsageStus_Alarm_Confirm,사용정보 접근허용,원격제어 앱을 통한 금융사기를 예방하기 위해 사용합니다.,확인);
-	//$callaction(fnPopover_AlertAction,fnSetUsageStus_Alarm_Confirm,사용정보 접근허용\n-원격제어 앱을 통한 금융사기를 예방하기 위해 사용합니다.,,확인);
-" />
-<action id="fnSetUsageStus_Alarm_Confirm" scope="common"
-value="
-	$setPermission_UsageStats();
-	//$exit();
-"/> -->
+
+
+
+
+
+
+
+
+
+

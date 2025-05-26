@@ -602,18 +602,10 @@ value="
 	}
 " />
 
-
-
-
-
-
-
 <action id="fnConfig_Load_All" scope="common" value="
 	$delarrayvar(arr_config);
-	$config_getarray(arr_config,common);
-
-	//$logarrayvar(arr_config);
-
+	$config_getarray(arr_config,common); 
+	$logarrayvar(arr_config);
 	for($arrCnt=0;$arrCnt<$getarrayvarcount(arr_config);$arrCnt++){
 		$setvar(
 			varName=$getarrayvar(arr_config,$arrCnt,2)        // 변수명
@@ -621,111 +613,6 @@ value="
 		);
 		if($strlen($varName)>0){	$setvar_common($($varName)=$varValue);	}
 	}
-	// Config 변수 초기화 셋팅
-	if($strlen($g_sise_auto_login)<1){		$callaction(fnConfig_SetValue,g_sise_auto_login,true);	} 			// 조회전용 자동로그인
-	if($strlen($g_cert_login_keep)<1){		$callaction(fnConfig_SetValue,g_cert_login_keep,true);	} 			// 공동인증접속 유지
-
-	if($strlen($lcd_open)<1){		$callaction(fnConfig_SetValue,lcd_open,false);	} 			// 화면자동꺼짐방지
-	if($strlen($hot_deal_menu_open)<1){		$callaction(fnConfig_SetValue,hot_deal_menu_open,false);	} 			// 초기 핫딜시 메뉴 오픈 
-	if($strlen($order_confirm_popup_open)<1){ $callaction(fnConfig_SetValue,order_confirm_popup_open,true); }	//주문확인창 보기 
-
-	if($strlen($g_jumunNche_alarm)<1){	$callaction(fnConfig_SetValue,g_jumunNche_alarm,true);	} 	// 주문체결 알람
-	if($strlen($g_news_alarm)<1){		$callaction(fnConfig_SetValue,g_news_alarm,false);	} 		// 뉴스알람
-	if($strlen($g_buy_tick)<1){     		$callaction(fnConfig_SetValue,g_buy_tick,100); } 			// 주문착오 매수
-	if($strlen($g_sell_tick)<1){     		$callaction(fnConfig_SetValue,g_sell_tick,100); } 			// 주문착오 매도
-	if($strlen($g_amount_tick)<1){     	$callaction(fnConfig_SetValue,g_amount_tick,50); } 			// 주문착오 수량
-
-	// 차트관련 환경변수 
-	if($strlen($g_avglineSet)<1){     		$callaction(fnConfig_SetValue,g_avglineSet,false); } 			// 
-	if($strlen($g_bollingerSet)<1){     	$callaction(fnConfig_SetValue,g_bollingerSet,false); } 			// 
-	if($strlen($g_mamulSet)<1){     		$callaction(fnConfig_SetValue,g_mamulSet,false); } 			// 
-	if($strlen($g_envelopeSet)<1){     	$callaction(fnConfig_SetValue,g_envelopeSet,false); } 			// 
-	if($strlen($g_secondary_index)<1){     	$callaction(fnConfig_SetValue,g_secondary_index,volume); } 		// 
-	if($strlen($g_3galarm)<1){     	$callaction(fnConfig_SetValue,g_3galarm,false); } 				// 초기 3g/4g알림 여부
-
-	// 자동로그인  변수 
-	if($strlen($g_is_auto_login)<1){     	$callaction(fnConfig_SetValue,g_is_auto_login,true); } 			// 자동로그인 여부  
-	if($strlen($g_autologin_type)<1){     	$callaction(fnConfig_SetValue,g_autologin_type,1); } 			// 1:시세자동로그인, 2:공동인증 
-
-
-	// 해외선물 
-	if( $strlen($g_limit_tick_global)<1 ){   $callaction(fnConfig_SetValue,g_limit_tick_global,100); 	} 				// 해외 제한틱 
-	if( $strlen($g_warnning_tick_global)<1 ){   $callaction(fnConfig_SetValue,g_warnning_tick_global,20); 	} 			// 해외 제한틱 
-	if( $strlen($g_limit_amount_global)<1 ){   $callaction(fnConfig_SetValue,g_limit_amount_global,100); 	} 				// 해외 제한틱 
-	if( $strlen($g_warnning_amount_global)<1 ){   $callaction(fnConfig_SetValue,g_warnning_amount_global,20); 	} 			// 해외 제한틱 
-
-
-	// 국내선물 
-	// 제한틱, 경고틱 ,제한수량, 경고수량 
-	if( $strlen($g_limit_tick_rate)<1 ){   $callaction(fnConfig_SetValue,g_limit_tick_rate,100); 	} 				//금리선물
-	if($strlen($g_limit_tick_currency)<1){     		$callaction(fnConfig_SetValue,g_limit_tick_currency,100); } 			// 통화선물
-	if($strlen($g_limit_tick_kospi200)<1){     	$callaction(fnConfig_SetValue,g_limit_tick_kospi200,100); } 			// 코스피200 선물 
-	if($strlen($g_limit_tick_minikospi)<1){     	$callaction(fnConfig_SetValue,g_limit_tick_minikospi,250); } 			// 미니코스피200선물 
-	if($strlen($g_limit_tick_pork)<1){     		$callaction(fnConfig_SetValue,g_limit_tick_pork,100); } 			// 돈육선물
-	if($strlen($g_limit_tick_gold)<1){     		$callaction(fnConfig_SetValue,g_limit_tick_gold,250); } 			// 금선물
-	if($strlen($g_limit_tick_ksq)<1){     		$callaction(fnConfig_SetValue,g_limit_tick_ksq,100); } 			// 코스닥150
-
-	if($strlen($g_warnning_tick_rate)<1){     		$callaction(fnConfig_SetValue,g_warnning_tick_rate,20); } 			// 금리선물
-	if($strlen($g_warnning_tick_currency)<1){     		$callaction(fnConfig_SetValue,g_warnning_tick_currency,20); } 		// 통화선물
-	if($strlen($g_warnning_tick_kospi200)<1){     		$callaction(fnConfig_SetValue,g_warnning_tick_kospi200,20); } 		// 코스피200 선물 
-	if($strlen($g_warnning_tick_minikospi)<1){     		$callaction(fnConfig_SetValue,g_warnning_tick_minikospi,50); } 		// 미니코스피200선물 
-	if($strlen($g_warnning_tick_pork)<1){     		$callaction(fnConfig_SetValue,g_warnning_tick_pork,20); } 			// 돈육선물
-	if($strlen($g_warnning_tick_gold)<1){     		$callaction(fnConfig_SetValue,g_warnning_tick_gold,50); } 			// 금선물
-	if($strlen($g_warnning_tick_ksq)<1){     		$callaction(fnConfig_SetValue,g_warnning_tick_ksq,50); } 			// 코스닥150
-
-	if($strlen($g_limit_amount_rate)<1){     		$callaction(fnConfig_SetValue,g_limit_amount_rate,500); } 			// 금리선물
-	if($strlen($g_limit_amount_currency)<1){     	$callaction(fnConfig_SetValue,g_limit_amount_currency,2500); } 		// 통화선물
-	if($strlen($g_limit_amount_kospi200)<1){     	$callaction(fnConfig_SetValue,g_limit_amount_kospi200,1000); } 		// 코스피200 선물 
-	if($strlen($g_limit_amount_minikospi)<1){     	$callaction(fnConfig_SetValue,g_limit_amount_minikospi,5000); } 		// 미니코스피200선물 
-	if($strlen($g_limit_amount_pork)<1){     		$callaction(fnConfig_SetValue,g_limit_amount_pork,500); } 			// 돈육선물
-	if($strlen($g_limit_amount_gold)<1){     		$callaction(fnConfig_SetValue,g_limit_amount_gold,500); } 			// 금선물
-	if($strlen($g_limit_amount_ksq)<1){     		$callaction(fnConfig_SetValue,g_limit_amount_ksq,500); } 			// 코스닥150
-
-	if($strlen($g_warnning_amount_rate)<1){     		$callaction(fnConfig_SetValue,g_warnning_amount_rate,300); } 		// 금리선물
-	if($strlen($g_warnning_amount_currency)<1){     	$callaction(fnConfig_SetValue,g_warnning_amount_currency,1500); } 		// 통화선물
-	if($strlen($g_warnning_amount_kospi200)<1){     	$callaction(fnConfig_SetValue,g_warnning_amount_kospi200,600); } 		// 코스피200 선물 
-	if($strlen($g_warnning_amount_minikospi)<1){     	$callaction(fnConfig_SetValue,g_warnning_amount_minikospi,3000); } 	// 미니코스피200선물 
-	if($strlen($g_warnning_amount_pork)<1){     		$callaction(fnConfig_SetValue,g_warnning_amount_pork,300); } 		// 돈육선물
-	if($strlen($g_warnning_amount_gold)<1){     		$callaction(fnConfig_SetValue,g_warnning_amount_gold,300); } 		// 금선물
-	if($strlen($g_warnning_amount_ksq)<1){     		$callaction(fnConfig_SetValue,g_warnning_amount_ksq,300); } 		// 코스닥150
-
-	// 제한금액 
-	if($strlen($g_limit_money_kospi_option)<1){     		$callaction(fnConfig_SetValue,g_limit_money_kospi_option,50); } 		// 코스피200옵션 
-	if($strlen($g_limit_money_minikospi_option)<1){     	$callaction(fnConfig_SetValue,g_limit_money_minikospi_option,50); } 	// 미니코스피200옵션 
-	if($strlen($g_limit_money_usd_option)<1){     			$callaction(fnConfig_SetValue,g_limit_money_usd_option,5); } 			// 미국달러옵션 
-	if($strlen($g_limit_money_stock_option)<1){     		$callaction(fnConfig_SetValue,g_limit_money_stock_option,10); } 		// 개별주식선물 
-	if($strlen($g_limit_money_wkospi_option)<1){			$callaction(fnConfig_SetValue,g_limit_money_wkospi_option,50); }		// 위클리옵션
-
-	// 경고금액 
-	if($strlen($g_warnning_money_kospi_option)<1){     		$callaction(fnConfig_SetValue,g_warnning_money_kospi_option,20); } 		// 코스피200옵션 
-	if($strlen($g_warnning_money_minikospi_option)<1){     	$callaction(fnConfig_SetValue,g_warnning_money_minikospi_option,20); } 	// 미니코스피200옵션 
-	if($strlen($g_warnning_money_usd_option)<1){     		$callaction(fnConfig_SetValue,g_warnning_money_usd_option,2); } 		// 미국달러옵션 
-	if($strlen($g_warnning_money_stock_option)<1){     		$callaction(fnConfig_SetValue,g_warnning_money_stock_option,4); } 		// 개별주식선물 
-	if($strlen($g_warnning_money_wkospi_option)<1){			$callaction(fnConfig_SetValue,g_warnning_money_wkospi_option,20); }		// 위클리옵션
-
-	// 틱한도
-	if($strlen($g_max_tick_rate)<1){     		$callaction(fnConfig_SetValue,g_max_tick_rate,200); } 			// 금리선물
-	if($strlen($g_max_tick_currency)<1){     		$callaction(fnConfig_SetValue,g_max_tick_currency,200); } 			// 통화선물
-	if($strlen($g_max_tick_kospi200)<1){     	$callaction(fnConfig_SetValue,g_max_tick_kospi200,200); } 			// 코스피200 선물 
-	if($strlen($g_max_tick_minikospi)<1){     	$callaction(fnConfig_SetValue,g_max_tick_minikospi,500); } 			// 미니코스피200선물 
-	if($strlen($g_max_tick_pork)<1){     		$callaction(fnConfig_SetValue,g_max_tick_pork,200); } 			// 돈육선물
-	if($strlen($g_max_tick_gold)<1){     		$callaction(fnConfig_SetValue,g_max_tick_gold,500); } 			// 금선물
-	if($strlen($g_max_tick_ksq)<1){     		$callaction(fnConfig_SetValue,g_max_tick_ksq,200); } 			// 코스닥150
-	// 수량한도
-	if($strlen($g_max_amount_rate)<1){     		$callaction(fnConfig_SetValue,g_max_amount_rate,1000); } 			// 금리선물
-	if($strlen($g_max_amount_currency)<1){     	$callaction(fnConfig_SetValue,g_max_amount_currency,5000); } 		// 통화선물
-	if($strlen($g_max_amount_kospi200)<1){     	$callaction(fnConfig_SetValue,g_max_amount_kospi200,2000); } 		// 코스피200 선물 
-	if($strlen($g_max_amount_minikospi)<1){     	$callaction(fnConfig_SetValue,g_max_amount_minikospi,5000); } 		// 미니코스피200선물 
-	if($strlen($g_max_amount_pork)<1){     		$callaction(fnConfig_SetValue,g_max_amount_pork,1000); } 			// 돈육선물
-	if($strlen($g_max_amount_gold)<1){     		$callaction(fnConfig_SetValue,g_max_amount_gold,1000); } 			// 금선물
-	if($strlen($g_max_amount_ksq)<1){     		$callaction(fnConfig_SetValue,g_max_amount_ksq,1000); } 			// 코스닥150
-	// 금액한도
-	// 제한금액 
-	if($strlen($g_max_money_kospi_option)<1){     		$callaction(fnConfig_SetValue,g_max_money_kospi_option,50); } 		// 코스피200옵션 
-	if($strlen($g_max_money_minikospi_option)<1){     	$callaction(fnConfig_SetValue,g_max_money_minikospi_option,50); } 	// 미니코스피200옵션 
-	if($strlen($g_max_money_usd_option)<1){     		$callaction(fnConfig_SetValue,g_max_money_usd_option,5); } 			// 미국달러옵션 
-	if($strlen($g_max_money_stock_option)<1){     		$callaction(fnConfig_SetValue,g_max_money_stock_option,10); } 		// 개별주식선물 
-	if($strlen($g_max_money_wkospi_option)<1){			$callaction(fnConfig_SetValue,g_max_money_wkospi_option,50); }		// 위클리옵션
 " />
 <action id="fnConfig_Save_All" scope="common" 
 paramlog="false"
