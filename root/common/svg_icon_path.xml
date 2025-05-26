@@ -37,6 +37,12 @@
 
 		,icon_idcard 		= $callaction(fnGetSvgIconPathName,idcard)
 
+		,icon_1_way_auth 		= $callaction(fnGetSvgIconPathName,1_way_auth)
+
+		,icon_confirm_circle 		= $callaction(fnGetSvgIconPathName,confirm_circle)		
+
+		,icon_account_complete 		= $callaction(fnGetSvgIconPathName,account_complete)		
+
 
 		// login.xml 
 		,icon_ci 					= $callaction(fnGetSvgIconPathName,ci_1)
