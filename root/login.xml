@@ -159,7 +159,7 @@ onLoad="screen_login_onload"
 
         />
         <button class="cs_btn_none" onClicked="
-        //$callaction(Act_Open_Account_Popup, 1000);
+        $callaction(Act_Open_Account_Popup, 1000);
         //$callaction(Act_Open_Account_Popup, 1002);
         //$callaction(Act_Open_Account_Popup, 1002);
         "/> 

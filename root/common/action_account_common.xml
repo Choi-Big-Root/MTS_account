@@ -653,7 +653,7 @@ value="
         )
     }elseif($menu_num < 1015){
         $setvar(
-            pop_info_tip_lbl=$(계좌 개설 신청자 명의의 은행(또는 증권사) 계좌정보를 입력해주세요.)
+            pop_info_tip_lbl=$(계좌 개설 신청자 명의의 은행%28또는 증권사%29 계좌정보를 입력해주세요.)
             ,pop_info_tip_height=$cs_height_80
         )
     }elseif($menu_num < 4119){
