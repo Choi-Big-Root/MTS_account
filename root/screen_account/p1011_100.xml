@@ -323,7 +323,7 @@ value="
 		layout_vertical="bottom"
 	>
 		<button 
-			width="$cs_bottom_two_button_width" 
+			width="$cs_width_100" 
 			height="$this.remain_bottom"
 			layout="left"
 			backcolor="$cs_color_white"
@@ -337,8 +337,8 @@ value="
 			value="이전"
 			onClicked="btn_open_account_history_onClicked"
 		/>
-		<button id="btn_1011_af"
-			width="$cs_bottom_two_button_width" 
+		<button id="btn_1011_100_1"
+			width="$cs_width_235" 
 			height="$this.remain_bottom"
 			layout="right"
 			backcolor="$cs_color_main"
@@ -350,9 +350,12 @@ value="
 			textcolor="$cs_color_white"
 			textcolor_active="$cs_color_white"
 			textcolor_disable="$cs_color_white"
-			enable="false"
-			value="다음"
-			onclicked=""
+			value="촬영할게요"
+			onclicked="1011_camera_onclicked"
 		/>
 	</viewgroup>
 </screen>
+<action id="1011_camera_onclicked" 
+value="
+	$callaction(Act_Open_Account_Move,4125);
+"/>
