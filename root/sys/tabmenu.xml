@@ -19,6 +19,10 @@
 		<menucode groupid="1" id="1010" name="이체출금 계좌등록" enable="true" file="plist/root/screen_account/p1010_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
 
 		<menucode groupid="1" id="1011" name="신분증제출" enable="true" file="plist/root/screen_account/p1011_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="1" id="1012" name="신분증제출" enable="true" file="plist/root/screen_account/p1012_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+
+		<menucode groupid="1" id="1013" name="소액이체 계좌인증" enable="true" file="plist/root/screen_account/p1013_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="1" id="1014" name="소액이체 계좌인증" enable="true" file="plist/root/screen_account/p1014_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
 
 		
 		<!-- 비대면 -->
