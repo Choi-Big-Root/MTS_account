@@ -617,7 +617,7 @@ $log($Act_CheckYesNo_onClicked_param1, $Act_CheckYesNo_onClicked_param2);
 <action id="btn_1008_confirm_onclicked"
 value="
 	if($chk_radio1_1.checked && $chk_radio2_1.checked && $chk_radio3_1.checked && $chk_radio4_1.checked){
-		$callaction(Act_Open_Account_Move,4141);
+		$callaction(Act_Open_Account_Move,1009);
 	}
 	else{
 		$callaction(fnPopover_AlertAction,,파생상품 위험고지 동의여부를 확인해 주세요.,,확인);
