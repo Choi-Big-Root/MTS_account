@@ -133,7 +133,8 @@ value="
 	$callaction(fnConfig_SetValue,g_IN_BNKNAME_BNK_NM 	,$recvSSL_body_NAME);
 
 	//$alertaction(fnActive_Next_1010,,계좌조회가 완료되었습니다.,확인);
-	$callaction(fnPopover_AlertAction,fnActive_Next_1010,계좌조회가 완료되었습니다.,,확인);
+	//$callaction(fnPopover_AlertAction,fnActive_Next_1010,계좌조회가 완료되었습니다.,,확인);
+	$callaction(fnActive_Next_1010);
 
 
 	// 비대면 절차개선 - 2020.09.28
@@ -436,6 +437,7 @@ value="
 			1010 g_save_acnt_no[$g_save_acnt_no],
 	);
 	*/
+	$popscreen(pop_1010_input_check_confirm);
 "/>
 
 //여기서 부터 진행을 해보자.
@@ -710,6 +712,146 @@ onload="popscreen_1010_choice_onload"
     />
 </popscreen>
 
+<popscreen id="pop_1010_input_check_confirm"
+width="$p_lcdWidth"
+height="$p_lcdHeight"
+backcolor="00000060"
+>
+	<screen id="pop_1010_input_check_confirm_screen"
+		width="$this.remain_right"
+		layout="center"
+		layout_vertical="bottom"
+		margin_top="$cs_height_30"
+		margin_bottom="$cs_height_20"
+		height="$cs_height_241"
+		background_roundinfo="$cs_color_white,$cs_color_white,$cs_radius_30,1,true,true,false,false"
+	>
+		<viewgroup
+			width="$cs_width_343"
+			height="$cs_height_113"
+			layout="center"
+			backcolor="$cs_color_line"
+			margin_left="1"
+			margin_right="1"
+			margin_bottom="1"
+			margin_top="1"
+		>
+			<label
+				width="$cs_width_109"
+				height="$cs_height_37"
+				backcolor="$cs_color_bg"
+				textcolor="$cs_color_text"
+				fontname="$cs_font_400"
+				fontsize="$cs_fontsize_14"
+				value="은행(증권사)"
+				align="center"
+			/>
+			<blnak width="1"/>
+			<label
+				width="$this.remain_right"
+				height="$cs_height_37"
+				margin_left="$cs_width_10"
+				backcolor="$cs_color_white"
+				textcolor="$cs_color_text"
+				fontname="$cs_font_400"
+				fontsize="$cs_fontsize_14"
+				value="$g_save_bank_name"
+				align="left"
+			/>
+			<br height="1"/>
+			<label
+				width="$cs_width_109"
+				height="$cs_height_37"
+				backcolor="$cs_color_bg"
+				textcolor="$cs_color_text"
+				fontname="$cs_font_400"
+				fontsize="$cs_fontsize_14"
+				value="계좌주"
+				align="center"
+			/>
+			<blnak width="1"/>
+			<label
+				width="$this.remain_right"
+				height="$cs_height_37"
+				margin_left="$cs_width_10"
+				backcolor="$cs_color_white"
+				textcolor="$cs_color_text"
+				fontname="$cs_font_400"
+				fontsize="$cs_fontsize_14"
+				value="$g_IN_AGREE_CLNT_NM"
+				align="left"
+			/>
+			<br height="1"/>
+			<label
+				width="$cs_width_109"
+				height="$cs_height_37"
+				backcolor="$cs_color_bg"
+				textcolor="$cs_color_text"
+				fontname="$cs_font_400"
+				fontsize="$cs_fontsize_14"
+				value="계좌번호"
+				align="center"
+			/>
+			<blnak width="1"/>
+			<label
+				width="$this.remain_right"
+				height="$cs_height_37"
+				margin_left="$cs_width_10"
+				backcolor="$cs_color_white"
+				textcolor="$cs_color_text"
+				fontname="$cs_font_400"
+				fontsize="$cs_fontsize_14"
+				value="$g_save_acnt_no"
+				align="left"
+			/>
+		</viewgroup>
+		<br/>
+		<viewgroup
+			width="$cs_width_343"
+			height="$cs_height_54"
+			layout="center"
+			layout_vertical="bottom"
+		>
+			<button 
+				width="$cs_width_167" 
+				height="$this.remain_bottom"
+				layout="left"
+				backcolor="$cs_color_white"
+				border_width="1"
+				border_color="$cs_color_disable"
+				border_radius="$cs_height_10"
+				fontsize="$cs_fontsize_16"
+				fontname="$cs_font_700"
+				textcolor="$cs_color_black"
+				textcolor_active="$cs_color_black"
+				value="이전"
+				key="1"
+				onClicked="$closescreen(pop_1010_input_check_confirm);"
+			/>
+			<button id="btn_pop_1010_input_check_confirm"
+				width="$cs_width_167" 
+				height="$this.remain_bottom"
+				layout="right"
+				backcolor="$cs_color_main"
+				border_width="1"
+				border_radius="$cs_height_10"
+				fontsize="$cs_fontsize_16"
+				fontname="$cs_font_700"
+				textcolor="$cs_color_white"
+				textcolor_active="$cs_color_white"
+				value="네 맞아요"
+				key="2"
+				onClicked="btn_pop_1010_input_check_confirm_onClicked"
+			/>
+		</viewgroup>
+	</screen>
+</popscreen>
+
+<action id="btn_pop_1010_input_check_confirm_onClicked"
+value="
+	$closescreen(pop_1010_input_check_confirm);
+	$callaction(Act_Open_Account_Move,1011);
+"/>
 
 <action id="TEXTFIELDEND_LOCAL"
 value="
