@@ -656,15 +656,15 @@ value="
             pop_info_tip_lbl=$(계좌 개설 신청자 명의의 은행%28또는 증권사%29 계좌정보를 입력해주세요.)
             ,pop_info_tip_height=$cs_height_80
         )
-    }elseif($menu_num < 1015){
+    }elseif($menu_num < 1013){
         $setvar(
             pop_info_tip_lbl=$(본인 확인을 위한 신분증 제출해주세요.)
             ,pop_info_tip_height=$cs_height_40
         )
-    }elseif($menu_num < 4120){
+    }elseif($menu_num < 1015){
         $setvar(
-            pop_info_tip_lbl=계좌 개설 신청자 명의의 은행(또는 증권사)\n계좌정보를 입력해주세요.
-            ,pop_info_tip_height=$h($g_lcdHeight,13)
+            pop_info_tip_lbl=$(1원이체로 계좌인증 하는 단계예요.)
+            ,pop_info_tip_height=$cs_height_40
         )
     }elseif($menu_num < 4121 || $menu_num == 4125 ){
         $setvar(
@@ -766,7 +766,7 @@ onunload="pop_info_tip_onunload"
         layout="center"
         margin_left="$cs_height_10"
         margin_right="$cs_height_10"
-        margin_top="$cs_height_10"
+        margin_top="$cs_height_5"
         margin_bottom="$cs_height_10"
         >
             <label
