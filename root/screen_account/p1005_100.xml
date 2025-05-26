@@ -163,7 +163,7 @@ value="
 <action id="btn_1005_jagum_onClicked"
 	value="
 		$setvar(
-			screen_1005_100.scrolloffset_y = 9999
+			screen_1005_100.scrolloffset_y = $lbl_1005_100_usa.y
 		);
 		$callaction(popscreen_1005_choice_onclicked,5);
 "/>
@@ -304,7 +304,7 @@ value="
 			onClicked="btn_1005_jagum_onClicked"
 		/>
 		<br height="$cs_height_20" />
-		<label
+		<label id="lbl_1005_100_usa"
 			class="cs_lbl_1005_100_title_1"
 			value="미국인 여부"
 		/>
