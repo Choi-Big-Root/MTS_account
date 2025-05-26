@@ -33,6 +33,10 @@
 		,icon_radio_on 			= $callaction(fnGetSvgIconPathName,radio_on)
 		,icon_radio_off 		= $callaction(fnGetSvgIconPathName,radio_off)
 
+		,icon_exclamation_circle 		= $callaction(fnGetSvgIconPathName,exclamation_circle)
+
+		,icon_idcard 		= $callaction(fnGetSvgIconPathName,idcard)
+
 
 		// login.xml 
 		,icon_ci 					= $callaction(fnGetSvgIconPathName,ci_1)
