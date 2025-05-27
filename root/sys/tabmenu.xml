@@ -28,6 +28,8 @@
 
 		<menucode groupid="1" id="1016" name="계좌개설 완료" enable="true" file="plist/root/screen_account/p1016_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
 
+		<menucode groupid="1" id="1017" name="계좌개설 신청 내역 안내" enable="true" file="plist/root/screen_account/p1017_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+
 		
 		<!-- 비대면 -->
 		<menucode groupid="4" id="4100" name="비대면 계좌개설" enable="true" file="plist/root/screen/p4100_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
