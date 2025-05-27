@@ -742,11 +742,14 @@ value="
 	);
 "/>
 <action id="BTN_POP_JIKJANG_3_CONFIRM_ONCLICKED"
+params="p_jikjang_3_text"
 value="
-	$delvar(tmp_jikjang_3_val)
-	$setvar(
-		tmp_jikjang_3_val = $tf_pop_jikjang_3_input.value
-	);
+	$delvar(tmp_jikjang_3_val);
+	if($strlen($p_jikjang_3_text) > 0){
+		$setvar( tmp_jikjang_3_val = $p_jikjang_3_text);
+	}else{
+		$setvar( tmp_jikjang_3_val = $tf_pop_jikjang_3_input.value );
+	}
 	$logvar(
 		tmp_jikjang_1_val
 		,tmp_jikjang_2_val
@@ -895,7 +898,7 @@ value="
 				textcolor_disable="$cs_color_white"
 				value="확인"
 				enable="false"
-				onClicked="btn_pop_jikjang_3_confirm_onClicked"	
+				onClicked="$callaction(btn_pop_jikjang_3_confirm_onClicked,);"	
 			/>
 		</viewgroup>
 
@@ -1322,15 +1325,31 @@ value="
 "/>
 <action id="tbl_jikjang_addrees_tr_onclicked" 
 value="
-	$delvar(tmp_jikjang_1_val,tmp_jikjang_2_val);
+	$delvar(tmp_jikjang_1_val,tmp_jikjang_2_val,tmp_jikjang_3_val,tmp_jikjang_find_start_idx);
 
 	$setvar(
 		tf_1004_jikjang_1.value = $this.rowkey3
 
 		,tmp_jikjang_1_val = $this.rowkey14
 		,tmp_jikjang_2_val = $this.rowkey15
+		,tmp_jikjang_find_start_idx = $find($tmp_jikjang_2_val,%2C)
 	);
-	$popscreen(popscreen_jikjang_3_input);
+
+	if($tmp_jikjang_find_start_idx < 0){
+		$popscreen(popscreen_jikjang_3_input);
+	}else{
+		$setvar(
+			,tmp_jikjang_2_val = $substring($this.rowkey15,0,$tmp_jikjang_find_start_idx)
+
+			,tmp_jikjang_find_start_idx = $result($tmp_jikjang_find_start_idx + 1)
+
+			,tmp_jikjang_3_text = $substring($this.rowkey15,$tmp_jikjang_find_start_idx,-1)
+		);
+		$logvar(tmp_jikjang_2_val);
+
+		$callaction(BTN_POP_JIKJANG_3_CONFIRM_ONCLICKED,$tmp_jikjang_3_text)
+
+	}
 " />
 
 
