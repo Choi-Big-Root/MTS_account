@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<class id="cs_lbl_1016_100_1_left"
+width="$result($this.remain_right/2)"
+height="$cs_height_18"
+fontname="$cs_font_400"
+fontsize="$cs_fontsize_14"
+textcolor="$cs_color_text"
+align="left"
+/>
+<class id="cs_lbl_1016_100_1_right"
+width="$this.remain_right"
+height="$cs_height_18"
+fontname="$cs_font_400"
+fontsize="$cs_fontsize_15"
+textcolor="$cs_color_black"
+align="right"
+/>
+
+<action id="screen_contents_onload"
+value="
+    $setvar(
+        ,vg_open_account_title.backcolor=FFFFFF
+        ,popscreen_open_account_history.hidden=true
+        ,popscreen_open_account_history_2.hidden=true
+        ,vg_account_title_step.hidden = true
+
+        ,menu_num=1016
+    );
+"/>
+
+<screen 
+    id="screen_1016_100"
+    class="cs_screen_contents"
+    backcolor="$cs_color_white"
+    onload="screen_contents_onload"
+    onunload="screen_contents_onunload"
+    noscroll_height="false"
+    margin_bottom="$cs_screen_bottom_margin"
+    margin_left="$cs_screen_left_right_margin"
+    margin_right="$cs_screen_left_right_margin"
+>
+	<br height="$cs_height_100" />
+    <viewgroup
+        width="$this.remain_right"
+        height="$result($this.remain_bottom - $cs_height_54)"
+    >
+    	<label 
+            width="$this.remain_right"
+            height="$cs_height_50" 
+            BACKGROUNDSVG="$icon_confirm_circle"
+            BACKGROUNDSVG_DISABLE="$icon_confirm_circle"
+            BACKGROUNDSVG_HIGHLIGHT="$icon_confirm_circle"
+            BACKGROUNDSVG_WIDTH="$cs_height_50"
+            BACKGROUNDSVG_HEIGHT="$cs_height_50"
+            backgroundimage_align="center"
+            backgroundimage_align_vertical="center"
+        />
+        <br height="$cs_height_30" />
+        <label
+            width="$this.remain_right"
+            height="$cs_height_28"
+            fontname="$cs_font_600"
+            fontsize="$cs_fontsize_20"
+            textcolor="$cs_color_black"
+            align="center"
+            value="계좌가 개설되었어요"
+        />
+        <br height="$cs_height_247" />
+        <viewgroup
+            width="$this.remain_right"
+            height="$this.remain_bottom"
+            margin_right="$cs_width_10"
+            margin_left="$cs_width_10"
+        >
+            <label
+                class="cs_lbl_1016_100_1_left"
+                value="계좌명"
+            />
+            //추후 데이터를 넣어야 한다.
+            <label
+                class="cs_lbl_1016_100_1_right"
+                value="홍길동"
+            />
+            <br height="$cs_height_20"/>
+            <label
+                class="cs_lbl_1016_100_1_left"
+                value="해외파생계좌번호"
+            />
+            //추후 데이터를 넣어야 한다.
+            <label
+                class="cs_lbl_1016_100_1_right"
+                value="4-00-12345"
+            />
+            <br height="$cs_height_20"/>
+            <label
+                class="cs_lbl_1016_100_1_left"
+                value="국민은행연계계좌번호"
+            />
+            //추후 데이터를 넣어야 한다.
+            <label
+                class="cs_lbl_1016_100_1_right"
+                value="345601654321"
+            />
+            <br height="$cs_height_20"/>
+            <label
+                class="cs_lbl_1016_100_1_left"
+                value="출신초등학교"
+            />
+            //추후 데이터를 넣어야 한다.
+            <label
+                class="cs_lbl_1016_100_1_right"
+                value="유진초등학교"
+            />
+            <br height="$cs_height_20"/>
+            <label
+                class="cs_lbl_1016_100_1_left"
+                value="친한친구이름"
+            />
+            //추후 데이터를 넣어야 한다.
+            <label
+                class="cs_lbl_1016_100_1_right"
+                value="김유진"
+            />
+            <br height="$cs_height_20"/>
+            <label
+                width="$this.remain_right"
+                height="$cs_height_16"
+                fontname="$cs_font_400"
+                fontsize="$cs_fontsize_13"
+                textcolor="$cs_color_text"
+                value="※ 계좌정보를 문자로도 발송했어요"
+            />
+        </viewgroup>
+    </viewgroup>
+    <br/>
+    <viewgroup
+        width="$cs_width_343"
+        height="$cs_height_54"
+        layout="center"
+        layout_vertical="bottom"
+    >
+        <button id=""
+            width="$this.remain_right"
+            height="$this.remain_bottom"
+            backcolor="$cs_color_main"
+            backcolor_disable="$cs_color_main_disable"
+            border_width="1"
+            border_radius="$cs_height_10"
+            fontsize="$cs_fontsize_16"
+            fontname="$cs_font_700"
+            textcolor="$cs_color_white"
+            textcolor_active="$cs_color_white"
+            textcolor_disable="$cs_color_white"
+            value="확인"
+            onClicked=""
+        />
+    </viewgroup>
+</screen>

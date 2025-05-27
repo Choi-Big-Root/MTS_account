@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actiondata value=" 
+	if($getvarlen(g_SSLSocketName) <= 0 || !$ssl_isconnect($g_SSLSocketName)) {
+		$log(SSL Socket Exist Check SocketName [$g_SSLSocketName] ********************************************* Connect Start);
+		$setvar_common(
+			g_SSLSocketName = $callaction(Act_SSL_Connect,$g_serverIP_account,$g_serverPort_account_ssl,Act_SSL_Connected,Act_SSL_Closed,Act_SSL_RecvData)
+		);
+		$log(SSL Socket Not Exists SocketName $g_SSLSocketName ********************************************* Connect After);
+	}
+	else {
+		$log(SSL Socket Exists SocketName $g_SSLSocketName *********************************************);
+	}
+	$setvar(iSelectKind=1);
+"/>
+<action id="screen_contents_onload"
+value="
+	$setvar(
+		,img_step_1.hidden=false
+		,img_step_2.hidden=false
+		,img_step_3.hidden=false
+		,img_step_4.hidden=false
+		,img_step_5.hidden=false
+		,img_step_6.hidden=false
+		,img_step_7.hidden=false
+		,img_step_8.hidden=true
+
+		,lbl_account_title_step_1.hidden=true
+		,lbl_account_title_step_2.hidden=true
+		,lbl_account_title_step_3.hidden=true
+		,lbl_account_title_step_4.hidden=true
+		,lbl_account_title_step_5.hidden=true
+		,lbl_account_title_step_6.hidden=true
+		,lbl_account_title_step_7.hidden=true
+		,lbl_account_title_step_8.hidden=false
+
+		,lbl_account_title_step_1.textcolor=$cs_color_disable
+		,lbl_account_title_step_2.textcolor=$cs_color_disable
+		,lbl_account_title_step_3.textcolor=$cs_color_disable
+		,lbl_account_title_step_4.textcolor=$cs_color_disable
+		,lbl_account_title_step_5.textcolor=$cs_color_disable
+		,lbl_account_title_step_6.textcolor=$cs_color_disable
+		,lbl_account_title_step_7.textcolor=$cs_color_disable
+		,lbl_account_title_step_8.textcolor=$cs_color_black
+
+
+		,lbl_account_title_step_1.fontname=$cs_font_400
+		,lbl_account_title_step_2.fontname=$cs_font_400
+		,lbl_account_title_step_3.fontname=$cs_font_400
+		,lbl_account_title_step_4.fontname=$cs_font_400
+		,lbl_account_title_step_5.fontname=$cs_font_400
+		,lbl_account_title_step_6.fontname=$cs_font_400
+		,lbl_account_title_step_7.fontname=$cs_font_400
+		,lbl_account_title_step_8.fontname=$cs_font_600
+
+
+		,vg_open_account_title.backcolor=FFFFFF
+		,popscreen_open_account_history.hidden=false
+		,popscreen_open_account_history_2.hidden=true
+		,vg_account_title_step.hidden = false
+
+		,menu_num=1014
+	);
+
+	
+	// 애드브릭스 테스트
+	$setvar(
+		tmp_arr_custom_data = [
+			[menucode, $tmp_account_menu]
+			,[acntname, $g_save_acnt_name]
+		]
+	);
+	// 배열명(키,밸류), 이벤트명
+	$adbrixCustom(tmp_arr_custom_data,screen);	// 화면별 데이터
+	
+	// 비대면 절차개선 - 2020.09.28
+	// 앞단계에서 입력한 은행명+계좌번호 불러옴
+	$setvar( lbl_acnt_info.value = $g_save_bank_name $g_save_acnt_no);
+
+"/>
+<screen 
+	id="screen_1014_100"
+	class="cs_screen_contents"
+	backcolor="$cs_color_white"
+	onload="screen_contents_onload"
+	onunload="screen_contents_onunload"
+	noscroll_height="false"
+	margin_top="$cs_screen_top_margin"
+	margin_bottom="$cs_screen_bottom_margin"
+	margin_left="$cs_screen_left_right_margin"
+	margin_right="$cs_screen_left_right_margin"
+>
+	<viewgroup
+		width="$this.remain_right"
+		height="$result($this.remain_bottom - $cs_height_54)"
+	>
+		<viewgroup
+			width="$this.remain_right"
+			height="$cs_height_132"
+		>
+			<label
+				width="$cs_width_116"
+				height="$cs_height_20"
+				fontsize="$cs_fontsize_15"
+				fontname="$cs_font_400"
+				textcolor="$cs_color_text"
+				align="left"
+				value="소액이체 계좌인증"
+			/>
+			<label 
+	        	id="img_pop_info_1014" 
+	        	width="$cs_height_20"
+	        	height="$cs_height_20"
+	            BACKGROUNDSVG="$icon_question"
+				BACKGROUNDSVG_DISABLE="$icon_question"
+				BACKGROUNDSVG_HIGHLIGHT="$icon_question"
+				BACKGROUNDSVG_WIDTH="$cs_height_20"
+				BACKGROUNDSVG_HEIGHT="$cs_height_20"
+				backgroundimage_align="center"
+				backgroundimage_align_vertical="center"
+				hidden="false"
+	        />
+			<viewgroup 
+				x="0" 
+				width="$cs_width_136" 
+				height="$cs_height_20"
+			>
+		        <button id="btn_pop_info_1014_100" class="cs_button_none" onClicked="btn_pop_info_1014_100_onClicked"/>
+	   		</viewgroup>
+	   		<br/>
+	   		<viewgroup
+	   			width="$this.remain_right"
+	   			height="$cs_height_102"
+	   			layout_vertical="bottom"
+	   		>
+	   			<label
+	   				width="$this.remain_right"
+	   				height="$cs_height_34"
+	   				textcolor="$cs_color_black"
+	   				fontsize="$cs_fontsize_24"
+	   				fontname="$cs_font_600"
+	   				value="입금자명에 표시된"
+	   			/>
+	   			<br/>
+	   			<label
+	   				width="$this.remain_right"
+	   				height="$cs_height_34"
+	   				textcolor="$cs_color_black"
+	   				fontsize="$cs_fontsize_24"
+	   				fontname="$cs_font_600"
+	   				value="인증번호(숫자 3자리)를"
+	   			/>
+	   			<br/>
+	   			<label
+	   				width="$this.remain_right"
+	   				height="$cs_height_34"
+	   				textcolor="$cs_color_black"
+	   				fontsize="$cs_fontsize_24"
+	   				fontname="$cs_font_600"
+	   				value="입력해주세요"
+	   			/>
+	   		</viewgroup>
+		</viewgroup>
+		<br height="$cs_height_40" />
+		<viewgroup
+			width="$this.remain_right"
+			height="$cs_height_150"
+			backcolor="$cs_color_bg"
+			border_radius="$cs_height_15"
+			margin_top="$cs_height_46"
+		>
+			<label id="lbl_acnt_info"
+				width="$this.remain_right"
+				height="$cs_height_18"
+				align="center"
+				fontname="$cs_font_400"
+				fontsize="$cs_fontsize_15"
+				textcolor="$cs_color_black"
+			/>
+			<br/>
+			<label 
+				width="$cs_width_143"
+				height="$cs_height_60"
+				align="right"
+				valign="center"
+				fontname="$cs_font_700"
+				fontsize="$cs_fontsize_16"
+				textcolor="$cs_color_black"
+				value="유진"
+			/>
+			<textfield id="tf_4134_key"
+				width="$this.remain_right"
+				height="$cs_height_60"
+				margin_left="$cs_width_10"
+				input_type="number"
+				maxlength="3"
+				placeholder="●  ●  ●"
+				textcolor_placeholder="$cs_color_disable"
+				textcolor="$cs_color_black"
+				fontsize="$cs_fontsize_16"
+				fontname="$cs_font_700"
+			/>
+		</viewgroup>
+		<br height="$cs_height_20"/>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_22"
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_14"
+			textcolor="$cs_color_black"
+			value="입력하신 계좌로 1원 송금 완료되었어요."
+			align="center"
+		/>
+		<br height="$cs_height_264"/>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_22"
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_13"
+			textcolor="$cs_color_text"
+			value="※ 5회 연속 오류 시 1일 동안 인증이 제한돼요."
+			align="center"
+		/>
+
+	</viewgroup>
+	<br/>
+	<viewgroup
+		width="$cs_width_343"
+		height="$cs_height_54"
+		layout="center"
+		layout_vertical="bottom"
+	>
+		<button 
+			width="$cs_width_100" 
+			height="$this.remain_bottom"
+			layout="left"
+			backcolor="$cs_color_white"
+			border_width="1"
+			border_radius="$cs_height_10"
+			border_color="$cs_color_disable"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_black"
+			textcolor_active="$cs_color_black"
+			value="이전"
+			onClicked="btn_open_account_history_onClicked"
+		/>
+		<button
+			width="$cs_width_235" 
+			height="$this.remain_bottom"
+			layout="right"
+			backcolor="$cs_color_main"
+			backcolor_disable="$cs_color_main_disable"
+			border_width="1"
+			border_radius="$cs_height_10"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_white"
+			textcolor_active="$cs_color_white"
+			textcolor_disable="$cs_color_white"
+			value="인증하기"
+			onclicked="fnSendSSL_MO_TRANSAT"
+		/>
+	</viewgroup>
+</screen>
+<action id="fnSendSSL_MO_TRANSAT"
+value="	
+	$popscreen(pop_host_msg,center); 		// 동글뱅이 띄운다.
+	$setvar(	
+		jsonName 		= MO_TRANSAT 	
+	);
+	$json_create($jsonName);
+
+	$json_setdata($jsonName,,HDR,,{});
+	$json_setdata($jsonName,HDR,VER,,1.0); 					// 1.0 : 연동버전
+	$json_setdata($jsonName,HDR,CMD,,$jsonName);			// 
+
+	$json_setdata($jsonName,,BODY,,{});
+	$json_setdata($jsonName,BODY,BSNS_DATE,,$g_save_bsns_date); 			// 거래일자
+	$json_setdata($jsonName,BODY,INOUT_NO,,$g_save_inout_no); 				// 입출금번호
+	$json_setdata($jsonName,BODY,MAST_ACCTNO,,$g_save_mast_acctno); 		// 대표계좌번호
+	$json_setdata($jsonName,BODY,VRRY_KEYY,,$tf_4134_key.value); 				// 인증Key
+	$json_setdata($jsonName,BODY,WORK_NO,,$g_OUT_AGREE_WORK_NO); 			// 상담번호
+
+	$json_print($jsonName);
+	$delvar(strSSLSendData);
+	$json_getfullstring($jsonName,strSSLSendData);
+	$json_delete($jsonName);
+	$logvar(strSSLSendData);
+	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
+"/>
+<action id="fnRecvSSL_MO_TRANSAT" 
+value="	
+	$setvar(
+		recvSSL_hdr_ret 			= $json_getdata($jsonname,HDR.RET)
+		,recvSSL_hdr_msg 			= $json_getdata($jsonname,HDR.MSG)
+		,recvSSL_hdr_err_code		= $json_getdata($jsonname,HDR.ERR_CODE)
+		,recvSSL_body_result_yn 	= $json_getdata($jsonname,BODY.RESULT_YN)		// 거래일자
+
+	);
+	$setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_hdr_err_code));
+
+	$log(========= SSL 받은데이터 ==============);
+	$logvar(
+		recvSSL_hdr_ret 
+		,recvSSL_hdr_msg 
+		,recvSSL_body_bsns_date
+		,recvSSL_body_inout_no
+		,recvSSL_body_mast_acctno
+	);
+
+	if($isequal_string($recvSSL_body_result_yn,P)){
+		$closescreen(pop_host_msg);
+		return;
+	}
+	
+	if(!$isequal_string($recvSSL_hdr_ret,OK)){
+		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤
+		//$alertaction(,,$recv_error_msg,확인);
+		$callaction(fnPopover_AlertAction,,$recv_error_msg,,확인);
+		return;
+	}
+	
+	$setvar($date_compare=$now(dd));
+	$log(현재일자[$now(dd)], 번수 저장일자[$date_compare]);
+
+	if($strlen($g_date_compare1)<1){
+		$callaction(fnConfig_SetValue,g_date_compare1,$date_compare);
+	}
+	if($now(dd)!=$g_date_compare1){
+		$log(>> 진위여부 횟수 초기화);
+		$callaction(fnConfig_SetValue,g_date_compare1,$date_compare); 	// 자정마다 날짜를 전역변수에 저장
+		$callaction(fnConfig_SetValue,g_transat_count,0);	// 자정이후 진위여부 횟수 초기화
+	}
+	else{
+		$log(>> 일자 변동없음..진위여부 횟수 초기화 x);
+	}
+	if(!$isequal_string($recvSSL_body_result_yn,Y)){
+		$log( =============== 역이체 인증확인 여부 =============== );
+		$logvar(g_transat_count);
+		if($strlen($g_transat_count)<1){
+			$setvar(transat_count=1);
+			$callaction(fnConfig_SetValue,g_transat_count,$transat_count);
+			$logvar(g_transat_count);
+		}
+		elseif($strlen($g_transat_count)>0){
+			if($g_transat_count==5){
+				$closescreen(pop_host_msg); 		// 동글뱅이 멈춤
+				$callaction(fnPopover_AlertAction,,5회 연속 오류로 1일 동안 인증이 제한됩니다.,,확인);
+				return;
+			}
+			$setvar(transat_count=$result($g_transat_count+1));
+			$callaction(fnConfig_SetValue,g_transat_count,$transat_count);
+		}
+		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤
+		$callaction(fnPopover_AlertAction,,인증정보를 정확히 입력해주세요,,확인);
+		return;
+	}
+	$closescreen(pop_host_msg); 		// 동글뱅이 멈춤
+	$callaction(fnSendSSL_MO_REQUEST); 		// 영상통화 신청(개설 신청)
+	
+	return;
+"/>
+//영상 통화 신청
+<action id="fnSendSSL_MO_REQUEST" 
+value="	
+
+	$logvar(
+ 		g_save_members_nm 		//추천인 성명
+		,g_save_members_no 		//추천인 사원번호
+	);
+	$popscreen(pop_host_msg,center); 		// 동글뱅이 띄운다.
+
+	if($g_isAndroid){		$callaction(fnConfig_SetValue,g_IN_REQUEST_DEV_OS 	,OS01); 		}
+	else{					$callaction(fnConfig_SetValue,g_IN_REQUEST_DEV_OS 	,OS02); 		}
+
+	$setvar(	jsonName 		= MO_REQUEST 	);
+	$json_create($jsonName);
+
+	$json_setdata($jsonName,,HDR,,{});
+	$json_setdata($jsonName,HDR,VER,,1.0); 					// 1.0 : 연동버전
+	$json_setdata($jsonName,HDR,CMD,,$jsonName);			// 
+
+	$json_setdata($jsonName,,BODY,,{});
+	$json_setdata($jsonName,BODY,DEV_OS,,$g_IN_REQUEST_DEV_OS);			// OS01: 안드로이드, OS02: iOS
+	$json_setdata($jsonName,BODY,DEV_TOKEN,,$p_APNS_RegKey);			// 디바이스 토큰 (Push 용)
+	$json_setdata($jsonName,BODY,WORK_NO,,$g_OUT_AGREE_WORK_NO); 		// 
+	
+	$json_setdata($jsonName,BODY,TEL_NUM,,$g_IN_REQUEST_TEL_NUM); 				// 고객 전화번호
+	$json_setdata($jsonName,BODY,RESV_STDT,,); 				// 예약시작일시(YYYYMMDDHH)
+	$json_setdata($jsonName,BODY,RESV_EDDT,,); 				// 예약종료일시(YYYYMMDDHH)
+
+	
+
+	$json_setdata($jsonName,BODY,LOCAL_YN,,$g_IN_REQUEST_LOCAL_YN); 				// Y : 내국인 N : 외국인
+	$json_setdata($jsonName,BODY,ABODE_NM,,$g_IN_REQUEST_ABODE_NM);					// Y : 국내거주 N : 국내비거주
+
+	$json_setdata($jsonName,BODY,HOME_POST_NO,,$g_IN_REQUEST_HOME_POST_NO); 		// HOME_POST_NO
+	$json_setdata($jsonName,BODY,HOME_ADDR,,$g_IN_REQUEST_HOME_ADDR); 				// 
+	$json_setdata($jsonName,BODY,HOME_ADDR2,,$g_IN_REQUEST_HOME_ADDR2); 			// 
+	$json_setdata($jsonName,BODY,HOME_TEL,,$g_IN_REQUEST_HOME_TEL); 				// 자택전화번호
+	$json_setdata($jsonName,BODY,JOB_NM,,$g_IN_REQUEST_JOB_NM); 				// 직업 
+	$json_setdata($jsonName,BODY,COM_NM,,$g_IN_REQUEST_COM_NM); 				// 직장명
+	$json_setdata($jsonName,BODY,COM_DEPART,,$g_IN_REQUEST_COM_DEPART); 		// 부서명
+	$json_setdata($jsonName,BODY,COM_TEL,,$g_IN_REQUEST_COM_TEL); 				// 직장전화번호
+	$json_setdata($jsonName,BODY,COM_POST_NO,,$g_IN_REQUEST_COM_POST_NO); 		// 직장주소
+	$json_setdata($jsonName,BODY,COM_ADDR,,$g_IN_REQUEST_COM_ADDR); 			// 
+	$json_setdata($jsonName,BODY,COM_ADDR2,,$g_IN_REQUEST_COM_ADDR2); 			// 
+	$json_setdata($jsonName,BODY,CLNT_EMAIL,,$g_IN_REQUEST_CLNT_EMAIL);		// 이메일주소
+	$json_setdata($jsonName,BODY,CLNT_FAX,,$g_IN_REQUEST_CLNT_FAX);		// FAX
+
+
+	$json_setdata($jsonName,BODY,TRD_PPO,,$g_IN_REQUEST_TRD_PPO); 		// 거래목적
+	$json_setdata($jsonName,BODY,FUNDS,,$g_IN_REQUEST_FUNDS); 			// 자금의 원천 및 출처
+	$json_setdata($jsonName,BODY,OWN_YN,,$g_IN_REQUEST_OWN_YN); 		// 실제 당사자 여부 Y/N
+	$json_setdata($jsonName,BODY,AMERICAN_YN,,$g_IN_REQUEST_AMERICAN_YN); 			// 미국인 여부
+	$json_setdata($jsonName,BODY,TRADE,,$g_IN_REQUEST_TRADE); 		// 매매거래통지
+	$json_setdata($jsonName,BODY,DEAL,,$g_IN_REQUEST_DEAL); 		// 월간거래통지
+
+	$json_setdata($jsonName,BODY,PD1,,$g_IN_REQUEST_PD1); 			// 계좌개설 국내선물:“10”, 해외선물:“20” (중복 선택인 경우 이어 붙인다. “1020”, “10”)
+
+
+	$json_setdata($jsonName,BODY,WON_BNK,,{});			// 원화계좌 
+	$json_setdata($jsonName,BODY.WON_BNK,BNK_CODE,,$g_IN_BNKNAME_BNK_CODE); 	// 은행코드 
+	$json_setdata($jsonName,BODY.WON_BNK,BNK_NO,,$g_IN_BNKNAME_BNK_NO); 		// 은행 계좌 번호 
+	$json_setdata($jsonName,BODY.WON_BNK,BNK_NM,,$g_IN_BNKNAME_BNK_NM); 		// 계좌명
+
+	$json_setdata($jsonName,BODY,NEW_PW,,$g_IN_REQUEST_NEW_PW); 				// 개설계좌 비밀번호
+	$json_setdata($jsonName,BODY,PICTURE,,{});						// 실명증표
+	
+	//$base64_encode(frontImageEncryptData,frontImageEncryptData_base64);
+	//$base64_encode(frontImageData,frontImageEncryptData_base64);
+	// g_save_frontImageEncryptData_base64
+	$json_setdata($jsonName,BODY.PICTURE,IMAGE,,$g_save_frontImageEncryptData_base64); 					// 실명증표사진 - Base64
+	$json_setdata($jsonName,BODY.PICTURE,IDCARD_TYPE,,$g_IN_REQUEST_IDCARD_TYPE); 			// ID01: 주민등록증, ID02: 운전면허증
+	$json_setdata($jsonName,BODY.PICTURE,RMN_DATE,,$g_IN_REQUEST_RMN_DATE); 				// 주민등록증 발급일자
+	$json_setdata($jsonName,BODY.PICTURE,DRV_NO,,$g_IN_REQUEST_DRV_NO); 					// 운전면허번호
+	$json_setdata($jsonName,BODY.PICTURE,DRV_CODE,,$g_IN_REQUEST_DRV_CODE); 				// 운전면허증 암호일련번호
+
+	// 비대면 절차개선 - 2020.09.28
+	// === 역이체 인증 이후 개설 신청 - 추가
+	$log(진위여부 저장된 값 >> g_save_result_yn[$g_save_result_yn]);
+	//$json_setdata($jsonName,BODY.PICTURE,CHK_YN,,Y); 										// Y:진위여부체크함, N:진위여부체크하지 않음
+	$json_setdata($jsonName,BODY.PICTURE,CHK_YN,,$g_save_result_yn); 						// Y:진위여부체크함, N:진위여부체크하지 않음
+
+	$json_setdata($jsonName,BODY,OPEN_TP,,1); 							// 1:역이체, 2:영상통화
+	//$json_setdata($jsonName,BODY,CREDI_GRADE,,); 						// 신용등급
+	$json_setdata($jsonName,BODY,INVI_EMPL_NO,,$g_save_members_no); 	// 계좌유치자 사번
+	$json_setdata($jsonName,BODY,INVI_EMPL_NM,,$g_save_members_nm); 	// 계좌유치자 사원명
+	$json_setdata($jsonName,BODY,INOUT_DT,,$g_save_bsns_date); 			// 역이체 출금일자 YYYYMMDD
+	$json_setdata($jsonName,BODY,INOUT_NO,,$g_save_inout_no); 			// 역이체 출금번호
+	$json_setdata($jsonName,BODY,MAST_ACCTNO,,$g_save_mast_acctno); 	// 역이체 출금계좌번호(당사)
+
+	$json_print($jsonName);
+	$delvar(strSSLSendData);
+	$json_getfullstring($jsonName,strSSLSendData);
+	$json_delete($jsonName);
+	$logvar(strSSLSendData);
+	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
+" />
+<action id="fnRecvSSL_MO_REQUEST" 
+value="
+	$setvar(
+		recvSSL_hdr_ret 	= $json_getdata($jsonname,HDR.RET)
+		,recvSSL_hdr_msg 	= $json_getdata($jsonname,HDR.MSG)
+	);
+	$log(========= SSL 받은데이터 ==============);
+	$logvar(
+		recvSSL_hdr_ret
+		,recvSSL_hdr_msg 	
+	);
+	if(!$isequal_string($recvSSL_hdr_ret,OK)){
+		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤
+		$alert(,,$recvSSL_hdr_msg);
+		return;
+	}
+	$closescreen(pop_host_msg); 		// 동글뱅이 멈춤
+	$callaction(fnConfig_SetValue,g_save_open_tp,1);	// 1:역이체, 2:영상통화
+" />

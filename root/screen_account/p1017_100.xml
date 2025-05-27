@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<action id="screen_contents_onload" value="
+	$setvar(
+		,vg_open_account_title.backcolor=FFFFFF
+		,popscreen_open_account_history.hidden=true
+		,popscreen_open_account_history_2.hidden=false
+		,vg_account_title_step.hidden = true
+
+		,menu_num=1001
+	);
+	$callaction(fnSendSSL_MO_TIME);
+"/>
+<action id="fnSendSSL_MO_TIME"
+value="	
+	// 역이체 가능시간 체크
+	$popscreen(pop_host_msg,center); 		// 동글뱅이 띄운다.
+	$setvar(	
+		jsonName 		= MO_TIME 	
+	);
+	$json_create($jsonName);
+
+	$json_setdata($jsonName,,HDR,,{});
+	$json_setdata($jsonName,HDR,VER,,1.0); 					// 1.0 : 연동버전
+	$json_setdata($jsonName,HDR,CMD,,$jsonName);			// 
+
+	$json_setdata($jsonName,,BODY,,{});
+	$json_setdata($jsonName,BODY,OPEN_TP,,1); 		// 1: 국내 , 2:해외
+	$json_setdata($jsonName,BODY,WORK_NO,,$g_OUT_AGREE_WORK_NO); 			// 상담번호
+
+	$json_print($jsonName);
+	$delvar(strSSLSendData);
+	$json_getfullstring($jsonName,strSSLSendData);
+	$json_delete($jsonName);
+	$logvar(strSSLSendData);
+	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
+"/>
+<action id="fnRecvSSL_MO_TIME" 
+value="
+	// 역이체 가능시간 체크
+	$setvar(
+		recvSSL_hdr_ret 		= $json_getdata($jsonname,HDR.RET)
+		,recvSSL_hdr_msg 		= $json_getdata($jsonname,HDR.MSG)
+		,recvSSL_hdr_err_code	= $json_getdata($jsonname,HDR.ERR_CODE)
+		,recvSSL_body_open_able_yn 	= $json_getdata($jsonname,BODY.OPEN_ABLE_YN)	// 역이체가능여부 Y/N
+		,recvSSL_body_reason_code = $json_getdata($jsonname,BODY.REASON_CODE) 	// 사유코드
+		,recvSSL_body_reason_msg = $json_getdata($jsonname,BODY.REASON_MSG) 	// 사유내용
+
+	);
+	$setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_hdr_err_code));
+
+	$log(========= SSL 받은데이터 ==============);
+
+	$logvar(
+		recvSSL_hdr_ret 
+		,recvSSL_hdr_msg 
+		,recvSSL_body_open_able_yn
+		,recvSSL_body_reason_code
+		,recvSSL_body_reason_msg
+	);
+
+	if(!$isequal_string($recvSSL_hdr_ret,OK)){
+		if($strlen($recvSSL_hdr_err_code) <= 0){
+			$callaction(fnPopover_AlertAction,,$recvSSL_hdr_msg,,확인);	
+		}else{
+			$callaction(fnPopover_AlertAction,,$recv_error_msg,,확인);
+		}
+		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
+		return;
+	}
+
+	$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
+	return;
+
+"/>
+<screen id="screen_1017_100"
+ 	class="cs_screen_contents"
+	backcolor="$cs_color_white"
+	onload="screen_contents_onload"
+	onunload="screen_contents_onunload"
+	noscroll_height="false"
+	margin_bottom="$cs_screen_bottom_margin"
+	margin_left="$cs_screen_left_right_margin"
+	margin_right="$cs_screen_left_right_margin"
+>
+	<viewgroup
+		width="$this.remain_right"
+		height="$result($this.remain_bottom - $cs_height_54)"
+	>
+		<br height="$cs_height_104"/>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_100"
+			BACKGROUNDSVG="$icon_account_in_progress"
+	        BACKGROUNDSVG_DISABLE="$icon_account_in_progress"
+	        BACKGROUNDSVG_HIGHLIGHT="$icon_account_in_progress"
+	        BACKGROUNDSVG_WIDTH="$cs_height_100"
+	        BACKGROUNDSVG_HEIGHT="$cs_height_100"
+	        backgroundimage_align="center"
+	        backgroundimage_align_vertical="center"
+		/>
+		<br height="$cs_height_25"/>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_28"
+			fontname="$cs_font_600"
+			fontsize="$cs_fontsize_20"
+			textcolor="$cs_color_black"
+			align="center"
+			value="진행중인 계좌개설"
+		/>
+		<br/>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_28"
+			fontname="$cs_font_600"
+			fontsize="$cs_fontsize_20"
+			textcolor="$cs_color_black"
+			align="center"
+			value="신청 내역이 있어요."
+		/>
+		<br height="$cs_height_10"/>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_20"
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_14"
+			textcolor="$cs_color_text"
+			align="center"
+			value="이전 단계에 이어서 진행하시려면"
+		/>
+		<br/>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_20"
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_14"
+			textcolor="$cs_color_text"
+			align="center"
+			value="‘이어하기’를 눌러주세요."
+		/>
+		<br height="$cs_height_10"/>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_20"
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_14"
+			textcolor="$cs_color_text"
+			align="center"
+			value="신규로 계좌개설을 원하시면"
+		/>
+		<br/>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_20"
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_14"
+			textcolor="$cs_color_text"
+			align="center"
+			value="‘처음부터’를 눌러주세요."
+		/>
+		<br height="$cs_height_238"/>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_20"
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_13"
+			textcolor="$cs_color_text"
+			align="center"
+			value="‘처음부터’를 누르시면, 기존에 작성하신"
+		/>
+		<br/>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_20"
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_13"
+			textcolor="$cs_color_text"
+			align="center"
+			value="계좌개설 신청내역은 모두 삭제돼요."
+		/>
+	</viewgroup>
+	<br/>
+	<viewgroup
+		width="$cs_width_343"
+		height="$cs_height_54"
+		layout="center"
+		layout_vertical="bottom"
+	>
+		<button id="btn_4103_bf"
+			width="$cs_bottom_two_button_width" 
+			height="$this.remain_bottom"
+			layout="left"
+			backcolor="$cs_color_white"
+			border_width="1"
+			border_radius="$cs_height_10"
+			border_color="$cs_color_disable"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_black"
+			textcolor_active="$cs_color_black"
+			value="이어하기"
+			onclicked="$callaction(fnOpenAccount_continus);"
+		/>
+		<button id="btn_4103_af"
+			width="$cs_bottom_two_button_width" 
+			height="$this.remain_bottom"
+			layout="right"
+			backcolor="$cs_color_main"
+			backcolor_disable="$cs_color_main_disable"
+			border_width="1"
+			border_radius="$cs_height_10"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_white"
+			textcolor_active="$cs_color_white"
+			textcolor_disable="$cs_color_white"
+			value="처음부터"
+			onclicked="$callaction(fnOpenAccount_newprocess);"
+		/>
+	</viewgroup>
+</screen>
+<action id="fnOpenAccount_continus" 
+value="
+	if($g_save_keep_go!=1){	
+		if($g_menu_code_open_account==1015 || $g_menu_code_open_account==1016){
+			$callaction(fnConfig_SetValue,g_menu_code_open_account,$g_menu_code_open_account_before);
+			$log(########## 이어하기 누를경우 이전화면으로 변경.);
+			$log(저장된화면이전 g_menu_code_open_account_before[$g_menu_code_open_account_before]);
+			$log(저장된화면 	g_menu_code_open_account[$g_menu_code_open_account]);
+		}
+		elseif($g_menu_code_open_account==1014){
+			$callaction(fnConfig_SetValue,g_menu_code_open_account,1013);
+		}
+	}
+	$log(상담번호:$g_OUT_AGREE_WORK_NO);
+	$log(마지막 화면번호:$g_menu_code_open_account);
+	$log(마지막 화면번호:$g_open_account_save);
+
+	$callaction(Act_Open_Account_Move,$g_menu_code_open_account);
+	
+" />
+
+<action id="fnOpenAccount_newprocess" 
+value="
+// 비대면 절차개선 - 2020.09.28
+	$callaction(fnConfig_SetValue,g_save_acno,);
+	$callaction(fnConfig_SetValue,g_save_cybr_acct_no,);
+	$callaction(fnConfig_SetValue,g_save_acno2,);
+	$callaction(fnConfig_SetValue,g_save_cybr_acct_no2,);
+	$callaction(fnConfig_SetValue,g_save_acno3,);
+	$callaction(fnConfig_SetValue,g_save_hts_id,);
+	$callaction(fnConfig_SetValue,g_save_qustion_1,);
+	$callaction(fnConfig_SetValue,g_save_qustion_2,);
+
+	$callaction(fnConfig_SetValue,g_open_tp_select,);		// 국내,해외 구분
+	$callaction(fnConfig_SetValue,g_save_bank_code,);		// 은행코드
+	$callaction(fnConfig_SetValue,g_save_bank_name,);		// 은행명
+	$callaction(fnConfig_SetValue,g_save_acnt_name,);		// 계좌명
+	$callaction(fnConfig_SetValue,g_save_acnt_no,);			// 계좌번호
+	$callaction(fnConfig_SetValue,g_IN_REQUEST_NEW_PW,);	// 계좌비밀번호
+	$callaction(fnConfig_SetValue,g_save_members_nm,);			// 추천직원 이름
+	$callaction(fnConfig_SetValue,g_save_members_no,);			// 추천직원 사번
+	$callaction(fnConfig_SetValue,g_save_frontImageEncryptData_base64,); 	// 신분증 이미지 바이너리
+
+	$callaction(fnConfig_SetValue,g_save_bsns_date,);			// 거래일자
+	$callaction(fnConfig_SetValue,g_save_inout_no,);			// 입출금번호
+	$callaction(fnConfig_SetValue,g_save_mast_acctno,);			// 대표계좌번호
+	
+	$callaction(fnConfig_SetValue,g_save_open_tp,);			// 인증방법 
+	$callaction(fnConfig_SetValue,g_save_result_yn,);		// 진위여부
+		
+
+	$callaction(fnConfig_SetValue,g_menu_code_open_account,1002); 	
+	$callaction(fnConfig_SetValue,g_open_account_save,1); 	
+	$callaction(BTN_OPEN_ACCOUNT_HISTORY_ONCLICKED);
+	$callaction(Act_Open_Account_Move,1003); 
+	
+" />
