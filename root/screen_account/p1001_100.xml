@@ -791,42 +791,13 @@ value="
 		,popscreen_title 	= $tmp_btn_id.value
 		,popscreen_key 		= $p_key
 	);
+	$setvar( $($tmp_btn_id).checked = true ); //일단 다시 누르면 무조건 true
 	if($vg_1001_100_agree_kind.selectkey == 1){ 		//상세동의서
 		$setvar( 	popscreen_html = $addstring(1001_100_,$p_key,_n_htmldata,_d)	);
-		if($isequal_string($p_key,1_1)){
-			$setvar( 	html_pop_height = $h($g_lcdHeight,175)	);
-		}
-		elseif($isequal_string($p_key,2_1)){
-			$setvar( 	html_pop_height = $h($g_lcdHeight,125)	);
-		}
-		elseif($isequal_string($p_key,2_2)){
-			$setvar( 	html_pop_height = $h($g_lcdHeight,145)	);
-		}
-		elseif($isequal_string($p_key,3_1)){
-			$setvar( 	html_pop_height = $h($g_lcdHeight,160)	);
-		}
-		elseif($isequal_string($p_key,4_1)){
-			$setvar( 	html_pop_height = $h($g_lcdHeight,105)	);
-		}
 	}
 	else{												//요약동의서 
 		$setvar(	popscreen_html = $addstring(1001_100_,$p_key,_n_htmldata)	);
 		// htmlview height 지정해야 함.
-		if($isequal_string($p_key,1_1)){
-			$setvar( 	html_pop_height = $h($g_lcdHeight,135)	);
-		}
-		elseif($isequal_string($p_key,2_1)){
-			$setvar( 	html_pop_height = $h($g_lcdHeight,130)	);
-		}
-		elseif($isequal_string($p_key,2_2)){
-			$setvar( 	html_pop_height = $h($g_lcdHeight,125)	);
-		}
-		elseif($isequal_string($p_key,3_1)){
-			$setvar( 	html_pop_height = $h($g_lcdHeight,145)	);
-		}
-		elseif($isequal_string($p_key,4_1)){
-			$setvar( 	html_pop_height = $h($g_lcdHeight,110)	);
-		}
 	}	
 	$popscreen(popscreen_1001_100);
 "/>
@@ -846,6 +817,15 @@ value="
 	if($popscreen_key != 4_1){
 		$setvar(btn_1001_100_agree.value = $(확인했고 동의해요%28$tmp_confirm_count/4%29) );
 	}
+
+	// 컨텐츠 크기만큼 height 를 다시 조정한다. 
+	$setvar(
+		lbl_html_pop.height 		= $html_pop.SCROLL_HEIGHT
+		,html_pop.height 			= $html_pop.SCROLL_HEIGHT
+		,screen_html.SCROLL_HEIGHT 	= $html_pop.SCROLL_HEIGHT
+	);
+	$reloadcontrol(lbl_html_pop);
+	$reloadcontrol(screen_html);
 
 "/>
 <action id="popscreen_1001_100_onunload"
@@ -872,7 +852,6 @@ value="
 		);			
 
 	}
-	return;
 
 " />
 <action id="fnPopScreen_Close_1001" 
@@ -957,8 +936,8 @@ backcolor="$cs_color_white"
 			<htmlview 
 			id="html_pop"
 			width="$this.remain_right" 
-			layout="center"
 			height="$this.remain_bottom"
+			layout="center"
 			value_html_var="$popscreen_html"
 			fontsize="$cs_fontsize_14"
 			textcolor="$cs_color_text"
@@ -968,10 +947,9 @@ backcolor="$cs_color_white"
 			margin_right="$cs_width_16"
 			margin_top="$cs_height_15"
 			margin_bottom="$cs_height_15"
-			noscroll_height="true"
-			height="$html_pop_height"
+			NOSCROLL_HEIGHT="false"
 			/>
-			<label x="$html_pop.x" width="$this.remain_right"  height="$html_pop_height" backcolor="none"/>
+			
 		</screen>
 		<br/>
 		<button id="btn_1001_100_agree"
