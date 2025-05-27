@@ -540,7 +540,7 @@ backcolor="$cs_color_white"
 		<screen id="screen_html"
 		width="$this.remain_right"
 		height="$result($this.remain_bottom - $cs_height_74)"
-		backcolor="ffffff"
+		backcolor="cs_color_white"
 		SCROLLOFFSET_ACTION="screen_1007_100_SCROLLOFFSET_ACTION"
 		>
 			<htmlview 
