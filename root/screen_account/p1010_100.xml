@@ -713,10 +713,20 @@ onload="popscreen_1010_choice_onload"
     />
 </popscreen>
 
+
+<action id="pop_1010_input_check_confirm_onload"
+value="
+	$setvar(
+		lbl_bnak_name_pop_1010_input_check_confirm.value = $g_save_bank_name
+		,lbl_clnt_name_pop_1010_input_check_confirm.value = $g_IN_AGREE_CLNT_NM
+		,lbl_acnt_no_pop_1010_input_check_confirm.value = $g_save_acnt_no
+	);
+"/>
 <popscreen id="pop_1010_input_check_confirm"
 width="$p_lcdWidth"
 height="$p_lcdHeight"
 backcolor="00000060"
+onload="pop_1010_input_check_confirm_onload"
 >
 	<screen id="pop_1010_input_check_confirm_screen"
 		width="$this.remain_right"
@@ -748,7 +758,7 @@ backcolor="00000060"
 				align="center"
 			/>
 			<blnak width="1"/>
-			<label
+			<label id="lbl_bnak_name_pop_1010_input_check_confirm"
 				width="$this.remain_right"
 				height="$cs_height_37"
 				margin_left="$cs_width_10"
@@ -756,7 +766,7 @@ backcolor="00000060"
 				textcolor="$cs_color_text"
 				fontname="$cs_font_400"
 				fontsize="$cs_fontsize_14"
-				value="$g_save_bank_name"
+				value=""
 				align="left"
 			/>
 			<br height="1"/>
@@ -771,7 +781,7 @@ backcolor="00000060"
 				align="center"
 			/>
 			<blnak width="1"/>
-			<label
+			<label id="lbl_clnt_name_pop_1010_input_check_confirm"
 				width="$this.remain_right"
 				height="$cs_height_37"
 				margin_left="$cs_width_10"
@@ -779,7 +789,7 @@ backcolor="00000060"
 				textcolor="$cs_color_text"
 				fontname="$cs_font_400"
 				fontsize="$cs_fontsize_14"
-				value="$g_IN_AGREE_CLNT_NM"
+				value=""
 				align="left"
 			/>
 			<br height="1"/>
@@ -794,7 +804,7 @@ backcolor="00000060"
 				align="center"
 			/>
 			<blnak width="1"/>
-			<label
+			<label id="lbl_acnt_no_pop_1010_input_check_confirm"
 				width="$this.remain_right"
 				height="$cs_height_37"
 				margin_left="$cs_width_10"
@@ -802,7 +812,7 @@ backcolor="00000060"
 				textcolor="$cs_color_text"
 				fontname="$cs_font_400"
 				fontsize="$cs_fontsize_14"
-				value="$g_save_acnt_no"
+				value=""
 				align="left"
 			/>
 		</viewgroup>
