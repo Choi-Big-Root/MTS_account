@@ -417,7 +417,7 @@ value="
 			textcolor_disable="$cs_color_white"
 			value="다음"
 			onclicked="$popscreen(popscreen_1002_100_info_open);"
-			enable="false"
+			//enable="false"
 		/>
 	</viewgroup>
 </screen>
@@ -753,19 +753,9 @@ value="
 
 
 	if($isequal_string($p_key,1)){
-		if($isequal_string($g_1002_html_phone,1002_htmldata_2)){
-			$setvar( 	html_pop_height = $h($g_lcdHeight,770)	);	
-		}
-		if($isequal_string($g_1002_html_phone,1002_htmldata_3)){
-			$setvar( 	html_pop_height = $h($g_lcdHeight,610)	);
-		}
-		if($isequal_string($g_1002_html_phone,1002_htmldata_4)){
-			$setvar( 	html_pop_height = $h($g_lcdHeight,500)	);
-		}
 		$setvar(	popscreen_html = $g_1002_html_phone	);
 	}
 	elseif($isequal_string($p_key,2)){
-		$setvar( 	html_pop_height = $h($g_lcdHeight,480)	);
 		$setvar(	popscreen_html = 1002_htmldata_5	);
 	}
 
@@ -866,6 +856,23 @@ value="
 		tmp_pop_1002_100_flag = true
 		,tmp_this_pos_y_1002 = 
 	);
+
+	if($html_pop.SCROLL_HEIGHT < $html_pop.height){
+		$setvar(
+			btn_1002_100_agree.hidden = false
+			,btn_1002_100_agree_bottom.hidden = true
+		);
+	}
+
+
+	// 컨텐츠 크기만큼 height 를 다시 조정한다. 
+	$setvar(
+		lbl_html_pop.height 		= $html_pop.SCROLL_HEIGHT
+		,html_pop.height 			= $html_pop.SCROLL_HEIGHT
+		,screen_html.SCROLL_HEIGHT 	= $html_pop.SCROLL_HEIGHT
+	);
+	$reloadcontrol(lbl_html_pop);
+	$reloadcontrol(screen_html);
 "/>
 <action id="SCREEN_1002_100_SCROLLOFFSET_ACTION" 
 params="
@@ -887,7 +894,6 @@ value="
 		);			
 
 	}
-	return;
 
 " />
 <popscreen id="popscreen_1002_100"
@@ -945,8 +951,8 @@ backcolor="$cs_color_white"
 			<htmlview 
 			id="html_pop"
 			width="$this.remain_right" 
-			layout="center"
 			height="$this.remain_bottom"
+			layout="center"
 			value_html_var="$popscreen_html"
 			fontsize="$cs_fontsize_14"
 			textcolor="$cs_color_text"
@@ -956,10 +962,9 @@ backcolor="$cs_color_white"
 			margin_right="$cs_width_16"
 			margin_top="$cs_height_15"
 			margin_bottom="$cs_height_15"
-			noscroll_height="true"
-			height="$html_pop_height"
+			NOSCROLL_HEIGHT="false"
 			/>
-			<label x="$html_pop.x" width="$this.remain_right"  height="$html_pop_height" backcolor="none"/>
+			<label id="lbl_html_pop" x="$html_pop.x" width="$this.remain_right" backcolor="none"/>
 		</screen>
 		<br/>
 		<button id="btn_1002_100_agree"
