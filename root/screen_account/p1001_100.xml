@@ -85,6 +85,7 @@ onClicked="$callaction(btn_essential_1001_100_onClicked,$this.key);"
 
 		,vg_open_account_title.backcolor=FFFFFF
 		,popscreen_open_account_history.hidden=false
+		,popscreen_open_account_history_2.hidden=true
 		,vg_account_title_step.hidden = false
 
 		,menu_num=1001
