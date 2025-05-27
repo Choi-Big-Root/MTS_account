@@ -24,6 +24,10 @@
 		<menucode groupid="1" id="1013" name="소액이체 계좌인증" enable="true" file="plist/root/screen_account/p1013_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
 		<menucode groupid="1" id="1014" name="소액이체 계좌인증" enable="true" file="plist/root/screen_account/p1014_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
 
+		<menucode groupid="1" id="1015" name="본인확인질문" enable="true" file="plist/root/screen_account/p1015_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+
+		<menucode groupid="1" id="1016" name="계좌개설 완료" enable="true" file="plist/root/screen_account/p1016_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+
 		
 		<!-- 비대면 -->
 		<menucode groupid="4" id="4100" name="비대면 계좌개설" enable="true" file="plist/root/screen/p4100_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
