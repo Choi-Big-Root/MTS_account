@@ -818,6 +818,13 @@ value="
 		$setvar(btn_1001_100_agree.value = $(확인했고 동의해요%28$tmp_confirm_count/4%29) );
 	}
 
+	if($html_pop.SCROLL_HEIGHT < $html_pop.height){
+		$setvar(
+			btn_1001_100_agree.hidden = false
+			,btn_1001_100_agree_bottom.hidden = true
+		);
+	}
+
 	// 컨텐츠 크기만큼 height 를 다시 조정한다. 
 	$setvar(
 		lbl_html_pop.height 		= $html_pop.SCROLL_HEIGHT
@@ -949,7 +956,7 @@ backcolor="$cs_color_white"
 			margin_bottom="$cs_height_15"
 			NOSCROLL_HEIGHT="false"
 			/>
-			
+			<label id="lbl_html_pop" x="$html_pop.x" width="$this.remain_right" backcolor="none"/>
 		</screen>
 		<br/>
 		<button id="btn_1001_100_agree"
