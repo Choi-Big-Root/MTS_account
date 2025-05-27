@@ -358,5 +358,5 @@ value="
 </screen>
 <action id="1011_camera_onclicked" 
 value="
-	$callaction(Act_Open_Account_Move,4125);
+	$callaction(Act_Open_Account_Move,1012);
 "/>
