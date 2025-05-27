@@ -300,39 +300,31 @@ value="
     $log(저장된화면  g_menu_code_open_account[$g_menu_code_open_account]);
     $callaction(fnConfig_SetValue,g_menu_code_open_account,$p_menu_code);       // 저장 
     
-    if($p_menu_code == 4105){
-        $callaction(fnConfig_SetValue,g_open_account_save_date,$now(yyyyMMdd));
-        $callaction(fnConfig_SetValue,g_open_account_save,2);       
-    }
-    elseif($p_menu_code == 4117){
+    if($p_menu_code == 1003){
         $callaction(fnConfig_SetValue,g_open_account_save_date,$now(yyyyMMdd));
         $callaction(fnConfig_SetValue,g_open_account_save,3);       
     }
-    elseif($p_menu_code == 4118){
+    elseif($p_menu_code == 1007){
         $callaction(fnConfig_SetValue,g_open_account_save_date,$now(yyyyMMdd));
         $callaction(fnConfig_SetValue,g_open_account_save,4);       
     }
-    elseif($p_menu_code == 4135){
+    elseif($p_menu_code == 1008){
         $callaction(fnConfig_SetValue,g_open_account_save_date,$now(yyyyMMdd));
         $callaction(fnConfig_SetValue,g_open_account_save,5);       
     }
-    elseif($p_menu_code == 4119){
+    elseif($p_menu_code == 1010){
         $callaction(fnConfig_SetValue,g_open_account_save_date,$now(yyyyMMdd));
         $callaction(fnConfig_SetValue,g_open_account_save,6);       
     }
-    elseif($p_menu_code == 4120){
+    elseif($p_menu_code == 1011){
         $callaction(fnConfig_SetValue,g_open_account_save_date,$now(yyyyMMdd));
         $callaction(fnConfig_SetValue,g_open_account_save,7);       
     }
-    elseif($p_menu_code == 4133){
+    elseif($p_menu_code == 1013){
         $callaction(fnConfig_SetValue,g_open_account_save_date,$now(yyyyMMdd));
         $callaction(fnConfig_SetValue,g_open_account_save,8);       
     }
-    elseif($p_menu_code == 4134 && $g_save_open_tp==1){
-        $callaction(fnConfig_SetValue,g_open_account_save_date,$now(yyyyMMdd));
-        $callaction(fnConfig_SetValue,g_open_account_save,8);       
-    }
-    elseif($p_menu_code == 4121 && $g_save_open_tp==2){
+    elseif($p_menu_code == 1014 && $g_save_open_tp==1){
         $callaction(fnConfig_SetValue,g_open_account_save_date,$now(yyyyMMdd));
         $callaction(fnConfig_SetValue,g_open_account_save,8);       
     }
