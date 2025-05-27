@@ -417,7 +417,7 @@ value="
 			textcolor_disable="$cs_color_white"
 			value="다음"
 			onclicked="$popscreen(popscreen_1002_100_info_open);"
-			//enable="false"
+			enable="false"
 		/>
 	</viewgroup>
 </screen>
