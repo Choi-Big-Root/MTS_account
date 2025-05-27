@@ -259,7 +259,7 @@ value="
 				/>
 				<br height="$cs_height_2" />
 				<label id="1002_phone_choice"
-					width="$cs_width_100" 
+					width="$cs_width_110" 
 					height="$cs_height_24"
 					textcolor="$cs_color_black"
 					fontsize="$cs_fontsize_16"
