@@ -5,6 +5,7 @@
 	$setvar(
 		,vg_account_title_step.hidden=true
 		,popscreen_open_account_history.hidden=false
+		,popscreen_open_account_history_2.hidden=true
 	);
 "/>
 <!-- <action id="screen_contents_onunload" 
@@ -455,8 +456,7 @@ value="
     }   
 
     //추후 확인 //수정
-    if($tmp_account_menu!=4131){
-        $log(4131 아닐경우에만 탐);
+    if($tmp_account_menu!=1015){
         $closescreen(pop_1000_1_2);
         $callaction(Act_Open_Account_Move,1001);
     }

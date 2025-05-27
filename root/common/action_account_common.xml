@@ -273,15 +273,6 @@ value="
             && $p_menu_code!=4144
             && $p_menu_code!=4145
         ){
-            // JPY 취약고객인 경우 무조건 고위험 확인서를 띄운다.
-            if($g_menu_code_open_account == 4115 && $p_menu_code == 4117 && $isequal_string($g_IN_CUST_WEAK_YN,Y))
-            {
-                $callaction(Act_Open_Account_Menu_Save,4116);
-                $setvar( tmp_arr_cnt         = $getarrayvarcount(arr_open_account_menu)    );
-                $setsubarray_common(arr_open_account_menu,$tmp_arr_cnt,4116);
-                $callaction(popscreen_open_account_onload);
-                return;
-            }
             $callaction(Act_Open_Account_Menu_Save,$p_menu_code);
         }
     }
@@ -296,15 +287,6 @@ value="
     }
     elseif($g_menu_code_open_account==4136 && $p_menu_code==4131){
         $callaction(Act_Open_Account_Menu_Save,$p_menu_code);
-    }
-    // JPY 취약고객인 경우 무조건 고위험 확인서를 띄운다.
-    elseif($g_menu_code_open_account == 4115 && $p_menu_code == 4117 && $isequal_string($g_IN_CUST_WEAK_YN,Y))
-    {
-        $callaction(Act_Open_Account_Menu_Save,4116);
-        $setvar( tmp_arr_cnt         = $getarrayvarcount(arr_open_account_menu)    );
-        $setsubarray_common(arr_open_account_menu,$tmp_arr_cnt,4116);
-        $callaction(popscreen_open_account_onload);
-        return;
     }
     $setvar( tmp_arr_cnt        = $getarrayvarcount(arr_open_account_menu)  );
     $setsubarray_common(arr_open_account_menu,$tmp_arr_cnt,$p_menu_code);
@@ -423,14 +405,26 @@ onunload="popscreen_open_account_onunload"
             btn_open_account_history_onClicked
             " />
         </viewgroup>
-      <!--   <viewgroup id="popscreen_open_account_history_2" x="$w($g_lcdWidth,87.6)" width="$w($g_lcdWidth,12.4)" height="$this.remain_bottom" hidden="true">
-            <img src="$icon_pop_cancel_w" x="$w($g_lcdWidth,2.6)" layout_vertical="center" />
-            <button class="cs_button_none" 
-                onClicked="
-                btn_open_account_history_onClicked
-                "
-             />
-        </viewgroup> -->
+        <viewgroup id="popscreen_open_account_history_2"
+            x="0" 
+            width="$this.remain_right" 
+            height="$this.remain_bottom" 
+            hidden="true"
+        >
+            <button
+                layout="right"
+                width="$cs_width_56"
+                height="$this.remain_bottom"
+                BACKGROUNDSVG="$icon_cancel_2"
+                BACKGROUNDSVG_DISABLE="$icon_cancel_2"
+                BACKGROUNDSVG_HIGHLIGHT="$icon_cancel_2"
+                BACKGROUNDSVG_WIDTH="$cs_height_24"
+                BACKGROUNDSVG_HEIGHT="$cs_height_24"
+                backgroundimage_align="center"
+                backgroundimage_align_vertical="center"
+                onClicked="btn_open_account_history_onClicked"
+            />
+        </viewgroup>
     <!--     <viewgroup id="popscreen_open_account_confirm" x="$w($g_lcdWidth,0)" width="$w($g_lcdWidth,12.4)" height="$this.remain_bottom">
             <img id="img_pop_info" src="$icon_ic_tip_off" layout="left" layout_vertical="center" />
             <button id="btn_pop_info" class="cs_button_none" onClicked="popscreen_open_account_confirm_onclicked" />
@@ -640,78 +634,32 @@ value="
         $setvar(
             pop_info_tip_lbl=$(고객님의 이름, 주민등록번호 및 휴대폰 인증을 진행해요.주민등록번호는 금융실명거래 및 비밀보장에 관한 법률에 근거하여 확인해요.)
             ,pop_info_tip_height=$cs_height_80
-        )
+        );
     }elseif($menu_num < 1007){
         $setvar(
             pop_info_tip_lbl=$(계좌개설을 위한 고객정보를 입력해주세요.)
             ,pop_info_tip_height=$cs_height_40
-        )
+        );
     }elseif($menu_num < 1010){
         $setvar(
             pop_info_tip_lbl=$(약관 승인 및 위험고지 내용을. 확인해주세요)
             ,pop_info_tip_height=$cs_height_40
-        )
+        );
     }elseif($menu_num < 1011){
         $setvar(
             pop_info_tip_lbl=$(계좌 개설 신청자 명의의 은행%28또는 증권사%29 계좌정보를 입력해주세요.)
             ,pop_info_tip_height=$cs_height_80
-        )
+        );
     }elseif($menu_num < 1013){
         $setvar(
             pop_info_tip_lbl=$(본인 확인을 위한 신분증 제출해주세요.)
             ,pop_info_tip_height=$cs_height_40
-        )
+        );
     }elseif($menu_num < 1015){
         $setvar(
             pop_info_tip_lbl=$(1원이체로 계좌인증 하는 단계예요.)
             ,pop_info_tip_height=$cs_height_40
-        )
-    }elseif($menu_num < 4121 || $menu_num == 4125 ){
-        $setvar(
-            pop_info_tip_lbl=본인확인을 위한 신분증 제출 단계입니다.
-            ,pop_info_tip_height=$h($g_lcdHeight,10)
-        )
-    }elseif($menu_num < 4124 ){
-        $setvar(
-            pop_info_tip_lbl=본인확인을 위한 영상통화 단계입니다.
-            ,pop_info_tip_height=$h($g_lcdHeight,10)
-        )
-    }elseif($menu_num == 4124 ){
-        $setvar(
-            pop_info_tip_lbl=계좌개설 신청내역 확인을 위한\n본인확인 단계입니다.
-            ,pop_info_tip_height=$h($g_lcdHeight,13)
-        )
-    }elseif($menu_num == 4131 ){ // workContent_20200206
-        $setvar(
-            pop_info_tip_lbl=ID 등록 단계입니다.
-            ,pop_info_tip_height=$h($g_lcdHeight,13)
-        )
-    }elseif($menu_num == 4132 ){ // workContent_20200206
-        $setvar(
-            pop_info_tip_lbl=ID 등록 단계입니다.
-            ,pop_info_tip_height=$h($g_lcdHeight,13)
-        )
-    }elseif($menu_num == 4133 ){ // workContent_20200206
-        $setvar(
-            pop_info_tip_lbl=비대면 인증선택 단계입니다.
-            ,pop_info_tip_height=$h($g_lcdHeight,13)
-        )
-    }elseif($menu_num == 4134 ){ // workContent_20200206
-        $setvar(
-            pop_info_tip_lbl=타금융기관 계좌인증 단계입니다.
-            ,pop_info_tip_height=$h($g_lcdHeight,13)
-        )
-    }elseif($menu_num == 4135 ){ // workContent_20200206
-        $setvar(
-            pop_info_tip_lbl=약관 승인 및 위험고지 내용을 확인하시기 바랍니다.
-            ,pop_info_tip_height=$h($g_lcdHeight,10)
-        )
-    }
-    elseif($menu_num == 4136 ){ // workContent_20200206
-        $setvar(
-            pop_info_tip_lbl=위험고지 녹취안내 단계입니다.
-            ,pop_info_tip_height=$h($g_lcdHeight,10)
-        )
+        );
     }
     
     $popscreen(pop_info_tip);
