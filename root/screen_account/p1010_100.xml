@@ -135,7 +135,6 @@ value="
 
 	//$alertaction(fnActive_Next_1010,,계좌조회가 완료되었습니다.,확인);
 	//$callaction(fnPopover_AlertAction,fnActive_Next_1010,계좌조회가 완료되었습니다.,,확인);
-	$callaction(fnActive_Next_1010);
 
 
 	// 비대면 절차개선 - 2020.09.28
@@ -151,6 +150,8 @@ value="
 		,g_save_acnt_name
 		,g_save_acnt_no
 	);
+
+	$callaction(fnActive_Next_1010);
 
 	// 애드브릭스 테스트
 	$setvar(
