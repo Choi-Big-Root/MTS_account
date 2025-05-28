@@ -345,19 +345,20 @@ value="
 		elseif($strlen($g_transat_count)>0){
 			if($g_transat_count==5){
 				$closescreen(pop_host_msg); 		// 동글뱅이 멈춤
-				$callaction(fnPopover_AlertAction,,5회 연속 오류로 1일 동안 인증이 제한됩니다.,,확인);
+				//$callaction(fnPopover_AlertAction,,5회 연속 오류로 1일 동안 인증이 제한됩니다.,,확인);
+				$popscreen(pop_caution2);
 				return;
 			}
 			$setvar(transat_count=$result($g_transat_count+1));
 			$callaction(fnConfig_SetValue,g_transat_count,$transat_count);
 		}
 		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤
-		$callaction(fnPopover_AlertAction,,인증정보를 정확히 입력해주세요,,확인);
+		//$callaction(fnPopover_AlertAction,,인증정보를 정확히 입력해주세요,,확인);
+		$popscreen(pop_caution1);
 		return;
 	}
 	$closescreen(pop_host_msg); 		// 동글뱅이 멈춤
-	$callaction(fnSendSSL_MO_REQUEST); 		// 영상통화 신청(개설 신청)
-	
+	$callaction(fnPopover_AlertAction,fnSendSSL_MO_REQUEST,계좌 인증이 완료 되었어요.,,닫기);
 	return;
 "/>
 //영상 통화 신청
@@ -476,3 +477,252 @@ value="
 	$closescreen(pop_host_msg); 		// 동글뱅이 멈춤
 	$callaction(fnConfig_SetValue,g_save_open_tp,1);	// 1:역이체, 2:영상통화
 " />
+
+<popscreen id="pop_caution1"
+	width="$g_lcdWidth" 
+	height="$p_lcdHeight"
+	//backcolor="0000ff"
+	modal="true"
+	modalbackcolor="#00000088"
+	layout="center"
+	layout_vertical="center"
+	onload=""
+	onclicked="$closescreen();"
+	key=""
+	>
+	<screen id="screen_comboAccountPopover"
+		width="$w($g_lcdWidth,88.3)"
+		//height="$h($g_lcdHeight,70)"
+		height="$h($g_lcdHeight,49.5)"
+		backcolor="none"
+		layout="center"
+		layout_vertical="center"
+		noscroll_width="true"
+		>
+		<viewgroup 
+			width="$super.width"
+			height="$h($g_lcdHeight,8.6)"
+			backcolor="ffffff"
+			>
+			<label width="$super.width" height="$super.height" align="left" margin_left="$w($g_lcdWidth,3.2)" 
+			fontname="$g_baseFontNameBold"
+			fontsize="$g_fontsize_big2"
+			value="안내" />
+		</viewgroup>
+		<br/><hr backcolor="3c3c3c" /><br/>
+		<viewgroup 
+			width="$super.width"
+			//height="$h($g_lcdHeight,49)"
+			height="$h($g_lcdHeight,10)"
+			backcolor="ffffff"
+			>
+			<viewgroup
+				width="$super.width"
+				height="$h($g_lcdHeight,20)"
+				>
+				<br height="$h($g_lcdHeight,2)" /><blank width="$w($g_lcdWidth,4)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName" 
+					fontsize="$g_fontSize_big1"
+					value="계좌이체 인증이 실패하였습니다." />
+				<br /><blank width="$w($g_lcdWidth,4)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName" 
+					fontsize="$g_fontSize_big1"
+					value="인증숫자 세자리를 확인해주세요." />
+			</viewgroup>
+		</viewgroup>
+		<br />
+		<viewgroup height="$h($g_lcdHeight,10)">
+			<button 
+				width="100%" 
+				height="$super.height" 
+				value="확인" 
+				backcolor="bd3135"
+				backcolor_active="b8240c"
+				fontsize="$g_fontsize_big2"
+				fontname="$g_baseFontNameBold"
+				textcolor="ffffff"
+				textcolor_active="ffffff"
+				onclicked="$closescreen();"
+				/>
+		</viewgroup>
+	</screen>
+</popscreen>
+<popscreen id="pop_caution2"
+	width="$g_lcdWidth" 
+	height="$p_lcdHeight"
+	//backcolor="0000ff"
+	modal="true"
+	modalbackcolor="#00000088"
+	layout="center"
+	layout_vertical="center"
+	onload=""
+	onclicked="$closescreen();"
+	key=""
+	>
+	<screen id="screen_comboAccountPopover"
+		width="$w($g_lcdWidth,88.3)"
+		//height="$h($g_lcdHeight,70)"
+		height="$h($g_lcdHeight,49.5)"
+		backcolor="none"
+		layout="center"
+		layout_vertical="center"
+		noscroll_width="true"
+		>
+		<viewgroup 
+			width="$super.width"
+			height="$h($g_lcdHeight,8.6)"
+			backcolor="ffffff"
+			>
+			<label width="$super.width" height="$super.height" align="left" margin_left="$w($g_lcdWidth,3.2)" 
+			fontname="$g_baseFontNameBold"
+			fontsize="$g_fontsize_big2"
+			value="안내" />
+		</viewgroup>
+		<br/><hr backcolor="3c3c3c" /><br/>
+		<viewgroup 
+			width="$super.width"
+			//height="$h($g_lcdHeight,49)"
+			height="$h($g_lcdHeight,17)"
+			backcolor="ffffff"
+			>
+			<viewgroup
+				width="$super.width"
+				height="$h($g_lcdHeight,20)"
+				>
+				<br height="$h($g_lcdHeight,2)" /><blank width="$w($g_lcdWidth,3.5)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName" 
+					fontsize="$g_fontSize_big1"
+					value="계좌이체 인증이 실패하였습니다." />
+				<br /><blank width="$w($g_lcdWidth,3.5)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName"
+					fontsize="$g_fontSize_big1" 
+					value="영상통화를 신청하시겠습니까?" />    
+				<br /><blank width="$w($g_lcdWidth,3.5)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName" 
+					fontsize="$g_fontSize_basic"
+					value="(영상통화의 경우 오전9시~오후4시 사이에만 가능" />
+					<br /><blank width="$w($g_lcdWidth,3.5)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName" 
+					fontsize="$g_fontSize_basic"
+					value="합니다. 이후 시간에는 예약만 가능합니다.)" />
+			</viewgroup>
+		</viewgroup>
+		<br />
+		<viewgroup height="$h($g_lcdHeight,10)" backcolor="ffffff">
+			<blank width="3.5%" />
+			<button 
+				width="45%" 
+				height="$result($super.height-$h($g_lcdHeight,1.5))" 
+				value="영상통화 신청" 
+				backcolor="bd3135"
+				backcolor_active="b8240c"
+				fontsize="$g_fontsize_big2"
+				fontname="$g_baseFontNameBold"
+				textcolor="ffffff"
+				textcolor_active="ffffff"
+				onclicked="$closescreen();
+				$callaction(Act_Open_Account_Move, 4121);"
+				/>
+			<blank width="3%" />
+			<button 
+				width="45%" 
+				height="$result($super.height-$h($g_lcdHeight,1.5))"
+				value="취소" 
+				backcolor="ffffff"
+				backcolor_active="e5e5e5"
+				border_width="$g_roundHeight"
+				border_color="bd3135"
+				fontsize="$g_fontsize_big2"
+				fontname="$g_baseFontNameBold"
+				textcolor="bd3135"
+				textcolor_active="bd3135"
+				onclicked="$closescreen();
+				$popscreen(pop_caution3);"
+				/>
+			<blank width="3.5%" />
+		</viewgroup>
+	</screen>
+</popscreen>
+<popscreen id="pop_caution3"
+	width="$g_lcdWidth" 
+	height="$p_lcdHeight"
+	//backcolor="0000ff"
+	modal="true"
+	modalbackcolor="#00000088"
+	layout="center"
+	layout_vertical="center"
+	onload=""
+	onclicked="$closescreen();"
+	key=""
+	>
+	<screen id="screen_comboAccountPopover"
+		width="$w($g_lcdWidth,88.3)"
+		//height="$h($g_lcdHeight,70)"
+		height="$h($g_lcdHeight,49.5)"
+		backcolor="none"
+		layout="center"
+		layout_vertical="center"
+		noscroll_width="true"
+		>
+		<viewgroup 
+			width="$super.width"
+			height="$h($g_lcdHeight,8.6)"
+			backcolor="ffffff"
+			>
+			<label width="$super.width" height="$super.height" align="left" margin_left="$w($g_lcdWidth,3.2)" 
+			fontname="$g_baseFontNameBold"
+			fontsize="$g_fontsize_big2"
+			value="안내" />
+		</viewgroup>
+		<br/><hr backcolor="3c3c3c" /><br/>
+		<viewgroup 
+			width="$super.width"
+			//height="$h($g_lcdHeight,49)"
+			height="$h($g_lcdHeight,14)"
+			backcolor="ffffff"
+			>
+			<viewgroup
+				width="$super.width"
+				height="$h($g_lcdHeight,20)"
+				>
+				<br height="$h($g_lcdHeight,2)" /><blank width="$w($g_lcdWidth,4)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName" 
+					fontsize="$g_fontSize_big1"
+					value="영상통화 신청이 취소되었습니다." />
+				<br /><blank width="$w($g_lcdWidth,4)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName" 
+					fontsize="$g_fontSize_big1"
+					value="다음날 계좌이체방식으로 다시 신청해 " />
+				<br /><blank width="$w($g_lcdWidth,4)"/>
+				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+					fontname="$g_baseFontName" 
+					fontsize="$g_fontSize_big1"
+					value="주시기 바랍니다." />
+			</viewgroup>
+		</viewgroup>
+		<br />
+		<viewgroup height="$h($g_lcdHeight,10)">
+			<button 
+				width="100%" 
+				height="$super.height" 
+				value="확인" 
+				backcolor="bd3135"
+				backcolor_active="b8240c"
+				fontsize="$g_fontsize_big2"
+				fontname="$g_baseFontNameBold"
+				textcolor="ffffff"
+				textcolor_active="ffffff"
+				onclicked="$closescreen();
+				$closescreen(popscreen_open_account);"
+				/>
+		</viewgroup>
+	</screen>
+</popscreen>
