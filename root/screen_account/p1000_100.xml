@@ -250,14 +250,31 @@ value="
 				<blank width="$cs_width_5"/>
 				<label
 					width="$this.remain_right"
-					height="$cs_height_66"
-					margin_top="0"
-					multiline="true"
-					valign="top"
+					height="$cs_height_22"
 					fontsize="$cs_fontsize_14"
 					textcolor="$cs_color_text"
 					fontname="$cs_font_400"
-					value="거래 없이 입금, 출금만 하는 경우, 금융거래 목적이 확인 되지 않은 경우,금융사기 방지를 위해’출금제한계좌’ 로 설정이 됩니다."
+					value="거래 없이 입금, 출금만 하는 경우, 금융거래 목적이"
+				/>
+				<br/>
+				<label
+					width="$this.remain_right"
+					height="$cs_height_22"
+					margin_left="$cs_width_9"
+					fontsize="$cs_fontsize_14"
+					textcolor="$cs_color_text"
+					fontname="$cs_font_400"
+					value="확인 되지 않은 경우,금융사기 방지를 위해’출금제한"
+				/>
+				<br/>
+				<label
+					width="$this.remain_right"
+					height="$cs_height_22"
+					margin_left="$cs_width_9"
+					fontsize="$cs_fontsize_14"
+					textcolor="$cs_color_text"
+					fontname="$cs_font_400"
+					value="계좌’ 로 설정이 됩니다."
 				/>
 				<br height="$cs_height_10"/>
 				<label
