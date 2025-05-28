@@ -283,7 +283,7 @@ value="
 
 	$callaction(fnConfig_SetValue,g_open_tp_select,1); // g_open_tp_select 해외:1, 국내:2
 
-	/*
+	
 	$log(
 		확인용 : 
 			1001 g_IN_AGREE_ITEM1[$g_IN_AGREE_ITEM1],
@@ -327,7 +327,7 @@ value="
 			1006 g_save_members_no[$g_save_members_no],
 			1006 g_open_tp_select[$g_open_tp_select],
 	);
-	*/
+	
 
 	$closescreen(popscreen_1006_100_pwd_check);
 	$callaction(Act_Open_Account_Move,1007);

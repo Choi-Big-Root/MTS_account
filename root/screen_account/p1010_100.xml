@@ -386,7 +386,7 @@ value="
 
 <action id="btn_1010_confirm_onclicked"
 value="
-	/*
+	
 	$log(
 		확인용 : 
 			1001 g_IN_AGREE_ITEM1[$g_IN_AGREE_ITEM1],
@@ -438,7 +438,7 @@ value="
 			1010 g_save_acnt_name[$g_save_acnt_name],
 			1010 g_save_acnt_no[$g_save_acnt_no],
 	);
-	*/
+	
 	$popscreen(pop_1010_input_check_confirm);
 "/>
 
