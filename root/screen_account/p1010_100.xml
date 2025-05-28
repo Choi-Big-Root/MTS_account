@@ -740,7 +740,7 @@ onload="pop_1010_input_check_confirm_onload"
 	>
 		<viewgroup
 			width="$cs_width_343"
-			height="$cs_height_113"
+			height="$cs_height_115"
 			layout="center"
 			backcolor="$cs_color_line"
 			margin_left="1"
@@ -796,7 +796,7 @@ onload="pop_1010_input_check_confirm_onload"
 			<br height="1"/>
 			<label
 				width="$cs_width_109"
-				height="$cs_height_37"
+				height="$this.remain_bottom"
 				backcolor="$cs_color_bg"
 				textcolor="$cs_color_text"
 				fontname="$cs_font_400"
@@ -807,7 +807,7 @@ onload="pop_1010_input_check_confirm_onload"
 			<blnak width="1"/>
 			<label id="lbl_acnt_no_pop_1010_input_check_confirm"
 				width="$this.remain_right"
-				height="$cs_height_37"
+				height="$this.remain_bottom"
 				margin_left="$cs_width_10"
 				backcolor="$cs_color_white"
 				textcolor="$cs_color_text"
