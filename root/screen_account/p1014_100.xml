@@ -187,7 +187,7 @@ value="
 				textcolor="$cs_color_black"
 				value="유진"
 			/>
-			<textfield id="tf_4134_key"
+			<textfield id="tf_1014_key"
 				width="$this.remain_right"
 				height="$cs_height_60"
 				margin_left="$cs_width_10"
@@ -278,7 +278,7 @@ value="
 	$json_setdata($jsonName,BODY,BSNS_DATE,,$g_save_bsns_date); 			// 거래일자
 	$json_setdata($jsonName,BODY,INOUT_NO,,$g_save_inout_no); 				// 입출금번호
 	$json_setdata($jsonName,BODY,MAST_ACCTNO,,$g_save_mast_acctno); 		// 대표계좌번호
-	$json_setdata($jsonName,BODY,VRRY_KEYY,,$tf_4134_key.value); 				// 인증Key
+	$json_setdata($jsonName,BODY,VRRY_KEYY,,$tf_1014_key.value); 				// 인증Key
 	$json_setdata($jsonName,BODY,WORK_NO,,$g_OUT_AGREE_WORK_NO); 			// 상담번호
 
 	$json_print($jsonName);
