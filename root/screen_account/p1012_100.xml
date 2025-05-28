@@ -229,6 +229,7 @@ value="
 	margin_left="$cs_screen_left_right_margin"
 	margin_right="$cs_screen_left_right_margin"
 >
+	//screen_1012_100_photo 를 viewgroup 컨트롤 안에 넣으면 원하는대로 동작X
 	<label
 		width="$cs_width_73"
 		height="$cs_height_20"
@@ -628,7 +629,7 @@ value="	// 비대면 절차개선 - 2020.09.28
 	
 	$callaction(fnConfig_SetValue,g_recvSSL_body_result_count,0);
 	$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
-
+	/*
 	$log(
 		확인용 : 
 			1001 g_IN_AGREE_ITEM1[$g_IN_AGREE_ITEM1],
@@ -691,6 +692,7 @@ value="	// 비대면 절차개선 - 2020.09.28
 			1012 g_recvSSL_body_result_count[$g_recvSSL_body_result_count],
 			1012 g_save_result_yn[$g_save_result_yn],
 	);
+	*/
 
 
 

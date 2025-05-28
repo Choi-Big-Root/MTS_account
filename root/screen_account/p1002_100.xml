@@ -15,7 +15,6 @@ $readfile(plist/root/html/1002_100_4.html,1002_htmldata_4);
 $readfile(plist/root/html/1002_100_5.html,1002_htmldata_5);
 "/>	
 <action id="screen_contents_onload" value="
-	$log(확인용);
 	$setvar(
 		,img_step_1.hidden=false
 		,img_step_2.hidden=true
@@ -162,14 +161,14 @@ value="
 	onload="screen_contents_onload"
 	onunload="screen_1002_100_onunload"
 	noscroll_height="true"
-	margin_bottom="$cs_height_20"
+	margin_top="$cs_screen_top_margin"
+    margin_bottom="$cs_screen_bottom_margin"
+    margin_left="$cs_screen_left_right_margin"
+    margin_right="$cs_screen_left_right_margin"
 >
-	<br height="$cs_height_15"/>
 	<viewgroup
 		width="$this.remain_right"
-		height="$cs_height_386"
-		margin_left="$cs_width_16"
-		margin_right="$cs_width_16"
+		height="$result($this.remain_bottom - $cs_height_54)"
 	>
 		<viewgroup
 			width="$this.remain_right"
@@ -1476,7 +1475,7 @@ value="
 		$callaction(fnPopover_AlertAction,,$recvSSL_hdr_msg,,확인);
 		return;
 	}
-
+	/*
 	$log(
 		확인용 : 
 			1001 g_IN_AGREE_ITEM1[$g_IN_AGREE_ITEM1],
@@ -1489,12 +1488,7 @@ value="
 			1002 g_IN_REQUEST_AGE[$g_IN_REQUEST_AGE],
 			1002 g_OUT_AGREE_WORK_NO[$g_OUT_AGREE_WORK_NO],
 	);
-
-
-	$log(최대근******** $getdiffday($g_open_account_save_date,$recvSSL_body_dt));
-
-
-
+	*/
 
 	//이어하기 처음하기 일단 대기 꼭 확인. //수정.
 	$closescreen(popscreen_number_keypad);

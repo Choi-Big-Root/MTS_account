@@ -116,7 +116,7 @@ value="
 		$callaction(fnConfig_SetValue,g_IN_REQUEST_CLNT_EMAIL 	,);
 	}
 
-
+	/*
 	$log(
 		확인용 : 
 			1001 g_IN_AGREE_ITEM1[$g_IN_AGREE_ITEM1],
@@ -135,6 +135,7 @@ value="
 			1003 g_IN_REQUEST_HOME_ADDR2[$g_IN_REQUEST_HOME_ADDR2],
 			1003 g_IN_REQUEST_CLNT_EMAIL[$g_IN_REQUEST_CLNT_EMAIL],
 	);
+	*/
 
 	$callaction(Act_Open_Account_Move,1004);
 	
@@ -163,14 +164,14 @@ value="
 	onload="screen_contents_onload"
 	onunload="screen_contents_onunload"
 	noscroll_height="true"
-	margin_bottom="$cs_height_20"
+	margin_top="$cs_screen_top_margin"
+    margin_bottom="$cs_screen_bottom_margin"
+    margin_left="$cs_screen_left_right_margin"
+    margin_right="$cs_screen_left_right_margin"
 >
-	<br height="$cs_height_15"/>
 	<viewgroup
 		width="$this.remain_right"
 		height="$result($this.remain_bottom - $cs_height_54)"
-		margin_left="$cs_width_16"
-		margin_right="$cs_width_16"
 	>
 		<viewgroup
 			width="$this.remain_right"

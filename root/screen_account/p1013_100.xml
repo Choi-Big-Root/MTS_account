@@ -235,6 +235,7 @@ value="
 	</viewgroup>
 </screen>
 <action id="fnInputDataCheck" value="
+	/*
 	$log(
 		확인용 : 
 			1001 g_IN_AGREE_ITEM1[$g_IN_AGREE_ITEM1],
@@ -297,6 +298,7 @@ value="
 			1012 g_recvSSL_body_result_count[$g_recvSSL_body_result_count],
 			1012 g_save_result_yn[$g_save_result_yn],
 	);
+	*/
 
 
 	if($fnInputDataCheck_param1 == 1){

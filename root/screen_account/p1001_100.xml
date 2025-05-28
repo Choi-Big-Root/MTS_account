@@ -113,14 +113,14 @@ value="
 	onload="screen_contents_onload"
 	onunload="screen_1001_100_onunload"
 	noscroll_height="true"
-	margin_bottom="$cs_height_20"
+	margin_top="$cs_screen_top_margin"
+    margin_bottom="$cs_screen_bottom_margin"
+    margin_left="$cs_screen_left_right_margin"
+    margin_right="$cs_screen_left_right_margin"
 >
-	<br height="$cs_height_15"/>
 	<viewgroup
 		width="$this.remain_right"
-		height="$cs_height_534"
-		margin_left="$cs_width_16"
-		margin_right="$cs_width_16"
+		height="$result($this.remain_bottom - $cs_height_54)"
 	>
 		<viewgroup
 			width="$this.remain_right"
@@ -184,6 +184,7 @@ value="
 		<viewgroup
 			width="$this.remain_right"
 			height="$cs_height_216"
+			border_color="$cs_color_bg"
 			border_radius="$cs_radius_15"
 			backcolor="$cs_color_bg"
 			margin_left="$cs_height_20"
@@ -194,7 +195,6 @@ value="
 			<viewgroup
 				width="$this.remain_right"
 				height="$cs_height_24"
-				//backcolor="ff000022"
 			>
 				<checkbox id="chk_1001_100_1_all"
 					width="$cs_width_229"
@@ -287,12 +287,10 @@ value="
 				/>
 			</viewgroup>
 		</viewgroup>
-		//<br height="$cs_height_20" />
-		<br/>
+		<br height="$cs_height_20" />
 		<viewgroup
 			width="$this.remain_right"
 			height="$cs_height_180"
-			layout_vertical="bottom"
 			border_radius="$cs_radius_15"
 			backcolor="$cs_color_bg"
 			margin_left="$cs_height_20"
@@ -769,13 +767,14 @@ value="
 
 	$callaction(fnConfig_SetValue,g_IN_AGREE_ITEM2 	,$tmp_mo_f1); 		// 개인정보선택동의 
 	$callaction(fnConfig_SetValue,g_IN_AGREE_ITEM3 	,$tmp_mo_f2); 		// 연락방식- 전체,SMS,전화,이메일,우편:NYYYN
-
+	/*
 	$log(
 		확인용 : 
 			1001 g_IN_AGREE_ITEM1[$g_IN_AGREE_ITEM1],
 			1001 g_IN_AGREE_ITEM2[$g_IN_AGREE_ITEM2],
 			1001 g_IN_AGREE_ITEM3[$g_IN_AGREE_ITEM3],
 	);
+	*/
 	$closescreen(pop_1001_100_1);
 	$callaction(Act_Open_Account_Move, 1002);
 "/>

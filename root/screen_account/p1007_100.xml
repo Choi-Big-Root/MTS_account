@@ -144,6 +144,7 @@ value="
 	margin_left="$cs_screen_left_right_margin"
 	margin_right="$cs_screen_left_right_margin"
 >
+	//스크린 스크롤이 되어야 하는 화면은 기존 구조와 다르다.
 	<viewgroup id="vg_1007_100_contents_title"
 		width="$this.remain_right"
 		height="$cs_height_98"
