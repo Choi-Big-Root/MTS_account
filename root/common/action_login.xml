@@ -5602,7 +5602,8 @@ value="
 		if(!$isequal_string($tmp_popscreen_name,popscreen_open_account)){
 			$popscreen(popscreen_open_account);	
 		}
-		$callaction(Act_Open_Account_Move,4129);
+		$callaction(fnConfig_SetValue,g_save_keep_go,1); // 개설후 ID등록
+		$callaction(Act_Open_Account_Move,1015);
 		//$setvar_common(g_OUT_AGREE_WORK_NO = );
 
 
