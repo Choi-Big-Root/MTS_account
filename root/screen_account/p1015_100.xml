@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <actiondata value="
-/*
  	$setvar_common(
  		g_SSLSocketName = $callaction(Act_SSL_Connect,$g_serverIP_account,$g_serverPort_account_ssl,Act_SSL_Connected,Act_SSL_Closed,Act_SSL_RecvData)
 	);
-*/
 "/>
 <action id="screen_contents_onload"
 value="
