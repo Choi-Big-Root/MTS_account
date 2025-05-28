@@ -87,16 +87,12 @@ value="
 		height="$result($this.remain_bottom - $cs_height_54)"
 	>
 		<br height="$cs_height_104"/>
-		<label
-			width="$this.remain_right"
+		<img
+			src="$icon_account_in_progress"
+			width="$cs_height_100"
 			height="$cs_height_100"
-			BACKGROUNDSVG="$icon_account_in_progress"
-	        BACKGROUNDSVG_DISABLE="$icon_account_in_progress"
-	        BACKGROUNDSVG_HIGHLIGHT="$icon_account_in_progress"
-	        BACKGROUNDSVG_WIDTH="$cs_height_100"
-	        BACKGROUNDSVG_HEIGHT="$cs_height_100"
-	        backgroundimage_align="center"
-	        backgroundimage_align_vertical="center"
+			layout="center"
+			imagesizefit="false"
 		/>
 		<br height="$cs_height_25"/>
 		<label

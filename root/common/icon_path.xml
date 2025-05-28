@@ -63,6 +63,8 @@
 
 		// p1000_100.xml
 		,icon_account_time	 		= $callaction(fnGetIconPathName,account_time)				
+		// p1017_100.xml
+		,icon_account_in_progress	= $callaction(fnGetIconPathName,account_in_progress)				
 
 		// intro_after.xml
 		,icon_intro_1	 		= $callaction(fnGetIconPathName,intro_1)				
