@@ -1500,6 +1500,11 @@ value="
 	$closescreen(popscreen_number_keypad);
 	$closescreen(popscreen_1002_100_telecom_auth_code);
 
+	if($g_dev_memory_check_flag){ 					// 금융보안원 검수 버전 
+    	$callaction(Act_Open_Account_Move,1010); 	// 계좌확인 - 이후 카메라 화면으로 이동 
+    	return;
+    }
+
 	//저장 화면이 있고, 7일경과가 아니고, 저장화면을 저장한 날짜가 존재하고, 이전 저장되어 있던 전화번호와 현재 인증된 전화번호가 같다면
 	//mo_workno 의 flag값은 4101에서 휴대폰 인증전에 이미 한번 확인이 되기에
 	if($g_open_account_save > 1 

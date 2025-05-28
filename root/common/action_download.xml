@@ -629,8 +629,7 @@ value="
 		,vg_progress_inner.width 	= $tmp_progress_pos
 	);
 
-	$callaction(_N_Act_Request_File_Xml,$tmp_xml_path,$tmp_xml_file); 		// 파일요청
-	
+	$callaction(_N_Act_Request_File_Xml,$tmp_xml_path,$tmp_xml_file); 		// 파일요청	
 " />
 <action id="_N_Act_VersionFile_XML_SAVE" scope="common" 
 value="
@@ -691,6 +690,7 @@ value="
 	return $MYMQ_RH_WKEY;
 "/>
 
+// 현재 사용안함 - 사용시 구현 필요.
 //////////////////////////////////////////////////////
 // 해외서버 연결 
 //////////////////////////////////////////////////////

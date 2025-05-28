@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<import filename="plist/root/common/error_code.xml" />
+
+//<import filename="plist/root/common/error_code.xml" />
 <actiondata value="
 	$setvar_common(
 		,g_channel_type = 2 		// channel type 1:HTS
@@ -31,9 +32,8 @@
 		, bNetLength 				= true	// htonl 함수를 사용하는 방법
 		, bRecvServerMultiStart 	= false
 	);
-
 " />
-
+<!--
 // 인증서 로그인 
 <action id="Act_Id_Request" scope="common" 
 params="
@@ -44,28 +44,28 @@ params="
 ,p_call_id
 "
 value="
-//$log(Act_Id_Request 함수 시작);
-$setvar(id_buff = $p_call_id);
-$logvar(recv_count_request);
-//$log(if문 통과전 id_buff[$id_buff]);
+	//$log(Act_Id_Request 함수 시작);
+	$setvar(id_buff = $p_call_id);
+	$logvar(recv_count_request);
+	//$log(if문 통과전 id_buff[$id_buff]);
 	if($getvarlen(id_buff) <= 0) {
-//	$log(Act_Id_Request id_buff 없을경우);
+	//	$log(Act_Id_Request id_buff 없을경우);
 		if($recv_count_request >= 2){
-//			$log(Act_Id_Request 아이디 두개이상일경우);
+			//$log(Act_Id_Request 아이디 두개이상일경우);
 			$setvar(id_buff = $select_id);
 		}
 		else{
-//			$log(Act_Id_Request 아이디 하나일경우);
+			//$log(Act_Id_Request 아이디 하나일경우);
 			$setvar(id_buff = $recv_user_id_request);
 		}
 	}
-//$log(if문 통과후 id_buff[$id_buff]);
-$logvar(p_varname_cert);
-$logvar(select_id);
-$logvar(recv_user_id_request);
-$logvar(id_buff);
-$logvar(p_call_id);
-$logvar(p_cert_dn);
+	//$log(if문 통과후 id_buff[$id_buff]);
+	$logvar(p_varname_cert);
+	$logvar(select_id);
+	$logvar(recv_user_id_request);
+	$logvar(id_buff);
+	$logvar(p_call_id);
+	$logvar(p_cert_dn);
 	$setvar(
 		,tmp_varname_cert 					= $p_varname_cert
 		,tmp_id_request_after_action 		= $p_after_action
@@ -88,7 +88,6 @@ $logvar(p_cert_dn);
 		);
 	}
 " />
-
 //클라우드
 <action id="Act_Id_Request_Cloud_After" scope="common"
 value="
@@ -138,7 +137,6 @@ value="
 	);
 
 	$callaction(fnCloudCheckCertConnectCommonBefore,true,true,$recv_dn_id_request,,$tmp_varname_cert,Act_Id_Request_Cloud_After_2);
-
 "/>
 //$callaction(fnGoLoginScreen,1); 
 <action id="Act_Go_Intro" scope="common"
@@ -172,7 +170,6 @@ value="
 	}
 	*/
 "/>
-
 //로컬
 <action id="Act_Id_Request_After" scope="common" 
 value="
@@ -258,7 +255,7 @@ value="
 	}
 "/>
 
-// 공동인증서 로그인 가능 아이디 호출///////////////////////////////////////////////////////////////////////////////////
+// 공동인증서 로그인 가능 아이디 호출
 <action id="Act_Id_Select" scope="common" 
 params="
 	p_dn_key
@@ -279,16 +276,16 @@ value="
 		,recv_user_id_request 		= $recvmap_data(CSBLDNTR,OutBlock.user_id,$reqid_CSBLDNTR,trim)
 	);
 
-// 테스트용 이후 주석처리해야함.
-//$setvar(recv_count_request=000003);
+	// 테스트용 이후 주석처리해야함.
+	//$setvar(recv_count_request=000003);
 
 	$logvar(recv_count_request);
 	$logvar(recv_user_id_request);
 
 	if($var_select_div == 1){		// 인증서 로그인의 경우
 		$setvar(value_cert = g_user_pw_cert_var_kind_2);
-$logvar(g_user_pw_cert_var_kind_2);
-$logvar(value_cert);
+		$logvar(g_user_pw_cert_var_kind_2);
+		$logvar(value_cert);
 		if($strlen($g_user_pw_cert_var_kind_2) <= 0){
 			$alert(,,비밀번호를 입력하세요.,확인);
 			$closescreen(pop_host_msg);
@@ -342,10 +339,7 @@ $logvar(value_cert);
 		$closescreen(pop_host_msg);
 		return;
 	}
-
 "/>
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 // 아이디 로그인 
 <action id="Act_Sise_Login_d" scope="common" 
 params="
@@ -371,7 +365,6 @@ value="
 
 		,reqid_CSBLOGIN = $callaction(FNSEND_ORDERDATA,CSBLOGIN,Input,,,,Act_Sise_Login_d_after)
 	);
-
 "/>
 // 인증서  로그인 
 <action id="Act_Sise_Login_cert_d" scope="common" 
@@ -436,30 +429,6 @@ value="
 	return $MYMQ_RH_WKEY;
 	*/
 "/>
-
-<!-- <action id="Act_Network_RecvData_IP_xml_after" scope="common"
-value="
-	if(!$p_become_active){
-		$callaction(Act_Sise_Login_d_after);
-	}
-	if($p_become_active){
-		$setvar(
-			p_become_active = false
-		);
-		// 주문체결 서버 연결 
-		$callaction(Act_Network_Connect
-			, $g_RealSocketName_Order
-			, $g_RealServerIP_Order
-			, $g_RealServerPort_Order
-			, 256
-			, 511
-			, 0		
-			, Act_Network_RecvData_OrderReal 						// 주문체결만 분리함
-			, Act_Server_Connect_Order_connected_BecomeActive 		// 연결 후 액션 
-		); 	
-		//$callaction(Act_Server_Connect_D_connected_BecomeActive);
-	}
-"/> -->
 <action id="Act_Sise_Login_d_after" scope="common" 
 value="	
 	$setvar_common(
@@ -573,7 +542,6 @@ value="
 	$addvar(strSendData,strApHeaderData, , , ,false,true);  // 마지막인자  scope
 	$sendvardata($g_RealSocketName_Order,,strSendData,0,,$p_after_action,TRUE);	
 " />
-
 <action id="Act_Dn_Request" scope="common" 
 params="
  p_varname_id
@@ -610,9 +578,7 @@ value="
 			,reqid_CSBLSIGN01 = $callaction(FNSEND_ORDERDATA,CSBLSIGN01,Input,,,,Act_Dn_Request_After)	
 		);
 	}
-
 " />
-
 <action id="Act_Dn_Request_Cloud_After" scope="common"
 value="
 	$log(여기까지 오면 일단 거의 끝);
@@ -766,7 +732,6 @@ value="
 	$callaction(Act_Network_Disconnect_All);
 
 	$openfile(plist/root/intro.xml); 
-
 " />
 // 계좌번호 가져오는데 실패함. 
 <action id="Act_Account_Get_Error" scope="common" 
@@ -1089,6 +1054,7 @@ value="
 	}
 	
 " />
+
 // 클라우드 인증서 비밀번호  오류
 <action id="Act_Cloud_Cert_Pass_Error" scope="common" 
 params="
@@ -1289,6 +1255,8 @@ p_name_id
 	$addvar(strSendData,strApHeaderData, , , ,false,true);  // 마지막인자  scope
 	$sendvardata($g_SiseSocketName,,strSendData,0,,$p_after_action,TRUE);	
 " />
+-->
+// 시세에서 데이터 가져올 경우 필요할 수 있음. - 수정필요
 <action id="Act_Network_SendData" scope="common" params="
 p_socket_name
 , p_trcode
@@ -1297,7 +1265,8 @@ p_socket_name
 , p_func
 , p_before_action
 , p_after_action
-" value="
+" 
+value="
 	if($g_is_background){	return;	}
 
 	if(!$isconnect($p_socket_name)){	
@@ -1415,6 +1384,7 @@ p_socket_name
 
 	return $MYMQ_RH_WKEY;
 " />
+<!--
 //확인
 <action id="Act_Network_SendData_Order" scope="common" 
 paramlog="false"
@@ -1611,13 +1581,13 @@ value="
 	// changeCMEAuthority_20191128
 	$delvar(MYMQ_RH_EXCODE);
 	$mapstruct_getattrvalue($p_socket_name,$strTrCode,MYMQ_RH_EXCODE,MYMQ_RH_EXCODE);
-//	$log(TRCODE[$strTrCode] MYMQ_RH_EXCODE is Check ********* [$MYMQ_RH_EXCODE]);
+	//$log(TRCODE[$strTrCode] MYMQ_RH_EXCODE is Check ********* [$MYMQ_RH_EXCODE]);
 	if($getvarlen(MYMQ_RH_EXCODE) > 0) {
 		$log(TRCODE[$strTrCode] MYMQ_RH_EXCODE is Setting [$MYMQ_RH_EXCODE]);
 	} else {
 		$setvar(	MYMQ_RH_EXCODE 	= $callaction(Act_Excode_Get, $strTrCode)	);
 	}
-//	$setvar(	MYMQ_RH_EXCODE 	= $callaction(Act_Excode_Get, $strTrCode)	);
+	//$setvar(	MYMQ_RH_EXCODE 	= $callaction(Act_Excode_Get, $strTrCode)	);
 	
 
 	if($isequal_string($strTrCode,CSBOSIGN02 ) 	// 인증서 인코딩값 전송 및 단축인증키 수신 (공동인증 성공 시 수행)
@@ -1825,7 +1795,7 @@ value="
 	}
 
 	//$logvar_binary(Act_Network_SendData_Order[$strTrCode] strSiseDataVarName Original, strSiseDataVarName);
-//	$logvar_binary(Act_Network_SendData_Order strSendData_Enc Original, strSendData_Enc);
+	//$logvar_binary(Act_Network_SendData_Order strSendData_Enc Original, strSendData_Enc);
 	
 	
 	
@@ -1900,7 +1870,6 @@ value="
 	return $MYMQ_RH_WKEY;
 
 " />
-
 //클라우드 분기
 <action id="fnCloudCertBriefSign" scope="common"
 value="
@@ -2015,7 +1984,7 @@ value="
 
 
 	//$logvar_binary(Act_Network_SendData_Order[$strTrCode] strSiseDataVarName Original, strSiseDataVarName);
-//	$logvar_binary(Act_Network_SendData_Order strSendData_Enc Original, strSendData_Enc);
+	//$logvar_binary(Act_Network_SendData_Order strSendData_Enc Original, strSendData_Enc);
 	
 	
 	
@@ -2194,10 +2163,8 @@ value="
 <action id="Act_Duplication_Exit" scope="common" 
 value="
 	$callaction(FNEXITBTNCLICKED, 1);
-
 " />
 
-// 
 <action id="FnExitBtnClicked" scope="common" 
 value="
 	$delvar_common(tmp_tradeweb);		// 트레이딩 커뮤니티 웹 접속유지
@@ -2254,7 +2221,6 @@ value="
 value="
 	$callaction(FnExitBtnClicked,2); 	// 정보를 저장하고 종료한다. 
 " />
-
 <action id="Act_Network_RecvData_OrderReal" scope="common" 
 //paramlog="false" 
 params="p_socket_name, p_varname_recv, p_err_no, p_socketnum" 
@@ -2361,156 +2327,24 @@ value="
 	}
 
 "/>
+-->
+<!--
+// 시세에서 데이터 가져올 경우 필요할 수 있음. - 수정필요
 <action id="Act_Network_RecvData" scope="common" 
 //paramlog="false" 
 params="p_socket_name, p_varname_recv, p_err_no, p_socketnum" 
 value="
 	//$logvar_binary(RecvData All ,$p_varname_recv); 
 	if($isequal_string($p_err_no,200)){ 			// 연결이 끊어짐.
-		$log(************** 연결 끊어짐[$p_socket_name][$p_socketnum][$g_iSocketNumber][$g_iSocketNumber_DOMESTIC]);
-		//$logvar(p_socket_name);
-		//$logvar(g_SiseSocketName_DOMESTIC);
-		//$logvar(g_iSocketNumber_DOMESTIC);
-		if($isequal_string($p_socket_name,$g_SiseSocketName_DOMESTIC)) {
-			$setvar_common(N_g_disconnect_domestic = true);
-			if($getvarlen(p_socketnum) > 0 && $p_socketnum != $g_iSocketNumber_DOMESTIC) {
-				$log(Act_Network_RecvData 200 Error SocketNum Check p_socketnum[$p_socketnum] g_iSocketNumber_DOMESTIC[$g_iSocketNumber_DOMESTIC]);
-				return;
-			}
-		}
-		if($isequal_string($p_socket_name,$g_SiseSocketName)) {
-			$setvar_common(N_g_disconnect_sise = true);
-			if($getvarlen(p_socketnum) > 0 && $p_socketnum != $g_iSocketNumber) {
-				$log(Act_Network_RecvData 200 Error SocketNum Check p_socketnum[$p_socketnum] g_iSocketNumber[$g_iSocketNumber]);
-				return;
-			}
-		}
-		$log(*****Act_Network_RecvData [$p_socket_name]:$g_is_background,$g_is_master_relading);
-
-		// 마스터 리로딩 여기확인
-		if($g_is_master_relading){ 		
-			if($isequal_string($p_socket_name, $g_SiseSocketName_DOMESTIC)){	$setvar_common(g_is_not_connect_DOMESTIC = true );		}
-			if($isequal_string($p_socket_name, $g_SiseSocketName)){				$setvar_common(g_is_not_connect = true );				}
-			if($g_is_not_connect && $g_is_not_connect_DOMESTIC){				$openfile(plist/root/intro.xml);						}
-			return;
-		}
-		//시세전용 로그인에서 인증서 로그인할 때 끊고 접속함 
-		if($g_is_cert_login_disconnect){ 			
-			if($isequal_string($p_socket_name,$g_SiseSocketName_DOMESTIC)){	$setvar_common(g_is_cert_not_connect_DOMESTIC = true );		}
-			if($isequal_string($p_socket_name, $g_SiseSocketName)){			$setvar_common(g_is_cert_not_connect = true );				}
-			if($g_is_cert_not_connect && $g_is_cert_not_connect_DOMESTIC){
-				$setvar_common(
-					g_is_cert_login_disconnect = false
-					,g_is_cert_not_connect_DOMESTIC = false
-					,g_is_cert_not_connect = false
-				);
-				$callaction(fnSISELogin_Cert_Confirm_New);
-			}
-			return;
-		}
-		// 백그라운드가 아니고 로그인화면이 아닐때 끊어지면 
-		if(!$g_is_background && $g_menuCode != 1920 ){
-			//$log(여기서 연결이 끊기다[$p_socket_name]. **********************);
-			//$openfile(plist/root/intro.xml);
-		}
-
-		return;
-
-		
-/*
-		$log(*****Act_Network_RecvData [$p_socket_name]:$g_is_background,g_is_master_relading);
-		$setvar_common(g_OrderServerKeyChangeResult = false);  		// 키교환 플래그를 초기화한다. 
-		if($g_is_master_relading){ 			// 마스터 리로딩 
-			$log(******* 마스터 리로에서 끊은건다. : );
-			if($isequal_string($p_socket_name, $g_SiseSocketName_DOMESTIC)){
-				$setvar_common(g_is_not_connect_DOMESTIC = true );
-			}
-			if($isequal_string($p_socket_name, $g_SiseSocketName)){
-				$setvar_common(g_is_not_connect = true );
-			}
-			if($g_is_not_connect && $g_is_not_connect_DOMESTIC){
-				$log(*****Act_Network_RecvData : intro.xml로 보냄 );
-				$openfile(plist/root/intro.xml);
-			}
-			return;
-		}
-		//$logvar(g_is_cert_login_disconnect);
-		if($g_is_cert_login_disconnect){
-			if($isequal_string($p_socket_name, $g_SiseSocketName_DOMESTIC)){
-				$setvar_common(g_is_cert_not_connect_DOMESTIC = true );
-			}
-			if($isequal_string($p_socket_name, $g_SiseSocketName)){
-				$setvar_common(g_is_cert_not_connect = true );
-			}
-			if($g_is_cert_not_connect && $g_is_cert_not_connect_DOMESTIC){
-				$setvar_common(
-					g_is_cert_login_disconnect = false
-					,g_is_cert_not_connect_DOMESTIC = false
-					,g_is_cert_not_connect = false
-				);
-				$log(*****Act_Network_RecvData : 공동인증 로그인 );
-				$callaction(fnSISELogin_Cert_Confirm_New);
-				return;
-			}
-			return;
-
-		}
-		if(!$g_is_background && $g_menuCode != 1920 ){
-			$stopnstimer(TIMER_POLLING);  			$log(***** 폴링중지 10);
-			$log(여기서 연결이 끊기다2. **********************);
-			$logvar(
-				g_is_master_relading 
-				,g_is_cert_login_disconnect 
-				,g_is_not_connect_DOMESTIC 
-				,g_is_not_connect
-				,g_is_cert_not_connect_DOMESTIC
-				,g_is_cert_not_connect
-			);
-			if(!$isconnect($g_SiseSocketName_DOMESTIC)){
-				$log(g_SiseSocketName_DOMESTIC 끊어짐 );
-			}
-			if(!$isconnect($g_SiseSocketName)){
-				$log(g_SiseSocketName 끊어짐 );
-				$closescreen();
-				//$closescreen(pop_host_msg);
-				$log(연결 끊김1);
-				return;
-				//$callaction(Act_Connect_Alarm, 연결 끊김1 [$p_err_no][$g_is_background][$g_menuCode], Act_Server_Disconnected);
-			}
-
-			if( !$isconnect($g_SiseSocketName_DOMESTIC)
-			&& !$isconnect($g_SiseSocketName)
-			){
-				//$callaction(Act_Connect_Alarm, 연결 끊김2[$p_err_no][$g_is_background][$g_menuCode], Act_Server_Disconnected);
-				$log(연결 끊김2);
-				$openfile(plist/root/intro.xml);
-				return;
-			}
-		}
-*/
+		$log(************** 연결 끊어짐[$p_socket_name][$p_varname_recv][$p_err_no][$p_socketnum]);
 		return;
 	}
-
-
 	// 폴링: 길이가 0인경우 
-	if($strlen($p_varname_recv) < 1){
-		
-		if($isequal_string($p_socket_name,YUJIN_SISE_DOMESTIC)){
-			$setvar_common(g_polling_d_fail_cnt = 0);
-		}
-		elseif($isequal_string($p_socket_name,YUJIN_ORDER_REAL)){
-			$setvar_common(g_polling_r_fail_cnt = 0);
-		}
-		else{
-			$setvar_common(g_polling_fail_cnt = 0);
-		}		
+	if($strlen($p_varname_recv) < 1){		
+		$setvar_common(g_polling_fail_cnt = 0);
 		$log(======== 폴링응답 Act_Network_RecvData:[$p_socket_name] ,g_polling_d_fail_cnt:[$g_polling_d_fail_cnt],g_polling_fail_cnt:[$g_polling_fail_cnt],g_polling_r_fail_cnt:[$g_polling_r_fail_cnt]);
 		return;
 	}
-
-	// 테스트때문에 일단 주석한 거다. - 실시간 처리가 잘 된다면 이 상태로 둔다.
-	if($g_is_background){	$log(**************** Act_Network_RecvData:백그라운드 [$p_socket_name]); 		return;	}
-
 	$setvar(
 		tmp_socketName = $p_socket_name
 		, strRecvVarName=$p_varname_recv
@@ -2648,7 +2482,6 @@ value="
 	
 	//SM
 	if($isequal_string($strFUNC,I)) {
-
 		$setvar( 	
 			POS_REALTYPE	= $LEN_MYMQ_TH
 			,LEN_REALTYPE 	= 2
@@ -3700,6 +3533,7 @@ value="
 		$map_parsebuffer($p_socket_name,$strRKEY,PageBlock,$strWKEY,strRecvData,FALSE,TRUE);
 	}
 " /> 
+
 <action id="Act_GoScreen_AccountChange" scope="common" 
 value="
 	if($Act_GoScreen_AccountChange_param1 == 1){
@@ -3819,7 +3653,6 @@ value="
 		$logarrayvar(pre_arr_realdata_d);
 	}
 	$delarrayvar(g_arr_realdata);
-
 " />
 <action id="Act_RealData_StartNStop" scope="common" 
 params="p_is_start, p_arrName, p_socket_name, p_is_back_stop" 
@@ -3904,9 +3737,9 @@ value="
 	$logvar_binary( REALDATA-SEND ,strSendData);
 	
 	$sendvardata($tmp_socket_name,REALTYPE,strSendData,0,,Act_Network_RecvData,TRUE);
+" /> 
 
-	
-" /> // 종목검색
+// 종목검색
 <action id="Act_Open_itemSearch" scope="common" 
 params="p_after_action, p_title"
 value="
@@ -3959,9 +3792,9 @@ value="
 	$closescreen(popscreen_orderConfirm_n);
 	$closescreen(popscreen_limit_stop);
 	$closescreen(popscreen_cancel_5220);
-
 "/>
-
+-->
+// 수정필요 
 <action id="EnterBackGround" scope="common" 
 //paramlog="false"
 params="
@@ -3972,113 +3805,16 @@ value="
 	$webview_background(trading_webview); 		// 미국주식옵션에서 사용되는 웹뷰 컨트롤
 	// 새버전 적용
 	return; 		
-
-	/*
-	$log(=============== EnterBackGround ===============);
-	$setvar(vg_4100_background.hidden = false );
-	$web_background(trading_webview);
-
-$logvar(tmp_tradeweb);
-$logvar(g_login_id);
-	if($strlen($g_login_id)>0){
-		$setvar(
-			,IN_usid = $g_login_id
-			,IN_name = $g_recv_UserName
-			,IN_maca = $g_mac_address
-			,IN_pcip = $g_recv_AUIP
-			
-			,reqid_CSBLOGOFF = $callaction(FNSEND_ORDERDATA,CSBLOGOFF,Input,,,,)
-		);  
-		$logvar(IN_usid, IN_name, IN_maca, IN_pcip);
-	}
-	
-	$setvar_common(g_is_master_relading = false );		// 백그라운드 넘어갈경우 무조건 마스터 받지 않게 하기위해 추가함 - 2020/08/05
-
-	$callaction(fnClosePopScreen); // 2020/02/12 추가
-
-	if($g_is_open_3gAlarm){
-		$log(****************** 3G 팝업을 닫는다);
-		$closescreen(pop_3GAlarm); 
-	}
-	//$ssl_close($g_SSLSocketName);  					// Android11 버전에서 소켓을 끊고 나면 반응을 하지 않는다.
-	if($g_is_exit){		$exit();	return;		}
-
-	if($g_menuCode == 1920 ){		return;		}		//로그인화면
-	if($g_is_fingerprint_background){ 			$setvar_common(g_is_fingerprint_background = );		return;		} // 지문인식 백그라운드일 리턴 
-//	$setvar_common(g_is_background = true);
-	$callaction(fnConfig_SetValue,g_menuCode 	,$g_menuCode); 	// 현재 화면을 저장한다.
-	// FnExitBtnClicked: 종료시 , fnGoLoginScreen:로그아웃 시 , fn_android_key_callback :안드로이드 백 버튼으로 종료시 
-	// 현재 종목코드를 저장한다.
-	$callaction(fnConfig_SetValue,g_itemcode 	,$g_itemcode); 							// 해외선물코드
-	$callaction(fnConfig_SetValue,g_itemcode_d 	,$g_itemcode_d); 						// 국내선물코드
-	$callaction(fnConfig_SetValue,g_itemcode_n 	,$g_itemcode_n); 						// 국내선물코드
-	// 현재 선택한 계좌번호를 저장한다. 
-	$callaction(fnConfig_SetValue,g_default_account_f 	,$g_default_account_f); 		// 해외계좌
-	$callaction(fnConfig_SetValue,g_default_account_d 	,$g_default_account_d); 		// 국내계좌
-	$callaction(fnConfig_SetValue,g_default_account 	,$g_default_account); 			// 전체계좌
-	$callaction(fnConfig_SetValue,g_default_account_f_l 	,$g_default_account_f_l); 	// 해외계좌
-	$callaction(fnConfig_SetValue,g_default_account_f_g 	,$g_default_account_f_g); 	// 해외계좌
-	//$logarrayvar(arr_config);
-	// 모든 설정파일 저장 
-	$callaction(fnConfig_Save_All); 
-	$log(*** 공동인증비번:g_login_cert[$g_login_cert]	);
-
-	$log(민료시간 공동인증:$g_login_expiry);
-
-	$delvar(g_RealServerIP_Order);
-	// 서버연결 끊기.
-	$callaction(Act_Network_Disconnect_All);
-	*/
-
 " />
+// 수정필요 
 <action id="BecomeActive" scope="common" 
 //paramlog="false"
 parmas="p_day, p_hour, p_min, p_duration" 
 value="
 	// 새버전 적용
-	$webview_active(trading_webview);  		// 미국주식옵션에서 사용되는 웹뷰 컨트롤
-	return;
-
-	/*
-	$log(=============== BecomeActive ===============);
-	$setvar(vg_4100_background.hidden = true );
-	$web_active(trading_webview);
-	$logvar(tmp_tradeweb);	
-	$checkPushData(fn_push_receive);
-	
-	if($g_menuCode == 1920 ){	return;		}
-	$setvar_common(g_is_background = false);
-
-	$stopnstimer(TIMER_EnterBackground); 
-	
-	if($strlen($g_file_name) > 0){	$openfile(plist/root/intro.xml); 		return;		} 		//intro,intro_after 체크
-
-	$setvar(tmp_now_check = $now(yyyyMMddHHmm));
-	$logvar(g_login_expiry, tmp_now_check);
-
-	if($g_login_expiry > $tmp_now_check){		$log(공동인증 로그인 유지시간 );					}
-	else{										$log(공동인증 로그인 유지시간 아님);				}
-
-	$log(포그라운드  :$g_menuCode,$g_is_fingerprint_background, g_menuCode, g_itemcode_d, g_itemcode_n);
-
-	if($g_is_fingerprint_background){ 	$setvar_common(g_is_fingerprint_background = );		return;		} 	// 지문인식 백그라운드일 경우에는 리턴시킨다. 
-
-	// 설정파일을 불러온다.  - 어플 실행 시 하고 있는떼 필요가 있는지 확인해야 함. 
-	$callaction(fnConfig_Load_All); 
-	// 현재 모드가 가로모드이면 세로모드로 바꾸어야 한다.
-	$log(세로 모드로 강제로 바꾼다. ***********);
-	if($g_isAndroid) {
-		$rotateView(1);
-	}
-
-	$lcdallopen($lcd_open); 	
-
-	$popscreen(pop_host_msg,center);
-	$setvar_common(g_reconnect_processing = true);
-	$security_delkeytoken();
-	$callaction(Act_BecomeActive_Connect, Act_BecomeActive_Connected_MASTER);
-	*/
+	$webview_active(trading_webview);  		// 미국주식옵션에서 사용되는 웹뷰 컨트롤	
 " />
+<!--
 <action id="Act_BecomeActive_Connect" scope="common"
 params="p_after_action"
 value="
@@ -4125,7 +3861,6 @@ value="
 		,Act_Server_Connect_D_connected_BecomeActive
 	);
 " />
-
 <action id="Act_Server_Connect_D_connected_BecomeActive" scope="common" 
 params="p_socket_name, p_socket_no"
 value="
@@ -4136,7 +3871,6 @@ value="
 
 	$callaction($tmp_connected_action);
 " />
-<!--
 <action id="Act_Server_Connect_Order_connected_BecomeActive" scope="common"
 params="p_socket_name, p_socket_no"
 value="
@@ -4176,10 +3910,6 @@ value="
 	$callaction($tmp_connected_action);
 
 "/>
--->	
-
-
-
 <action id="Act_BecomeActive_Connected_MASTER" scope="common"
 value="
 	if($g_is_background){	return;	}
@@ -4211,7 +3941,6 @@ value="
 
 		$callaction(Act_Download_Master_Start_d, fnMasterDownloading_d_BecomeActive, fnMasterDownloadComplete_d_BecomeActive);
 	 }
-	 
 "/>
 <action id="fnMasterDownloading_d_BecomeActive"  scope="common"
 params="p_success_cnt, p_error_cnt, p_total_cnt" 
@@ -4242,13 +3971,11 @@ value="
 
 		$callaction(Act_Download_XML_Start, fnXMLDownloading_BecomeActive, fnXMLDownloadComplete_BecomeActive);
 	 }
-
 " />
 <action id="fnXMLDownloading_BecomeActive" scope="common"
 params="p_success_cnt, p_error_cnt, p_total_cnt" 
 value="
 	$setvar_common(	,g_isDownload_xml = true 		);
-	
 " />
 <action id="fnXMLDownloadComplete_BecomeActive" scope="common"
 value="
@@ -4265,9 +3992,7 @@ value="
 	$log(********** 다시연결 );
 	
 	$callaction(Act_Server_Connect, Act_BecomeActive_Connected);
-	
 "/>
-
 <action id="Act_BecomeActive_Connected" scope="common"
 value="
 	$log(******** Act_BecomeActive_Connected g_polling_time:$g_polling_time);
@@ -4427,7 +4152,6 @@ value="
 			$callaction(Act_Id_Request, $var_dn_value, $var_name_cert ,Act_BecomeActive_Login_End,,$var_name_id);
 		}
 	}
-	
 " />
 <action id="Act_Dn_Sise_Login"  scope="common" 
 params="p_dn, p_after_action"
@@ -4442,7 +4166,6 @@ value="
 		,IN_cadn	= $p_dn
 		,reqid_CSBLSIGN01 = $callaction(FNSEND_ORDERDATA,CSBLSIGN01,Input,,,,Act_Dn_Sise_Login_After)
 	);
-	
 " />
 <action id="Act_Dn_Sise_Login_After" scope="common" 
 value="
@@ -4591,7 +4314,6 @@ value="
 	}
 	//$callaction(screen_base_onload);
 " />
-<!--
 <action id="Act_BecomeActive_Login_Success" scope="common" 
 params="p_name_id, p_name_pwd, p_name_cert, p_login_kind, p_is_id_save" 
 value="
@@ -4607,7 +4329,6 @@ value="
 	// 마스터와 XML을 다운로드한다.
 	//$callaction(Act_Download_MasterNXml_Start, $g_strVersionFilePath, $g_strVersionFileName, Act_BecomeActive_MasterNXmlDownloading, Act_BecomeActive_MasterNXmlDownloadComplete);	
 " />
--->
 <action id="Act_BecomeActive_MasterNXmlDownloading" scope="common" 
 params="p_success_cnt, p_error_cnt, p_total_cnt" 
 value="
@@ -4626,7 +4347,6 @@ value="
 		// 국내선물 마스터 다운로드 
 		$callaction(Act_Download_Master_Start_d, Act_BecomeActive_MasterDownloading_d, Act_BecomeActive_MasterDownloadComplete_d);
 	 }
-
 " />
 <action id="Act_BecomeActive_MasterDownloading_d" scope="common" 
 params="p_success_cnt, p_error_cnt, p_total_cnt" 
@@ -4684,8 +4404,8 @@ value="
 		retStr = $addstring([$p_type],[$p_no],$retStr)
 	);
 	return $retStr;
-	
 " />
+-->
 <action id="Act_Error_Message_Account" scope="common" 
 params="p_err_code" 
 value="
@@ -4701,8 +4421,8 @@ value="
 		,retStr = $getarrayvar(g_arr_rcod,$tmp_sel_error_idx,1)
 	);
 	return $retStr;
-	
 " />
+<!--
  // 계좌번호 온로드
 <action id="combo_account_onload" value="
 	
@@ -4883,7 +4603,7 @@ value="
 // changeCMEAuthority_20191128
 <action id="Act_EXCH_Get_After_Process" scope="common" 
 value="
-//	$logvar_binary(Act_EXCH_Get_After_Process PageBlock,strPageData);
+	//$logvar_binary(Act_EXCH_Get_After_Process PageBlock,strPageData);
 	$setvar(
 		CSBA000105_ech1 = $recvmap_data(CSBA000105,PageBlock.ech1,$reqid_CSBA000105,trim)     //EXCH CME   (01:허용 00:불가)
 		,CSBA000105_ech2 = $recvmap_data(CSBA000105,PageBlock.ech2,$reqid_CSBA000105,trim)    //EXCH EUREX (04:허용 00:불가)
@@ -4968,7 +4688,7 @@ value="
 		$setsubarray_common(arr_EXCH_Group,0,FCME,01);
 	}
 	// EUREX 는 사용하지 않는것 같아서 통일성있게 3글자로 바꿈..추후에 문제가 생기면 다시 생각..
-//	if($isequal_string($CSBA000105_ech2,04)){     $setsubarray_common(arr_EXCH,$getarrayvarcount(arr_EXCH),FERX,EUREX,$CSBA000105_ech2); }
+	//if($isequal_string($CSBA000105_ech2,04)){     $setsubarray_common(arr_EXCH,$getarrayvarcount(arr_EXCH),FERX,EUREX,$CSBA000105_ech2); }
 	if($isequal_string($CSBA000105_ech2,04)){     $setsubarray_common(arr_EXCH,$getarrayvarcount(arr_EXCH),FERX,ERX,$CSBA000105_ech2); }
 	if($isequal_string($CSBA000105_ech3,05)){     $setsubarray_common(arr_EXCH,$getarrayvarcount(arr_EXCH),FSGX,SGX,$CSBA000105_ech3);   }
 	if($isequal_string($CSBA000105_ech4,06)){     $setsubarray_common(arr_EXCH,$getarrayvarcount(arr_EXCH),FHKE,HKE,$CSBA000105_ech4);   }
@@ -5054,10 +4774,6 @@ value="
 				<img src="$icon_pop_cancel_w" x="$w($g_lcdWidth,2.6)" layout_vertical="center" />
 				<button class="cs_button_none" onClicked="$closescreen(popscreen_base)" />
 			</viewgroup>
-			<!-- <viewgroup id="popscreen_base_btn_confirm" x="$w($g_lcdWidth,0)" width="$w($g_lcdWidth,12.4)" height="$this.remain_bottom" hidden="true">
-				<img id="img_pop_info" src="$icon_ic_tip_off" layout="left" layout_vertical="center" />
-				<button class="cs_button_none" onClicked="popscreen_base_btn_confirm_onclicked" />
-			</viewgroup> -->
 		</viewgroup>
 	</screen>
 </popscreen>
@@ -5158,7 +4874,8 @@ value="
 	$callaction(Act_Server_IP_Check_action_login);
 	
 "/>
-
+-->
+// 확인필요 - 비대면 영상통화 시 필요 
 <action id="fn_push_receive" scope="common" 
 value="
     $log(여기 푸쉬? action_login.xml $kindMessage);
@@ -5332,9 +5049,7 @@ value="
 	}
 
 	$SetIconBadgeNumber(0);
-
 "/>
-
 <action id="fnPush_Recv_Start_Play" scope="common"
 value="
 	$setvar_common(
@@ -5343,7 +5058,7 @@ value="
 " />
 <action id="fnStartVideo" scope="common"
 value="
-//    $saveBase64Image(파일명, 변수명);
+    //$saveBase64Image(파일명, 변수명);
 	$setvar(
 		//strVideo_DeviceId 		= $g_IN_REQUEST_TEL_NUM
 		strVideo_DeviceId 			= $g_OUT_AGREE_WORK_NO 		//
@@ -5404,7 +5119,6 @@ value="
 
 	//$alertaction(fn_Mo_CALL_confirm,,상담사로부터 영상통화가 신청되었습니다\n영상통화를 하시겠습니까?,취소,확인);
 	$callaction(fnPopover_AlertAction,fn_Mo_CALL_confirm,상담사로부터 영상통화가 신청되었습니다\n영상통화를 하시겠습니까?,취소,확인);
-	
 " />
 <action id="fn_Mo_CALL_confirm"  scope="common"
 params="p_btn_idx"
@@ -5418,7 +5132,6 @@ value="
 		$callaction(fnSendSSL_MO_NOPLAY);		
 	}
 " />
-
 // 영상통화 중지 
 <action id="fnSendSSL_MO_STOP" scope="common"
 value="	
@@ -5452,8 +5165,6 @@ value="
 		//$alertaction(,,$recvSSL_hdr_msg,확인);	
 		$callaction(fnPopover_AlertAction,,$recvSSL_hdr_msg,,확인);
 	}
-
-
 " />
 //영상 통화 거절
 <action id="fnSendSSL_MO_NOPLAY" scope="common"
@@ -5488,7 +5199,6 @@ value="
 		//$alertaction(,,$recvSSL_hdr_msg,확인);	
 		$callaction(fnPopover_AlertAction,,$recvSSL_hdr_msg,,확인);
 	}
-
 " />
 //영상 통화 시작
 <action id="fnSendSSL_MO_PLAY" scope="common"
@@ -5526,7 +5236,6 @@ value="
 	}
 
 	$callaction(fnStartVideo);
-
 " />
 <action id="fnRecvSSL_MO_SAVE" scope="common"
 value="
@@ -5548,7 +5257,6 @@ value="
 		$callaction(fnPopover_AlertAction,,WORK_NO 틀림.,,확인);
 		return;
 	}	
-
 " />
 <action id="fnRecvSSL_MO_RESULT"  scope="common"
 value="
@@ -5602,8 +5310,7 @@ value="
 		if(!$isequal_string($tmp_popscreen_name,popscreen_open_account)){
 			$popscreen(popscreen_open_account);	
 		}
-		$callaction(fnConfig_SetValue,g_save_keep_go,1); // 개설후 ID등록
-		$callaction(Act_Open_Account_Move,1015);
+		$callaction(Act_Open_Account_Move,4129);
 		//$setvar_common(g_OUT_AGREE_WORK_NO = );
 
 
@@ -5631,21 +5338,16 @@ value="
 		return;
 	}
 " />
-
 <action id="fnStartVideoResult"  scope="common"
 params="result" 
 value="
 	$log(****** 영상결과  fnStartVideoResult);
 	$callaction(fnSendSSL_MO_STOP);			
-	
 "/>
-
-
 <action id="Act_SSL_Closed" scope="common"
 value="
 	$callaction(fnPopover_AlertAction,,SSL연결이 끊어졌습니다.,,확인);
 "/>
-
 <action id="Act_SSL_Connect" scope="common"
 params="
 p_serverIP
@@ -5655,7 +5357,6 @@ p_serverIP
 ,p_recv_action
 "
 value="
-	
 	//$setvar(g_SSLSocketName=$ssl_connect(14.63.196.29,10110,ssl_connect_callaction,ssl_close_callaction,Act_SSL_RecvData));
 
 	if($ssl_isconnect($g_SSLSocketName)) {	
@@ -5668,7 +5369,6 @@ value="
 	$log(ret_sockName:$ret_sockName);
 	return $ret_sockName;
 " />
-
 <action id="Act_SSL_Connected_push"  scope="common"
 params="
 p_socket_name
@@ -5725,17 +5425,17 @@ value="
 
 		,recvSSL_body_STAT		= $json_getdata($jsonname,BODY.STAT) 
 		,recvSSL_body_USER_ID	= $json_getdata($jsonname,BODY.USER_ID) 
-/*
-ST01: 신청 대기 중
-ST02: 신분증 확인 중
-ST03: 영상통화 대기 중 (신분증 확인 완료)
-ST04: 영상 통화 중 (자동으로 영상통화 시작)
-ST05: 신청/변경대기중(영상통화완료)
-ST11: 정상 처리 완료
-ST12: 신분증 거절
-ST13: 영상통화 거절
-ST14: 신청/변경완료 실패
-*/
+	/*
+	ST01: 신청 대기 중
+	ST02: 신분증 확인 중
+	ST03: 영상통화 대기 중 (신분증 확인 완료)
+	ST04: 영상 통화 중 (자동으로 영상통화 시작)
+	ST05: 신청/변경대기중(영상통화완료)
+	ST11: 정상 처리 완료
+	ST12: 신분증 거절
+	ST13: 영상통화 거절
+	ST14: 신청/변경완료 실패
+	*/
 
 	);
 	$log(========= SSL 받은데이터 ==============);
@@ -5950,7 +5650,7 @@ value="
 	//$delvar($p_recvDataVar);
 " />
 
-
+<!--
 <action id="fnUser_Login" scope="common"
 params="
 p_user_id_var 			// 아이디
@@ -6211,7 +5911,7 @@ value="
 
 	$callaction($tmp_User_Login_SendTR_success_action);
 "/>
-
+-->
 <import filename="plist/root/common/action_login_n.xml" />
 
 

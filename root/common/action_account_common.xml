@@ -362,7 +362,7 @@ value="
 " />
 <popscreen id="popscreen_open_account" scope="common"
 width="$g_lcdWidth" 
-height="$p_lcdHeight"
+height="$g_lcdHeight"
 layout="center"
 layout_vertical="center"
 onload="popscreen_open_account_onload"

@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actiondata value="
+//2022년 12월 12일 추가.
+	if(!$g_isAndroid){ //아이폰은 상관없다.
+		$log(****** IOS ***********);
+		$setvar(strPermission=GET_ACCOUNTS|CAMERA|RECORD_AUDIO|POST_NOTIFICATIONS|RECEIVE_SMS);
+
+	}elseif($g_isAndroid && $int($deviceinfo(SYSTEMNAME)) >= 13){ //Android버전이 13이상 일때
+		$log(******Android Version 13 이상 ***********);
+		$setvar(strPermission=GET_ACCOUNTS|CAMERA|RECORD_AUDIO|POST_NOTIFICATIONS|RECEIVE_SMS);
+
+	}else{	//Android버전이 13미만일때
+		$log(******Android Version 13 미만 ***********);
+		$setvar(strPermission=GET_ACCOUNTS|CAMERA|RECORD_AUDIO);
+	}
+
+	$log(OSVERSION = g_os_version);
+	if(!$isPermission($strPermission)) {
+		$log(**** 퍼미션 없는거 있음. );
+		$requestPermission($strPermission,Act_Permission_Check_After);
+	}
+	else {
+		$callaction(Act_VaccineCheck,fn_VaccineCheck_AfterAction);
+	}
+" />
+// 안드로이드만 동작
+<action id="P_SMS_RECEV_ACTION" scope="common"
+params="p_contents"
+value="
+    $log(받은 메세지 : $p_contents);
+
+    $alertaction(,받은메세지,$p_contents,확인);
+" />
+<action id="screen_jsonani_sample_onload"
+value="
+    $setvar(
+        arr_test = [
+            [1, test1],
+            [2, test3]
+        ]
+    );
+    $setarraydata(tbl_test,arr_test);
+" />
+<screen id="screen_jsonani_sample"
+width="$p_lcdWidth"
+height="$p_lcdHeight"
+backcolor="ffffff"
+ani_backgroundJSON="plist/ani_json/bg_splash.json"        // json 확장자 생략
+onLoad="screen_jsonani_sample_onload"
+>
+    <viewgroup
+    width="$w($p_lcdWidth,58.0)"
+    height="$h($p_lcdHeight,4.2)"
+    border_color="cccccc"
+    border_width="2"
+    border_radius="1"
+    layout="center"
+    //backcolor="00ff00"
+    >
+        <textfield_security id="txt_security_0"
+        width="$this.remain_right"
+        height="$super.height"
+        input_type="public"
+        hint="공동인증서 비밀번호"
+        align="center"
+        valuevar="tmp_user_pw_cert_var"
+        valueencvar="tmp_user_pw_cert_encvar"
+        valuevar_common="true"
+        encryptvalue="false"
+        //fontsize="$g_fontSize_basic"
+        fontsize="24"
+        fontname="$g_baseFontName"
+        onChanged="txt_pw_security_onchanged"
+        board_type="control"                                    // 컨트롤 타입
+        maxlength="10"
+        textcolor="000000"
+        />
+    </viewgroup>
+    <br height="$h($p_lcdHeight,2)"/>
+<viewgroup
+    width="$w($p_lcdWidth,58.0)"
+    height="$h($p_lcdHeight,4.2)"
+    border_color="cccccc"
+    border_width="2"
+    border_radius="1"
+    layout="center"
+    //backcolor="00ff00"
+    >
+    <textfield_security id="txt_security_1"
+    width="$this.remain_right"
+    height="$super.height"
+    input_type="public"
+    hint="공동인증서 비밀번호"
+    description="공동인증서 비밀번호"
+    align="center"
+    valuevar="tmp_user_pw_cert_var"
+    valueencvar="tmp_user_pw_cert_encvar"
+    valuevar_common="true"
+    encryptvalue="false"
+    //fontsize="$g_fontSize_basic"
+    fontsize="24"
+    fontname="$g_baseFontName"
+    onChanged="txt_pw_security_onchanged"
+    textcolor="000000"
+                        // 컨트롤 타입
+    maxlength="10"
+    />
+</viewgroup>
+<action id="txt_pw_security_onchanged"
+value="
+    $logvar(tmp_user_pw_cert_var, );
+    $logvar_binary(tmp_user_pw_cert_encvar,tmp_user_pw_cert_encvar);
+" />
+<br height="$h($p_lcdHeight,2)"/>
+    // 새로고침 시 에러남 - 수정 필요
+<!--    <ANIMATIONVIEW id="vg_svg_test"-->
+<!--    width="$w($p_lcdWidth,40)"-->
+<!--    height="$h($p_lcdHeight,20)"-->
+<!--    backcolor="ff0000"-->
+<!--    layout="center"-->
+<!--    //ani_backgroundJSON="plist/ani_json/biometric.json"        // 현재 하드코딩되어 있음.-->
+<!--    onload="vg_svg_test_onload"-->
+<!--    >-->
+<!--    </ANIMATIONVIEW>-->
+<!--    <br/>-->
+
+    <screen id="screen_contents"
+    width="$this.remain_right"
+    height="$this.remain_bottom"
+    layout="center"
+    //ani_backgroundJSON="plist/ani_json/LottieLogo2.json"        // anijson_start 로 동작
+    //ani_backgroundJSON="plist/ani_json/bg_splash.json"
+    //ani_backgroundJSON="plist/ani_json/icon-1.svg"
+    
+    //backgroundimage="plist/root/icon-1.svg"
+    //backgroundimage_align="left"
+    //backgroundimage_x="20"
+    //backgroundimage_align_vertical="top"
+    //backgroundfull="false"
+    //backgroundrepeat="false"
+    //imagesizefit="false"
+    >
+        <label
+        width="$h($p_lcdHeight,40)"
+        height="$h($p_lcdHeight,40)"
+        backcolor="0000ff22"
+        //backgroundimage="plist/root/icon-1.svg"
+        backgroundimage="plist/root/resource/icon/iphone6/iphone6_icon_radio_on@2x.png"
+        backgroundimage_align="center"
+        //backgroundimage_x="20"
+        //backgroundimage_align_vertical="top"
+        backgroundfull="true"
+        backgroundrepeat="false"
+        imagesizefit="false"
+        />
+        <br/>
+        <label id="lbl_svg"
+        width="$h($p_lcdHeight,40)"
+        height="$h($p_lcdHeight,40)"
+        backcolor="00ff0022"
+        //backgroundfull="true"
+        //backgroundrepeat="false"
+        //imagesizefit="false"
+        
+        BACKGROUNDSVG="plist/root/icon-1.svg"
+        BACKGROUNDSVG_DISABLE="plist/root/icon-1.svg"
+        BACKGROUNDSVG_HIGHLIGHT="plist/root/icon-1.svg"
+        BACKGROUNDSVG_WIDTH="$h($p_lcdHeight,40)"
+        BACKGROUNDSVG_HEIGHT="$h($p_lcdHeight,40)"
+        
+        //backgroundimage_x="20"
+        //backgroundimage_y="20"
+        backgroundimage_align="right"
+        backgroundimage_align_vertical="top"
+        onClicked="test_BACKGROUNDSVG_onClicked"
+        />
+<action id="test_BACKGROUNDSVG_onClicked"
+value="
+    $setvar(lbl_svg.BACKGROUNDSVG = plist/ani_json/checkbox-check-on.svg);
+" />
+        <br/>
+        <checkbox id="chk_svg"
+        width="$w($p_lcdWidth,40)"
+        height="$w($p_lcdHeight,7.2)"
+        value="CheckBox TEST"
+        BACKGROUNDSVG_WIDTH="$h($p_lcdHeight,3)"
+        BACKGROUNDSVG_HEIGHT="$h($p_lcdHeight,3)"
+        backgroundimage_x="20"
+        backgroundimage_align="left"
+        backgroundimage_align_vertical="center"
+        margin_left="$h($p_lcdHeight,7.2)"
+        CHECKIMAGESVG="plist/ani_json/checkbox-check-on.svg"        // 체크박스 이미지 크기는 BACKGROUNDSVG_WIDTH 따라감.
+        UNCHECKIMAGESVG="plist/ani_json/checkbox-check-off.svg"
+        //CHECKIMAGESVG_DISABLE="plist/ani_json/checkbox-check-off.svg"
+        checked="false"
+        onchanged=""
+        />
+        <br/>
+        <button
+        width="$w($p_lcdWidth,40)"
+        height="$h($p_lcdHeight,7.2)"
+        value="Button TEST"
+        BACKGROUNDSVG="plist/ani_json/checkbox-check-off.svg"
+        BACKGROUNDSVG_DISABLE="plist/root/icon-1.svg"
+        BACKGROUNDSVG_HIGHLIGHT="plist/ani_json/checkbox-check-on.svg"
+        BACKGROUNDSVG_WIDTH="$h($p_lcdHeight,4)"
+        BACKGROUNDSVG_HEIGHT="$h($p_lcdHeight,4)"
+        //backgroundimage_x="20"
+        backgroundimage_align="left"
+        backgroundimage_align_vertical="center"
+        backcolor="00ff00"
+        backcolor_active="0000ff"
+        //enable="false"
+        margin_left="$h($p_lcdHeight,10.2)"
+        textcolor_active="ff0000"
+        />
+        <br/>
+        <table id="tbl_test"
+        width="$this.remain_right"
+        height="$h($p_lcdHeight,40)"
+        rowheight="$h($p_lcdHeight,8)"
+        margin_checkleft="$w($p_lcdWidth,2.5)"
+        >
+            <tr blank="true"
+            arraydata="0:key"
+            check="true"
+            check_last="false"
+            //checkimage="plist/root/resource/icon/iphone6/iphone6_icon_radio_on@2x.png"
+            //uncheckimage="plist/root/resource/icon/iphone6/iphone6_icon_radio_off@2x.png"
+            //onclicked="fnExpandTableRow"
+            
+            CHECKIMAGESVG="plist/ani_json/checkbox-check-on.svg"        // 체크박스 이미지 크기는 BACKGROUNDSVG_WIDTH 따라감.
+            UNCHECKIMAGESVG="plist/ani_json/checkbox-check-off.svg"
+            BACKGROUNDSVG_WIDTH="$h($p_lcdHeight,4)"
+            BACKGROUNDSVG_HEIGHT="$h($p_lcdHeight,4)"
+            >
+                <td width="$w($p_lcdWidth,10)">
+                </td>
+                <td width="$this.remain_right"
+                    margin_left="0"
+                    margin_right="0"
+                    arraydata="
+                    0:key~1:value
+                    "
+                    />
+            </tr>
+        </table>
+<action id="fnExpandTableRow"
+value="
+"/>
+        <br/>
+        <viewgroup
+        width="$this.remain_right"
+        height="$h($p_lcdHeight,40)"
+        >
+            <button id="btn_test"
+            width="$w($p_lcdWidth,20)"
+            height="$h($p_lcdHeight,5)"
+            value="확대Ani"
+            backcolor="00ff00"
+            textcolor="0000ff"
+            imagesizefit="true"
+            onload="
+            $setctrlvar(btn_test,expand_height,100);
+            $setctrlvar(btn_test,expand_flag,0);
+            "
+            onClicked="btn_ani_test_onClicked"
+            layout_vertical="center"
+            />
+            <blank width="$w($p_lcdWidth,2)"/>
+            <button id="btn_ani_restart"
+            width="$w($p_lcdWidth,20)"
+            height="$h($p_lcdHeight,5)"
+            value="ReStart"
+            backcolor="ffffff"
+            textcolor="0000ff"
+            imagesizefit="true"
+            onClicked="btn_ani_restart_onClicked"
+            //ani_backgroundJSON="plist/ani_json/lf30_kpiqvmrk.json"
+            //ANI_JSON_WIDTH="$w($p_lcdWidth,5)"
+            //ANI_JSON_HEIGHT="$h($p_lcdHeight,5)"
+            layout_vertical="center"
+            />
+            <blank width="$w($p_lcdWidth,2)"/>
+<!--            <button id="btn_switch"-->
+<!--            width="$w($p_lcdWidth,40)"-->
+<!--            height="$h($p_lcdHeight,30)"-->
+<!--            value=""-->
+<!--            backcolor="00ff0022"-->
+<!--            //backcolor="ffffff"-->
+<!--            textcolor="0000ff"-->
+<!--            imagesizefit="false"-->
+<!--            ani_switchJSON="plist/ani_json/Switch.json"-->
+<!--            //ANI_JSON_WIDTH="$w($p_lcdWidth,20)"-->
+<!--            //ANI_JSON_HEIGHT="$h($p_lcdHeight,10)"-->
+<!--            layout_vertical="center"-->
+<!--            />-->
+            <blank width="$w($p_lcdWidth,2)"/>
+
+<!--            <button id="btn_switch"-->
+<!--            width="$w($p_lcdWidth,20)"-->
+<!--            height="$w($p_lcdWidth,5)"-->
+<!--            value=""-->
+<!--            backcolor="00ff0022"-->
+<!--            //backcolor="ffffff"-->
+<!--            textcolor="0000ff"-->
+<!--            value="선택"-->
+<!--            align="left"-->
+<!--            //backgroundimage_align="right"-->
+<!--            imagesizefit="false"-->
+<!--            //ani_switchJSON="plist/ani_json/TwitterHeart.json"-->
+<!--            ani_switchJSON="plist/ani_json/lf20_1wu8wbcn.json"-->
+<!--            ANI_JSON_WIDTH="$w($p_lcdWidth,20)"-->
+<!--            //ANI_JSON_HEIGHT="$h($p_lcdHeight,10)"-->
+<!--            layout_vertical="center"-->
+<!--            -->
+<!--            />-->
+
+        </viewgroup>
+        <br/>
+        <viewgroup
+        width="$w($p_lcdWidth,60)"
+        height="$w($p_lcdWidth,60)"
+        //ani_backgroundJSON="plist/ani_json/biometric.json"
+        layout="center"
+        >
+        </viewgroup>
+    </screen>
+
+    <br/>
+    <button width="$w($p_lcdWidth,20)" height="$h($p_lcdHeight,7)"
+    layout="right"
+    layout_vertical="bottom"
+    value="새로고침1"
+    backcolor="ff0000"
+    onClicked="
+        $openfile(plist/root/jsonani_sample.xml);
+    "
+    />
+</screen>
+<action id="btn_ani_test_onClicked"
+value="
+    $setvar(
+          movE_Spd         = 0.4
+        , action_id     = $this.id
+        , expand_width    = $w($p_lcdWidth,60)
+        , expand_height    = $getctrlvar($action_id,expand_height)
+        , expand_flag     = $getctrlvar($action_id,expand_flag)
+        , imagename     = $getctrlvar(this,imagename)
+    );
+    $logvar(
+        movE_Spd
+        , action_id
+        , expand_width
+        , expand_height
+        , expand_flag
+        , imagename
+    );
+
+    $animation_start();
+    // spacebar(공백주의);
+    $setvar_ani(
+        btn_test.width=$expand_width
+        ,btn_test.height=$expand_height
+        ,btn_test.x=$w($p_lcdWidth,10)
+        ,btn_test.y=$h($p_lcdHeight,20)
+    );
+    $animation_end($movE_Spd);
+" />
+<!--
+<ANIMATIONVIEW id="vg_svg_test"
+//width="$p_lcdWidth"
+//height="$p_lcdHeight"
+width="$w($p_lcdWidth,40)"
+height="$h($p_lcdHeight,20)"
+//backgroundimage="plist/bg_loding.png"
+//BACKGROUNDSVG="finger"
+//backcolor="00ff0022"
+layout="center"
+//layout_vertical="center"
+ani_backgroundJSON="plist/ani_json/biometric.json"        // json 확장자 생략
+onload="vg_svg_test_onload"
+>
+</ANIMATIONVIEW>
+<button id="vg_svg_test"
+width="$w($p_lcdWidth,40)"
+height="$h($p_lcdHeight,20)"
+layout="center"
+ani_backgroundJSON="plist/ani_json/LottieLogo2.json"        // json 확장자 생략
+value="테스트"
+border_width="1"
+border_color="cccccc"
+onClicked="$log(btn_onClicked);"
+/>
+-->
+<action id="vg_svg_test_onload"
+value="
+    $setvar(vg_svg_test.ani_backgroundJSON = biometric);
+" />
+<action id="btn_ani_restart_onClicked"
+value="
+    $anijson_start(screen_contents);
+" />
+
+

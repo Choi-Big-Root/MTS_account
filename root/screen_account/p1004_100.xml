@@ -1335,8 +1335,6 @@ value="
 		,tmp_jikjang_find_start_idx = $find($tmp_jikjang_2_val,%2C)
 	);
 
-	$logvar(tmp_jikjang_find_start_idx);
-
 	if($tmp_jikjang_find_start_idx < 0){
 		$popscreen(popscreen_jikjang_3_input);
 	}else{

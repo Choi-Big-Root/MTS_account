@@ -8,7 +8,7 @@
 		$callaction(textFieldEnd_local,$TEXTFIELDEND_PARAM1);
 	}
 " />
-
+<!--
 <action id="fnGoScreen_Base" scope="common" 
 params="p_menu_code"
 value="
@@ -39,10 +39,12 @@ value="
 
 	$openfile(plist/root/basescreen.xml);	
 "/>
+-->
 <!-- <action id="fnSet_DxFeed_Stock_After"  scope="common" 
 value="
 	$openfile(plist/root/basescreen.xml);	
 "/> -->
+<!--
 <action id="fnGoScreen_Base_Move"  scope="common" 
 value="
 	$callaction(fnAddPreScreen,$g_menuCode,$g_itemCode);        // 화면 히스토리 저장
@@ -68,6 +70,8 @@ value="
 
 	$openfile(plist/root/basescreen.xml);
 " />
+-->
+<!--
 <action id="fnGoScreen" scope="common" 
 params="p_menu_code, p_is_self"
 value="
@@ -476,13 +480,6 @@ value="
 		}
 	}
 " />
-<!--
- *********************************************************************************
- **
- ** fnGoLoginScreen: 로그인 화면으로 이동한다. 로그인 화면은 basescreen.xml에서 제외
- **
- *********************************************************************************
--->
 <action id="fnGoLoginScreen" scope="common" 
 value="
 	$log(************** 로그아웃 );
@@ -518,10 +515,10 @@ value="
 	$callaction(fnConfig_SetValue,g_recv_dn,);
 	$setvar_common(g_recv_dn = );
 
-//	$logvar(g_login_id, g_login_pwd, g_login_cert, g_login_type, g_login_kind, g_login_id_save,g_login_dn);
+	//$logvar(g_login_id, g_login_pwd, g_login_cert, g_login_type, g_login_kind, g_login_id_save,g_login_dn);
 
 	$callaction(fnConfig_Load_All);        // 새버젼 
-//	$callaction(fnConfig_Log);       		// 새버젼 
+	//$callaction(fnConfig_Log);       		// 새버젼 
 	
 	// 계좌번호 삭제
 	$setvar_common(
@@ -550,9 +547,9 @@ value="
 	$logarrayvar(g_arr_account_f_g);
 
 	// 종목정보 삭제 
-//	$callaction(fnConfig_SetValue,g_itemCode 	,); 	// 이 액션에는 빈값이 들어가면 안된다. - 염이사 확인 
-//	$callaction(fnConfig_SetValue,g_itemCode_d 	,);
-//	$callaction(fnConfig_SetValue,g_itemCode_n 	,);
+	//$callaction(fnConfig_SetValue,g_itemCode 	,); 	// 이 액션에는 빈값이 들어가면 안된다. - 염이사 확인 
+	//$callaction(fnConfig_SetValue,g_itemCode_d 	,);
+	//$callaction(fnConfig_SetValue,g_itemCode_n 	,);
 
 	$logvar(g_itemCode, g_itemCode_d, g_itemCode_n);
 
@@ -560,14 +557,10 @@ value="
 	$setvar_common(g_menuCode=1920);
 	$openfile(plist/root/login.xml);
 " />
-<!--
- *********************************************************************************
- **
- ** android_keymap: 안드로이드에서 뒤로가기 버튼을 터치 콜백액션
- **
- *********************************************************************************
 -->
+
 <!--
+// 따로 처리함.
 <action id="android_keymap" scope="common" 
 value="
 	if($android_keymap_param1 == 1 && $android_keymap_param2 == 4) {
@@ -693,43 +686,15 @@ value="
 	}
 " />
 -->
-<!--
- *********************************************************************************
- **
- ** android_keymap: 안드로이드 종료 확인 팝업창에서 확인 터치 콜백 액션
- **
- *********************************************************************************
--->
+// 새로 만들어야 함.
 <action id="fn_android_key_callback" scope="common" 
 value="
-	if($fn_android_key_callback_param1 == 1){
-		// Config 파일이나 관심종목 등 저장되어야 백그라운드 갈때 저장하는 것들은 여기서도 저장이 되어야한다.
-
-		$callaction(fnSaveDBInterestItemCode);      // 관심종목 저장
-		$callaction(fnSaveDBInterestItemCode_d);      // 관심종목 저장 - 국내 
-		
-	
-		// 현재 종목코드를 저장한다.
-		$callaction(fnConfig_SetValue,g_itemcode 	,$g_itemcode); 	// 해외선물코드
-		$callaction(fnConfig_SetValue,g_itemcode_d 	,$g_itemcode_d); 	// 국내선물코드
-		$callaction(fnConfig_SetValue,g_itemcode_n 	,$g_itemcode_n); 	// 국내선물코드
-
-		// 현재 선택한 계좌번호를 저장한다. 
-		$callaction(fnConfig_SetValue,g_default_account_f 	,$g_default_account_f); 	// 해외계좌
-		$callaction(fnConfig_SetValue,g_default_account_d 	,$g_default_account_d); 	// 국내계좌
-		$callaction(fnConfig_SetValue,g_default_account 	,$g_default_account); 	// 전체계좌
-
-		$callaction(fnConfig_SetValue,g_default_account_f_l 	,$g_default_account_f_l); 	// 해외계좌
-		$callaction(fnConfig_SetValue,g_default_account_f_g 	,$g_default_account_f_g); 	// 해외계좌
-		
-		
-		// 모든 설정파일 저장 
+	if($fn_android_key_callback_param1 == 1){		
+		// 모든 설정파일 저장  - 각 동작에서 따로 저장해야함. 추후 삭제 
 		$callaction(fnConfig_Save_All); 
-
 		$exit();
 	}
 "/>
-
 
 <popscreen id="pop_host_msg" scope="common"
 	width="$g_lcdWidth" 
@@ -784,105 +749,12 @@ p_kind 			// 가로,세로
 ,p_type
 "
 value="
-	
-	$log(SetOrientation : action.xml);
-	if($g_menuCode==8132
-    || $g_menuCode==8133
-	){
-		if($p_kind == 2){
-			$closescreen_all();
-		}
-	}
-
-    if($g_menuCode==2131
-    || $g_menuCode==2132
-    || $g_menuCode==5131
-    || $g_menuCode==5132
-    || $g_menuCode==7131
-    || $g_menuCode==7132
-    || $g_menuCode==8132
-    || $g_menuCode==8133
-    ){
-    	$setvar_common(orientation=true);
-    	// 아이폰 노치형 때문에 추가 
-		if( $g_iBottomVar > 0) {
-			if($p_kind == 2 ){
-				if($p_type == 3){		$setvar(root_screen.x_ori = 0);		}
-				else{					$setvar(root_screen.x_ori = $g_lcdBaseX_ori);	}
-			}
-			if($p_kind == 1 ){
-				if($p_type == 2){		$setvar(root_screen.x_ori = 0);	}
-				else{					$setvar(root_screen.x_ori = $g_lcdBaseX_ori);	}
-			}
-		}
-    }
-    else{
-        $setvar_common(orientation=false);
-    }
+	$log(SetOrientation : action_common.xml);
     $setvar_common(
     	g_orinetation_kind  = $p_kind		// 가로,세로 
 		,g_orinetation_type = $p_type
 		,g_cur_orientation 	= $orientation
     );
-    
-    return ;
-
-	//2022_11_30 해당 소스 추가 안드로이드 , 아이폰 동일하게 화면회전 처리.
-	$setvar_common(orientation=false); return;
-
-	//2022_11_30 아이폰도 동일하게 처리하기에 주석처리.
-	//if($g_isAndroid){		$setvar_common(orientation=false); return;			}
-
-	$setvar(
-		ori_kind=$SetOrientation_param1
-		,ori_type=$SetOrientation_param2
-	);
-	// 아이폰 노치형 때문에 추가 
-	if( $g_iBottomVar > 0) {
-		if($ori_kind == 2 ){
-			if($ori_type == 3){		$setvar(root_screen.x_ori = 0);		}
-			else{					$setvar(root_screen.x_ori = $g_lcdBaseX_ori);	}
-		}
-		if($ori_kind == 1 ){
-			if($ori_type == 2){		$setvar(root_screen.x_ori = 0);	}
-			else{					$setvar(root_screen.x_ori = $g_lcdBaseX_ori);	}
-		}
-	}
-
-	$setvar_common(orientation=true);
-	$setvar_common(m_Orientation_Kind =$ori_kind);
-	
-	if($ori_type==2){
-		$setvar_common(orientation=false);
-		$log(ori_type:2);
-	}
-
-	if($g_menuCode == 2130 || $g_menuCode == 2131 || $g_menuCode == 2132){
-		$closescreen($getcurr_popscreen());
-	}elseif($g_menuCode == 5130 || $g_menuCode == 5131 || $g_menuCode == 5132){
-		$closescreen($getcurr_popscreen());
-	}elseif($g_menuCode == 7130 || $g_menuCode == 7131 || $g_menuCode == 7132){
-		$closescreen($getcurr_popscreen());
-	}
-	if($ori_kind==2){
-		$log(ori_kind:2);
-		$setvar_common(orientation=false);
-
-		if($g_menuCode == 2130 || $g_menuCode == 2131 || $g_menuCode == 2132){
-			$setvar_common(orientation=true);
-			$closescreen($getcurr_popscreen());
-		}elseif($g_menuCode == 5130 || $g_menuCode == 5131 || $g_menuCode == 5132){
-			$setvar_common(orientation=true);
-			$closescreen($getcurr_popscreen());
-		}elseif($g_menuCode == 7130 || $g_menuCode == 7131 || $g_menuCode == 7132){
-			$setvar_common(orientation=true);
-			$closescreen($getcurr_popscreen());
-		}
-	}
-	
-	$setvar_common(cur_orientation=$orientation);
-	$callaction(SetOrientation_LOCAL);      // 해당 화면에서 생성함. - 티커가 있을경우 티커도 적용시킨다.
-	$logvar(orientation);
 " />
 
 <!--
@@ -912,6 +784,7 @@ value="
 	return $replace(|,%20,$retStr);
 " />
 -->
+<!--
 <action id="fnSetMultiItemCode" scope="common" 
 params="p_code"
 value="
@@ -1697,7 +1570,7 @@ value="
 	}
 	return $retStr;
 " />
-
+-->
 
 <!-- 
 최대근 20230705 추가.
@@ -1706,6 +1579,7 @@ p_key  	: sfile03마스터파일 7번째 필드값  예)004
 p_flage	: true(오픈시간 return) , false(종료시간 return)
 return 	: 장 운영시간(sfile14 1번째) 및 종료시간(sfile14 2번째)
 -->
+<!--
 <action id="fnGetOpenCloseTimeToItem" scope="common"
 params="p_key,p_flage"
 value="
@@ -2092,7 +1966,6 @@ value="
 		 $setvar_common(g_itemCls_n=1,check_leader.hidden_all=false);                     
 		 }
 " />
-
 <action id="fnSetItemCode_n"  scope="common"
 params="p_code"
 value="
@@ -2162,7 +2035,6 @@ value="
 
 	$logvar(g_leaderCode_n);
 " />
-
 <action id="fnSetItemName_n"  scope="common"
 params="p_code"
 value="
@@ -2266,7 +2138,6 @@ value="
 		tmp_g_itemCode          =   $getarrayvar($tmpArrExchName,0,3)
 	);
 	$callaction(fnSetItemCode,$tmp_g_itemCode);                         // 종목셋팅
-
 "/>
 <action id="fnGetItemCls_d" 
 params="p_code"
@@ -2315,9 +2186,7 @@ value="
 	else{							// 옵션
 		return 2;
 	}
-	
 " />
-
 <action id="fnOptionMkt" scope="common" 
 params="p_lprc, p_pqty, p_mdms, p_code"
 value="
@@ -2365,7 +2234,6 @@ value="
 	}
 "
 />
-
 //연결선물 코드를 셋팅한다.
 <action id="fnLeaderCode_Set" scope="common"
 value="
@@ -2446,7 +2314,6 @@ value="
 
 	return $tmp_arrIdx;
 " />
-
 // 관심종목을 DB에서 읽어온다.
 <action id="fnLoadDBInterestItemCode" scope="common" value="
 	$delarrayvar(arr_interestItem);
@@ -2552,7 +2419,6 @@ value="
 	$setarrayquery(MASTER,arr_interestItem_a_option,INSERT INTO T_INTERESTITEM_LIST_A_OPTION VALUES('[[0]]','[[1]]','[[2]]','[[3]]'));
 	" />
 </action>
-
 // 국내선옵
 <action id="fnSaveDBInterestItemCode_d" scope="common">
 	<query value="
@@ -2563,7 +2429,6 @@ value="
 	$setarrayquery(MASTER,arr_interestItem_d,INSERT INTO T_INTERESTITEM_LIST_D VALUES('[[0]]','[[1]]','[[2]]','[[3]]'));
 	" />
 </action>
-
 <action id="fnCreateDBInterestSearchItem" scope="common">
 	<query value="
 	// 관심종목 테이블 삭제를 어떻게 할 것인지 결정.
@@ -2575,7 +2440,6 @@ value="
 	);    
 	"/>
 </action>
-
 // 관심종목 테이블 생성 
 <action id="fnCreateDBInterestItem" scope="common">
 	<query value="
@@ -2650,7 +2514,6 @@ value="
 	if($tmp_arrIdx<0){      return false;    }
 	else{                   return true;     }
 " />
-
 <action id="fnCallbackPopoverClose" scope="common" 
     value="
     // 실시간을 다시 쏜다.
@@ -2665,7 +2528,6 @@ value="
 	else{
 		return false;
 	}
-
 "/>
 // 주간인지 야간인지 구분 
 <action id="fnIsDomestic_DayScreen" scope="common" value="
@@ -2675,7 +2537,6 @@ value="
 	else{
 		return false;
 	}
-
 "/>
 // 팝오버 띄우기 - 종목검색시 사용 
 <action id="fnOpenPopover" scope="common" 
@@ -2745,7 +2606,6 @@ value="
 		<import_dynamic filename="$popoverXmlFile"/>
 	</screen>
 </popscreen>
-
 <action id="fnAccountPwdSave" scope="common" 
 params="p_account, p_encvar"
 value="
@@ -2813,10 +2673,9 @@ value="
 	$logarrayvar(g_arr_account);
 
 	
-	return;
-	
+	return;	
 " />
-
+-->
 
 
 
@@ -2833,7 +2692,7 @@ value="
 	if($tmp_cnt>100){    $delarrayvar(arr_screenHistory,0);  }
 " />
 
-
+<!--
 // 로그인 프로세스 시작
 <action id="fnLoginProcess" scope="common" value="
 
@@ -2866,7 +2725,6 @@ value="
 	);
 	$setvar(reqid_usrlogon=$callaction(FNSEND_ORDERDATA,usrlogon,Input,,,,fnSendTr_usrlogon_After));
 " />
-
  <action id="fnSendTr_usrlogon_After" scope="common" value="
 	$setvar_common( 
 		usrlogon_sign = $recvmap_data(usrlogon,PageBlock.sign,$reqid_usrlogon,trim)
@@ -2935,7 +2793,6 @@ value="
 		$callaction(fnPopover_AlertAction,fnLoginProcessFail,$usrlogon_rmsg,,확인);
 
 	}
-	
 "/>
 // 공동인증서 DN값 서버 요청
 <action id="fnRequestDN" scope="common" value=" 
@@ -2969,6 +2826,8 @@ value="
 	
 	$callaction(fnCertPassVerify,$pibo0301_pkey);
 " />
+-->
+<!--
 // 공동인증서 비밀번호 검증
 <action id="fnCertPassVerify" scope="common" value="
 	$setvar(    tmp_cert_index = $cert_getdnindex($fnCertPassVerify_param1)     );
@@ -3111,7 +2970,6 @@ value="
 	$callaction(fnUserHaderSet);
 	$setvar(IN_LOGIN_TP=$g_combo_usrlogon_optn);
 	$setvar(reqid_ph015101=$callaction(FNSEND_ORDERDATA,ph015501,Input,,,,fnSendTr_ph015101_After));    
-
 " />
 <action id="fnSendTr_ph015101_After" scope="common" value="
 	// 에러메세지 확인 
@@ -3161,28 +3019,6 @@ value="
 
 	$callaction(fnSendTr_ph100601);
 " />
-/*
-// 호가주문 자동주문 위험고지 조회 
-<action id="fnSendTr_ph171401" scope="common" value="
-	$setvar(reqid_ph171401=$callaction(FNSEND_ORDERDATA,ph171401,Input,,,,fnSendTr_ph171401_After));
-" />
-<action id="fnSendTr_ph171401_After" scope="common" value="
-	// 에러메세지 확인 
-	$map_getfielddata($g_OrderSocketName,varErrCode,$ledgerBlockCode,rcod,strLedgerBlockData);
-	$map_getfielddata($g_OrderSocketName,varErrMsg,$ledgerBlockCode,rmsg,strLedgerBlockData);
-	$log(fnSendTr_ph171401_After:[$varErrCode][$varErrMsg]);
-	if(!$isequal_string($varErrCode,00000)){
-		//$alertaction(fnLoginProcessFail,,$varErrMsg,확인);
-		$callaction(fnPopover_AlertAction,fnLoginProcessFail,$varErrMsg,,확인);
-		return;
-	}
-
-	$setvar(ph171401_wchk = $recvmap_data(ph171401,PageBlock.wchk,$reqid_ph171401,trim));       //'0' 신청, '1' 미신청
-	$log(호가주문 자동주문 위험고지 조회  : $ph171401_wchk);
-
-	$callaction(fnSendTr_ph100601);
-" />
-*/
 // 전자금융사기 예방서비스 팝업
 <action id="fnSendTr_ph100601" scope="common" value="
 	$setvar_common(g_ph100601_popup_yn = );       
@@ -3217,7 +3053,6 @@ value="
 	);
 	$setvar(reqid_ph103304=$callaction(FNSEND_ORDERDATA,ph103304,Input,,,,fnSendTr_ph103304_After));
 " />
-
 // 상품 CAB 관리 조회 :옵션에서 사용하는 TR
 <action id="fnSendTr_ph800801" scope="common" value="
 	$callaction(fnUserHaderSet);
@@ -3395,15 +3230,6 @@ value="
 	//$setsubarray_common(arr_quickMenu,5,btn_menu_2360,헷지계좌\n신청,2360);
 	
 " />
-<!-- <action id="fnCreateDBQuickMenu" scope="common">
-	<query value="
-		CREATE TABLE IF NOT EXISTS T_QUICKMENU(
-			BTN_ID VARCHAR
-			, VALUE_LIST VARCHAR
-			, KEY VARCHAR
-		);
-	"/>
-</action> -->
 <action id="fnCreateDBQuickMenu" scope="common"
 value="
 	$logvar(g_OrderServerCheckSimulation);
@@ -3567,7 +3393,7 @@ value="
 		screen_alarm.hidden=true
 	);
 " />
-
+-->
 
 <!--
 // 국내선옵 테이블 생성 
@@ -3689,8 +3515,7 @@ value="
 	"/>
 </action>
 -->
-
-
+<!--
 // 틱사이즈 검증 
 <action id="Act_StopLiimit_Tick_Verify"  scope="common"
 params="p_base,p_mdms, p_limit, p_stop, p_hoga"
@@ -3831,7 +3656,8 @@ value="
 	}
 	return true;
 " />
-
+-->
+<!--
 <action id="Act_GetIP_RealServer" scope="common"
 params="p_after_action"
 value="
@@ -4053,11 +3879,6 @@ value="
 	
 	$log(IN_PROC_TP : $IN_PROC_TP, IN_USER_ID : $IN_USER_ID);
 " />
-
-
-
-
-
 <action id="fnSendTr_CSBA000801_After" scope="common"
 value="
 	if($isequal_string($recv_RCOD,49030)){
@@ -4066,8 +3887,6 @@ value="
 		return;
 	}
 "/>
-
-
 <action id="fnFindMarketCode" 
 scope="common"
 params="p_item_code"
@@ -4206,23 +4025,19 @@ value="
 		$callaction(fnGoScreen,2180);
 	}
 "/>
+
 //클라우드 관련 함수
-<!-- 클라우드 인증서 서비스 연결 안되어 있는상태 : 사용자 정보 x -->
 <action id="FnAcquireUserInfoAction"
 scope="common"
 value="
 	$callaction(fnPopover_AlertAction,fnCloudDisConnect,클라우드 인증 서비스에 연결되어 있지 않습니다.\n연결을 위해 화면을 이동하시겠습니까?,취소,확인);
 "/>
-
-<!-- 클라우드 인증서 서비스 연결 안되어 있는상태 : 약관 동의 정보 x -->
 <action id="FnAcknowledgeConditionsOfUse"
 scope="common"
 value="
 	$closescreen(popscreen_base);
 	$callaction(fnOpenPopScreen,plist/root/screen/p1244_100.xml,클라우드 인증서 회원가입,);
 "/>
-
-<!-- 클라우드 인증서 서비스 연결 안되어 있는상태 : 기기 등록 정보 x -->
 <action id="FnOnPhoneNumberProofTransactionStart"
 scope="common"
 params=
@@ -4236,7 +4051,6 @@ value="
 	);
 	$callaction(fnOpenPopScreen,plist/root/screen/p1299_100.xml,클라우드 인증서 회원가입,);
 "/>
-<!-- 인증서 연결 팝업 '확인,취소' 관련 선택 action -->
 <action id="fnCloudDisConnect"
 scope="common"
 params="p_key"
@@ -4245,16 +4059,6 @@ value="
 		$callaction(fnOpenPopScreen,plist/root/screen/p1242_100.xml,클라우드 인증서 회원가입,);
 	}
 "/>
-
-<!-- 
-기존 인증서는 이름만 존재하는 데이터가 존재하였지만 클라우드에는 없음. 
-클라우드에서는 [cn=최대근,ou=HTS,ou=유진,ou=선물,o=SignKorea,c=KR] 해당 값에서 이름만 빼와야 하기에 해당 함수 작성.
-
-p_is_arr = p_val가 array인지 아닌지
-p_val = 인증서 배열 및 [cn=최대근,ou=HTS,ou=유진,ou=선물,o=SignKorea,c=KR]
-p_idx = index 번호
-p_division = [cn=최대근,ou=HTS,ou=유진,ou=선물,o=SignKorea,c=KR] 에서 뽑아내고 싶은 내용 예) cn,o
--->
 <action id="fnGetCertSubjectInfo"
 scope="common"
 params="p_is_arr,p_division,p_val,p_idx"
@@ -4304,17 +4108,6 @@ value="
 
 	return $tmp_replace_division;
 "/>
-
-<!-- 
-클라우드 자동 로그인시 연결 끊겨있는지 확인 함수.
-
-!!해당 함수 위치를 common 에 둘지 intro_after에 둘지 생각..
-intro_after에서만 사용하니 옮겨둬야할지도..
-
-연결되어 있다면 저장되어있던 g_login_dn 값 존재하는지 확인 후 있다면 정상 진행 없다면 팝업 + 로그인 화면
-
-연결 안되어 있다면 팝업 + 로그인 화면
--->
 <action id="fnAutoLoginCloudCheckConnect"
 scope="common"
 params="p_is_connect"
@@ -4328,10 +4121,6 @@ value="
 		return;
 	}
 "/>
-<!-- 
-상단 클라우드 서비스 연결 확인 후 연결되어 있다면 로그인했을 당시 dn이 클라우드 목록에 존재 하는지 확인 해야합니다
-존재,존재x 에 따라 결과표시
--->
 <action id="fnAutoLoginCloudCheckDN"
 scope="common"
 params="p_arr_name"
@@ -4363,26 +4152,6 @@ value="
 	}
 	return;
 "/>
-
-
-<!-- 
-연결확인
-+
-유저 클라우드 인증서 목록
-+
-비밀번호 체크
-연결 함수
-따로 따로 호출도 가능하다.
-
-params = 
-cloudnpki_getUserCertificateListCloud 사용(true/false),
-cloud_common_use_check_pin 사용(true/false),
-p_dn(필수값 dn),
-p_dn_idx(비밀번호 체크만 사용할때 필요한 dn index값)
-p_pin(확인할 비밀번호값)
-
-상단 autologin과 다른점은 autologin은 기존에서도 화면이동을 강제합니다.
--->
 <action id="fnCloudCheckCertConnectCommonBefore" 
 scope="common"
 params="
@@ -4590,3 +4359,4 @@ value="
 		</viewgroup>
 	</viewgroup>
 </popscreen>
+-->

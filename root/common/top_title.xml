@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+// 추후 파일 삭제 예정 
 <actiondata value="
 	$setvar(    title=$replace(%0A,,$getxmlvalue(MENUDATA,,name,^|id == $g_menuCode))    );
 " />

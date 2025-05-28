@@ -475,6 +475,11 @@ value="
     //추후 확인 //수정
     if($tmp_account_menu!=1015){
         $closescreen(pop_1000_1_2);
+        
+        if($g_dev_memory_check_flag){ 					// 금융보안원 검수 버전 
+    		$callaction(Act_Open_Account_Move,1002);
+    		return;
+    	}
         $callaction(Act_Open_Account_Move,1001);
     }
 "/>

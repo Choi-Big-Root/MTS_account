@@ -607,7 +607,7 @@ value="
 	//매매 체결 통보
 	$callaction(fnConfig_SetValue,g_IN_REQUEST_TRADE 	,$btn_1005_meme.key);
 
-	
+	/*
 	$log(
 		확인용 : 
 			1001 g_IN_AGREE_ITEM1[$g_IN_AGREE_ITEM1],
@@ -643,7 +643,7 @@ value="
 			1005 g_IN_REQUEST_DEAL[$g_IN_REQUEST_DEAL],
 			1005 g_IN_REQUEST_TRADE[$g_IN_REQUEST_TRADE],
 	);
-	
+	*/
 
 	$callaction(Act_Open_Account_Move,1006);
 "/>
