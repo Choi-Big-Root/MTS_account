@@ -627,7 +627,7 @@ value="
 				textcolor="ffffff"
 				textcolor_active="ffffff"
 				onclicked="$closescreen();
-				$callaction(Act_Open_Account_Move, 4121);"
+				$callaction(Act_Open_Account_Move, 1018);"
 				/>
 			<blank width="3%" />
 			<button 

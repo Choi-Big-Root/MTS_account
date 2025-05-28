@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<br/>
+<!--
+ *********************************************************************************
+ **
+ ** 화면을 그린 후에 필요한 작업을 한다. 
+ ** - TR을 배열에 담는다. 전송은 특이한 경우가 아니면 basescreen에서 일괄적으로 전송한다.
+ **
+ *********************************************************************************
+ -->
+
+<action id="screen_contents_onload" value="
+	$setvar(
+		,img_step_1.hidden=false
+		,img_step_2.hidden=false
+		,img_step_3.hidden=false
+		,img_step_4.hidden=false
+		,img_step_5.hidden=false
+		,img_step_6.hidden=false
+		,img_step_7.hidden=false
+		,img_step_8.hidden=true
+		,lbl_open_account_title.x=$w($g_lcdwidth,4.6) // 순서대로 오지 않을경우에 치우친다.
+		,lbl_account_title_step_1.hidden=true
+		,lbl_account_title_step_2.hidden=true
+		,lbl_account_title_step_3.hidden=true
+		,lbl_account_title_step_4.hidden=true
+		,lbl_account_title_step_5.hidden=true
+		,lbl_account_title_step_6.hidden=true
+		,lbl_account_title_step_7.hidden=true
+		,lbl_account_title_step_8.hidden=false
+		,lbl_account_title_step_8.textcolor=ffffff
+		,vg_account_title_step.hidden=false
+		,popscreen_open_account_history.hidden=true
+		,popscreen_open_account_history_2.hidden=true
+		,popscreen_open_account_confirm.hidden=false
+		,popscreen_open_account_confirm.x=$w($g_lcdwidth,23)
+		,menu_num=1018
+		);
+		//$setControlHidden(popscreen_open_account_history,true);
+		//$setControlHidden(popscreen_open_account_history_2,true);
+		//$setControlHidden(popscreen_open_account_confirm,false);
+
+	// 애드브릭스 테스트
+	$setvar(
+		tmp_arr_custom_data = [
+			[menucode, $tmp_account_menu]
+			,[acntname, $g_save_acnt_name]
+		]
+	);
+	// 배열명(키,밸류), 이벤트명
+	$adbrixCustom(tmp_arr_custom_data,screen);	// 화면별 데이터
+	
+"/>
+
+<action id="1018_videocall_onclicked" 
+value="
+
+	if($now(HHmmss)<090000 || $now(HHmmss)>160000){
+		//$alertaction(1018_videocall_after,,영상통화 가능시간이 아닙니다.\n예약통화를 진행하시겠습니까?,취소,확인);
+		$callaction(fnPopover_AlertAction,1018_videocall_after,영상통화 가능시간이 아닙니다.\n예약통화를 진행하시겠습니까?,취소,확인);
+	}else{
+		//$alertaction(1018_videocall_after_2,,영상통화를 진행하시겠습니까?,취소,확인);		
+		$callaction(fnPopover_AlertAction,1018_videocall_after_2,영상통화를 진행하시겠습니까?,취소,확인);
+	}
+"/>
+//영상 통화 신청
+<action id="fnSendSSL_MO_REQUEST" 
+value="	
+if($g_save_open_tp==1){	// 소액이체 신청한경우 알림창
+	$alert(,,이미 소액이체 계좌인증을 신청하셨습니다. 영상통화 신청을 원하시면 처음부터 다시 계좌개설을 진행해 주십시오.,확인,);
+	return;
+}
+$logvar(
+ 	g_save_members_nm 		//추천인 성명
+	,g_save_members_no 		//추천인 사원번호
+);
+	$popscreen(pop_host_msg,center); 		// 동글뱅이 띄운다.
+
+	// ,g_IN_AGREE_RMN_NO 
+	if($g_isAndroid){		$callaction(fnConfig_SetValue,g_IN_REQUEST_DEV_OS 	,OS01); 		}
+	else{					$callaction(fnConfig_SetValue,g_IN_REQUEST_DEV_OS 	,OS02); 		}
+
+	$setvar(	jsonName 		= MO_REQUEST 	);
+	$json_create($jsonName);
+
+	$json_setdata($jsonName,,HDR,,{});
+	$json_setdata($jsonName,HDR,VER,,1.0); 					// 1.0 : 연동버전
+	$json_setdata($jsonName,HDR,CMD,,$jsonName);			// 
+
+	$json_setdata($jsonName,,BODY,,{});
+	$json_setdata($jsonName,BODY,DEV_OS,,$g_IN_REQUEST_DEV_OS);			// OS01: 안드로이드, OS02: iOS
+	$json_setdata($jsonName,BODY,DEV_TOKEN,,$p_APNS_RegKey);			// 디바이스 토큰 (Push 용)
+	$json_setdata($jsonName,BODY,WORK_NO,,$g_OUT_AGREE_WORK_NO); 		// 
+	
+	$json_setdata($jsonName,BODY,TEL_NUM,,$g_IN_REQUEST_TEL_NUM); 				// 고객 전화번호
+	$json_setdata($jsonName,BODY,RESV_STDT,,); 				// 예약시작일시(YYYYMMDDHH)
+	$json_setdata($jsonName,BODY,RESV_EDDT,,); 				// 예약종료일시(YYYYMMDDHH)
+
+	
+
+	$json_setdata($jsonName,BODY,LOCAL_YN,,$g_IN_REQUEST_LOCAL_YN); 				// Y : 내국인 N : 외국인
+	$json_setdata($jsonName,BODY,ABODE_NM,,$g_IN_REQUEST_ABODE_NM);					// Y : 국내거주 N : 국내비거주
+
+	$json_setdata($jsonName,BODY,HOME_POST_NO,,$g_IN_REQUEST_HOME_POST_NO); 		// HOME_POST_NO
+	$json_setdata($jsonName,BODY,HOME_ADDR,,$g_IN_REQUEST_HOME_ADDR); 				// 
+	$json_setdata($jsonName,BODY,HOME_ADDR2,,$g_IN_REQUEST_HOME_ADDR2); 			// 
+	$json_setdata($jsonName,BODY,HOME_TEL,,$g_IN_REQUEST_HOME_TEL); 				// 자택전화번호
+	$json_setdata($jsonName,BODY,JOB_NM,,$g_IN_REQUEST_JOB_NM); 				// 직업 
+	$json_setdata($jsonName,BODY,COM_NM,,$g_IN_REQUEST_COM_NM); 				// 직장명
+	$json_setdata($jsonName,BODY,COM_DEPART,,$g_IN_REQUEST_COM_DEPART); 		// 부서명
+	$json_setdata($jsonName,BODY,COM_TEL,,$g_IN_REQUEST_COM_TEL); 				// 직장전화번호
+	$json_setdata($jsonName,BODY,COM_POST_NO,,$g_IN_REQUEST_COM_POST_NO); 		// 직장주소
+	$json_setdata($jsonName,BODY,COM_ADDR,,$g_IN_REQUEST_COM_ADDR); 			// 
+	$json_setdata($jsonName,BODY,COM_ADDR2,,$g_IN_REQUEST_COM_ADDR2); 			// 
+	$json_setdata($jsonName,BODY,CLNT_EMAIL,,$g_IN_REQUEST_CLNT_EMAIL);		// 이메일주소
+	$json_setdata($jsonName,BODY,CLNT_FAX,,$g_IN_REQUEST_CLNT_FAX);		// FAX
+
+
+	$json_setdata($jsonName,BODY,TRD_PPO,,$g_IN_REQUEST_TRD_PPO); 		// 거래목적
+	$json_setdata($jsonName,BODY,FUNDS,,$g_IN_REQUEST_FUNDS); 			// 자금의 원천 및 출처
+	$json_setdata($jsonName,BODY,OWN_YN,,$g_IN_REQUEST_OWN_YN); 		// 실제 당사자 여부 Y/N
+	$json_setdata($jsonName,BODY,AMERICAN_YN,,$g_IN_REQUEST_AMERICAN_YN); 			// 미국인 여부
+	$json_setdata($jsonName,BODY,TRADE,,$g_IN_REQUEST_TRADE); 		// 매매거래통지
+	$json_setdata($jsonName,BODY,DEAL,,$g_IN_REQUEST_DEAL); 		// 월간거래통지
+
+	$json_setdata($jsonName,BODY,PD1,,$g_IN_REQUEST_PD1); 			// 계좌개설 국내선물:“10”, 해외선물:“20” (중복 선택인 경우 이어 붙인다. “1020”, “10”)
+
+
+	$json_setdata($jsonName,BODY,WON_BNK,,{});			// 원화계좌 
+	$json_setdata($jsonName,BODY.WON_BNK,BNK_CODE,,$g_IN_BNKNAME_BNK_CODE); 	// 은행코드 
+	$json_setdata($jsonName,BODY.WON_BNK,BNK_NO,,$g_IN_BNKNAME_BNK_NO); 		// 은행 계좌 번호 
+	$json_setdata($jsonName,BODY.WON_BNK,BNK_NM,,$g_IN_BNKNAME_BNK_NM); 		// 계좌명
+
+	$json_setdata($jsonName,BODY,NEW_PW,,$g_IN_REQUEST_NEW_PW); 				// 개설계좌 비밀번호
+	$json_setdata($jsonName,BODY,PICTURE,,{});						// 실명증표
+	
+	//$base64_encode(frontImageEncryptData,frontImageEncryptData_base64);
+	//$base64_encode(frontImageData,frontImageEncryptData_base64);
+	//g_save_frontImageEncryptData_base64
+	$json_setdata($jsonName,BODY.PICTURE,IMAGE,,$g_save_frontImageEncryptData_base64); 					// 실명증표사진 - Base64
+	$json_setdata($jsonName,BODY.PICTURE,IDCARD_TYPE,,$g_IN_REQUEST_IDCARD_TYPE); 			// ID01: 주민등록증, ID02: 운전면허증
+	$json_setdata($jsonName,BODY.PICTURE,RMN_DATE,,$g_IN_REQUEST_RMN_DATE_ENC); 				// 주민등록증 발급일자
+	$json_setdata($jsonName,BODY.PICTURE,DRV_NO,,$g_IN_REQUEST_DRV_NO_ENC); 					// 운전면허번호
+	$json_setdata($jsonName,BODY.PICTURE,DRV_CODE,,$g_IN_REQUEST_DRV_CODE_ENC); 				// 운전면허증 암호일련번호
+
+// 비대면 절차개선 - 2020.09.28
+// === 역이체 인증 이후 개설 신청 - 추가
+	$log(진위여부 저장된 값 >> g_save_result_yn[$g_save_result_yn]);
+	//$json_setdata($jsonName,BODY.PICTURE,CHK_YN,,Y); 										// Y:진위여부체크함, N:진위여부체크하지 않음
+	$json_setdata($jsonName,BODY.PICTURE,CHK_YN,,$g_save_result_yn); 						// Y:진위여부체크함, N:진위여부체크하지 않음
+	$json_setdata($jsonName,BODY,OPEN_TP,,2); 							// 1:역이체, 2:영상통화
+//	$json_setdata($jsonName,BODY,CREDI_GRADE,,); 						// 신용등급
+	$json_setdata($jsonName,BODY,INVI_EMPL_NO,,$g_save_members_no); 	// 계좌유치자 사번
+	$json_setdata($jsonName,BODY,INVI_EMPL_NM,,$g_save_members_nm); 	// 계좌유치자 사원명
+	$json_setdata($jsonName,BODY,INOUT_DT,,$g_save_bsns_date); 			// 역이체 출금일자 YYYYMMDD
+	$json_setdata($jsonName,BODY,INOUT_NO,,$g_save_inout_no); 			// 역이체 출금번호
+	$json_setdata($jsonName,BODY,MAST_ACCTNO,,$g_save_mast_acctno); 	// 역이체 출금계좌번호(당사)
+// === 여기까지 추가완료
+
+	$json_print($jsonName);
+	$delvar(strSSLSendData);
+	$json_getfullstring($jsonName,strSSLSendData);
+	$json_delete($jsonName);
+	$logvar(strSSLSendData);
+	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
+
+
+" />
+<action id="fnRecvSSL_MO_REQUEST" 
+value="
+	$closescreen(pop_host_msg); 		// 동글뱅이 띄운다.
+
+	$setvar(
+		recvSSL_hdr_ret 	= $json_getdata($jsonname,HDR.RET)
+		,recvSSL_hdr_msg 	= $json_getdata($jsonname,HDR.MSG)
+	);
+	$log(========= SSL 받은데이터 ==============);
+	$logvar(
+		recvSSL_hdr_ret
+		,recvSSL_hdr_msg 	
+	);
+	if(!$isequal_string($recvSSL_hdr_ret,OK)){
+		$alert(,,$recvSSL_hdr_msg);
+		return;
+	}
+	$callaction(fnConfig_SetValue,g_save_open_tp,2);	// 1:역이체, 2:영상통화
+	$callaction(Act_Open_Account_Move,1019);
+
+" />
+<action id="1018_videocall_after" value="
+	if($1018_videocall_after_param1==1){
+		$callaction(Act_Open_Account_Move,1020);
+	}
+"/>
+<action id="1018_videocall_after_2" value="
+	if($1018_videocall_after_2_param1==1){
+
+		
+		$callaction(fnSendSSL_MO_REQUEST);
+		return;
+	}
+"/>
+<action id="btn_1018_af_onclicked" value="
+	$callaction(Act_Open_Account_Move,1020);
+"/>
+<screen id="screen_1018_100"
+	class="cs_screen_contents"
+	backcolor="f1f1f1"
+	onload="screen_contents_onload"
+	>
+	<screen id="screen_1018_100"
+		class="cs_screen_contents"
+		backcolor="f1f1f1"
+		>
+		<screen
+			height="$this.remain_bottom">
+			<viewgroup 
+				margin_left="$w($g_lcdWidth,6.3)"
+				width="$super.width"
+				height="$h($g_lcdHeight,7)" 
+				backcolor="ffffff"			
+				>			
+				<label 
+					height="$h($g_lcdHeight,7)" 
+					fontname="$g_baseFontNameBold" 
+					fontsize="$g_fontsize_big1" 
+					value="영상통화 요청 및 예약" 
+					textcolor="222222" 
+					/>
+			</viewgroup>
+			<br/><hr backcolor="cccccc" /><br /><hr height="$getratio_height($g_lcdHeight,0)" backcolor="f1f1f1"/><br />
+			<viewgroup
+				id="vg_1018_100"
+				width="$super.width"
+				height="$h($g_lcdHeight,48)"				
+				>
+				<img id="img_bg_videocall" src="$bg_img_videocall" layout_vertical="center" layout="center" imagesizefit="true"/>	
+				<button 
+					id="btn_1018_100_1"
+					layout="center"
+					width="$w($g_lcdwidth,63)" 
+					height="$h($g_lcdHeight,8)" 
+					y="$result($h($g_lcdHeight,45)-$h($g_lcdHeight,6))"
+					border_radius="$w($g_lcdWidth,0.5)"
+					backcolor="e33433"
+					backcolor_active="bd3135"
+					border_width="$g_roundHeight"
+					value="영상통화 요청" 
+					textcolor="ffffff"
+					textcolor_active="ffffff"
+					fontsize="$g_fontsize_big1"
+					fontname="$g_baseFontNameBold"
+					align="center"
+					onclicked="1018_videocall_onclicked" 
+					/>
+			</viewgroup>
+			<br height="$h($g_lcdHeight,2)"/><blank width="$w($g_lcdwidth,4.4)"/>
+			<viewgroup
+				width="$w($g_lcdwidth,92)" 
+				height="$h($g_lcdHeight,25)"
+				border_color="cccccc"
+				border_radius="$w($g_lcdWidth,0.5)"
+				backcolor="ffffff"
+				border_width="$g_roundHeight"
+				>
+				<label
+					margin_left="$w($g_lcdWidth,2)"
+					width="$w($g_lcdwidth,92)" 
+					height="$h($g_lcdHeight,7.9)"
+					value="실시간 영상통화를 통한 추가 본인 확인"
+					fontsize="$g_fontSize_basic" 
+					fontname="$g_baseFontNameBold"
+					backcolor="f9f9f9"
+					textcolor="3a3a3a"
+					margin_left="$w($g_lcdWidth,4.2)"
+					/>
+				<br/><hr /><br />
+				<br height="$h($g_lcdHeight,2)"/>
+				<blank width="$w($g_lcdWidth,4)" />
+				<label
+					//margin_left="$w($g_lcdWidth,2)"
+					width="$super.width" 
+					height="$h($g_lcdHeight,4)"
+					value="상담원과의 영상통화를 통해 본인 확인합니다."
+					fontsize="$g_fontSize_basic" 
+					textcolor="666666"
+					/>
+				<br/>
+				<blank width="$w($g_lcdWidth,4)" />
+				<label
+					//margin_left="$w($g_lcdWidth,2)"
+					width="$w($g_lcdwidth,33)" 
+					height="$h($g_lcdHeight,4)"
+					value="영상통화 가능시간 :"
+					fontsize="$g_fontSize_basic" 
+					textcolor="666666"
+					/>
+				<label
+					//margin_left="$w($g_lcdWidth,2)"
+					width="$this.remain_right" 
+					height="$h($g_lcdHeight,4)"
+					value="영업일 09:00 ~ 16:00"
+					fontsize="$g_fontSize_basic"
+					textcolor="e33433" 
+					/>
+				<br/>
+				<viewgroup
+					margin_left="$w($g_lcdwidth,4)"
+					width="$w($g_lcdwidth,9)"
+					height="$h($g_lcdHeight,3)"
+					>
+					<img 
+						id="img_1018_1"
+						width="$w($g_lcdwidth,6)"
+						height="$h($g_lcdHeight,3)"
+						src="$icon_note"
+						layout="center"
+						layout_vertical="center"
+						/>
+				</viewgroup>
+				<label 	
+					margin_left="$w($g_lcdwidth,4)"
+					width="$this.remain_right"
+					height="$h($g_lcdHeight,5.5)"
+					textcolor="999999"
+					layout="center"
+					fontsize="$g_fontSize_basic"
+					value="가능시간 이외 시간에는 예약통화를 설정하여\n진행 가능."/>
+			</viewgroup>
+			<br height="$h($g_lcdHeight,2)"/><blank width="$w($g_lcdWidth,4.4)" />		
+			<viewgroup
+				width="$w($g_lcdwidth,92)" 
+				height="$h($g_lcdHeight,40)"
+				border_color="cccccc"
+				border_radius="$w($g_lcdWidth,0.5)"
+				backcolor="ffffff"
+				border_width="$g_roundHeight"
+				>
+				<label
+					margin_left="$w($g_lcdWidth,4)"
+					width="$w($g_lcdwidth,92)" 
+					height="$h($g_lcdHeight,5)"
+					value="영상통화시 고객 확인 정보"
+					textcolor="e33433"
+					fontsize="$g_fontSize_basic" 
+					fontname="$g_baseFontNameBold"
+					/>
+				<br/><blank width="$w($g_lcdWidth,4)" />
+				<label
+					//margin_left="$w($g_lcdWidth,2)"
+					width="$super.width" 
+					height="$h($g_lcdHeight,4)"
+					value="1.실시간 고객님께서 촬영했던 신분증"
+					extcolor="666666"
+					fontsize="$g_fontSize_basic"
+					/>
+				<br/><blank width="$w($g_lcdWidth,4)" />
+				<label
+					//margin_left="$w($g_lcdWidth,2)"
+					width="$super.width" 
+					height="$h($g_lcdHeight,4)"
+					value="2.고객 개인정보(성명, 주소, 연락처 외)"
+					extcolor="666666"
+					fontsize="$g_fontSize_basic"
+					/>
+				<br/>
+				<viewgroup
+					margin_left="$w($g_lcdwidth,3.5)"
+					width="$w($g_lcdwidth,9)"
+					height="$h($g_lcdHeight,3.7)"
+					>
+					<img 
+						id="img_1018_2"
+						width="$w($g_lcdwidth,6)"
+						height="$h($g_lcdHeight,3.7)"
+						src="$icon_note"
+						layout="center"
+						layout_vertical="center"
+						/>
+				</viewgroup>
+					<label
+						margin_left="$w($g_lcdwidth,4)" 	
+						width="$this.remain_right"
+						height="$h($g_lcdHeight,3.7)"
+						textcolor="999999"
+						layout="center"
+						fontsize="$g_fontSize_basic"
+						value="반드시 본인만 가능합니다.(대리인 불가)"/>
+					<br/>
+				<viewgroup
+					margin_left="$w($g_lcdwidth,3.5)"
+					width="$w($g_lcdwidth,9)"
+					height="$h($g_lcdHeight,3.7)"
+					>
+					<img 
+						id="img_1018_3"
+						width="$w($g_lcdwidth,6)"
+						height="$h($g_lcdHeight,3.7)"
+						src="$icon_note"
+						layout="center"
+						layout_vertical="center"
+						/>
+				</viewgroup>
+					<label
+						margin_left="$w($g_lcdwidth,4)" 	
+						width="$this.remain_right"
+						height="$h($g_lcdHeight,6.5)"
+						textcolor="999999"
+						layout="center"
+						fontsize="$g_fontSize_basic"
+						value="신분증 사진이 심하게 훼손되는 등 육안으로\n확인이 어려운 경우 신규개설이 제한됩니다."/>
+				<br/>
+				<viewgroup
+					margin_left="$w($g_lcdwidth,3.5)"
+					width="$w($g_lcdwidth,9)"
+					height="$h($g_lcdHeight,3.2)"
+					>
+					<img 
+						id="img_1018_4"
+						width="$w($g_lcdwidth,6)"
+						height="$h($g_lcdHeight,3.2)"
+						src="$icon_note"
+						layout="center"
+						layout_vertical="center"
+						/>
+				</viewgroup>
+					<label
+						margin_left="$w($g_lcdwidth,4)" 	
+						width="$this.remain_right"
+						height="$h($g_lcdHeight,8.5)"
+						textcolor="999999"
+						layout="center"
+						fontsize="$g_fontSize_basic"
+						value="단기다수계좌 개설자, 개인정보 노출자,자금세탁\n혐의자 등은 모바일을 통한 계좌개설을 할 수\n없습니다."/>
+				<br/>
+				<viewgroup
+					margin_left="$w($g_lcdwidth,3.5)"
+					width="$w($g_lcdwidth,9)"
+					height="$h($g_lcdHeight,3.7)"
+					>
+					<img 
+						id="img_1018_5"
+						width="$w($g_lcdwidth,5)"
+						height="$h($g_lcdHeight,3.7)"
+						src="$icon_note"
+						layout="center"
+						layout_vertical="center"
+						/>
+				</viewgroup>
+					<label
+						margin_left="$w($g_lcdwidth,4)" 	
+						width="$this.remain_right"
+						height="$h($g_lcdHeight,6.5)"
+						textcolor="999999"
+						layout="center"
+						fontsize="$g_fontSize_basic"
+						value="일부 저사양 단말기에서는 서비스 이용이\n제한될 수 있습니다."/>
+			</viewgroup>
+						
+		<br height="$h($g_lcdHeight,4)"/>
+		<blank width="$w($g_lcdWidth,4.4)" />
+		<button 
+			id="btn_1018_bf"
+			fontsize="$g_fontsize_big3" 
+			//y="$result($this.remain_bottom-$h($g_lcdHeight,13.4))"
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,9.4)" 
+			backcolor="ffffff"
+			border_width="$g_roundHeight"
+			border_color="e33433"
+			backcolor_active="e5e5e5"
+			textcolor="e33433"
+			textcolor_active="e33433"
+			value="이전" 
+			onclicked="btn_open_account_history_onClicked"
+			/>
+		<blank width="$w($g_lcdWidth,1.8)"/>
+		<button 
+			id="btn_1018_af"
+			//y="$result($this.remain_bottom-$h($g_lcdHeight,13.4))"
+			fontsize="$g_fontsize_big3" 
+			width="$w($g_lcdwidth,45.1)" 
+			height="$h($g_lcdHeight,9.4)" 
+			backcolor="e33433"
+			border_width="$g_roundHeight"
+			backcolor_active="cc2f2e"
+			textcolor="ffffff"
+			textcolor_active="ffffff"
+			value="영상통화 예약" 
+			onclicked="btn_1018_af_onclicked"
+			//backcolor_disable="bfbfbf"
+			//textcolor_disable="999999"
+			/>
+		<br height="$h($g_lcdHeight,4)"/>
+		</screen>
+	</screen>
+</screen>

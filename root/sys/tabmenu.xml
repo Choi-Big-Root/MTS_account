@@ -30,6 +30,10 @@
 
 		<menucode groupid="1" id="1017" name="계좌개설 신청 내역 안내" enable="true" file="plist/root/screen_account/p1017_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
 
+		<menucode groupid="1" id="1018" name="영상통화" enable="true" file="plist/root/screen_account/p1018_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="1" id="1019" name="영상통화" enable="true" file="plist/root/screen_account/p1019_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+		<menucode groupid="1" id="1020" name="영상통화" enable="true" file="plist/root/screen_account/p1020_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
+
 		
 		<!-- 비대면 -->
 		<menucode groupid="4" id="4100" name="비대면 계좌개설" enable="true" file="plist/root/screen/p4100_100.xml" certlogin="false" siselogin="true" simulation="true" tabmenu="N" s_login="true" display="N" type="blue" hts_no="???" open="true"/>
