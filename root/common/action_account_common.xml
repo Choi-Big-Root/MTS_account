@@ -265,26 +265,24 @@ value="
     $log(Act_Open_Account_Move - g_IN_CUST_WEAK_YN : $g_IN_CUST_WEAK_YN);
     if($g_menu_code_open_account < $p_menu_code || $strlen($g_menu_code_open_account) < 1){
         if(
-            $p_menu_code!=1017 
-            && $p_menu_code!=1012 
+            $p_menu_code!=1017      //이어하기
+
+            && $p_menu_code!=1019   //1018이 첫화면
+            && $p_menu_code!=1020   //1018이 첫화면
+
+            && $p_menu_code!=1008   //1007이 첫화면
+            && $p_menu_code!=1009   //1007이 첫화면
+
+            && $p_menu_code!=1002   //1001이 첫화면
+
+            && $p_menu_code!=1012   //1011이 첫화면
+
+            && $p_menu_code!=1005   //1003이 첫화면
+            && $p_menu_code!=1004   //1003이 첫화면 
         ){
             $callaction(Act_Open_Account_Menu_Save,$p_menu_code);
         }
     }
-    /*
-    elseif($g_menu_code_open_account==4135 && $p_menu_code==4119){
-        $callaction(Act_Open_Account_Menu_Save,$p_menu_code);
-    }
-    elseif($g_menu_code_open_account==4134 && $p_menu_code==4129){
-        $callaction(Act_Open_Account_Menu_Save,$p_menu_code);
-    }
-    elseif($g_menu_code_open_account==4133 && $p_menu_code==4121){
-        $callaction(Act_Open_Account_Menu_Save,$p_menu_code);
-    }
-    elseif($g_menu_code_open_account==4136 && $p_menu_code==4131){
-        $callaction(Act_Open_Account_Menu_Save,$p_menu_code);
-    }
-    */
     $setvar( tmp_arr_cnt        = $getarrayvarcount(arr_open_account_menu)  );
     $setsubarray_common(arr_open_account_menu,$tmp_arr_cnt,$p_menu_code);
     $callaction(popscreen_open_account_onload);
@@ -322,6 +320,10 @@ value="
         $callaction(fnConfig_SetValue,g_open_account_save,8);       
     }
     elseif($p_menu_code == 1014 && $g_save_open_tp==1){
+        $callaction(fnConfig_SetValue,g_open_account_save_date,$now(yyyyMMdd));
+        $callaction(fnConfig_SetValue,g_open_account_save,8);       
+    }
+    elseif($p_menu_code == 1018 && $g_save_open_tp==2){
         $callaction(fnConfig_SetValue,g_open_account_save_date,$now(yyyyMMdd));
         $callaction(fnConfig_SetValue,g_open_account_save,8);       
     }
