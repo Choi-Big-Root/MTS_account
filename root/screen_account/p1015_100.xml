@@ -228,3 +228,8 @@ value="
         /> -->
     </viewgroup>
 </screen>
+
+<action id="fnInputDataCheck"
+value="
+    $callaction(Act_Open_Account_Move,1016);
+"/>

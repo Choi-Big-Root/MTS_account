@@ -153,7 +153,13 @@ value="
             textcolor_active="$cs_color_white"
             textcolor_disable="$cs_color_white"
             value="확인"
-            onClicked=""
+            onClicked="fnEndIDRegister"
         />
     </viewgroup>
 </screen>
+<action id="fnEndIDRegister" value="
+    $callaction(fnDataClear);
+    //$closescreen(popscreen_open_account);     
+    $closescreen_all();
+    $setvar(g_is_open_account =); //로그인화면에서 종료위해 초기화
+"/>
