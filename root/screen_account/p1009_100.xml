@@ -137,7 +137,7 @@ value="
 			margin_top="$cs_height_15"
 			margin_bottom="$cs_height_15"
 			margin_left="$cs_width_20"
-			margin_right="$cs_width_20"
+			//margin_right="$cs_width_20"
 			backcolor="$cs_color_bg"
 			border_width="1"
 			border_radius="$cs_radius_15"
@@ -162,7 +162,10 @@ value="
 				fontname="$cs_font_400"
 				fontsize="$cs_fontsize_15"
 				multiline="true"
-				value="타인으로부터 계좌대여 요청을 받은 사실이 있습니까?\n\n - 계좌 등을 타인에게 양도하여 범죄에 이용되는 경우 민ㆍ형사상 책임을 질 수 있습니다."
+				value="타인으로부터 계좌대여 요청을 받은 사실이 있습니까? 
+
+- 계좌 등을 타인에게 양도하여 범죄에 이용되는 경우
+민ㆍ형사상 책임을 질 수 있습니다."
 			/>
 			<br/>
 			<viewgroup id="vg_qustion1_check" 
@@ -242,7 +245,8 @@ value="
 				fontname="$cs_font_400"
 				fontsize="$cs_fontsize_15"
 				multiline="true"
-				value="타인으로부터 신용등급상향, 대출 등이 목적으로 계좌개설을 요청받은 사실이 있습니까?"
+				value="타인으로부터 신용등급상향, 대출 등이 목적으로
+계좌개설을 요청받은 사실이 있습니까?"
 			/>
 			<br/>
 			<viewgroup id="vg_qustion2_check" 
