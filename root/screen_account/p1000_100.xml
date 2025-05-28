@@ -22,16 +22,16 @@ value="
 	onload="screen_contents_onload"
 	onunload="screen_contents_onunload"
 	noscroll_height="true"
-	margin_bottom="$cs_height_20"
+    margin_top="$cs_screen_top_margin"
+    margin_bottom="$cs_screen_bottom_margin"
+    margin_left="$cs_screen_left_right_margin"
+    margin_right="$cs_screen_left_right_margin"
 >
 	<viewgroup
-		width="$this.remain_right"
-		height="$cs_height_366"
-		margin_top="$cs_height_15"
-		margin_left="$cs_width_16"
-		margin_right="$cs_width_16"
-	>
-		<viewgroup
+        width="$this.remain_right"
+        height="$result($this.remain_bottom - $cs_height_54)"
+    >
+    	<viewgroup
 			width="$this.remain_right"
 			height="$cs_height_106"
 		>
@@ -66,89 +66,83 @@ value="
 				value="개설 시 아래 세가지가 필요해요."
 			/>
 		</viewgroup>
-		<br/>
-		<viewgroup
+		<br height="$cs_height_50" />
+		<label 
+			width="$cs_height_50" 
+			height="$cs_height_50" 
+        	BACKGROUNDSVG="$icon_icon_1"
+	        BACKGROUNDSVG_DISABLE="$icon_icon_1"
+	        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_1"
+	        BACKGROUNDSVG_WIDTH="$cs_height_50"
+	        BACKGROUNDSVG_HEIGHT="$cs_height_50"
+	        backgroundimage_align="center"
+	        backgroundimage_align_vertical="center"
+		/>
+		<blank width="$cs_width_15"/>
+		<label
 			width="$this.remain_right"
-			height="$cs_height_210"
-			layout_vertical="bottom"
-		>
-			<label 
-				width="$cs_height_50" 
-				height="$cs_height_50" 
-            	BACKGROUNDSVG="$icon_icon_1"
-		        BACKGROUNDSVG_DISABLE="$icon_icon_1"
-		        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_1"
-		        BACKGROUNDSVG_WIDTH="$cs_height_50"
-		        BACKGROUNDSVG_HEIGHT="$cs_height_50"
-		        backgroundimage_align="center"
-		        backgroundimage_align_vertical="center"
-			/>
-			<blank width="$cs_width_15"/>
-			<label
-				width="$this.remain_right"
-				height="$cs_height_50" 
-				fontname="$cs_font_400"
-				fontsize="$cs_fontsize_16"
-				textcolor="$cs_color_black"
-				value="본인명의 휴대폰"
-			/>
-			<br height="$cs_height_30"/>
-			<label 
-				width="$cs_height_50" 
-				height="$cs_height_50" 
-				BACKGROUNDSVG="$icon_icon_2"
-		        BACKGROUNDSVG_DISABLE="$icon_icon_2"
-		        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_2"
-		        BACKGROUNDSVG_WIDTH="$cs_height_50"
-		        BACKGROUNDSVG_HEIGHT="$cs_height_50"
-		        backgroundimage_align="center"
-		        backgroundimage_align_vertical="center"
-			/>
-			<blank width="$cs_width_15"/>
-			<label
-				width="$this.remain_right"
-				height="$cs_height_50" 
-				fontname="$cs_font_400"
-				fontsize="$cs_fontsize_16"
-				textcolor="$cs_color_black"
-				value="주민등록증 또는 운전면허증"
-			/>
-			<br height="$cs_height_30"/>
-			<label 
-				width="$cs_height_50" 
-				height="$cs_height_50" 
-				BACKGROUNDSVG="$icon_icon_3"
-		        BACKGROUNDSVG_DISABLE="$icon_icon_3"
-		        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_3"
-		        BACKGROUNDSVG_WIDTH="$cs_height_50"
-		        BACKGROUNDSVG_HEIGHT="$cs_height_50"
-		        backgroundimage_align="center"
-		        backgroundimage_align_vertical="center"
-			/>
-			<blank width="$cs_width_15"/>
-			<label
-				width="$this.remain_right"
-				height="$cs_height_50" 
-				fontname="$cs_font_400"
-				fontsize="$cs_fontsize_16"
-				textcolor="$cs_color_black"
-				value="온라인에서 조회 가능한 금융계좌"
-			/>
-		</viewgroup>
-		
-	</viewgroup>
-	<br height="$cs_height_271" />
-	<label
-	width="$this.remain_right"
-	height="$cs_height_18"
-	textcolor="$cs_color_black"
-	fontname="$cs_font_400"
-	fontsize="$cs_fontsize_15"
-	align="center"
-	value="비대면 계좌개설이 제한되는 경우는요?"
-	onClicked="$popscreen(pop_1000_1_4);"
-	/>
-	<br height="$cs_height_18" />
+			height="$cs_height_50" 
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_16"
+			textcolor="$cs_color_black"
+			value="본인명의 휴대폰"
+		/>
+		<br height="$cs_height_30"/>
+		<label 
+			width="$cs_height_50" 
+			height="$cs_height_50" 
+			BACKGROUNDSVG="$icon_icon_2"
+	        BACKGROUNDSVG_DISABLE="$icon_icon_2"
+	        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_2"
+	        BACKGROUNDSVG_WIDTH="$cs_height_50"
+	        BACKGROUNDSVG_HEIGHT="$cs_height_50"
+	        backgroundimage_align="center"
+	        backgroundimage_align_vertical="center"
+		/>
+		<blank width="$cs_width_15"/>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_50" 
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_16"
+			textcolor="$cs_color_black"
+			value="주민등록증 또는 운전면허증"
+		/>
+		<br height="$cs_height_30"/>
+		<label 
+			width="$cs_height_50" 
+			height="$cs_height_50" 
+			BACKGROUNDSVG="$icon_icon_3"
+	        BACKGROUNDSVG_DISABLE="$icon_icon_3"
+	        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_3"
+	        BACKGROUNDSVG_WIDTH="$cs_height_50"
+	        BACKGROUNDSVG_HEIGHT="$cs_height_50"
+	        backgroundimage_align="center"
+	        backgroundimage_align_vertical="center"
+		/>
+		<blank width="$cs_width_15"/>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_50" 
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_16"
+			textcolor="$cs_color_black"
+			value="온라인에서 조회 가능한 금융계좌"
+		/>
+		<br/>
+		<label
+		layout_vertical="bottom"
+		width="$this.remain_right"
+		height="$cs_height_54"
+		textcolor="$cs_color_black"
+		fontname="$cs_font_400"
+		fontsize="$cs_fontsize_15"
+		align="center"
+		value="비대면 계좌개설이 제한되는 경우는요?"
+		onClicked="$popscreen(pop_1000_1_4);"
+		/>
+    </viewgroup>
+	<br/>
 	<button id="btn_1000_account_open"
 		width="$cs_width_343"
 		height="$cs_height_54"
