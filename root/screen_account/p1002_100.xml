@@ -65,11 +65,6 @@ $readfile(plist/root/html/1002_100_5.html,1002_htmldata_5);
         ,tmp_first_phone_slash_flage = true
         ,tmp_second_phone_slash_flage = true
 	);
-	//초기화 
-	$callaction(fnConfig_SetValue,g_tf_1002_confirm_2_var,);
-	$callaction(fnConfig_SetValue,g_tf_1002_confirm_2_encvar,);
-	$callaction(fnConfig_SetValue,g_IN_AGREE_RMN_NO,);
-
 "/>
 
 <action id="screen_1002_100_onunload" 
