@@ -27,7 +27,8 @@
     $log(g_lcdHeight:[$g_lcdHeight]);
 
     $logvar(g_device_width,g_device_height);
-    $callaction(set_base_ratio, $g_design_width, $g_design_height, $g_device_width, $g_device_height);
+    //$callaction(set_base_ratio, $g_design_width, $g_design_height, $g_device_width, $g_device_height);
+    $callaction(set_base_ratio, $g_design_width, $g_design_height, $g_device_width, $p_lcdHeight);
     $callaction(set_font_size, $g_design_width, $g_design_height, $g_device_width, $g_device_height);
     $callaction(set_image_path);
 
