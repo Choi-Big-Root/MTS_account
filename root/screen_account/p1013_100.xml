@@ -235,6 +235,70 @@ value="
 	</viewgroup>
 </screen>
 <action id="fnInputDataCheck" value="
+	$log(
+		확인용 : 
+			1001 g_IN_AGREE_ITEM1[$g_IN_AGREE_ITEM1],
+			1001 g_IN_AGREE_ITEM2[$g_IN_AGREE_ITEM2],
+			1001 g_IN_AGREE_ITEM3[$g_IN_AGREE_ITEM3],
+
+			1002 g_save_tel_num[$g_save_tel_num],
+			1002 g_IN_AGREE_RMN_NO[$g_IN_AGREE_RMN_NO],
+			1002 g_IN_AGREE_CLNT_NM[$g_IN_AGREE_CLNT_NM],
+			1002 g_IN_REQUEST_TEL_NUM[$g_IN_REQUEST_TEL_NUM],
+			1002 g_IN_REQUEST_AGE[$g_IN_REQUEST_AGE],
+			1002 g_OUT_AGREE_WORK_NO[$g_OUT_AGREE_WORK_NO],
+			1002 g_IN_AGREE_RMN_NO_VAR[$g_IN_AGREE_RMN_NO_VAR],
+			1002 g_tf_1002_confirm_2_encvar[$g_tf_1002_confirm_2_encvar],
+
+			1003 g_IN_REQUEST_HOME_POST_NO[$g_IN_REQUEST_HOME_POST_NO],
+			1003 g_IN_REQUEST_HOME_ADDR[$g_IN_REQUEST_HOME_ADDR],
+			1003 g_IN_REQUEST_HOME_ADDR2[$g_IN_REQUEST_HOME_ADDR2],
+			1003 g_IN_REQUEST_CLNT_EMAIL[$g_IN_REQUEST_CLNT_EMAIL],
+
+			1004 g_IN_REQUEST_JOB_NM[$g_IN_REQUEST_JOB_NM],
+			1004 g_IN_REQUEST_COM_NM[$g_IN_REQUEST_COM_NM],
+			1004 g_IN_REQUEST_COM_DEPART[$g_IN_REQUEST_COM_DEPART],
+			1004 g_IN_REQUEST_COM_TEL[$g_IN_REQUEST_COM_TEL],
+			1004 g_IN_REQUEST_COM_POST_NO[$g_IN_REQUEST_COM_POST_NO],
+			1004 g_IN_REQUEST_COM_ADDR[$g_IN_REQUEST_COM_ADDR],
+			1004 g_IN_REQUEST_COM_ADDR2[$g_IN_REQUEST_COM_ADDR2],
+
+			1005 g_IN_REQUEST_TRD_PPO[$g_IN_REQUEST_TRD_PPO],
+			1005 g_IN_REQUEST_FUNDS[$g_IN_REQUEST_FUNDS],
+			1005 g_IN_REQUEST_AMERICAN_YN[$g_IN_REQUEST_AMERICAN_YN],
+			1005 g_IN_REQUEST_LOCAL_YN[$g_IN_REQUEST_LOCAL_YN],
+			1005 g_IN_REQUEST_ABODE_NM[$g_IN_REQUEST_ABODE_NM],
+			1005 g_IN_REQUEST_OWN_YN[$g_IN_REQUEST_OWN_YN],
+			1005 g_IN_REQUEST_DEAL[$g_IN_REQUEST_DEAL],
+			1005 g_IN_REQUEST_TRADE[$g_IN_REQUEST_TRADE],
+
+			1006 g_IN_REQUEST_PD1[$g_IN_REQUEST_PD1],
+			1006 g_chk_4117_5gr_1[$g_chk_4117_5gr_1],
+			1006 g_chk_4117_5gr_2[$g_chk_4117_5gr_2],
+			1006 g_IN_REQUEST_NEW_PW[$g_IN_REQUEST_NEW_PW],
+			1006 g_save_members_nm[$g_save_members_nm],
+			1006 g_save_members_no[$g_save_members_no],
+			1006 g_open_tp_select[$g_open_tp_select],
+
+			1010 g_IN_BNKNAME_BNK_CODE[$g_IN_BNKNAME_BNK_CODE],
+			1010 g_IN_BNKNAME_BNK_NO[$g_IN_BNKNAME_BNK_NO],
+			1010 g_IN_BNKNAME_BNK_NM[$g_IN_BNKNAME_BNK_NM],
+			1010 g_save_bank_name[$g_save_bank_name],
+			1010 g_save_bank_code[$g_save_bank_code],
+			1010 g_save_acnt_name[$g_save_acnt_name],
+			1010 g_save_acnt_no[$g_save_acnt_no],
+
+			1012 g_IN_REQUEST_IDCARD_TYPE[$g_IN_REQUEST_IDCARD_TYPE],
+			1012 g_save_frontImageEncryptData_base64[$g_save_frontImageEncryptData_base64],
+			1012 g_IN_REQUEST_RMN_DATE_ENC[$g_IN_REQUEST_RMN_DATE_ENC],
+			1012 g_IN_REQUEST_DRV_NO_ENC[$g_IN_REQUEST_DRV_NO_ENC],
+			1012 g_IN_REQUEST_DRV_CODE_ENC[$g_IN_REQUEST_DRV_CODE_ENC],
+			1012 g_date_compare[$g_date_compare],
+			1012 g_recvSSL_body_result_count[$g_recvSSL_body_result_count],
+			1012 g_save_result_yn[$g_save_result_yn],
+	);
+
+
 	if($fnInputDataCheck_param1 == 1){
 		$callaction(fnSendSSL_MO_TRANSIN);		// 역이체 입금 서비스
 		return;
