@@ -11,6 +11,42 @@
 	$readfile(plist/root/html/1007_100_16.html,1007_htmldata_16);
 	$readfile(plist/root/html/1007_100_18.html,1007_htmldata_18);
 "/>
+
+<class id="cs_1007_100_title"
+width="$this.remain_right"
+height="$cs_height_34"
+textcolor="$cs_color_black"
+fontsize="$cs_fontsize_24"
+fontname="$cs_font_600"
+/>
+
+<class id="cs_1007_100_chk_all"
+width="$this.remain_right"
+height="$cs_height_24"
+margin_left="$cs_width_30"
+CHECKIMAGESVG="$icon_checkbox_check_on" 
+UNCHECKIMAGESVG="$icon_checkbox_check_off"
+CHECKIMAGESVG_DISABLE="$icon_checkbox_check_off"
+BACKGROUNDSVG_WIDTH="$cs_height_24"
+BACKGROUNDSVG_HEIGHT="$cs_height_24"
+backgroundimage_align="left"
+backgroundimage_align_vertical="center"
+fontsize="$cs_fontsize_16"
+fontname="$cs_font_600"
+textcolor="232B2B"
+/>
+
+<class id="cs_1007_100_vg_chk_kind"
+width="$this.remain_right"
+border_width="1"
+border_radius="$cs_radius_15"
+backcolor="$cs_color_bg"
+margin_left="$cs_width_20"
+margin_right="$cs_width_20"
+margin_bottom="$cs_height_20"
+margin_top="$cs_height_20"
+/>
+
 <class id="cs_btn_essential_1007_100"
 width="$this.remain_right"
 height="$cs_height_22"
@@ -185,50 +221,23 @@ value="
    			layout_vertical="bottom"
    		>
    			<label
-   				width="$this.remain_right"
-   				height="$cs_height_34"
-   				textcolor="$cs_color_black"
-   				fontsize="$cs_fontsize_24"
-   				fontname="$cs_font_600"
+   				class="cs_1007_100_title"
    				value="약관을 확인하고"
    			/>
    			<br/>
    			<label
-   				width="$this.remain_right"
-   				height="$cs_height_34"
-   				textcolor="$cs_color_black"
-   				fontsize="$cs_fontsize_24"
-   				fontname="$cs_font_600"
+   				class="cs_1007_100_title"
    				value="동의해 주세요."
    			/>
    		</viewgroup>
 	</viewgroup>
 	<br height="$cs_height_20" />
 	<viewgroup
-		width="$this.remain_right"
 		height="$cs_height_249"
-		border_width="1"
-		border_radius="$cs_radius_15"
-		backcolor="$cs_color_bg"
-		margin_left="$cs_width_20"
-		margin_right="$cs_width_20"
-		margin_bottom="$cs_height_20"
-		margin_top="$cs_height_20"
+		class="cs_1007_100_vg_chk_kind"
 	>
 		<checkbox id="chk_1007_100_1_all"
-			width="$this.remain_right"
-			height="$cs_height_24"
-			margin_left="$cs_width_30"
-			CHECKIMAGESVG="$icon_checkbox_check_on" 
-			UNCHECKIMAGESVG="$icon_checkbox_check_off"
-			CHECKIMAGESVG_DISABLE="$icon_checkbox_check_off"
-			BACKGROUNDSVG_WIDTH="$cs_height_24"
-			BACKGROUNDSVG_HEIGHT="$cs_height_24"
-			backgroundimage_align="left"
-			backgroundimage_align_vertical="center"
-			fontsize="$cs_fontsize_16"
-			fontname="$cs_font_600"
-			textcolor="232B2B" //디자인정의 안되어있는 색상.
+			class="cs_1007_100_chk_all" 
 			value="약관승인"
 			onclicked="$callaction(fnAgree_Check_1007_100,1);"
 		/>
@@ -272,30 +281,11 @@ value="
 	</viewgroup>
 	<br height="$cs_height_20" />
 	<viewgroup
-		width="$this.remain_right"
 		height="$cs_height_183"
-		border_width="1"
-		border_radius="$cs_radius_15"
-		backcolor="$cs_color_bg"
-		margin_left="$cs_width_20"
-		margin_right="$cs_width_20"
-		margin_bottom="$cs_height_20"
-		margin_top="$cs_height_20"
+		class="cs_1007_100_vg_chk_kind"
 	>
 		<checkbox id="chk_1007_100_2_all"
-			width="$this.remain_right"
-			height="$cs_height_24"
-			margin_left="$cs_width_30"
-			CHECKIMAGESVG="$icon_checkbox_check_on" 
-			UNCHECKIMAGESVG="$icon_checkbox_check_off"
-			CHECKIMAGESVG_DISABLE="$icon_checkbox_check_off"
-			BACKGROUNDSVG_WIDTH="$cs_height_24"
-			BACKGROUNDSVG_HEIGHT="$cs_height_24"
-			backgroundimage_align="left"
-			backgroundimage_align_vertical="center"
-			fontsize="$cs_fontsize_16"
-			fontname="$cs_font_600"
-			textcolor="232B2B" //디자인정의 안되어있는 색상.
+			class="cs_1007_100_chk_all" 
 			value="위험고지 확인"
 			onclicked="$callaction(fnAgree_Check_1007_100,10);"
 		/>
@@ -327,30 +317,11 @@ value="
 	</viewgroup>
 	<br height="$cs_height_20" />
 	<viewgroup
-		width="$this.remain_right"
 		height="$cs_height_150"
-		border_width="1"
-		border_radius="$cs_radius_15"
-		backcolor="$cs_color_bg"
-		margin_left="$cs_width_20"
-		margin_right="$cs_width_20"
-		margin_bottom="$cs_height_20"
-		margin_top="$cs_height_20"
+		class="cs_1007_100_vg_chk_kind"
 	>
 		<checkbox id="chk_1007_100_3_all"
-			width="$this.remain_right"
-			height="$cs_height_24"
-			margin_left="$cs_width_30"
-			CHECKIMAGESVG="$icon_checkbox_check_on" 
-			UNCHECKIMAGESVG="$icon_checkbox_check_off"
-			CHECKIMAGESVG_DISABLE="$icon_checkbox_check_off"
-			BACKGROUNDSVG_WIDTH="$cs_height_24"
-			BACKGROUNDSVG_HEIGHT="$cs_height_24"
-			backgroundimage_align="left"
-			backgroundimage_align_vertical="center"
-			fontsize="$cs_fontsize_16"
-			fontname="$cs_font_600"
-			textcolor="232B2B" //디자인정의 안되어있는 색상.
+			class="cs_1007_100_chk_all" 
 			value="고객 유의사항"
 			onclicked="$callaction(fnAgree_Check_1007_100,15);"
 		/>

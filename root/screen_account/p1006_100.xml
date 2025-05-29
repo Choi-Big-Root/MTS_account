@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<class id="cs_1006_100_title"
+width="$this.remain_right"
+height="$cs_height_34"
+textcolor="$cs_color_black"
+fontsize="$cs_fontsize_24"
+fontname="$cs_font_600"
+/>
+
 <action id="screen_contents_onload" value="
 	$setvar(
 		,img_step_1.hidden=false
@@ -121,20 +129,12 @@ value="
 	   			layout_vertical="bottom"
 	   		>
 	   			<label
-	   				width="$this.remain_right"
-	   				height="$cs_height_34"
-	   				textcolor="$cs_color_black"
-	   				fontsize="$cs_fontsize_24"
-	   				fontname="$cs_font_600"
+	   				class="cs_1006_100_title"
 	   				value="계좌의 비밀번호를"
 	   			/>
 	   			<br/>
 	   			<label
-	   				width="$this.remain_right"
-	   				height="$cs_height_34"
-	   				textcolor="$cs_color_black"
-	   				fontsize="$cs_fontsize_24"
-	   				fontname="$cs_font_600"
+	   				class="cs_1006_100_title"
 	   				value="설정해주세요"
 	   			/>
 	   		</viewgroup>
