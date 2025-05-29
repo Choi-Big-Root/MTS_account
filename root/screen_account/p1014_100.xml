@@ -315,7 +315,6 @@ value="
 	
 	if(!$isequal_string($recvSSL_hdr_ret,OK)){
 		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤
-		//$alertaction(,,$recv_error_msg,확인);
 		$callaction(fnPopover_AlertAction,,$recv_error_msg,,확인);
 		return;
 	}
@@ -364,7 +363,10 @@ value="
 //영상 통화 신청
 <action id="fnSendSSL_MO_REQUEST" 
 value="	
-
+	if($g_save_open_tp==2){	// 영상통화 인증을 신청한경우 알림창
+		$callaction(fnPopover_AlertAction,,이미 영상통화 인증을 신청하셨습니다. 소액이체 계좌인증을 원하시면 처음부터 다시 계좌개설을 진행해 주십시오.,,확인);
+		return;
+	}
 	$logvar(
  		g_save_members_nm 		//추천인 성명
 		,g_save_members_no 		//추천인 사원번호
@@ -471,7 +473,7 @@ value="
 	);
 	if(!$isequal_string($recvSSL_hdr_ret,OK)){
 		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤
-		$alert(,,$recvSSL_hdr_msg);
+		$callaction(fnPopover_AlertAction,,$recvSSL_hdr_msg,,확인);
 		return;
 	}
 	$closescreen(pop_host_msg); 		// 동글뱅이 멈춤
