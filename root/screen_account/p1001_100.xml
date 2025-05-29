@@ -24,6 +24,13 @@
 	$readfile(plist/root/html/1001_100_4_1_n_d.html,1001_100_4_1_n_htmldata_d); 		// 개인(신용)정보 수집/이용에 관한사항
 
 "/>
+<class id="cs_1001_100_title"
+width="$this.remain_right"
+height="$cs_height_34"
+textcolor="$cs_color_black"
+fontsize="$cs_fontsize_24"
+fontname="$cs_font_600"
+/>
 <class id="cs_btn_essential_1001_100"
 width="$this.remain_right"
 height="$cs_height_22"
@@ -39,7 +46,47 @@ BACKGROUNDSVG_HEIGHT="$cs_height_18"
 backgroundimage_align="left"
 backgroundimage_align_vertical="center"
 onClicked="$callaction(btn_essential_1001_100_onClicked,$this.key);"
-/>	
+/>
+<class id="cs_1001_100_chk_all"
+width="$cs_width_229"
+height="$this.remain_bottom"
+fontsize="$cs_fontsize_16"
+fontname="$cs_font_600"
+textcolor="232B2B"
+margin_left="$result($cs_height_24 + $cs_width_6)"
+CHECKIMAGESVG="$icon_checkbox_check_on" 
+UNCHECKIMAGESVG="$icon_checkbox_check_off"
+CHECKIMAGESVG_DISABLE="$icon_checkbox_check_off"
+BACKGROUNDSVG_WIDTH="$cs_height_24"
+BACKGROUNDSVG_HEIGHT="$cs_height_24"
+backgroundimage_align="left"
+backgroundimage_align_vertical="center"
+/>
+<class id="cs_1001_100_gr_agree_kind"
+groupid="gr_1001_100_agree_kind"
+height="$this.remain_bottom"
+backcolor="$cs_color_line"
+backcolor_active="$cs_color_text"
+align="center"
+textcolor="$cs_color_text"
+textcolor_active="$cs_color_white"
+fontsize="$cs_fontsize_12"
+fontname="$cs_font_400"
+fontname_active="$cs_font_600"
+/>
+<class id="cs_1001_100_security_kind"
+width="$result($super.width/5)"
+height="$this.remain_bottom"
+/>		
+<class id="cs_1001_100_security_kind_text"
+width="$result($super.width/5)"
+height="$this.remain_bottom"
+fontsize="$cs_fontsize_11"
+fontname="$cs_font_400"
+textcolor="$cs_color_black"
+align="center"
+valign="bottom"
+/>
 <action id="screen_contents_onload" value="
 	$log(확인용);
 	$setvar(
@@ -160,20 +207,12 @@ value="
 	   			layout_vertical="bottom"
 	   		>
 	   			<label
-	   				width="$this.remain_right"
-	   				height="$cs_height_34"
-	   				textcolor="$cs_color_black"
-	   				fontsize="$cs_fontsize_24"
-	   				fontname="$cs_font_600"
+	   				class="cs_1001_100_title"
 	   				value="약관을 확인하고"
 	   			/>
 	   			<br/>
 	   			<label
-	   				width="$this.remain_right"
-	   				height="$cs_height_34"
-	   				textcolor="$cs_color_black"
-	   				fontsize="$cs_fontsize_24"
-	   				fontname="$cs_font_600"
+	   				class="cs_1001_100_title"
 	   				value="동의해 주세요."
 	   			/>
 	   		</viewgroup>
@@ -195,23 +234,10 @@ value="
 				height="$cs_height_24"
 			>
 				<checkbox id="chk_1001_100_1_all"
-					width="$cs_width_229"
-					height="$this.remain_bottom"
-					fontsize="$cs_fontsize_16"
-					fontname="$cs_font_600"
-					textcolor="232B2B"
-					margin_left="$result($cs_height_24 + $cs_width_6)"
-					CHECKIMAGESVG="$icon_checkbox_check_on" 
-					UNCHECKIMAGESVG="$icon_checkbox_check_off"
-					CHECKIMAGESVG_DISABLE="$icon_checkbox_check_off"
-					BACKGROUNDSVG_WIDTH="$cs_height_24"
-					BACKGROUNDSVG_HEIGHT="$cs_height_24"
-					backgroundimage_align="left"
-					backgroundimage_align_vertical="center"
+					class="cs_1001_100_chk_all"
 					value="개인(신용)정보 필수동의서"
-					//enable="false"
 					onClicked="$callaction(btn_1001_confirm_onclicked);"
-				/>
+				/>			
 				<viewgroup id="vg_1001_100_agree_kind"
 					width="$this.remain_right"
 					height="$this.remain_bottom"
@@ -219,36 +245,16 @@ value="
 					border_radius="$cs_radius_5"
 				>
 					<button
-						groupid="gr_1001_100_agree_kind"
+						class="cs_1001_100_gr_agree_kind"
 						width="$result($this.remain_right/2)"
-						height="$this.remain_bottom"
-						backcolor="$cs_color_line"
-						backcolor_active="$cs_color_text"
 						value="요약"
-						align="center"
-						textcolor="$cs_color_text"
-						textcolor_active="$cs_color_white"
-						fontsize="$cs_fontsize_12"
-						fontname="$cs_font_400"
-						fontname_active="$cs_font_600"
-
 						key="2"
 						select="true"
 					/>
 					<button
-						groupid="gr_1001_100_agree_kind"
+						class="cs_1001_100_gr_agree_kind"
 						width="$this.remain_right"
-						height="$this.remain_bottom"
-						backcolor="$cs_color_line"
-						backcolor_active="$cs_color_text"
 						value="상세"
-						align="center"
-						textcolor="$cs_color_text"
-						textcolor_active="$cs_color_white"
-						fontsize="$cs_fontsize_12"
-						fontname="$cs_font_400"
-						fontname_active="$cs_font_600"
-
 						key="1"
 					/>
 				</viewgroup>
@@ -301,21 +307,8 @@ value="
 				height="$cs_height_24"
 			>
 				<checkbox id="chk_1001_100_2"
-					width="$cs_width_229"
-					height="$this.remain_bottom"
-					fontsize="$cs_fontsize_16"
-					fontname="$cs_font_600"
-					textcolor="232B2B"
-					margin_left="$result($cs_height_24 + $cs_width_6)"
-					CHECKIMAGESVG="$icon_checkbox_check_on" 
-					UNCHECKIMAGESVG="$icon_checkbox_check_off"
-					CHECKIMAGESVG_DISABLE="$icon_checkbox_check_off"
-					BACKGROUNDSVG_WIDTH="$cs_height_24"
-					BACKGROUNDSVG_HEIGHT="$cs_height_24"
-					backgroundimage_align="left"
-					backgroundimage_align_vertical="center"
+					class="cs_1001_100_chk_all"
 					value="[선택]개인(신용)정보 동의서"
-					//enable="false"
 					onClicked="$callaction(btn_essential_1001_100_onClicked,4_1);"
 				/>
 			</viewgroup>
@@ -341,28 +334,23 @@ value="
 				>
 					//여기 체크 박스 작업중.
 					<label id="lbl_1001_100_security"
-						width="$result($super.width/5)"
-						height="$this.remain_bottom"
+						class="cs_1001_100_security_kind"
 						backcolor="0897F0"
 					/>
 					<label
-						width="$result($super.width/5)"
-						height="$this.remain_bottom"
+						class="cs_1001_100_security_kind"
 						backcolor="92D050"
 					/>
 					<label
-						width="$result($super.width/5)"
-						height="$this.remain_bottom"
+						class="cs_1001_100_security_kind"
 						backcolor="FFEB00"
 					/>
 					<label
-						width="$result($super.width/5)"
-						height="$this.remain_bottom"
+						class="cs_1001_100_security_kind"
 						backcolor="FFC000"
 					/>
 					<label
-						width="$result($super.width/5)"
-						height="$this.remain_bottom"
+						class="cs_1001_100_security_kind"
 						backcolor="FF0000"
 					/>
 
@@ -382,53 +370,23 @@ value="
 				</viewgroup>
 				<br/>
 				<label
-					width="$result($super.width/5)"
-					height="$this.remain_bottom"
-					fontsize="$cs_fontsize_11"
-					fontname="$cs_font_400"
-					textcolor="$cs_color_black"
-					align="center"
-					valign="bottom"
+					class="cs_1001_100_security_kind_text"
 					value="안심"
 				/>
 				<label
-					width="$result($super.width/5)"
-					height="$this.remain_bottom"
-					fontsize="$cs_fontsize_11"
-					fontname="$cs_font_400"
-					textcolor="$cs_color_black"
-					align="center"
-					valign="bottom"
+					class="cs_1001_100_security_kind_text"
 					value="양호"
 				/>
 				<label
-					width="$result($super.width/5)"
-					height="$this.remain_bottom"
-					fontsize="$cs_fontsize_11"
-					fontname="$cs_font_400"
-					textcolor="$cs_color_black"
-					align="center"
-					valign="bottom"
+					class="cs_1001_100_security_kind_text"
 					value="보통"
 				/>
 				<label
-					width="$result($super.width/5)"
-					height="$this.remain_bottom"
-					fontsize="$cs_fontsize_11"
-					fontname="$cs_font_400"
-					textcolor="$cs_color_black"
-					align="center"
-					valign="bottom"
+					class="cs_1001_100_security_kind_text"
 					value="신충"
 				/>
 				<label
-					width="$result($super.width/5)"
-					height="$this.remain_bottom"
-					fontsize="$cs_fontsize_11"
-					fontname="$cs_font_400"
-					textcolor="$cs_color_black"
-					align="center"
-					valign="bottom"
+					class="cs_1001_100_security_kind_text"
 					value="주의"
 				/>
 				
