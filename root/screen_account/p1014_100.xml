@@ -86,6 +86,14 @@ value="
 	$setvar( lbl_acnt_info.value = $g_save_bank_name $g_save_acnt_no);
 
 "/>
+<action id="btn_pop_info_1014_100_onClicked"
+value="
+	$setvar(
+		tmp_pop_info_x_cal = $result($img_pop_info_1014.x_abs + $w($g_lcdwidth,0.6))
+		,tmp_pop_imfo_y_cal = $result($img_pop_info_1014.y_abs + $h($g_lcdHeight,2.6))
+	);
+	$callaction(popscreen_open_account_confirm_onclicked,$tmp_pop_info_x_cal,$tmp_pop_imfo_y_cal);
+"/>
 <screen 
 	id="screen_1014_100"
 	class="cs_screen_contents"

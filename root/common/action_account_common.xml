@@ -661,6 +661,11 @@ value="
             pop_info_tip_lbl=$(1원이체로 계좌인증 하는 단계예요.)
             ,pop_info_tip_height=$cs_height_40
         );
+    }elseif($menu_num < 1021){
+        $setvar(
+            pop_info_tip_lbl=$(본인 확인을 위한 영상통화 단계에요.)
+            ,pop_info_tip_height=$cs_height_40
+        );
     }
     
     $popscreen(pop_info_tip);
