@@ -17,28 +17,45 @@
 		,img_step_4.hidden=false
 		,img_step_5.hidden=false
 		,img_step_6.hidden=false
-		,img_step_7.hidden=false
+		,img_step_7.hidden=true
 		,img_step_8.hidden=true
-		,lbl_open_account_title.x=$w($g_lcdwidth,4.6) // 순서대로 오지 않을경우에 치우친다.
+
 		,lbl_account_title_step_1.hidden=true
 		,lbl_account_title_step_2.hidden=true
 		,lbl_account_title_step_3.hidden=true
 		,lbl_account_title_step_4.hidden=true
 		,lbl_account_title_step_5.hidden=true
 		,lbl_account_title_step_6.hidden=true
-		,lbl_account_title_step_7.hidden=true
+		,lbl_account_title_step_7.hidden=false
 		,lbl_account_title_step_8.hidden=false
-		,lbl_account_title_step_8.textcolor=ffffff
-		,vg_account_title_step.hidden=false
-		,popscreen_open_account_history.hidden=true
+
+		,lbl_account_title_step_1.textcolor=$cs_color_disable
+		,lbl_account_title_step_2.textcolor=$cs_color_disable
+		,lbl_account_title_step_3.textcolor=$cs_color_disable
+		,lbl_account_title_step_4.textcolor=$cs_color_disable
+		,lbl_account_title_step_5.textcolor=$cs_color_disable
+		,lbl_account_title_step_6.textcolor=$cs_color_disable
+		,lbl_account_title_step_7.textcolor=$cs_color_black
+		,lbl_account_title_step_8.textcolor=$cs_color_disable
+
+
+		,lbl_account_title_step_1.fontname=$cs_font_400
+		,lbl_account_title_step_2.fontname=$cs_font_400
+		,lbl_account_title_step_3.fontname=$cs_font_400
+		,lbl_account_title_step_4.fontname=$cs_font_400
+		,lbl_account_title_step_5.fontname=$cs_font_400
+		,lbl_account_title_step_6.fontname=$cs_font_400
+		,lbl_account_title_step_7.fontname=$cs_font_600
+		,lbl_account_title_step_8.fontname=$cs_font_400
+
+
+		,vg_open_account_title.backcolor=FFFFFF
+		,popscreen_open_account_history.hidden=false
 		,popscreen_open_account_history_2.hidden=true
-		,popscreen_open_account_confirm.hidden=false
-		,popscreen_open_account_confirm.x=$w($g_lcdwidth,23)
+		,vg_account_title_step.hidden = false
+
 		,menu_num=1018
-		);
-		//$setControlHidden(popscreen_open_account_history,true);
-		//$setControlHidden(popscreen_open_account_history_2,true);
-		//$setControlHidden(popscreen_open_account_confirm,false);
+	);
 
 	// 애드브릭스 테스트
 	$setvar(
