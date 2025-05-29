@@ -23,8 +23,6 @@
 	$readfile(plist/root/html/1001_100_3_1_n_d.html,1001_100_3_1_n_htmldata_d); 		// 3-1 조회에 관한 사항[미수/파생상품 거래용]
 	$readfile(plist/root/html/1001_100_4_1_n_d.html,1001_100_4_1_n_htmldata_d); 		// 개인(신용)정보 수집/이용에 관한사항
 
-	$callaction(fnHTMLFontSizeSet);
-
 "/>
 <class id="cs_btn_essential_1001_100"
 width="$this.remain_right"
