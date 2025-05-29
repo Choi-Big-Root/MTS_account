@@ -260,6 +260,10 @@ value="
 <action id="Act_Open_Account_Move" scope="common"
 params="p_menu_code"
 value="
+    //이어하기 기능 완료 1008,1004는 추후 얘기나오면 고민해보는걸로.
+    //1004 같은경우는 1003 과 다르게 직업영역이고 1004에서 입력이 잘못되면 1005에서도 영향이 가기에 저장가능.
+    //1007는step4 , 1008는 step5 서로 다른 step이기에 구별.
+
     $log(Act_Open_Account_Move - g_menu_code_open_account : $g_menu_code_open_account);
     $log(Act_Open_Account_Move - p_menu_code : $p_menu_code);
     $log(Act_Open_Account_Move - g_IN_CUST_WEAK_YN : $g_IN_CUST_WEAK_YN);
@@ -270,18 +274,24 @@ value="
             && $p_menu_code!=1019   //1018이 첫화면
             && $p_menu_code!=1020   //1018이 첫화면
 
-            && $p_menu_code!=1008   //1007이 첫화면
-            && $p_menu_code!=1009   //1007이 첫화면
+            //&& $p_menu_code!=1008   //1007이 첫화면
+            && $p_menu_code!=1009   //1008이 첫화면
 
             && $p_menu_code!=1002   //1001이 첫화면
 
             && $p_menu_code!=1012   //1011이 첫화면
 
-            && $p_menu_code!=1005   //1003이 첫화면
-            && $p_menu_code!=1004   //1003이 첫화면 
+            && $p_menu_code!=1005   //1003이 첫화면 
+            //&& $p_menu_code!=1004   //1003이 첫화면 
         ){
             $callaction(Act_Open_Account_Menu_Save,$p_menu_code);
         }
+    }
+    elseif($g_menu_code_open_account==1013 && $p_menu_code==1018){
+        $callaction(Act_Open_Account_Menu_Save,$p_menu_code);
+    }
+    elseif($g_menu_code_open_account==1011 && $p_menu_code==1018){
+        $callaction(Act_Open_Account_Menu_Save,$p_menu_code);
     }
     $setvar( tmp_arr_cnt        = $getarrayvarcount(arr_open_account_menu)  );
     $setsubarray_common(arr_open_account_menu,$tmp_arr_cnt,$p_menu_code);
