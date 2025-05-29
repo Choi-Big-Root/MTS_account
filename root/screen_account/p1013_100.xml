@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<class id="cs_1013_100_title"
+width="$this.remain_right"
+height="$cs_height_34"
+textcolor="$cs_color_black"
+fontsize="$cs_fontsize_24"
+fontname="$cs_font_600"
+/>
+<class id="cs_1013_100_account_info"
+width="$this.remain_right"
+height="$cs_height_22"
+fontname="$cs_font_400"
+fontsize="$cs_fontsize_15"
+textcolor="$cs_color_text"
+/>
 <action id="screen_contents_onload"
 value="
 	$setvar(
@@ -135,40 +149,24 @@ value="
 	   			layout_vertical="bottom"
 	   		>
 	   			<label
-	   				width="$this.remain_right"
-	   				height="$cs_height_34"
-	   				textcolor="$cs_color_black"
-	   				fontsize="$cs_fontsize_24"
-	   				fontname="$cs_font_600"
+	   				class="cs_1013_100_title"
 	   				value="$g_save_acnt_name님 명의의 계좌로"
 	   			/>
 	   			<br/>
 	   			<label
-	   				width="$this.remain_right"
-	   				height="$cs_height_34"
-	   				textcolor="$cs_color_black"
-	   				fontsize="$cs_fontsize_24"
-	   				fontname="$cs_font_600"
+	   				class="cs_1013_100_title"
 	   				value="1원을 보내드려요"
 	   			/>
 	   		</viewgroup>
 		</viewgroup>
 		<br height="$cs_height_10"/>
 		<label
-			width="$this.remain_right"
-			height="$cs_height_22"
-			fontname="$cs_font_400"
-			fontsize="$cs_fontsize_15"
-			textcolor="$cs_color_text"
+			class="cs_1013_100_account_info"
 			value="금융기관 : $g_save_bank_name"
 		/>
 		<br/>
 		<label
-			width="$this.remain_right"
-			height="$cs_height_22"
-			fontname="$cs_font_400"
-			fontsize="$cs_fontsize_15"
-			textcolor="$cs_color_text"
+			class="cs_1013_100_account_info"
 			value="계좌번호 : $g_save_acnt_no"
 		/>
 		<br height="$cs_height_86"/>

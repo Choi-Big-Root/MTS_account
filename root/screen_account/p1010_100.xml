@@ -1,3 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<class id="cs_1010_100_title"
+width="$this.remain_right"
+height="$cs_height_34"
+textcolor="$cs_color_black"
+fontsize="$cs_fontsize_24"
+fontname="$cs_font_600"
+/>
+
+<class id="cs_1010_100_input_vg"
+width="$this.remain_right"
+height="$cs_height_76"
+border_width="1"
+border_radius="$cs_radius_10"
+border_color="$cs_color_line"
+margin_right="$cs_width_20"
+margin_left="$cs_width_20"
+margin_top="$cs_height_18"
+margin_bottom="$cs_height_18"
+/>
+
+<class id="cs_1010_100_input_lbl"
+width="$this.remain_right"
+height="$cs_height_14"
+fontname="$cs_font_400"
+fontsize="$cs_fontsize_12"
+textcolor="$cs_color_text"
+/>
+
 <action id="screen_contents_onload"
 value="
 	$setvar(
@@ -224,42 +254,22 @@ value="
 	   			layout_vertical="bottom"
 	   		>
 	   			<label
-	   				width="$this.remain_right"
-	   				height="$cs_height_34"
-	   				textcolor="$cs_color_black"
-	   				fontsize="$cs_fontsize_24"
-	   				fontname="$cs_font_600"
+	   				class="cs_1010_100_title"
 	   				value="$g_IN_AGREE_CLNT_NM님 명의의"
 	   			/>
 	   			<br/>
 	   			<label
-	   				width="$this.remain_right"
-	   				height="$cs_height_34"
-	   				textcolor="$cs_color_black"
-	   				fontsize="$cs_fontsize_24"
-	   				fontname="$cs_font_600"
+	   				class="cs_1010_100_title"
 	   				value="계좌정보를 입력해주세요"
 	   			/>
 	   		</viewgroup>
 		</viewgroup>
 		<br height="$cs_height_20" />
 		<viewgroup
-			width="$this.remain_right"
-			height="$cs_height_76"
-			border_width="1"
-			border_radius="$cs_radius_10"
-			border_color="$cs_color_line"
-			margin_right="$cs_width_20"
-			margin_left="$cs_width_20"
-			margin_top="$cs_height_18"
-			margin_bottom="$cs_height_18"
+			class="cs_1010_100_input_vg"
 		>
 			<label
-				width="$this.remain_right"
-				height="$cs_height_14"
-				fontname="$cs_font_400"
-				fontsize="$cs_fontsize_12"
-				textcolor="$cs_color_text"
+				class="cs_1010_100_input_lbl"
 				value="금융기관"
 			/>
 			<br/>
@@ -275,22 +285,11 @@ value="
 		</viewgroup>
 		<br height="$cs_height_20" />
 		<viewgroup
-			width="$this.remain_right"
-			height="$cs_height_76"
-			border_width="1"
-			border_radius="$cs_radius_10"
-			border_color="$cs_color_line"
-			//margin_right="$cs_width_20"
-			margin_left="$cs_width_20"
-			margin_top="$cs_height_18"
-			margin_bottom="$cs_height_18"
+			class="cs_1010_100_input_vg"
+			margin_right=""
 		>
 			<label
-				width="$this.remain_right"
-				height="$cs_height_14"
-				fontname="$cs_font_400"
-				fontsize="$cs_fontsize_12"
-				textcolor="$cs_color_text"
+				class="cs_1010_100_input_lbl"
 				value="계좌번호"
 			/>
 			<br/>

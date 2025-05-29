@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<class id="cs_1005_100_title"
+width="$this.remain_right"
+height="$cs_height_34"
+textcolor="$cs_color_black"
+fontsize="$cs_fontsize_24"
+fontname="$cs_font_600"
+/>
 <class id="cs_lbl_1005_100_title_1"
 width="$this.remain_right"
 height="$cs_height_24"
@@ -258,20 +266,12 @@ value="
    			layout_vertical="bottom"
    		>
    			<label
-   				width="$this.remain_right"
-   				height="$cs_height_34"
-   				textcolor="$cs_color_black"
-   				fontsize="$cs_fontsize_24"
-   				fontname="$cs_font_600"
+   				class="cs_1005_100_title"
    				value="안전한 금융거래를 위해"
    			/>
    			<br/>
    			<label
-   				width="$this.remain_right"
-   				height="$cs_height_34"
-   				textcolor="$cs_color_black"
-   				fontsize="$cs_fontsize_24"
-   				fontname="$cs_font_600"
+   				class="cs_1005_100_title"
    				value="아래 내용을 확인해주세요"
    			/>
    		</viewgroup>

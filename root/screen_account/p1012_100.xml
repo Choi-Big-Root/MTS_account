@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 신분증 촬영 관련해서 라이센스 변경되면 그때 작업을 이어서 해야한다. -->
+
+<class id="cs_1012_100_input_info"
+width="$this.remain_right"
+height="$cs_height_14"
+fontname="$cs_font_400"
+fontsize="$cs_fontsize_12"
+textcolor="$cs_color_text"
+/>
+
+<class id="cs_1012_100_input_tf"
+width="$this.remain_right"
+height="$cs_height_24"
+fontname="$cs_font_400"
+fontsize="$cs_fontsize_16"
+textcolor="$cs_color_black"
+textcolor_disable="$cs_color_black"
+backcolor="$cs_color_white"
+backcolor_disable="$cs_color_white"
+/>
+
 <action id="screen_contents_onload" value="
 	$setvar(
 		,img_step_1.hidden=false
@@ -323,7 +342,6 @@ value="
 		<viewgroup
 			width="$this.remain_right"
 			height="$cs_height_307"
-			//backcolor="ff000022"
 			margin_left="$cs_width_20"
 			margin_right="$cs_width_20"
 			margin_top="$cs_height_18"
@@ -333,97 +351,54 @@ value="
 			border_color="$cs_color_line"
 		>
 			<label
-				width="$this.remain_right"
-				height="$cs_height_14"
-				fontname="$cs_font_400"
-				fontsize="$cs_fontsize_12"
-				textcolor="$cs_color_text"
+				class="cs_1012_100_input_info"
 				value="이름"
 			/>
 			<br/>
 			<textfield id="tf_1012_name"
-				width="$this.remain_right"
-				height="$cs_height_24"
-				fontname="$cs_font_400"
-				fontsize="$cs_fontsize_16"
-				textcolor="$cs_color_black"
+				class="cs_1012_100_input_tf"
 				keyboard_type="text"
-				backcolor="$cs_color_white"
-				backcolor_disable="$cs_color_disable"
 			/>
 			<br height="$cs_height_18" />
 			<hr height="1" backcolor="$cs_color_line"/>
 			<br height="$cs_height_18" />
 			<label
-				width="$this.remain_right"
-				height="$cs_height_14"
-				fontname="$cs_font_400"
-				fontsize="$cs_fontsize_12"
-				textcolor="$cs_color_text"
+				class="cs_1012_100_input_info"
 				value="주민등록번호"
 			/>
 			<br/>
 			<textfield id="tf_1012_jumin"
-				width="$this.remain_right"
-				height="$cs_height_24"
-				fontname="$cs_font_400"
-				fontsize="$cs_fontsize_16"
-				textcolor="$cs_color_black"
-				textcolor_disable="$cs_color_black"
+				class="cs_1012_100_input_tf"
 				input_type="number"
 				keyboard_type="number"
-				backcolor="$cs_color_white"
-				backcolor_disable="$cs_color_white"
 				enable="false"
 			/>
 			<br height="$cs_height_18" />
 			<hr height="1" backcolor="$cs_color_line"/>
 			<br height="$cs_height_18" />
 			<label id="lbl_1012_LicenceNumber"
-				width="$this.remain_right"
-				height="$cs_height_14"
-				fontname="$cs_font_400"
-				fontsize="$cs_fontsize_12"
-				textcolor="$cs_color_text"
+				class="cs_1012_100_input_info"
 				value="운전면허번호"
 			/>
 			<br/>
 			<textfield id="tf_1012_LicenceNumber"
-				width="$this.remain_right"
-				height="$cs_height_24"
-				fontname="$cs_font_400"
-				fontsize="$cs_fontsize_16"
-				textcolor="$cs_color_black"
-				textcolor_disable="$cs_color_black"
+				class="cs_1012_100_input_tf"
 				input_type="number"
 				keyboard_type="number"
-				backcolor="$cs_color_white"
-				backcolor_disable="$cs_color_white"
 				enable="false"
 			/>
 			<br height="$cs_height_18" />
 			<hr height="1" backcolor="$cs_color_line"/>
 			<br height="$cs_height_18" />
 			<label id="lbl_1012_date"
-				width="$this.remain_right"
-				height="$cs_height_14"
-				fontname="$cs_font_400"
-				fontsize="$cs_fontsize_12"
-				textcolor="$cs_color_text"
+				class="cs_1012_100_input_info"
 				value="발급일자"
 			/>
 			<br/>
 			<textfield id="tf_1012_date"
-				width="$this.remain_right"
-				height="$cs_height_24"
-				fontname="$cs_font_400"
-				fontsize="$cs_fontsize_16"
-				textcolor="$cs_color_black"
-				textcolor_disable="$cs_color_black"
+				class="cs_1012_100_input_tf"
 				input_type="number"
 				keyboard_type="number"
-				backcolor="$cs_color_white"
-				backcolor_disable="$cs_color_white"
 				enable="false"
 			/>
 		</viewgroup>
@@ -1116,5 +1091,5 @@ value="
 // 카메라 뷰에서 닫기 버튼 터치시 
 <action id="p_callback_camera_close" 
 value="
-	$callaction(btn_open_account_history_onClicked);
+	//$callaction(btn_open_account_history_onClicked);
 " />
