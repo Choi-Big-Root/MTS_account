@@ -814,10 +814,10 @@ value="	// 비대면 절차개선 - 2020.09.28
 				height="$h($g_lcdHeight,20)"
 				>
 				<br height="$h($g_lcdHeight,2)" /><blank width="$w($g_lcdWidth,3.5)"/>
-				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
+				<label width="$this.remain_right" height="$this.remain_bottom"
 					fontname="$g_baseFontName" 
 					fontsize="$g_fontSize_big1"
-					value="진위여부가 확인되지 않습니다." />
+					value="진위여부가 확인되지 않네요\n영상통화를 신청하시겠어요?" />
 			</viewgroup>
 		</viewgroup>
 		<br />
@@ -901,17 +901,17 @@ value="	// 비대면 절차개선 - 2020.09.28
 				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
 					fontname="$g_baseFontName" 
 					fontsize="$g_fontSize_big1"
-					value="영상통화 신청이 취소되었습니다." />
+					value="영상통화 신청이 취소되었어요." />
 				<br /><blank width="$w($g_lcdWidth,4)"/>
 				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
 					fontname="$g_baseFontName" 
 					fontsize="$g_fontSize_big1"
-					value="다음날 계좌이체방식으로 다시 신청해 " />
+					value="다음날 계좌이체방식으로" />
 				<br /><blank width="$w($g_lcdWidth,4)"/>
 				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
 					fontname="$g_baseFontName" 
 					fontsize="$g_fontSize_big1"
-					value="주시기 바랍니다." />
+					value="다시 신청해 주세요." />
 			</viewgroup>
 		</viewgroup>
 		<br />
@@ -1052,26 +1052,12 @@ value="	// 비대면 절차개선 - 2020.09.28
 					align="left" 
 					margin_left="$w($g_lcdWidth,3.2)"
 					valign="center"
-					value="신분증 인식에 실패하였습니다.\n영상통화로 진행하시겠습니까?" />
+					value="신분증 인식이 어려워요\n영상통화로 인증을 진행할까요?" />
 			</viewgroup>
 		</viewgroup>
 		<br />
 		<viewgroup height="$h($g_lcdHeight,10)" backcolor="ffffff">
 			<blank width="3.5%" />
-			<button 
-				width="45%" 
-				height="$result($super.height-$h($g_lcdHeight,1.5))" 
-				value="예" 
-				backcolor="bd3135"
-				backcolor_active="b8240c"
-				fontsize="$g_fontsize_big2"
-				fontname="$g_baseFontNameBold"
-				textcolor="ffffff"
-				textcolor_active="ffffff"
-				onclicked="$closescreen();
-				$callaction(Act_Open_Account_Move, 1018);"
-				/>
-			<blank width="3%" />
 			<button 
 				width="45%" 
 				height="$result($super.height-$h($g_lcdHeight,1.5))"
@@ -1086,6 +1072,21 @@ value="	// 비대면 절차개선 - 2020.09.28
 				textcolor_active="bd3135"
 				onclicked="btn_result_N_count_5_cancel_onClicked"
 				/>
+			<blank width="3%" />
+			
+			<button 
+				width="45%" 
+				height="$result($super.height-$h($g_lcdHeight,1.5))" 
+				value="영상통화 할게요" 
+				backcolor="bd3135"
+				backcolor_active="b8240c"
+				fontsize="$g_fontsize_big2"
+				fontname="$g_baseFontNameBold"
+				textcolor="ffffff"
+				textcolor_active="ffffff"
+				onclicked="$closescreen();
+				$callaction(Act_Open_Account_Move, 1018);"
+			/>
 			<!-- <blank width="3.5%" />
 			
 			<button 
