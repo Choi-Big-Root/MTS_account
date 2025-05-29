@@ -81,7 +81,7 @@ onLoad="screen_login_onload"
     fontsize="$cs_fontsize_24"
     textcolor="000000"
     />
-    <br height="$cs_height_15"/>
+    <br height="$cs_height_30"/>
     <viewgroup
     width="$cs_width_343" 
     height="$cs_height_250"
@@ -122,7 +122,7 @@ onLoad="screen_login_onload"
         "
         /> 
     </viewgroup>
-    <br height="$cs_height_10"/>
+    <br height="$cs_height_15"/>
     <viewgroup
     width="$cs_width_343" 
     height="$cs_height_150"
@@ -164,7 +164,7 @@ onLoad="screen_login_onload"
         //$callaction(Act_Open_Account_Popup, 1002);
         "/> 
     </viewgroup>
-    <br height="$cs_height_10"/>
+    <br height="$cs_height_30"/>
     <viewgroup
     width="$cs_width_343" 
     height="$cs_height_268"
@@ -209,6 +209,7 @@ onLoad="screen_login_onload"
         "
         />
     </viewgroup>
+    <br height="$cs_height_20"/>
 </screen>
 
 // 뒤로가기 버튼 클릭 
