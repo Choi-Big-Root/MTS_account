@@ -14,6 +14,30 @@ $readfile(plist/root/html/1002_100_3.html,1002_htmldata_3);
 $readfile(plist/root/html/1002_100_4.html,1002_htmldata_4);
 $readfile(plist/root/html/1002_100_5.html,1002_htmldata_5);
 "/>	
+
+<class id="cs_1002_100_title"
+width="$this.remain_right"
+height="$cs_height_34"
+textcolor="$cs_color_black"
+fontsize="$cs_fontsize_24"
+fontname="$cs_font_600"
+/>
+<class id="cs_1002_100_vg_input"
+width="$this.remain_right"
+height="$cs_height_76"
+margin_top="$cs_height_18"
+margin_bottom="$cs_height_18"
+margin_left="$cs_width_20"
+border_radius="$cs_radius_10"
+border_color="$cs_color_line"
+/>
+<class id="cs_1002_100_lbl_input_info"
+width="$this.remain_right"
+height="$cs_height_14"
+textcolor="$cs_color_text"
+fontsize="$cs_fontsize_12"
+fontname="$cs_font_400"
+/>
 <action id="screen_contents_onload" value="
 	$setvar(
 		,img_step_1.hidden=false
@@ -135,6 +159,7 @@ value="
     }
 
 "/>
+//디자인 시안에 맞게 작업했던 keypad 주석
 <!-- <action id="fnAccountKeypad_1002_100_confirm"
 value="
 	$log(최대근**************);
@@ -210,20 +235,12 @@ value="
 	   			layout_vertical="bottom"
 	   		>
 	   			<label
-	   				width="$this.remain_right"
-	   				height="$cs_height_34"
-	   				textcolor="$cs_color_black"
-	   				fontsize="$cs_fontsize_24"
-	   				fontname="$cs_font_600"
+	   				class="cs_1002_100_title"
 	   				value="본인 확인을 위해"
 	   			/>
 	   			<br/>
 	   			<label
-	   				width="$this.remain_right"
-	   				height="$cs_height_34"
-	   				textcolor="$cs_color_black"
-	   				fontsize="$cs_fontsize_24"
-	   				fontname="$cs_font_600"
+	   				class="cs_1002_100_title"
 	   				value="정보를 입력해 주세요."
 	   			/>
 	   		</viewgroup>
@@ -234,21 +251,11 @@ value="
 			height="$this.remain_bottom"
 		>
 			<viewgroup id="vg_1002_100_input_3"
-				width="$this.remain_right"
-				height="$cs_height_76"
-				margin_top="$cs_height_18"
-				margin_bottom="$cs_height_18"
-				margin_left="$cs_width_20"
-				border_radius="$cs_radius_10"
-				border_color="$cs_color_line"
+				class="cs_1002_100_vg_input"
 				hidden="true"
 			>
 				<label
-					width="$this.remain_right"
-					height="$cs_height_14"
-					textcolor="$cs_color_text"
-					fontsize="$cs_fontsize_12"
-					fontname="$cs_font_400"
+					class="cs_1002_100_lbl_input_info"
 					value="휴대폰번호"
 				/>
 				<br height="$cs_height_2" />
@@ -296,24 +303,14 @@ value="
 			</viewgroup>
 			<br height="$cs_height_20" />
 			<viewgroup id="vg_1002_100_input_2"
-				width="$this.remain_right"
-				height="$cs_height_76"
-				margin_top="$cs_height_18"
-				margin_bottom="$cs_height_18"
-				margin_left="$cs_width_20"
-				border_radius="$cs_radius_10"
-				border_color="$cs_color_line"
+				class="cs_1002_100_vg_input"
 				hidden="true"
 
 				x="$vg_1002_100_input_3.x"
 				y="$vg_1002_100_input_3.y"
 			>
 				<label
-					width="$this.remain_right"
-					height="$cs_height_14"
-					textcolor="$cs_color_text"
-					fontsize="$cs_fontsize_12"
-					fontname="$cs_font_400"
+					class="cs_1002_100_lbl_input_info"
 					value="주민등록번호"
 				/>
 				<br/>
@@ -340,23 +337,13 @@ value="
 			</viewgroup>
 			<br height="$cs_height_20" />
 			<viewgroup id="vg_1002_100_input_1"
-				width="$this.remain_right"
-				height="$cs_height_76"
-				margin_top="$cs_height_18"
-				margin_bottom="$cs_height_18"
-				margin_left="$cs_width_20"
-				border_radius="$cs_radius_10"
-				border_color="$cs_color_line"
+				class="cs_1002_100_vg_input"
 
 				x="$vg_1002_100_input_3.x"
 				y="$vg_1002_100_input_3.y"
 			>
 				<label
-					width="$this.remain_right"
-					height="$cs_height_14"
-					textcolor="$cs_color_text"
-					fontsize="$cs_fontsize_12"
-					fontname="$cs_font_400"
+					class="cs_1002_100_lbl_input_info"
 					value="이름"
 				/>
 				<br/>

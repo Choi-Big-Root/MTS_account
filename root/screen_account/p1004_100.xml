@@ -1,4 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<class id="cs_1004_100_title"
+width="$this.remain_right"
+height="$cs_height_34"
+textcolor="$cs_color_black"
+fontsize="$cs_fontsize_24"
+fontname="$cs_font_600"
+/>
+<class id="cs_1004_100_lbl_input_text"
+width="$this.remain_right"
+height="$cs_height_14"
+fontname="$cs_font_400"
+fontsize="$cs_fontsize_12"
+textcolor="$cs_color_text"
+/>
+<class id="cs_1004_100_tf_input_text"
+width="$this.remain_right" 
+height="$cs_height_24"
+fontname="$cs_font_400"
+fontsize="$cs_fontsize_16"
+textcolor="$cs_color_black"
+textcolor_active="$cs_color_black"
+textcolor_disable="$cs_color_black"
+textcolor_placeholder="$cs_color_disable"
+/>
+<class id="cs_1004_lbl_input_jikjang_text"
+width="$this.remain_right"
+height="$cs_height_24"
+fontname="$cs_font_400"
+fontsize="$cs_fontsize_16"
+textcolor="$cs_color_black"
+hidden="true"
+/>
 <action id="screen_contents_onload" value="
 	// 비대면 절차개선 - 2020.09.28
 	$setvar(
@@ -239,20 +272,12 @@ value="
 	   			layout_vertical="bottom"
 	   		>
 	   			<label
-	   				width="$this.remain_right"
-	   				height="$cs_height_34"
-	   				textcolor="$cs_color_black"
-	   				fontsize="$cs_fontsize_24"
-	   				fontname="$cs_font_600"
+	   				class="cs_1004_100_title"
 	   				value="직업 정보를"
 	   			/>
 	   			<br/>
 	   			<label
-	   				width="$this.remain_right"
-	   				height="$cs_height_34"
-	   				textcolor="$cs_color_black"
-	   				fontsize="$cs_fontsize_24"
-	   				fontname="$cs_font_600"
+	   				class="cs_1004_100_title"
 	   				value="입력해 주세요."
 	   			/>
 	   		</viewgroup>
@@ -270,11 +295,7 @@ value="
 			margin_bottom="$cs_height_25"
 		>
 			<label
-				width="$this.remain_right"
-				height="$cs_height_16"
-				fontname="$cs_font_400"
-				fontsize="$cs_fontsize_12"
-				textcolor="$cs_color_text"
+				class="cs_1004_100_lbl_input_text"
 				value="직업"
 			/>
 			<br/>
@@ -305,23 +326,12 @@ value="
 				height="$cs_height_40"
 			>
 				<label
-					width="$this.remain_right"
-					height="$cs_height_16"
-					fontname="$cs_font_400"
-					fontsize="$cs_fontsize_12"
-					textcolor="$cs_color_text"
+					class="cs_1004_100_lbl_input_text"
 					value="직장명"
 				/>
 				<br/>
 				<textfield id="tf_1004_jikjang_1"
-					width="$this.remain_right" 
-					height="$cs_height_24"
-					fontname="$cs_font_400"
-					fontsize="$cs_fontsize_16"
-					textcolor="$cs_color_black"
-					textcolor_active="$cs_color_black"
-					textcolor_disable="$cs_color_black"
-					textcolor_placeholder="$cs_color_disable"
+					class="cs_1004_100_tf_input_text"
 					align="left"
 					placeholder="직장명"
 					enable="false"
@@ -340,22 +350,13 @@ value="
 			height="$cs_height_40"
 			>
 				<label
-					width="$this.remain_right"
-					height="$cs_height_14"
-					fontname="$cs_font_400"
-					fontsize="$cs_fontsize_12"
-					textcolor="$cs_color_text"
+					class="cs_1004_100_lbl_input_text"
 					value="직장주소"
 					layout_vertical="top"
 				/>
 				<br/>
 				<textfield id="lbl_1004_jikjang_1"
-					width="$this.remain_right"
-					height="$cs_height_24"
-					fontname="$cs_font_400"
-					fontsize="$cs_fontsize_16"
-					textcolor="$cs_color_black"
-					textcolor_placeholder="$cs_color_disable"
+					class="cs_1004_100_tf_input_text"
 					placeholder="직장주소"
 					enable="false"
 					layout_vertical="bottom"
@@ -363,23 +364,13 @@ value="
 				<label id="lbl_1004_jikjang_2"
 					x="$lbl_1004_jikjang_1.x"
 					y="$lbl_1004_jikjang_1.y"
-					width="$this.remain_right"
-					height="$cs_height_24"
-					fontname="$cs_font_400"
-					fontsize="$cs_fontsize_16"
-					textcolor="$cs_color_black"
+					class="cs_1004_lbl_input_jikjang_text"
 					valign="center"
-					hidden="true"
 				/>
 				<label id="lbl_1004_jikjang_3"
 					x="$lbl_1004_jikjang_2.x"
 					y="$lbl_1004_jikjang_2.y"
-					width="$this.remain_right"
-					height="$cs_height_24"
-					fontname="$cs_font_400"
-					fontsize="$cs_fontsize_16"
-					textcolor="$cs_color_black"
-					hidden="true"
+					class="cs_1004_lbl_input_jikjang_text"
 				/>
 
 				<button id="btn_1004_jikjang_juso_search"

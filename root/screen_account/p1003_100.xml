@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<class id="cs_1003_100_title"
+width="$this.remain_right"
+height="$cs_height_34"
+textcolor="$cs_color_black"
+fontsize="$cs_fontsize_24"
+fontname="$cs_font_600"
+/>
+<class id="cs_1003_100_lbl_input_text"
+width="$this.remain_right"
+height="$cs_height_14"
+fontname="$cs_font_400"
+fontsize="$cs_fontsize_12"
+textcolor="$cs_color_text"
+/>
+<class id="cs_1003_100_jatek_text"
+width="$this.remain_right"
+height="$cs_height_24"
+fontname="$cs_font_400"
+fontsize="$cs_fontsize_16"
+textcolor="$cs_color_black"
+/>
 <action id="screen_contents_onload" value="
 	// 비대면 절차개선 - 2020.09.28
 	$setvar(
@@ -213,20 +234,12 @@ value="
 	   			layout_vertical="bottom"
 	   		>
 	   			<label
-	   				width="$this.remain_right"
-	   				height="$cs_height_34"
-	   				textcolor="$cs_color_black"
-	   				fontsize="$cs_fontsize_24"
-	   				fontname="$cs_font_600"
+	   				class="cs_1003_100_title"
 	   				value="$addstring($g_IN_AGREE_CLNT_NM,님의 정보를);"
 	   			/>
 	   			<br/>
 	   			<label
-	   				width="$this.remain_right"
-	   				height="$cs_height_34"
-	   				textcolor="$cs_color_black"
-	   				fontsize="$cs_fontsize_24"
-	   				fontname="$cs_font_600"
+	   				class="cs_1003_100_title"
 	   				value="입력해 주세요."
 	   			/>
 	   		</viewgroup>
@@ -244,11 +257,7 @@ value="
 			margin_bottom="$cs_height_25"
 		>
 			<label
-				width="$this.remain_right"
-				height="$cs_height_16"
-				fontname="$cs_font_400"
-				fontsize="$cs_fontsize_12"
-				textcolor="$cs_color_text"
+				class="cs_1003_100_lbl_input_text"
 				value="휴대전화번호"
 			/>
 			<br/>
@@ -267,21 +276,13 @@ value="
 				height="$cs_height_40"
 			>
 				<label
-					width="$this.remain_right"
-					height="$cs_height_14"
-					fontname="$cs_font_400"
-					fontsize="$cs_fontsize_12"
-					textcolor="$cs_color_text"
+					class="cs_1003_100_lbl_input_text"
 					value="자택주소"
 					layout_vertical="top"
 				/>
 				<br/>
 				<textfield id="lbl_1003_jatek_1"
-					width="$this.remain_right"
-					height="$cs_height_24"
-					fontname="$cs_font_400"
-					fontsize="$cs_fontsize_16"
-					textcolor="$cs_color_black"
+					class="cs_1003_100_jatek_text"
 					textcolor_placeholder="$cs_color_disable"
 					placeholder="자택주소"
 					enable="false"
@@ -290,22 +291,14 @@ value="
 				<label id="lbl_1003_jatek_2"
 					x="$lbl_1003_jatek_1.x"
 					y="$lbl_1003_jatek_1.y"
-					width="$this.remain_right"
-					height="$cs_height_24"
-					fontname="$cs_font_400"
-					fontsize="$cs_fontsize_16"
-					textcolor="$cs_color_black"
+					class="cs_1003_100_jatek_text"
 					valign="center"
 					hidden="true"
 				/>
 				<label id="lbl_1003_jatek_3"
 					x="$lbl_1003_jatek_2.x"
 					y="$lbl_1003_jatek_2.y"
-					width="$this.remain_right"
-					height="$cs_height_24"
-					fontname="$cs_font_400"
-					fontsize="$cs_fontsize_16"
-					textcolor="$cs_color_black"
+					class="cs_1003_100_jatek_text"
 					hidden="true"
 				/>
 
@@ -323,11 +316,7 @@ value="
 				height="$cs_height_40"
 			>
 				<label
-					width="$this.remain_right"
-					height="$cs_height_16"
-					fontname="$cs_font_400"
-					fontsize="$cs_fontsize_12"
-					textcolor="$cs_color_text"
+					class="cs_1003_100_lbl_input_text"
 					value="이메일"
 				/>
 				<br/>
