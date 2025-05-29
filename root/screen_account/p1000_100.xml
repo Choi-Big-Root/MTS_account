@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<class id="cs_1000_100_title"
+width="$this.remain_right"
+height="$cs_height_34"
+valign="center"
+fontname="$cs_font_600"
+fontsize="$cs_fontsize_24"
+textcolor="$cs_color_black"
+/>
+<class id="cs_1000_100_svg_1"
+width="$cs_height_50" 
+height="$cs_height_50"
+BACKGROUNDSVG_WIDTH="$cs_height_50"
+BACKGROUNDSVG_HEIGHT="$cs_height_50"
+backgroundimage_align="center"
+backgroundimage_align_vertical="center"
+/>
+<class id="cs_1000_100_contents_lbl_1"
+width="$this.remain_right"
+height="$cs_height_50" 
+fontname="$cs_font_400"
+fontsize="$cs_fontsize_16"
+textcolor="$cs_color_black"
+/>
+
 <action id="screen_contents_onload" value="
 	$setvar(g_is_open_account = true); // 안드로이드 키맵에서 쓰인다. 
 	$setvar(
@@ -36,22 +60,12 @@ value="
 			height="$cs_height_106"
 		>
 			<label
-				width="$this.remain_right"
-				height="$cs_height_34"
-				valign="center"
-				fontname="$cs_font_600"
-				fontsize="$cs_fontsize_24"
-				textcolor="$cs_color_black"
+				class="cs_1000_100_title"
 				value="미국주식옵션 종목"
 			/>
 			<br/>
 			<label
-				width="$this.remain_right"
-				height="$cs_height_34"
-				valign="center"
-				fontname="$cs_font_600"
-				fontsize="$cs_fontsize_24"
-				textcolor="$cs_color_black"
+				class="cs_1000_100_title"
 				value="5000+ 이상 거래가능."
 			/>
 			<br/>
@@ -68,65 +82,38 @@ value="
 		</viewgroup>
 		<br height="$cs_height_50" />
 		<label 
-			width="$cs_height_50" 
-			height="$cs_height_50" 
+			class="cs_1000_100_svg_1" 
         	BACKGROUNDSVG="$icon_icon_1"
 	        BACKGROUNDSVG_DISABLE="$icon_icon_1"
 	        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_1"
-	        BACKGROUNDSVG_WIDTH="$cs_height_50"
-	        BACKGROUNDSVG_HEIGHT="$cs_height_50"
-	        backgroundimage_align="center"
-	        backgroundimage_align_vertical="center"
 		/>
 		<blank width="$cs_width_15"/>
 		<label
-			width="$this.remain_right"
-			height="$cs_height_50" 
-			fontname="$cs_font_400"
-			fontsize="$cs_fontsize_16"
-			textcolor="$cs_color_black"
+			class="cs_1000_100_contents_lbl_1"
 			value="본인명의 휴대폰"
 		/>
 		<br height="$cs_height_30"/>
 		<label 
-			width="$cs_height_50" 
-			height="$cs_height_50" 
+			class="cs_1000_100_svg_1" 
 			BACKGROUNDSVG="$icon_icon_2"
 	        BACKGROUNDSVG_DISABLE="$icon_icon_2"
 	        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_2"
-	        BACKGROUNDSVG_WIDTH="$cs_height_50"
-	        BACKGROUNDSVG_HEIGHT="$cs_height_50"
-	        backgroundimage_align="center"
-	        backgroundimage_align_vertical="center"
 		/>
 		<blank width="$cs_width_15"/>
 		<label
-			width="$this.remain_right"
-			height="$cs_height_50" 
-			fontname="$cs_font_400"
-			fontsize="$cs_fontsize_16"
-			textcolor="$cs_color_black"
+			class="cs_1000_100_contents_lbl_1"
 			value="주민등록증 또는 운전면허증"
 		/>
 		<br height="$cs_height_30"/>
 		<label 
-			width="$cs_height_50" 
-			height="$cs_height_50" 
+			class="cs_1000_100_svg_1" 
 			BACKGROUNDSVG="$icon_icon_3"
 	        BACKGROUNDSVG_DISABLE="$icon_icon_3"
 	        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_3"
-	        BACKGROUNDSVG_WIDTH="$cs_height_50"
-	        BACKGROUNDSVG_HEIGHT="$cs_height_50"
-	        backgroundimage_align="center"
-	        backgroundimage_align_vertical="center"
 		/>
 		<blank width="$cs_width_15"/>
 		<label
-			width="$this.remain_right"
-			height="$cs_height_50" 
-			fontname="$cs_font_400"
-			fontsize="$cs_fontsize_16"
-			textcolor="$cs_color_black"
+			class="cs_1000_100_contents_lbl_1"
 			value="온라인에서 조회 가능한 금융계좌"
 		/>
 		<br/>
