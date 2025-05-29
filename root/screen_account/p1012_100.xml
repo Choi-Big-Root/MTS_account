@@ -1091,5 +1091,5 @@ value="
 // 카메라 뷰에서 닫기 버튼 터치시 
 <action id="p_callback_camera_close" 
 value="
-	//$callaction(btn_open_account_history_onClicked);
+	$callaction(btn_open_account_history_onClicked);
 " />
