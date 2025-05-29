@@ -412,9 +412,37 @@ value="
 			value="다음"
 			onclicked="$popscreen(popscreen_1002_100_info_open);"
 			enable="false"
+			//onclicked="fnTestContinueOrForFirst" 
 		/>
 	</viewgroup>
 </screen>
+
+//처음부터,이어하기 테스트 함수 존재하면 추후에도 편할것 같아 추가.
+<action id="fnTestContinueOrForFirst"
+value="
+	$setvar(tmp_pop_countinu_flag = true);
+	$setvar(
+		recvSSL_body_use_yn = Y
+	);
+
+	$log([$g_open_account_save][$getdiffday($g_open_account_save_date,$recvSSL_body_dt)][$strlen($g_open_account_save_date)]);
+
+	$logvar(
+		g_open_account_save
+	);
+
+	if($g_open_account_save > 1 
+		&& $getdiffday($g_open_account_save_date,$recvSSL_body_dt) <= 8
+		&& $strlen($g_open_account_save_date) > 1
+		&& $tmp_pop_countinu_flag
+		&& $isequal_string($recvSSL_body_use_yn,Y)
+	)
+	{
+		$callaction(Act_Open_Account_Move,1017);	// 이어하기,처음부터 선택화면으로..
+	}else{
+		$callaction(Act_Open_Account_Move,1003);	// 처음부터 순차진행
+	}
+"/>
 
 
 //통신사 선택 관련
