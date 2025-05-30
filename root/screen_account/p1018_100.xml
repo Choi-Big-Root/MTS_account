@@ -342,16 +342,20 @@ value="
 		/>
 		<br height="$cs_height_20" />
 		<label id="btn_1018_100_1"
-			width="$this.remain_right"
-			height="$cs_height_22"
-			fontname="$cs_font_500"
-			fontsize="$cs_fontsize_14"
-			textcolor="$cs_color_black"
+			width="$cs_width_220" 
+			height="$cs_height_54"
+			layout="center"
+			backcolor="$cs_color_main"
+			border_width="1"
+			border_radius="$cs_height_10"
+			textcolor="$cs_color_white"
+			fontname="$cs_font_700"
+			fontsize="$cs_fontsize_16"
 			align="center"
 			value="영상통화 요청해요"
 			onclicked="1018_videocall_onclicked" 
 		/>
-		<br height="$cs_height_64" />
+		<br height="$cs_height_32" />
 		<label
 			class="cs_1018_100_info_text_title"
 			value="영상통화 시작 전 확인해 주세요."
