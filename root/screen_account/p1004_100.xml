@@ -1064,6 +1064,10 @@ value="
 value="
 	$callaction(fnInputDataCheck_1004_100);
 "/>
+<action id="fnJikJangSearchTextClean"
+value="
+	$setvar(tf_popscreen_1004_choice_jikjang.value = );
+"/>
 <popscreen id="popscreen_1004_choice_jikjang"
 	width="$p_lcdWidth" 
 	height="$p_lcdHeight"
@@ -1150,7 +1154,7 @@ value="
 				BACKGROUNDSVG_HEIGHT="$cs_height_20"	
 				backgroundimage_align="center"
 				backgroundimage_align_vertical="center"
-				onclicked="$closescreen(popscreen_1002_phone_choice);" 
+				onclicked="fnJikJangSearchTextClean" 
 		    />
 		</viewgroup>
 		<br height="$cs_height_20" />
