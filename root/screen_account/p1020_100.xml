@@ -9,23 +9,30 @@
  **
  *********************************************************************************
  -->
- <class
- 	id="css_1020_select"
- 	groupid="btn_1020_100"
-	width="$w($g_lcdwidth,29.2)"
-	height="$h($g_lcdHeight,5.7)"
-	backcolor="ffffff"
-	border_color="dddfe0"
-	border_color_active="5b5d68"
-	border_width="$g_roundHeight"
-	border_radius="$w($g_lcdWidth,0.5)"
-	textcolor="999999"
-	textcolor_active="ffffff"
-	backcolor_active="5b5d68"
-	align="center"
-	onclicked="btn_1020_onclciked"
-	/>
-
+<class id="cs_1020_100_title"
+width="$this.remain_right"
+height="$cs_height_34"
+textcolor="$cs_color_black"
+fontsize="$cs_fontsize_24"
+fontname="$cs_font_600"
+/>
+<class id="cs_1020_select"
+groupid="btn_1020_100"
+width="$cs_width_112"
+height="$cs_height_36"
+backcolor="$cs_color_line"
+backcolor_active="$cs_color_main"
+border_width="1"
+border_radius="$cs_height_6"
+border_color="$cs_color_line"
+border_color_active="$cs_color_main"
+textcolor="$cs_color_black"
+textcolor_active="$cs_color_white"
+fontsize="$cs_fontsize_13"
+fontname="$cs_font_400"
+align="center"
+onclicked="btn_1020_onclciked"
+/>
 <action id="screen_contents_onload" value="
 	$setvar(
 		,img_step_1.hidden=false
@@ -34,30 +41,47 @@
 		,img_step_4.hidden=false
 		,img_step_5.hidden=false
 		,img_step_6.hidden=false
-		,img_step_7.hidden=false
+		,img_step_7.hidden=true
 		,img_step_8.hidden=true
-		,lbl_open_account_title.x=$w($g_lcdwidth,4.6) // 순서대로 오지 않을경우에 치우친다.
+
 		,lbl_account_title_step_1.hidden=true
 		,lbl_account_title_step_2.hidden=true
 		,lbl_account_title_step_3.hidden=true
 		,lbl_account_title_step_4.hidden=true
 		,lbl_account_title_step_5.hidden=true
 		,lbl_account_title_step_6.hidden=true
-		,lbl_account_title_step_7.hidden=true
+		,lbl_account_title_step_7.hidden=false
 		,lbl_account_title_step_8.hidden=false
-		,lbl_account_title_step_8.textcolor=ffffff
-		
-		,vg_account_title_step.hidden=false
-		,popscreen_open_account_history.hidden=true
+
+		,lbl_account_title_step_1.textcolor=$cs_color_disable
+		,lbl_account_title_step_2.textcolor=$cs_color_disable
+		,lbl_account_title_step_3.textcolor=$cs_color_disable
+		,lbl_account_title_step_4.textcolor=$cs_color_disable
+		,lbl_account_title_step_5.textcolor=$cs_color_disable
+		,lbl_account_title_step_6.textcolor=$cs_color_disable
+		,lbl_account_title_step_7.textcolor=$cs_color_black
+		,lbl_account_title_step_8.textcolor=$cs_color_disable
+
+
+		,lbl_account_title_step_1.fontname=$cs_font_400
+		,lbl_account_title_step_2.fontname=$cs_font_400
+		,lbl_account_title_step_3.fontname=$cs_font_400
+		,lbl_account_title_step_4.fontname=$cs_font_400
+		,lbl_account_title_step_5.fontname=$cs_font_400
+		,lbl_account_title_step_6.fontname=$cs_font_400
+		,lbl_account_title_step_7.fontname=$cs_font_600
+		,lbl_account_title_step_8.fontname=$cs_font_400
+
+
+		,vg_open_account_title.backcolor=FFFFFF
+		,popscreen_open_account_history.hidden=false
 		,popscreen_open_account_history_2.hidden=true
-		,popscreen_open_account_confirm.hidden=false
-		,popscreen_open_account_confirm.x=$w($g_lcdwidth,23)
-		,menu_num=1020		
+		,vg_account_title_step.hidden = false
+
+		,menu_num=1020
+
 		,1020_select_key1=false ,1020_select_key2=false ,1020_select_key3=false ,1020_select_key4=false ,1020_select_key5=false
 		,1020_select_key6=false ,1020_select_key7=false ,1020_select_key8=false);
-		//$setControlHidden(popscreen_open_account_history,true);
-		//$setControlHidden(popscreen_open_account_history_2,true);
-		//$setControlHidden(popscreen_open_account_confirm,false);
 
 	// 애드브릭스 테스트
 	$setvar(
@@ -71,6 +95,19 @@
 		
 "/>
 <action id="btn_1020_onclciked" value="
+	$setvar(
+		btn_1020_01.fontname = $cs_font_400
+		,btn_1020_02.fontname = $cs_font_400
+		,btn_1020_03.fontname = $cs_font_400
+		,btn_1020_04.fontname = $cs_font_400
+		,btn_1020_05.fontname = $cs_font_400
+		,btn_1020_06.fontname = $cs_font_400
+		,btn_1020_07.fontname = $cs_font_400
+
+		,$($this.id).fontname = $cs_font_600
+	);
+
+
 	$setvar(
 		lbl_1020_100_2.value = $this.value
 		,lbl_1020_100_2.key = $this.key
@@ -115,8 +152,7 @@ $logvar(
 		,tmp_RESV_EDDT
 	);
 	if($tmp_now >= $tmp_RESV_STDT){
-		//$alertaction(,,현재시간 이후로 예약이 가능합니다.,확인);
-		$callaction(fnPopover_AlertAction,,현재시간 이후로 예약이 가능합니다.,,확인);
+		$callaction(fnPopover_AlertAction,,현재시간 이후로 예약이 가능해요,,확인);
 		return;
 	}
 
@@ -221,7 +257,6 @@ value="
 		return;
 	}
 	$callaction(fnConfig_SetValue,g_save_open_tp,2);	// 1:역이체, 2:영상통화
-	//$alertaction(vg_1020_af_after_onClicked,,$lbl_1020_100_1.value $lbl_1020_100_2.value\n영상통화 예약 신청이 완료되었습니다.,확인,예약시간변경);
 	$callaction(fnPopover_AlertAction,vg_1020_af_after_onClicked,$lbl_1020_100_1.value $lbl_1020_100_2.value\n영상통화 예약 신청이 완료되었습니다.,확인,예약시간변경);
 
 " />
@@ -233,235 +268,277 @@ value="
 	}
 	return;
 "/>
-
+<action id="btn_pop_info_1020_100_onClicked"
+value="
+	$setvar(
+		tmp_pop_info_x_cal = $result($img_pop_info_1020.x_abs + $w($g_lcdwidth,0.6))
+		,tmp_pop_imfo_y_cal = $result($img_pop_info_1020.y_abs + $h($g_lcdHeight,2.6))
+	);
+	$callaction(popscreen_open_account_confirm_onclicked,$tmp_pop_info_x_cal,$tmp_pop_imfo_y_cal);
+"/>
 <screen id="screen_1020_100"
 	class="cs_screen_contents"
+	backcolor="$cs_color_white"
 	onload="screen_contents_onload"
+	onunload="screen_contents_onunload"
+	noscroll_height="true"
+	margin_top="$cs_screen_top_margin"
+	margin_bottom="$cs_screen_bottom_margin"
+	margin_left="$cs_screen_left_right_margin"
+	margin_right="$cs_screen_left_right_margin"
+>
+	<viewgroup
+		width="$this.remain_right"
+		height="$result($this.remain_bottom - $cs_height_54)"
 	>
-	<screen id="screen_1020_100"
-		backcolor="f5f5f5"
+		<viewgroup
+			width="$this.remain_right"
+			height="$cs_height_98"
 		>
-		<screen
-			height="$this.remain_bottom">
+			<label
+				width="$cs_width_60"
+				height="$cs_height_20"
+				fontsize="$cs_fontsize_15"
+				fontname="$cs_font_400"
+				textcolor="$cs_color_text"
+				align="left"
+				value="영상통화"
+			/>
+			<label 
+	        	id="img_pop_info_1020" 
+	        	width="$cs_height_20"
+	        	height="$cs_height_20"
+	            BACKGROUNDSVG="$icon_question"
+				BACKGROUNDSVG_DISABLE="$icon_question"
+				BACKGROUNDSVG_HIGHLIGHT="$icon_question"
+				BACKGROUNDSVG_WIDTH="$cs_height_20"
+				BACKGROUNDSVG_HEIGHT="$cs_height_20"
+				backgroundimage_align="center"
+				backgroundimage_align_vertical="center"
+				hidden="false"
+	        />
 			<viewgroup 
-				margin_left="$w($g_lcdWidth,6.3)"
-				width="$super.width"
-				height="$h($g_lcdHeight,7)" 
-				backcolor="ffffff"			
-				>			
-				<label 
-					height="$h($g_lcdHeight,7)" 
-					fontname="$g_baseFontNameBold" 
-					fontsize="$g_fontsize_big1" 
-					value="영상통화 예약" 
-					/>
-			</viewgroup>
-			<br/><hr backcolor="cccccc" /><br /><hr height="$getratio_height($g_lcdHeight,0)" backcolor="f1f1f1"/><br />
-			<br height="$h($g_lcdHeight,2)"/><blank width="$w($g_lcdwidth,4.4)"/>
-			<viewgroup 
-				//margin_left="$w($g_lcdwidth,2)"
-				width="$w($g_lcdwidth,92)" 
-				height="$h($g_lcdHeight,12)" 	
-				border_color="cccccc"
-				border_width="$g_roundHeight"		
-				>
-				<label 
-					margin_left="$w($g_lcdwidth,3)"
-					width="$w($g_lcdwidth,28)"
-					height="$result($super.height/2)" 
-					value="연락처"
-					textcolor="343c49"
-					fontsize="$g_fontsize_basic"
-					fontname="$g_baseFontNameBold"
-					backcolor="e5e5e5"
-					/>
-				<hr width="1" height="$result($super.height/2)" /> 
-				<label 
-					margin_left="$w($g_lcdwidth,3)"
-					width="$this.remain_right"
-					height="$result($super.height/2)" 
-					textcolor="343c49"
-					fontsize="$g_fontsize_basic"
-					backcolor="ffffff"
-					value="$formatstring(###-####-####,$g_IN_REQUEST_TEL_NUM)"
-					/>
-				<br/><hr/><br/>
-				<label 
-					margin_left="$w($g_lcdwidth,3)"
-					width="$w($g_lcdwidth,28)"
-					height="$result($super.height/2)" 
-					value="날짜"
-					textcolor="343c49"
-					fontsize="$g_fontsize_basic"
-					fontname="$g_baseFontNameBold"
-					backcolor="e5e5e5"
-					/>
-				<hr width="1" height="$result($super.height/2)"/> 
-				<viewgroup 
-					id="vg_combo_period"
-					width="$w($g_lcdwidth,64)"
-					height="$result($super.height/2)"
-					backcolor="ffffff"
-					>		
-					<label 
-						id="combo_period_1020"
-						margin_left="$w($g_lcdwidth,3)"
-						width="$w($g_lcdwidth,56)"
-						height="$super.height" 
-						textcolor="343c49"
-						fontsize="$g_fontsize_basic"
-						key="$now(yyyyMMdd)"
-						value="$formatstring(####-##-##,$this.key)"
-						/>
-						<viewgroup 
-							width="$w($g_lcdwidth,4)"
-							height="$h($g_lcdHeight,8)"	
-							>
-							<img id="img_1020_1" src="$icon_down" layout="center" y="$h($g_lcdHeight,2.3)"/>
-						</viewgroup>
-						<button class="cs_button_none" 
-						onClicked="$callaction(fnOpenDatePopover,100,50,combo_period_1020,fnComboDate_1020_Close,combo_period_1020);"/>
-				</viewgroup>
-			</viewgroup>
-			<br height="$h($g_lcdHeight,2.5)"/>	
+				x="0" 
+				width="$cs_width_80" 
+				height="$cs_height_20"
+			>
+		        <button id="btn_pop_info_1020_100" class="cs_button_none" onClicked="btn_pop_info_1020_100_onClicked"/>
+	   		</viewgroup>
+	   		<br/>
+	   		<viewgroup
+	   			width="$this.remain_right"
+	   			height="$cs_height_68"
+	   			layout_vertical="bottom"
+	   		>
+	   			<label
+	   				class="cs_1020_100_title"
+	   				value="영상통화 예약시간을"
+	   			/>
+	   			<br/>
+	   			<label
+	   				class="cs_1020_100_title"
+	   				value="선택해 주세요"
+	   			/>
+	   		</viewgroup>
+		</viewgroup>
+		<br height="$cs_height_20" />
+		<viewgroup
+			width="$this.remain_right"
+			height="$cs_height_153"
+			margin_left="$cs_width_20"
+			margin_right="$cs_width_20"
+			margin_top="$cs_height_18"
+			margin_bottom="$cs_height_18"
+			border_width="1"
+			border_radius="$cs_height_10"
+			border_color="$cs_color_line"
+		>
+			<label
+				width="$this.remain_right"
+				height="$cs_height_14"
+				fontname="$cs_font_400"
+				fontsize="$cs_fontsize_12"
+				textcolor="$cs_color_text"
+				value="연락처"
+			/>
+			<br/>
+			<label 
+				width="$this.remain_right"
+				height="$cs_height_26"
+				fontname="$cs_font_400"
+				fontsize="$cs_fontsize_16"
+				textcolor="$cs_color_black"
+				value="$formatstring(###-####-####,$g_IN_REQUEST_TEL_NUM)"
+			/>
+			<br height="$cs_height_18" />
+			<hr height="1" backcolor="$cs_color_line"/>
+			<br height="$cs_height_18" />
 			<viewgroup
-				margin_left="$w($g_lcdwidth,4)"
-				width="$super.width" 
-				height="$h($g_lcdHeight,30)" 		
-				>
-				<label 				
-					height="$h($g_lcdHeight,6)" 
-					fontname="$g_baseFontNameBold" 
-					value="영상통화-예약시간" 
-					/>
+				width="$this.remain_right"
+				height="$this.remain_bottom"
+			>
+				<label
+					width="$this.remain_right"
+					height="$cs_height_14"
+					fontname="$cs_font_400"
+					fontsize="$cs_fontsize_12"
+					textcolor="$cs_color_text"
+					value="날짜"
+				/>
 				<br/>
-				<button id="btn_1020_01"
-					class="css_1020_select"
-					value="09:00 ~ 10:00"	
-					select="true"
-					key="1"			
-					/>
-				<blank width="$w($g_lcdwidth,2.2)"/>
-				<button
-					class="css_1020_select"
-					value="10:00 ~ 11:00"
-					key="2"	
-					/>
-				<blank width="$w($g_lcdwidth,2.2)"/>
-				<button
-					class="css_1020_select"
-					value="11:00 ~ 12:00"
-					key="3"	
-					/>
-				<br height="$h($g_lcdHeight,2)"/>
-				<button
-					class="css_1020_select"
-					value="12:00 ~ 13:00"
-					key="4"	
-					/>
-				<blank width="$w($g_lcdwidth,2.2)"/>
-				<button
-					class="css_1020_select"
-					value="13:00 ~ 14:00"
-					key="5"						
-					/>
-				<blank width="$w($g_lcdwidth,2.2)"/>
-				<button
-					class="css_1020_select"
-					value="14:00 ~ 15:00"
-					key="6"	
-					/>
-				<br height="$h($g_lcdHeight,2)"/>
-				<button
-					class="css_1020_select"
-					value="15:00 ~ 16:00"
-					key="7"	
-					/>
-			</viewgroup>
-			<br height="$h($g_lcdHeight,2)"/><blank width="$w($g_lcdwidth,4.4)"/>
-			<viewgroup 
-				//margin_left="$w($g_lcdwidth,2)"
-				width="$w($g_lcdwidth,92)" 
-				height="$h($g_lcdHeight,12)" 	
-				border_color="cccccc"
-				border_width="$g_roundHeight"	
-				backcolor="ffffff"	
-				>
-				<label 
-					margin_left="$w($g_lcdwidth,3)"
-					width="$w($g_lcdwidth,28)"
-					height="$result($super.height/2)" 
-					value="신청일"
-					textcolor="343c49"
-					fontsize="$g_fontsize_basic"
-					fontname="$g_baseFontNameBold"
-					/>
-				<label
-					id="lbl_1020_100_1" 
-					margin_left="$w($g_lcdwidth,3)"
-					width="$this.remain_right"
-					height="$result($super.height/2)" 
-					textcolor="343c49"
-					align="right"
-					margin_right="$w($g_lcdwidth,4)"
-					fontsize="$g_fontsize_basic"
-					value="$combo_period_1020.value"
-					/>
-				<br/><hr/><br/>
-				<label 
-					margin_left="$w($g_lcdwidth,3)"
-					width="$w($g_lcdwidth,28)"
-					height="$result($super.height/2)" 
-					value="시간"
-					textcolor="343c49"
-					fontsize="$g_fontsize_basic"
-					fontname="$g_baseFontNameBold"
-					/>
-				<label
-					id="lbl_1020_100_2" 
-					margin_left="$w($g_lcdwidth,3)"
-					width="$this.remain_right"
-					height="$result($super.height/2)" 
-					textcolor="343c49"
-					align="right"
-					margin_right="$w($g_lcdwidth,4)"
-					fontsize="$g_fontsize_basic"
-					key="$btn_1020_01.key"
-					value="$btn_1020_01.value"
-					/>
-			</viewgroup>
-			<br height="$h($g_lcdHeight,4)"/><blank width="$w($g_lcdwidth,4.4)"/>
-			<button 
-				id="btn_1020_bf"
-				fontsize="$g_fontsize_big2" 
-				y="$result($this.remain_bottom-$h($g_lcdHeight,13.4))"
-				width="$w($g_lcdwidth,42)" 
-				height="$h($g_lcdHeight,9.4)" 
-				backcolor="ffffff"
-				border_width="$g_roundHeight"
-				border_color="e33433"
-				backcolor_active="e5e5e5"
-				textcolor="e33433"
-				textcolor_active="e33433"
-				value="취소" 
-				onclicked="btn_open_account_history_onClicked"
+				<label id="combo_period_1020" 
+					height="$cs_height_26"
+					fontname="$cs_font_400"
+					fontsize="$cs_fontsize_16"
+					textcolor="$cs_color_black"
+					BACKGROUNDSVG="$icon_polygon_3"
+			        BACKGROUNDSVG_DISABLE="$icon_polygon_3"
+			        BACKGROUNDSVG_HIGHLIGHT="$icon_polygon_3"
+			        BACKGROUNDSVG_WIDTH="$cs_width_10"
+			        BACKGROUNDSVG_HEIGHT="$cs_height_8"
+			        backgroundimage_align="right"
+			        backgroundimage_align_vertical="top"
+
+					key="$now(yyyyMMdd)"
+					value="$formatstring(####-##-##,$this.key)"
 				/>
-			<blank width="$w($g_lcdWidth,1.8)"/>
-			<button 
-				id="btn_1020_af"
-				y="$result($this.remain_bottom-$h($g_lcdHeight,13.4))"
-				fontsize="$g_fontsize_big2" 
-				width="$w($g_lcdwidth,48.2)" 
-				height="$h($g_lcdHeight,9.4)" 
-				backcolor="e33433"
-				border_width="$g_roundHeight"
-				backcolor_active="cc2f2e"
-				textcolor="ffffff"
-				textcolor_active="ffffff"
-				value="영상통화 예약 등록" 
-				onclicked="btn_1020_af_onclicked"
-				/>
-			<br height="$h($g_lcdHeight,4)"/>
-		</screen>
-	</screen>
+				<button class="cs_button_none" 
+				onClicked="$callaction(fnOpenDatePopover,100,50,combo_period_1020,fnComboDate_1020_Close,combo_period_1020);"/>
+			</viewgroup>
+		</viewgroup>
+		<br height="$cs_height_20" />
+		<viewgroup
+			width="$super.width" 
+			height="$cs_height_162" 		
+		>
+			<label 				
+				height="$cs_height_24" 
+				fontname="$cs_font_700"
+				fontsize="$cs_fontsize_14"
+				textcolor="$cs_color_text"
+				value="영상통화-예약시간" 
+			/>
+			<br height="$cs_height_20" />
+			<button id="btn_1020_01"
+				class="cs_1020_select"
+				fontname="$cs_font_600"
+				value="09:00 ~ 10:00"	
+				select="true"
+				key="1"			
+			/>
+			<blank width="$cs_width_5"/>
+			<button id="btn_1020_02"
+				class="cs_1020_select"
+				value="10:00 ~ 11:00"
+				key="2"	
+			/>
+			<blank width="$cs_width_5"/>
+			<button id="btn_1020_03"
+				class="cs_1020_select"
+				value="11:00 ~ 12:00"
+				key="3"	
+			/>
+			<br height="$cs_height_5"/>
+			<button id="btn_1020_04"
+				class="cs_1020_select"
+				value="12:00 ~ 13:00"
+				key="4"	
+			/>
+			<blank width="$cs_width_5"/>
+			<button id="btn_1020_05"
+				class="cs_1020_select"
+				value="13:00 ~ 14:00"
+				key="5"						
+			/>
+			<blank width="$cs_width_5"/>
+			<button id="btn_1020_06"
+				class="cs_1020_select"
+				value="14:00 ~ 15:00"
+				key="6"	
+			/>
+			<br height="$cs_height_5"/>
+			<button id="btn_1020_07"
+				class="cs_1020_select"
+				value="15:00 ~ 16:00"
+				key="7"	
+			/>
+		</viewgroup>
+		<br height="$cs_height_20" />
+		<hr height="1" backcolor="$cs_color_line"/>
+		<br height="$cs_height_20" />
+		<label 
+			width="$cs_width_90"
+			height="$cs_height_44" 
+			value="신청일"
+			textcolor="$cs_color_text"
+			fontsize="$cs_fontsize_13"
+			fontname="$cs_font_400"
+		/>
+		<label
+			id="lbl_1020_100_1" 
+			width="$this.remain_right"
+			height="$cs_height_44" 
+			textcolor="$cs_color_black"
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_16"
+			value="$combo_period_1020.value"
+		/>
+		<br/>
+		<label 
+			width="$cs_width_90"
+			height="$cs_height_44" 
+			value="시간"
+			textcolor="$cs_color_text"
+			fontsize="$cs_fontsize_13"
+			fontname="$cs_font_400"
+		/>
+		<label id="lbl_1020_100_2" 
+			width="$this.remain_right"
+			height="$cs_height_44" 
+			textcolor="$cs_color_black"
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_16"
+			key="$btn_1020_01.key"
+			value="$btn_1020_01.value"
+		/>
+	</viewgroup>
+	<br/>
+	<viewgroup
+		width="$cs_width_343"
+		height="$cs_height_54"
+		layout="center"
+		layout_vertical="bottom"
+	>
+		<button id="btn_1020_bf"
+			width="$cs_width_100" 
+			height="$this.remain_bottom"
+			layout="left"
+			backcolor="$cs_color_white"
+			border_width="1"
+			border_radius="$cs_height_10"
+			border_color="$cs_color_disable"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_black"
+			textcolor_active="$cs_color_black"
+			value="이전"
+			onClicked="btn_open_account_history_onClicked"
+		/>
+		<button id="btn_1020_af"
+			width="$cs_width_235" 
+			height="$this.remain_bottom"
+			layout="right"
+			backcolor="$cs_color_main"
+			backcolor_disable="$cs_color_main_disable"
+			border_width="1"
+			border_radius="$cs_height_10"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_white"
+			textcolor_active="$cs_color_white"
+			textcolor_disable="$cs_color_white"
+			value="예약 할게요"
+			onclicked="btn_1020_af_onclicked"
+		/>
+	</viewgroup>
 </screen>
