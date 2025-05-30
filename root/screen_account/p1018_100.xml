@@ -8,7 +8,44 @@
  **
  *********************************************************************************
  -->
-
+<class id="cs_1018_100_title"
+width="$this.remain_right"
+height="$cs_height_34"
+textcolor="$cs_color_black"
+fontsize="$cs_fontsize_24"
+fontname="$cs_font_600"
+/>
+<class id="cs_1018_100_info_text_lbl"
+width="$this.remain_right"
+height="$cs_height_22"
+margin_left="$cs_width_22"
+BACKGROUNDSVG="$icon_rectangle_230"
+BACKGROUNDSVG_DISABLE="$icon_rectangle_230"
+BACKGROUNDSVG_HIGHLIGHT="$icon_rectangle_230"
+BACKGROUNDSVG_WIDTH="$cs_height_4"
+BACKGROUNDSVG_HEIGHT="$cs_height_4"
+backgroundimage_x="$cs_width_13"
+backgroundimage_align="left"
+backgroundimage_align_vertical="center"
+fontname="$cs_font_400"
+fontsize="$cs_fontsize_14"
+textcolor="$cs_color_text"
+/>
+<class id="cs_1018_100_info_text_title"
+width="$this.remain_right"
+height="$cs_height_22"
+margin_left="$cs_width_19"
+BACKGROUNDSVG="$icon_exclamation_circle"
+BACKGROUNDSVG_DISABLE="$icon_exclamation_circle"
+BACKGROUNDSVG_HIGHLIGHT="$icon_exclamation_circle"
+BACKGROUNDSVG_WIDTH="$cs_height_16"
+BACKGROUNDSVG_HEIGHT="$cs_height_16"
+backgroundimage_align="left"
+backgroundimage_align_vertical="center"
+fontname="$cs_font_600"
+fontsize="$cs_fontsize_15"
+textcolor="$cs_color_gray_dark"
+/>
 <action id="screen_contents_onload" value="
 	$setvar(
 		,img_step_1.hidden=false
@@ -71,20 +108,18 @@
 
 <action id="1018_videocall_onclicked" 
 value="
-
+	//수정 서버에서 내려주는 시간으로 비교해서 진행해야한다.
 	if($now(HHmmss)<090000 || $now(HHmmss)>160000){
-		//$alertaction(1018_videocall_after,,영상통화 가능시간이 아닙니다.\n예약통화를 진행하시겠습니까?,취소,확인);
-		$callaction(fnPopover_AlertAction,1018_videocall_after,영상통화 가능시간이 아닙니다.\n예약통화를 진행하시겠습니까?,취소,확인);
+		$callaction(fnPopover_AlertAction,1018_videocall_after,영상통화 가능시간이 아니에요\n예약통화를 진행할까요?,취소,확인);
 	}else{
-		//$alertaction(1018_videocall_after_2,,영상통화를 진행하시겠습니까?,취소,확인);		
-		$callaction(fnPopover_AlertAction,1018_videocall_after_2,영상통화를 진행하시겠습니까?,취소,확인);
+		$callaction(fnPopover_AlertAction,1018_videocall_after_2,영상통화를 진행할까요?,취소,확인);
 	}
 "/>
 //영상 통화 신청
 <action id="fnSendSSL_MO_REQUEST" 
 value="	
 if($g_save_open_tp==1){	// 소액이체 신청한경우 알림창
-	$alert(,,이미 소액이체 계좌인증을 신청하셨습니다. 영상통화 신청을 원하시면 처음부터 다시 계좌개설을 진행해 주십시오.,확인,);
+	$callaction(fnPopover_AlertAction,,이미 소액이체 계좌인증을 신청하셨습니다. 영상통화 신청을 원하시면 처음부터 다시 계좌개설을 진행해 주십시오.,,확인);
 	return;
 }
 $logvar(
@@ -220,295 +255,208 @@ value="
 <action id="btn_1018_af_onclicked" value="
 	$callaction(Act_Open_Account_Move,1020);
 "/>
+<action id="btn_pop_info_1018_100_onClicked"
+value="
+	$setvar(
+		tmp_pop_info_x_cal = $result($img_pop_info_1018.x_abs + $w($g_lcdwidth,0.6))
+		,tmp_pop_imfo_y_cal = $result($img_pop_info_1018.y_abs + $h($g_lcdHeight,2.6))
+	);
+	$callaction(popscreen_open_account_confirm_onclicked,$tmp_pop_info_x_cal,$tmp_pop_imfo_y_cal);
+"/>
 <screen id="screen_1018_100"
 	class="cs_screen_contents"
-	backcolor="f1f1f1"
+	backcolor="$cs_color_white"
 	onload="screen_contents_onload"
+	onunload="screen_contents_onunload"
+	noscroll_height="true"
+	margin_top="$cs_screen_top_margin"
+	margin_bottom="$cs_screen_bottom_margin"
+	margin_left="$cs_screen_left_right_margin"
+	margin_right="$cs_screen_left_right_margin"
+>
+	<viewgroup
+		width="$this.remain_right"
+		height="$result($this.remain_bottom - $cs_height_54)"
 	>
-	<screen id="screen_1018_100"
-		class="cs_screen_contents"
-		backcolor="f1f1f1"
+		<viewgroup
+			width="$this.remain_right"
+			height="$cs_height_98"
 		>
-		<screen
-			height="$this.remain_bottom">
+			<label
+				width="$cs_width_60"
+				height="$cs_height_20"
+				fontsize="$cs_fontsize_15"
+				fontname="$cs_font_400"
+				textcolor="$cs_color_text"
+				align="left"
+				value="영상통화"
+			/>
+			<label 
+	        	id="img_pop_info_1018" 
+	        	width="$cs_height_20"
+	        	height="$cs_height_20"
+	            BACKGROUNDSVG="$icon_question"
+				BACKGROUNDSVG_DISABLE="$icon_question"
+				BACKGROUNDSVG_HIGHLIGHT="$icon_question"
+				BACKGROUNDSVG_WIDTH="$cs_height_20"
+				BACKGROUNDSVG_HEIGHT="$cs_height_20"
+				backgroundimage_align="center"
+				backgroundimage_align_vertical="center"
+				hidden="false"
+	        />
 			<viewgroup 
-				margin_left="$w($g_lcdWidth,6.3)"
-				width="$super.width"
-				height="$h($g_lcdHeight,7)" 
-				backcolor="ffffff"			
-				>			
-				<label 
-					height="$h($g_lcdHeight,7)" 
-					fontname="$g_baseFontNameBold" 
-					fontsize="$g_fontsize_big1" 
-					value="영상통화 요청 및 예약" 
-					textcolor="222222" 
-					/>
-			</viewgroup>
-			<br/><hr backcolor="cccccc" /><br /><hr height="$getratio_height($g_lcdHeight,0)" backcolor="f1f1f1"/><br />
-			<viewgroup
-				id="vg_1018_100"
-				width="$super.width"
-				height="$h($g_lcdHeight,48)"				
-				>
-				<img id="img_bg_videocall" src="$bg_img_videocall" layout_vertical="center" layout="center" imagesizefit="true"/>	
-				<button 
-					id="btn_1018_100_1"
-					layout="center"
-					width="$w($g_lcdwidth,63)" 
-					height="$h($g_lcdHeight,8)" 
-					y="$result($h($g_lcdHeight,45)-$h($g_lcdHeight,6))"
-					border_radius="$w($g_lcdWidth,0.5)"
-					backcolor="e33433"
-					backcolor_active="bd3135"
-					border_width="$g_roundHeight"
-					value="영상통화 요청" 
-					textcolor="ffffff"
-					textcolor_active="ffffff"
-					fontsize="$g_fontsize_big1"
-					fontname="$g_baseFontNameBold"
-					align="center"
-					onclicked="1018_videocall_onclicked" 
-					/>
-			</viewgroup>
-			<br height="$h($g_lcdHeight,2)"/><blank width="$w($g_lcdwidth,4.4)"/>
-			<viewgroup
-				width="$w($g_lcdwidth,92)" 
-				height="$h($g_lcdHeight,25)"
-				border_color="cccccc"
-				border_radius="$w($g_lcdWidth,0.5)"
-				backcolor="ffffff"
-				border_width="$g_roundHeight"
-				>
-				<label
-					margin_left="$w($g_lcdWidth,2)"
-					width="$w($g_lcdwidth,92)" 
-					height="$h($g_lcdHeight,7.9)"
-					value="실시간 영상통화를 통한 추가 본인 확인"
-					fontsize="$g_fontSize_basic" 
-					fontname="$g_baseFontNameBold"
-					backcolor="f9f9f9"
-					textcolor="3a3a3a"
-					margin_left="$w($g_lcdWidth,4.2)"
-					/>
-				<br/><hr /><br />
-				<br height="$h($g_lcdHeight,2)"/>
-				<blank width="$w($g_lcdWidth,4)" />
-				<label
-					//margin_left="$w($g_lcdWidth,2)"
-					width="$super.width" 
-					height="$h($g_lcdHeight,4)"
-					value="상담원과의 영상통화를 통해 본인 확인합니다."
-					fontsize="$g_fontSize_basic" 
-					textcolor="666666"
-					/>
-				<br/>
-				<blank width="$w($g_lcdWidth,4)" />
-				<label
-					//margin_left="$w($g_lcdWidth,2)"
-					width="$w($g_lcdwidth,33)" 
-					height="$h($g_lcdHeight,4)"
-					value="영상통화 가능시간 :"
-					fontsize="$g_fontSize_basic" 
-					textcolor="666666"
-					/>
-				<label
-					//margin_left="$w($g_lcdWidth,2)"
-					width="$this.remain_right" 
-					height="$h($g_lcdHeight,4)"
-					value="영업일 09:00 ~ 16:00"
-					fontsize="$g_fontSize_basic"
-					textcolor="e33433" 
-					/>
-				<br/>
-				<viewgroup
-					margin_left="$w($g_lcdwidth,4)"
-					width="$w($g_lcdwidth,9)"
-					height="$h($g_lcdHeight,3)"
-					>
-					<img 
-						id="img_1018_1"
-						width="$w($g_lcdwidth,6)"
-						height="$h($g_lcdHeight,3)"
-						src="$icon_note"
-						layout="center"
-						layout_vertical="center"
-						/>
-				</viewgroup>
-				<label 	
-					margin_left="$w($g_lcdwidth,4)"
-					width="$this.remain_right"
-					height="$h($g_lcdHeight,5.5)"
-					textcolor="999999"
-					layout="center"
-					fontsize="$g_fontSize_basic"
-					value="가능시간 이외 시간에는 예약통화를 설정하여\n진행 가능."/>
-			</viewgroup>
-			<br height="$h($g_lcdHeight,2)"/><blank width="$w($g_lcdWidth,4.4)" />		
-			<viewgroup
-				width="$w($g_lcdwidth,92)" 
-				height="$h($g_lcdHeight,40)"
-				border_color="cccccc"
-				border_radius="$w($g_lcdWidth,0.5)"
-				backcolor="ffffff"
-				border_width="$g_roundHeight"
-				>
-				<label
-					margin_left="$w($g_lcdWidth,4)"
-					width="$w($g_lcdwidth,92)" 
-					height="$h($g_lcdHeight,5)"
-					value="영상통화시 고객 확인 정보"
-					textcolor="e33433"
-					fontsize="$g_fontSize_basic" 
-					fontname="$g_baseFontNameBold"
-					/>
-				<br/><blank width="$w($g_lcdWidth,4)" />
-				<label
-					//margin_left="$w($g_lcdWidth,2)"
-					width="$super.width" 
-					height="$h($g_lcdHeight,4)"
-					value="1.실시간 고객님께서 촬영했던 신분증"
-					extcolor="666666"
-					fontsize="$g_fontSize_basic"
-					/>
-				<br/><blank width="$w($g_lcdWidth,4)" />
-				<label
-					//margin_left="$w($g_lcdWidth,2)"
-					width="$super.width" 
-					height="$h($g_lcdHeight,4)"
-					value="2.고객 개인정보(성명, 주소, 연락처 외)"
-					extcolor="666666"
-					fontsize="$g_fontSize_basic"
-					/>
-				<br/>
-				<viewgroup
-					margin_left="$w($g_lcdwidth,3.5)"
-					width="$w($g_lcdwidth,9)"
-					height="$h($g_lcdHeight,3.7)"
-					>
-					<img 
-						id="img_1018_2"
-						width="$w($g_lcdwidth,6)"
-						height="$h($g_lcdHeight,3.7)"
-						src="$icon_note"
-						layout="center"
-						layout_vertical="center"
-						/>
-				</viewgroup>
-					<label
-						margin_left="$w($g_lcdwidth,4)" 	
-						width="$this.remain_right"
-						height="$h($g_lcdHeight,3.7)"
-						textcolor="999999"
-						layout="center"
-						fontsize="$g_fontSize_basic"
-						value="반드시 본인만 가능합니다.(대리인 불가)"/>
-					<br/>
-				<viewgroup
-					margin_left="$w($g_lcdwidth,3.5)"
-					width="$w($g_lcdwidth,9)"
-					height="$h($g_lcdHeight,3.7)"
-					>
-					<img 
-						id="img_1018_3"
-						width="$w($g_lcdwidth,6)"
-						height="$h($g_lcdHeight,3.7)"
-						src="$icon_note"
-						layout="center"
-						layout_vertical="center"
-						/>
-				</viewgroup>
-					<label
-						margin_left="$w($g_lcdwidth,4)" 	
-						width="$this.remain_right"
-						height="$h($g_lcdHeight,6.5)"
-						textcolor="999999"
-						layout="center"
-						fontsize="$g_fontSize_basic"
-						value="신분증 사진이 심하게 훼손되는 등 육안으로\n확인이 어려운 경우 신규개설이 제한됩니다."/>
-				<br/>
-				<viewgroup
-					margin_left="$w($g_lcdwidth,3.5)"
-					width="$w($g_lcdwidth,9)"
-					height="$h($g_lcdHeight,3.2)"
-					>
-					<img 
-						id="img_1018_4"
-						width="$w($g_lcdwidth,6)"
-						height="$h($g_lcdHeight,3.2)"
-						src="$icon_note"
-						layout="center"
-						layout_vertical="center"
-						/>
-				</viewgroup>
-					<label
-						margin_left="$w($g_lcdwidth,4)" 	
-						width="$this.remain_right"
-						height="$h($g_lcdHeight,8.5)"
-						textcolor="999999"
-						layout="center"
-						fontsize="$g_fontSize_basic"
-						value="단기다수계좌 개설자, 개인정보 노출자,자금세탁\n혐의자 등은 모바일을 통한 계좌개설을 할 수\n없습니다."/>
-				<br/>
-				<viewgroup
-					margin_left="$w($g_lcdwidth,3.5)"
-					width="$w($g_lcdwidth,9)"
-					height="$h($g_lcdHeight,3.7)"
-					>
-					<img 
-						id="img_1018_5"
-						width="$w($g_lcdwidth,5)"
-						height="$h($g_lcdHeight,3.7)"
-						src="$icon_note"
-						layout="center"
-						layout_vertical="center"
-						/>
-				</viewgroup>
-					<label
-						margin_left="$w($g_lcdwidth,4)" 	
-						width="$this.remain_right"
-						height="$h($g_lcdHeight,6.5)"
-						textcolor="999999"
-						layout="center"
-						fontsize="$g_fontSize_basic"
-						value="일부 저사양 단말기에서는 서비스 이용이\n제한될 수 있습니다."/>
-			</viewgroup>
-						
-		<br height="$h($g_lcdHeight,4)"/>
-		<blank width="$w($g_lcdWidth,4.4)" />
+				x="0" 
+				width="$cs_width_80" 
+				height="$cs_height_20"
+			>
+		        <button id="btn_pop_info_1018_100" class="cs_button_none" onClicked="btn_pop_info_1018_100_onClicked"/>
+	   		</viewgroup>
+	   		<br/>
+	   		<viewgroup
+	   			width="$this.remain_right"
+	   			height="$cs_height_68"
+	   			layout_vertical="bottom"
+	   		>
+	   			<label
+	   				class="cs_1018_100_title"
+	   				value="상담원과 영상통화로"
+	   			/>
+	   			<br/>
+	   			<label
+	   				class="cs_1018_100_title"
+	   				value="본인 확인을 할게요"
+	   			/>
+	   		</viewgroup>
+		</viewgroup>
+		<br height="$cs_height_41" />
+		<label
+			width="$this.remain_right"
+			height="$cs_height_140"
+			BACKGROUNDSVG="$icon_request_call"
+			BACKGROUNDSVG_DISABLE="$icon_request_call"
+			BACKGROUNDSVG_HIGHLIGHT="$icon_request_call"
+			BACKGROUNDSVG_WIDTH="$cs_width_220"
+			BACKGROUNDSVG_HEIGHT="$cs_height_140"
+			backgroundimage_align="center"
+			backgroundimage_align_vertical="center"
+		/>
+		<br height="$cs_height_20" />
+		<label id="btn_1018_100_1"
+			width="$this.remain_right"
+			height="$cs_height_22"
+			fontname="$cs_font_500"
+			fontsize="$cs_fontsize_14"
+			textcolor="$cs_color_black"
+			align="center"
+			value="영상통화 요청해요"
+			onclicked="1018_videocall_onclicked" 
+		/>
+		<br height="$cs_height_64" />
+		<label
+			class="cs_1018_100_info_text_title"
+			value="영상통화 시작 전 확인해 주세요."
+		/>
+		<br height="$cs_height_9" />
+		<label
+			class="cs_1018_100_info_text_lbl"
+			value="훼손되지 않은 실물신분증을 준비해주세요."
+		/>
+		<br/>
+		<label
+			class="cs_1018_100_info_text_lbl"
+			value="반드시 본인만 개설이 가능해요.(대리인 불가)"
+		/>
+		<br/>
+		<label
+			class="cs_1018_100_info_text_lbl"
+			value="고객님의 개인정보(성명, 생년월일 등)를 확인해요."
+		/>
+		<br/>
+		<label
+			class="cs_1018_100_info_text_lbl"
+			value="단기다수계좌 개설자, 개인정보 노출자, 자금세탁"
+		/>
+		<br/>
+		<label
+			class="cs_1018_100_info_text_lbl"
+			BACKGROUNDSVG=""
+			BACKGROUNDSVG_DISABLE=""
+			BACKGROUNDSVG_HIGHLIGHT=""
+			BACKGROUNDSVG_WIDTH=""
+			BACKGROUNDSVG_HEIGHT=""
+			backgroundimage_x=""
+			backgroundimage_align=""
+			backgroundimage_align_vertical=""
+			value="혐의자 등은 비대면 계좌개설을 할 수 없어요."
+		/>
+		<br/>
+		<label
+			class="cs_1018_100_info_text_lbl"
+			value="일부 저사양 단말기에서는 개설이 어려울 수 있어요."
+		/>
+
+		<br height="$cs_height_20" />
+		<label
+			class="cs_1018_100_info_text_title"
+			value="영상통화 가능시간을 확인해 주세요."
+		/>
+		<br height="$cs_height_9" />
+		<label
+			class="cs_1018_100_info_text_lbl"
+			width="$cs_width_120"
+			value="영상통화 가능시간 : "
+		/>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_22"
+			fontname="$cs_font_700"
+			fontsize="$cs_fontsize_14"
+			textcolor="$cs_color_black"
+			value="영업일 9:00 ~ 16:00"
+		/>
+		<br/>
+		<label
+			class="cs_1018_100_info_text_lbl"
+			value="가능시간 외에는 영상통화 예약만 가능해요"
+		/>
+	</viewgroup>
+	<br/>
+	<viewgroup
+		width="$cs_width_343"
+		height="$cs_height_54"
+		layout="center"
+		layout_vertical="bottom"
+	>
 		<button 
-			id="btn_1018_bf"
-			fontsize="$g_fontsize_big3" 
-			//y="$result($this.remain_bottom-$h($g_lcdHeight,13.4))"
-			width="$w($g_lcdwidth,45.1)" 
-			height="$h($g_lcdHeight,9.4)" 
-			backcolor="ffffff"
-			border_width="$g_roundHeight"
-			border_color="e33433"
-			backcolor_active="e5e5e5"
-			textcolor="e33433"
-			textcolor_active="e33433"
-			value="이전" 
-			onclicked="btn_open_account_history_onClicked"
-			/>
-		<blank width="$w($g_lcdWidth,1.8)"/>
-		<button 
-			id="btn_1018_af"
-			//y="$result($this.remain_bottom-$h($g_lcdHeight,13.4))"
-			fontsize="$g_fontsize_big3" 
-			width="$w($g_lcdwidth,45.1)" 
-			height="$h($g_lcdHeight,9.4)" 
-			backcolor="e33433"
-			border_width="$g_roundHeight"
-			backcolor_active="cc2f2e"
-			textcolor="ffffff"
-			textcolor_active="ffffff"
-			value="영상통화 예약" 
+			width="$cs_width_100" 
+			height="$this.remain_bottom"
+			layout="left"
+			backcolor="$cs_color_white"
+			border_width="1"
+			border_radius="$cs_height_10"
+			border_color="$cs_color_disable"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_black"
+			textcolor_active="$cs_color_black"
+			value="이전"
+			onClicked="btn_open_account_history_onClicked"
+		/>
+		<button id="btn_1018_af"
+			width="$cs_width_235" 
+			height="$this.remain_bottom"
+			layout="right"
+			backcolor="$cs_color_main"
+			backcolor_disable="$cs_color_main_disable"
+			border_width="1"
+			border_radius="$cs_height_10"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_white"
+			textcolor_active="$cs_color_white"
+			textcolor_disable="$cs_color_white"
+			value="영상통화 예약해요"
 			onclicked="btn_1018_af_onclicked"
-			//backcolor_disable="bfbfbf"
-			//textcolor_disable="999999"
-			/>
-		<br height="$h($g_lcdHeight,4)"/>
-		</screen>
-	</screen>
+		/>
+	</viewgroup>
 </screen>
