@@ -8,6 +8,22 @@
  **
  *********************************************************************************
  -->
+<class id="cs_1019_100_nomal_lbl"
+width="$this.remain_right" 
+height="$cs_height_24" 
+textcolor="$cs_color_text"
+fontsize="$cs_fontsize_15"
+fontname="$cs_font_400"
+align="center"
+/>
+<class id="cs_1019_100_blue_lbl"
+width="$this.remain_right" 
+height="$cs_height_24" 
+textcolor="$cs_color_main"
+fontsize="$cs_fontsize_15"
+fontname="$cs_font_400"
+align="center"
+/>
 <action id="screen_contents_onload" value="
 	$setvar(
 		,img_step_1.hidden=false
@@ -16,23 +32,43 @@
 		,img_step_4.hidden=false
 		,img_step_5.hidden=false
 		,img_step_6.hidden=false
-		,img_step_7.hidden=false
+		,img_step_7.hidden=true
 		,img_step_8.hidden=true
-		,lbl_open_account_title.x=$w($g_lcdwidth,4.6) // 순서대로 오지 않을경우에 치우친다.
+
 		,lbl_account_title_step_1.hidden=true
 		,lbl_account_title_step_2.hidden=true
 		,lbl_account_title_step_3.hidden=true
 		,lbl_account_title_step_4.hidden=true
 		,lbl_account_title_step_5.hidden=true
 		,lbl_account_title_step_6.hidden=true
-		,lbl_account_title_step_7.hidden=true
+		,lbl_account_title_step_7.hidden=false
 		,lbl_account_title_step_8.hidden=false
-		,lbl_account_title_step_8.textcolor=ffffff
-		,vg_account_title_step.hidden=false
-		,popscreen_open_account_history.hidden=true
+
+		,lbl_account_title_step_1.textcolor=$cs_color_disable
+		,lbl_account_title_step_2.textcolor=$cs_color_disable
+		,lbl_account_title_step_3.textcolor=$cs_color_disable
+		,lbl_account_title_step_4.textcolor=$cs_color_disable
+		,lbl_account_title_step_5.textcolor=$cs_color_disable
+		,lbl_account_title_step_6.textcolor=$cs_color_disable
+		,lbl_account_title_step_7.textcolor=$cs_color_black
+		,lbl_account_title_step_8.textcolor=$cs_color_disable
+
+
+		,lbl_account_title_step_1.fontname=$cs_font_400
+		,lbl_account_title_step_2.fontname=$cs_font_400
+		,lbl_account_title_step_3.fontname=$cs_font_400
+		,lbl_account_title_step_4.fontname=$cs_font_400
+		,lbl_account_title_step_5.fontname=$cs_font_400
+		,lbl_account_title_step_6.fontname=$cs_font_400
+		,lbl_account_title_step_7.fontname=$cs_font_600
+		,lbl_account_title_step_8.fontname=$cs_font_400
+
+
+		,vg_open_account_title.backcolor=FFFFFF
+		,popscreen_open_account_history.hidden=false
 		,popscreen_open_account_history_2.hidden=true
-		,popscreen_open_account_confirm.hidden=false
-		,popscreen_open_account_confirm.x=$w($g_lcdwidth,23)
+		,vg_account_title_step.hidden = false
+
 		,menu_num=1019
 	);
 
@@ -49,19 +85,25 @@
 	$setvar(tmp_1019_100_cnt = 0);		
 	$setnstimer(TIMER_MO_REQUEST,0.5,fnTIMER_MO_REQUEST,true);
 "/>
-
-<actiondata value="
-	$setvar(
-		lbl_1019_100_info = 영상통화요청이\n정상적으로 접수되셨습니다.\n영상통화 연결을 위해 푸시알림이 발송될 \n예정입니다. (예상 소요시간 10분)\n받으신 푸시알림을 확인하시면\n영상통화가 연결됩니다.
-	);
-" />
 <action id="fnTIMER_MO_REQUEST" 
 paramlog="false"
 value="
 	
 	//$setvar(tmp_1019_100_cnt = $result($tmp_1019_100_cnt + 1));
-	if($btn_1019_100_red.hidden){	$setvar(btn_1019_100_red.hidden = false);	}
-	else{							$setvar(btn_1019_100_red.hidden = true);	}
+	if($btn_1019_100_blue.hidden){	
+		$setvar(
+			btn_1019_100_blue.hidden = false
+			,btn_1019_100_blue2.hidden = false
+			,btn_1019_100_blue3.hidden = false
+		);	
+	}
+	else{
+		$setvar(
+			btn_1019_100_blue.hidden = true
+			,btn_1019_100_blue2.hidden = true
+			,btn_1019_100_blue3.hidden = true
+		);	
+	}
 "/>
 <action id="fnTIMER_MO_REQUEST_confirm" 
 params="p_btn_idx"
@@ -78,153 +120,218 @@ value="
 value="
 	$stopnstimer(TIMER_MO_REQUEST);
 "/>
-
+<action id="btn_pop_info_1019_100_onClicked"
+value="
+	$setvar(
+		tmp_pop_info_x_cal = $result($img_pop_info_1019.x_abs + $w($g_lcdwidth,0.6))
+		,tmp_pop_imfo_y_cal = $result($img_pop_info_1019.y_abs + $h($g_lcdHeight,2.6))
+	);
+	$callaction(popscreen_open_account_confirm_onclicked,$tmp_pop_info_x_cal,$tmp_pop_imfo_y_cal);
+"/>
 <screen id="screen_1019_100"
 	class="cs_screen_contents"
-	backcolor="e33433"
+	backcolor="$cs_color_white"
 	onload="screen_contents_onload"
-	onunload="screen_contents_onunload_1019"
+	onunload="screen_contents_onunload"
+	noscroll_height="true"
+	margin_top="$cs_screen_top_margin"
+	margin_bottom="$cs_screen_bottom_margin"
+	margin_left="$cs_screen_left_right_margin"
+	margin_right="$cs_screen_left_right_margin"
+>
+	<viewgroup
+		width="$this.remain_right"
+		height="$result($this.remain_bottom - $cs_height_54)"
 	>
-	<screen id="screen_1019_100"
-		backcolor="f1f1f1"
+		<label
+			width="$cs_width_60"
+			height="$cs_height_20"
+			fontsize="$cs_fontsize_15"
+			fontname="$cs_font_400"
+			textcolor="$cs_color_text"
+			align="left"
+			value="영상통화"
+		/>
+		<label 
+        	id="img_pop_info_1019" 
+        	width="$cs_height_20"
+        	height="$cs_height_20"
+            BACKGROUNDSVG="$icon_question"
+			BACKGROUNDSVG_DISABLE="$icon_question"
+			BACKGROUNDSVG_HIGHLIGHT="$icon_question"
+			BACKGROUNDSVG_WIDTH="$cs_height_20"
+			BACKGROUNDSVG_HEIGHT="$cs_height_20"
+			backgroundimage_align="center"
+			backgroundimage_align_vertical="center"
+			hidden="false"
+        />
+		<viewgroup 
+			x="0" 
+			width="$cs_width_80" 
+			height="$cs_height_20"
 		>
-		<screen
-			height="$this.remain_bottom">
-			<viewgroup 
-				margin_left="$w($g_lcdWidth,6.3)"
-				width="$super.width"
-				height="$h($g_lcdHeight,7)" 
-				backcolor="ffffff"			
-				>			
-				<label 
-					height="$h($g_lcdHeight,7)" 
-					fontname="$g_baseFontNameBold" 
-					fontsize="$g_fontsize_big1" 
-					value="영상통화 요청" 
-					textcolor="222222"
-					/>
-			</viewgroup>
-			<br/><hr backcolor="cccccc" /><br /><hr height="$getratio_height($g_lcdHeight,0)" backcolor="f1f1f1"/><br />
-			<viewgroup
-				id="vg_1019_100"
-				width="$super.width"
-				height="$h($g_lcdHeight,45)"
-				
-				>
-				<label 
-					id="btn_1019_100_1"
-					layout="center"
-					width="$w($g_lcdwidth,90)" 
-					height="$h($g_lcdHeight,20)" 
-					y="0"
-					value="$lbl_1019_100_info" 
-					textcolor="343c49"
-					fontsize="$g_fontsize_big2"
-					fontname="$g_baseFontNameBold"
-					align="center"
-					//backcolor="ff0000"
-					/>
-				<label 
-					id="btn_1019_100_red"
-					layout="center"
-					width="$w($g_lcdwidth,90)" 
-					height="$h($g_lcdHeight,20)" 
-					y="0"
-					value="$lbl_1019_100_info" 
-					textcolor="ff0000"
-					fontsize="$g_fontsize_big2"
-					fontname="$g_baseFontNameBold"
-					align="center"
-					//backcolor="ff0000"
-					/>
-				<img id="img_bg_videocall" src="$bg_img_videocall" layout_vertical="bottom" layout="center" imagesizefit="true"/>
-			</viewgroup>
-			<br height="$h($g_lcdHeight,2)"/><blank width="$w($g_lcdwidth,4.4)"/>
-			<viewgroup 
-				//margin_left="$w($g_lcdwidth,2)"
-				width="$w($g_lcdwidth,92)" 
-				//height="$h($g_lcdHeight,20)" 	
-				height="$h($g_lcdHeight,7)" 	
-				border_color="cccccc"
-				border_width="$g_roundHeight"		
-				>
-				<label 
-					margin_left="$getratio_width($g_lcdwidth,3)"
-					width="$result($super.width/2)"
-					//height="$result($super.height/3)" 
-					height="$this.remain_bottom" 
-					value="영상통화 가능시간" 
-					textcolor="343c49"
-					fontsize="$g_fontsize_basic"
-					fontname="$g_baseFontNameBold"
-					align="left"
-					backcolor="e5e5e5"
-					/>	
-				<hr width="1" height="$result($super.height/1)" /> 	
-				<label 
-					margin_left="$getratio_width($g_lcdwidth,3)"
-					width="$result($super.width/2)"
-					height="$this.remain_bottom" 
-					value="영업일 09:00 ~ 16:00" 
-					textcolor="343c49"
-					fontsize="$g_fontsize_basic"
-					align="left"/>
-				<br/><hr /><br/>
-			</viewgroup>
-			<br height="$h($g_lcdHeight,1)"/>
-			<viewgroup
-					margin_left="$w($g_lcdwidth,4)"
-					width="$w($g_lcdwidth,9)"
-					height="$h($g_lcdHeight,5.8)"
-					>
-					<img 
-						id="img_1019_1"
-						width="$w($g_lcdwidth,6)"
-						height="$h($g_lcdHeight,5.8)"
-						src="$icon_note"
-						layout="center"
-						layout_vertical="center"
-						/>
-				</viewgroup>
-				<label
-					margin_left="$w($g_lcdwidth,4)" 	
-					width="$this.remain_right"
-					height="$h($g_lcdHeight,10)"
-					textcolor="999999"
-					layout="center"
-					fontsize="$g_fontSize_basic"
-					value="통화 연결이 원활하지 않을 경우, 예약통화를 등록하시면\n고객님이 원하는 시간에 영상통화를 통한 계좌개설을\n하실수 있습니다."/>
-			<br height="$h($g_lcdHeight,4)"/><blank width="$w($g_lcdwidth,4.4)"/>
-			<button 
-				id="btn_1019_bf"
-				fontsize="$g_fontsize_big3" 
-				//y="$result($this.remain_bottom-$h($g_lcdHeight,13.4))"
-				width="$w($g_lcdwidth,45.1)" 
-				height="$h($g_lcdHeight,9.4)" 
-				backcolor="ffffff"
-				border_width="$g_roundHeight"
-				border_color="e33433"
-				backcolor_active="e5e5e5"
-				textcolor="e33433"
-				textcolor_active="e33433"
-				value="이전" 
-				onclicked="btn_open_account_history_onClicked"
-				/>
-			<blank width="$w($g_lcdWidth,1.8)"/>
-			<button 
-				id="btn_1019_af"
-				fontsize="$g_fontsize_big3" 
-				width="$w($g_lcdwidth,45.1)" 
-				height="$h($g_lcdHeight,9.4)" 
-				backcolor="e33433"
-				border_width="$g_roundHeight"
-				backcolor_active="cc2f2e"
-				textcolor="ffffff"
-				textcolor_active="ffffff"
-				value="영상통화 예약" 
-				onclicked="$callaction(Act_Open_Account_Move,1020);"
-				/>
-			<br height="$h($g_lcdHeight,4)"/>
-		</screen>
-	</screen>
+	        <button id="btn_pop_info_1019_100" class="cs_button_none" onClicked="btn_pop_info_1019_100_onClicked"/>
+   		</viewgroup>
+
+   		<br height="$cs_height_35" />
+   		<label 
+            width="$this.remain_right"
+            height="$cs_height_50" 
+            BACKGROUNDSVG="$icon_confirm_circle"
+            BACKGROUNDSVG_DISABLE="$icon_confirm_circle"
+            BACKGROUNDSVG_HIGHLIGHT="$icon_confirm_circle"
+            BACKGROUNDSVG_WIDTH="$cs_height_50"
+            BACKGROUNDSVG_HEIGHT="$cs_height_50"
+            backgroundimage_align="center"
+            backgroundimage_align_vertical="center"
+        />
+        <br height="$cs_height_30" />
+        <label
+        	width="$this.remain_right"
+        	height="$cs_height_28"
+        	fontname="$cs_font_600"
+        	fontsize="$cs_fontsize_20"
+        	textcolor="$cs_color_black"
+        	align="center"
+        	value="영상통화요청이"
+        />
+        <br/>
+        <label
+        	width="$this.remain_right"
+        	height="$cs_height_28"
+        	fontname="$cs_font_600"
+        	fontsize="$cs_fontsize_20"
+        	textcolor="$cs_color_black"
+        	align="center"
+        	value="정상적으로 접수되셨습니다."
+        />
+        <br height="$cs_height_10" />
+		<label 
+			id="btn_1019_100_1"
+			class="cs_1019_100_nomal_lbl"
+			value="영상통화 연결을 위해 푸시알림 발송될 예정입니다." 
+		/>
+		<br/>
+		<label 
+			id="btn_1019_100_2"
+			class="cs_1019_100_nomal_lbl"
+			value="(예상 소요시간 10분)" 
+		/>
+		<br/>
+		<label 
+			id="btn_1019_100_3"
+			class="cs_1019_100_nomal_lbl"
+			value="받으신 푸시알림을 확인하시면 영상통화가 연결됩니다." 
+		/>
+		<label 
+			id="btn_1019_100_blue"
+			class="cs_1019_100_blue_lbl"
+			x="$btn_1019_100_1.x"
+			y="$btn_1019_100_1.y"
+			value="영상통화 연결을 위해 푸시알림 발송될 예정입니다." 
+		/>
+		<label 
+			id="btn_1019_100_blue2"
+			class="cs_1019_100_blue_lbl"
+			x="$btn_1019_100_2.x"
+			y="$btn_1019_100_2.y"
+			value="(예상 소요시간 10분)" 
+		/>
+		<label 
+			id="btn_1019_100_blue3"
+			class="cs_1019_100_blue_lbl"
+			x="$btn_1019_100_3.x"
+			y="$btn_1019_100_3.y"
+			value="받으신 푸시알림을 확인하시면 영상통화가 연결됩니다." 
+		/>
+		<br height="$cs_height_30" />
+		<viewgroup
+			width="$this.remain_right"
+			height="$cs_height_44"
+			border_width="1"
+			border_color="$cs_color_bg"
+			border_radius="$cs_height_10"
+			backcolor="$cs_color_bg"
+		>
+			<label
+				width="50%"
+				height="$this.remain_bottom"
+				margin_left="$cs_width_45"
+				fontname="$cs_font_400"
+				fontsize="$cs_fontsize_15"
+				textcolor="$cs_color_black"
+				align="right"
+				value="· 영상통화 가능시간 : "
+			/>
+			<label
+				width="$this.remain_right"
+				height="$this.remain_bottom"
+				margin_left="$cs_width_4"
+				fontname="$cs_font_700"
+				fontsize="$cs_fontsize_15"
+				textcolor="$cs_color_main"
+				value="영업일 9:00 ~ 16:00"
+			/>
+		</viewgroup>
+		<br height="$cs_height_30" />
+		<label
+		width="$this.remain_right"
+		height="$cs_height_88"
+		margin_left="$cs_width_19"
+		BACKGROUNDSVG="$icon_exclamation_circle"
+		BACKGROUNDSVG_DISABLE="$icon_exclamation_circle"
+		BACKGROUNDSVG_HIGHLIGHT="$icon_exclamation_circle"
+		BACKGROUNDSVG_WIDTH="$cs_height_16"
+		BACKGROUNDSVG_HEIGHT="$cs_height_16"
+		backgroundimage_align="left"
+		backgroundimage_align_vertical="top"
+		backgroundimage_y="$cs_height_5"
+		valign="top"
+		multiline="true"
+		minfontsize="$cs_fontsize_15"
+		fontname="$cs_font_600"
+		fontsize="$cs_fontsize_15"
+		textcolor="$cs_color_gray_dark"
+		value="통화연결이 원활하지 않을 경우, 영상통화 예약을 신청해 주세요.신청해 주시면, 고객님이 원하시는 시간에 영상통화 계좌개설이 가능해요."
+		/>
+	</viewgroup>
+	<br/>
+	<viewgroup
+		width="$cs_width_343"
+		height="$cs_height_54"
+		layout="center"
+		layout_vertical="bottom"
+	>
+		<button id="btn_1019_bf"
+			width="$cs_width_100" 
+			height="$this.remain_bottom"
+			layout="left"
+			backcolor="$cs_color_white"
+			border_width="1"
+			border_radius="$cs_height_10"
+			border_color="$cs_color_disable"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_black"
+			textcolor_active="$cs_color_black"
+			value="이전"
+			onClicked="btn_open_account_history_onClicked"
+		/>
+		<button id="btn_1019_af"
+			width="$cs_width_235" 
+			height="$this.remain_bottom"
+			layout="right"
+			backcolor="$cs_color_main"
+			backcolor_disable="$cs_color_main_disable"
+			border_width="1"
+			border_radius="$cs_height_10"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_white"
+			textcolor_active="$cs_color_white"
+			textcolor_disable="$cs_color_white"
+			value="영상통화 예약해요"
+			onclicked="$callaction(Act_Open_Account_Move,1020);"
+		/>
+	</viewgroup>
 </screen>
