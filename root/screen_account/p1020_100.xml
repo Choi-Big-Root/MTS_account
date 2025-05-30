@@ -118,14 +118,14 @@ onclicked="btn_1020_onclciked"
 " />
 <action id="btn_1020_af_onclicked" 
 value="
-if($g_save_open_tp==1){	// 소액이체 신청한경우 알림창
-	$alert(,,이미 소액이체 계좌인증을 신청하셨습니다. 영상통화 신청을 원하시면 처음부터 다시 계좌개설을 진행해 주십시오.,확인,);
-	return;
-}
-$logvar(
- 	g_save_members_nm 		//추천인 성명
-	,g_save_members_no 		//추천인 사원번호
-);
+	if($g_save_open_tp==1){	// 소액이체 신청한경우 알림창
+		$callaction(fnPopover_AlertAction,,이미 소액이체 계좌인증을 신청하셨습니다. 영상통화 신청을 원하시면 처음부터 다시 계좌개설을 진행해 주십시오.,,확인);
+		return;
+	}
+	$logvar(
+	 	g_save_members_nm 		//추천인 성명
+		,g_save_members_no 		//추천인 사원번호
+	);
 	$log([$combo_period_1020.key],[$lbl_1020_100_2.key]);
 	if($lbl_1020_100_2.key == 1){	$setvar(tmp_STDT_start = 09, tmp_STDT_end = 10);	}
 	elseif($lbl_1020_100_2.key == 2){	$setvar(tmp_STDT_start = 10, tmp_STDT_end = 11);	}
@@ -136,8 +136,6 @@ $logvar(
 	elseif($lbl_1020_100_2.key == 7){	$setvar(tmp_STDT_start = 15, tmp_STDT_end = 16);	}
 	elseif($lbl_1020_100_2.key == 8){	$setvar(tmp_STDT_start = 16, tmp_STDT_end = 17);	}
 	
-
-
 	$setvar(
 		tmp_RESV_STDT = $addstring($combo_period_1020.key,$tmp_STDT_start)
 		,tmp_RESV_EDDT = $addstring($combo_period_1020.key,$tmp_STDT_end)
@@ -208,19 +206,12 @@ $logvar(
 	$json_setdata($jsonName,BODY,NEW_PW,,$g_IN_REQUEST_NEW_PW); 
 	$json_setdata($jsonName,BODY,PICTURE,,{});						// 실명증표
 	
-	//$base64_encode(frontImageEncryptData,frontImageEncryptData_base64);
-	//$base64_encode(frontImageData,frontImageEncryptData_base64);
-	//g_save_frontImageEncryptData_base64
 	$json_setdata($jsonName,BODY.PICTURE,IMAGE,,$g_save_frontImageEncryptData_base64); 					// 실명증표사진 - Base64
 	$json_setdata($jsonName,BODY.PICTURE,IDCARD_TYPE,,$g_IN_REQUEST_IDCARD_TYPE); 			// ID01: 주민등록증, ID02: 운전면허증
 	$json_setdata($jsonName,BODY.PICTURE,RMN_DATE,,$g_IN_REQUEST_RMN_DATE); 				// 주민등록증 발급일자
 	$json_setdata($jsonName,BODY.PICTURE,DRV_NO,,$g_IN_REQUEST_DRV_NO); 				// 운전면허번호
 	$json_setdata($jsonName,BODY.PICTURE,DRV_CODE,,$g_IN_REQUEST_DRV_CODE); 				// 운전면허증 암호일련번호
 
-// 비대면 절차개선 - 2020.09.28
-// === 역이체 인증 이후 개설 신청 - 추가
-	$log(진위여부 저장된 값 >> g_save_result_yn[$g_save_result_yn]);
-	//$json_setdata($jsonName,BODY.PICTURE,CHK_YN,,Y); 										// Y:진위여부체크함, N:진위여부체크하지 않음
 	$json_setdata($jsonName,BODY.PICTURE,CHK_YN,,$g_save_result_yn); 						// Y:진위여부체크함, N:진위여부체크하지 않음
 
 	$json_setdata($jsonName,BODY,OPEN_TP,,2); 							// 1:역이체, 2:영상통화
@@ -229,7 +220,6 @@ $logvar(
 	$json_setdata($jsonName,BODY,INOUT_DT,,$g_save_bsns_date); 			// 역이체 출금일자 YYYYMMDD
 	$json_setdata($jsonName,BODY,INOUT_NO,,$g_save_inout_no); 			// 역이체 출금번호
 	$json_setdata($jsonName,BODY,MAST_ACCTNO,,$g_save_mast_acctno); 	// 역이체 출금계좌번호(당사)
-// === 여기까지 추가완료
 
 	$json_print($jsonName);
 	$delvar(strSSLSendData);
@@ -253,11 +243,11 @@ value="
 		,recvSSL_hdr_msg 	
 	);
 	if(!$isequal_string($recvSSL_hdr_ret,OK)){
-		$alert(,,$recvSSL_hdr_msg);
+		$callaction(fnPopover_AlertAction,,$recvSSL_hdr_msg,,확인);
 		return;
 	}
 	$callaction(fnConfig_SetValue,g_save_open_tp,2);	// 1:역이체, 2:영상통화
-	$callaction(fnPopover_AlertAction,vg_1020_af_after_onClicked,$lbl_1020_100_1.value $lbl_1020_100_2.value\n영상통화 예약 신청이 완료되었습니다.,확인,예약시간변경);
+	$callaction(fnPopover_AlertAction,vg_1020_af_after_onClicked,$lbl_1020_100_1.value $lbl_1020_100_2.value\n영상통화 예약 신청이 완료되었어요,확인,예약시간변경);
 
 " />
 <action id="vg_1020_af_after_onClicked" 
