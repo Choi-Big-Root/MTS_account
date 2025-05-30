@@ -41,6 +41,7 @@
 
 		,icon_confirm_circle 		= $callaction(fnGetSvgIconPathName,confirm_circle)		
 
+		,icon_request_call 		= $callaction(fnGetSvgIconPathName,request_call)				
 
 		// login.xml 
 		,icon_ci 					= $callaction(fnGetSvgIconPathName,ci_1)
