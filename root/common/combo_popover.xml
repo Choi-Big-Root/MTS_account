@@ -126,7 +126,7 @@
 	else{
 		if($CALENDAR_ONDATESELECTED_PARAM4<$now(yyyyMMdd)){
 			//$alertaction(,,이전 날짜는 선택할 수 없습니다.,취소,확인);
-			$callaction(fnPopover_AlertAction,,이전 날짜는 선택할 수 없습니다.,,확인);
+			$callaction(fnPopover_AlertAction,,이전 날짜는 선택할 수 없어요.,,확인);
 			return;
 
 		}

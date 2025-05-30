@@ -93,7 +93,10 @@
 		,cs_fontsize_15 = $h($g_lcdHeight,1.9)
 		,cs_fontsize_16 = $h($g_lcdHeight,2.0)
 		,cs_fontsize_18 = $h($g_lcdHeight,2.3)
+		,cs_fontsize_20 = $h($g_lcdHeight,2.5)
+		,cs_fontsize_22 = $h($g_lcdHeight,2.7)
 		,cs_fontsize_24 = $h($g_lcdHeight,3.0)
+		,cs_fontsize_30 = $h($g_lcdHeight,3.7)
 	);	
 
 	/*
