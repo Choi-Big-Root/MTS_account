@@ -513,8 +513,6 @@ value="
 		width='$this.remain_right'
 		height='$super.height'
 		margin_bottom=''
-		nsrowline='true'
-		nsrowlinecolor='$cs_color_white'
 		>
 
 	);
@@ -523,49 +521,37 @@ value="
 		$setvar(
 			tmp_key 	= $getarrayvar($set_bank_name,$i,0)
 			,tmp_name 	= $getarrayvar($set_bank_name,$i,1)
-			,tmp_mod 	= $result($i%4)
+			,tmp_mod 	= $result($i%2)
 		);
 		$log(뭔데[$i][$tmp_mod][$tmp_name]);
 		
 		if($tmp_mod==0){
 			$add_parsetag_parent(screen_1010_menu_1,
-				<tr width='$super.width' height='$h($g_lcdHeight,13.8)' margin_bottom=''>
+				<tr width='$super.width' height='$h($g_lcdHeight,6)' margin_bottom=''>
 					<td width='$this.remain_right' height='$this.remain_bottom' backcolor='none' margin_bottom=''>
 			);
 		}
 
-		$setvar(
-			tmp_icon_path_id = $getvar($addstring(icon_bank_stock_,$tmp_key))
-		);
-
 		$add_parsetag_parent(screen_1010_menu_1,
-			<button id='btn_1010_$tmp_key' width='25%' height='$this.remain_bottom'
+			<button id='btn_1010_01' width='50%' height='$this.remain_bottom'
 			key='[[$tmp_key]]'
 			value='[[$tmp_name]]'
 			backcolor='$cs_color_white' backcolor_active='$cs_color_white'
 			textcolor='$cs_color_black' textcolor_active='$cs_color_black'
 			fontname='$cs_font_500'
 			fontsize='$cs_fontsize_14'
-			margin_top='$cs_height_10'
-			margin_bottom='$cs_height_10'
-			valign='bottom'
+			valign='center'
 			onclicked='btn_menu1_onclicked'
 			border_color_active='222222' 
 			border_width_active='2'
-
-			BACKGROUNDSVG='[[$tmp_icon_path_id]]'
-            BACKGROUNDSVG_DISABLE='[[$tmp_icon_path_id]]'
-            BACKGROUNDSVG_HIGHLIGHT='[[$tmp_icon_path_id]]'
-            BACKGROUNDSVG_WIDTH='$cs_height_50'
-            BACKGROUNDSVG_HEIGHT='$cs_height_50'
-            backgroundimage_align='center'
-            backgroundimage_align_vertical='top'
-            backgroundimage_y='$cs_height_13'
-			backcolor='ff000022'
 			/>
 		);
-		
-		if($tmp_mod==3){
+		if($tmp_mod==0){
+			$add_parsetag_parent(screen_1010_menu_1,
+				<hr width='1' height='$super.height'/>
+			);
+		}
+		if($tmp_mod==1){
 			$add_parsetag_parent(screen_1010_menu_1,
 					</td>
 				</tr>
@@ -687,7 +673,13 @@ onload="popscreen_1010_choice_onload"
 				<viewgroup
 					width="$this.remain_right"
 					height="$this.remain_bottom"
-					backcolor="$cs_color_white"
+					backcolor="$cs_color_line"
+					border_width="1"
+					border_radius="$cs_height_7"
+					margin_top="$cs_height_3"
+					margin_bottom="$cs_height_3"
+					margin_left="$cs_width_3"
+					margin_right="$cs_width_3"
 				>
 					<screen
 						id="screen_1010_menu_1"
