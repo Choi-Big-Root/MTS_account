@@ -538,8 +538,6 @@ value="	// 비대면 절차개선 - 2020.09.28
 
 	if(!$isequal_string($recvSSL_hdr_ret,OK)){
 		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
-		//$alertaction(,,$recv_error_msg,확인);
-		//$callaction(fnPopover_AlertAction,,$recv_error_msg,,확인);
 		$callaction(fnPopover_AlertAction,,$recvSSL_hdr_msg,,확인);
 		return;
 	}
@@ -678,411 +676,368 @@ value="	// 비대면 절차개선 - 2020.09.28
 
 
 <popscreen id="pop_caution1"
-	width="$g_lcdWidth" 
+	width="$p_lcdWidth" 
 	height="$p_lcdHeight"
-	//backcolor="0000ff"
-	modal="true"
-	modalbackcolor="#00000088"
 	layout="center"
 	layout_vertical="center"
-	onload=""
-	onclicked="$closescreen();"
-	key=""
-	>
-	<screen id="screen_comboAccountPopover"
-		width="$w($g_lcdWidth,88.3)"
-		//height="$h($g_lcdHeight,70)"
-		height="$h($g_lcdHeight,52.5)"
-		backcolor="none"
+	backcolor="00000060"
+>
+	<screen
+		width="$cs_width_300"
+		height="$cs_height_200"
+		backcolor="$cs_color_white"
 		layout="center"
 		layout_vertical="center"
 		noscroll_width="true"
-		>
-		<viewgroup 
-			width="$super.width"
-			height="$h($g_lcdHeight,8.6)"
-			backcolor="ffffff"
-			>
-			<label width="$super.width" height="$super.height" align="left" margin_left="$w($g_lcdWidth,3.2)" 
-			fontname="$g_baseFontNameBold"
-			fontsize="$g_fontsize_big2"
-			value="알림" />
-		</viewgroup>
-		<br/><hr backcolor="3c3c3c" /><br/>
-		<viewgroup 
-			width="$super.width"
-			//height="$h($g_lcdHeight,49)"
-			height="$h($g_lcdHeight,18)"
-			backcolor="ffffff"
-			>
-			<viewgroup
-				width="$super.width"
-				height="$h($g_lcdHeight,15)"
-				>
-				<br height="$h($g_lcdHeight,3)" /><blank width="$w($g_lcdWidth,4)"/>
-				<htmlview width="$w($g_lcdWidth,78.3)" height="$h($g_lcdHeight,12)" 
-					fontname="$g_baseFontName" 
-					fontsize="$g_fontSize_big1"
-					lineheight="$h($g_lcdHeight,3)"
-					VALUE_HTML_VAR="recvSSL_body_reject_reason"
-					/>
-
-			</viewgroup>
-		</viewgroup>
-		<br />
-		<viewgroup height="$h($g_lcdHeight,10)">
-			<button 
-				width="100%" 
-				height="$super.height" 
-				value="확인" 
-				backcolor="bd3135"
-				backcolor_active="b8240c"
-				fontsize="$g_fontsize_big2"
-				fontname="$g_baseFontNameBold"
-				textcolor="ffffff"
-				textcolor_active="ffffff"
-				onclicked="$closescreen();"
-				/>
-		</viewgroup>
+		border_width="1"
+		border_radius="$cs_height_20"
+		margin_left="$cs_width_25"
+		margin_right="$cs_width_25"
+		margin_top="$cs_height_25"
+		margin_bottom="$cs_height_25"
+	>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_24"
+			fontname="$cs_font_600"
+			fontsize="$cs_fontsize_16"
+			textcolor="$cs_color_black"
+			align="center"
+			value="$recvSSL_body_reject_reason"
+		/>
+		<br height="$cs_height_10" />
+		<label
+			width="$this.remain_right"
+			height="$cs_height_18"
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_13"
+			textcolor="$cs_color_black"
+			align="center"
+			value="신분증 재촬영 또는 입력정보를"
+		/>
+		<br/>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_18"
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_13"
+			textcolor="$cs_color_black"
+			align="center"
+			value="수정해주세요."
+		/>
+		<br/>
+		<button
+			width="$this.remain_right" 
+			height="$cs_height_50"
+			layout_vertical="bottom"
+			backcolor="$cs_color_main"
+			backcolor_disable="$cs_color_main_disable"
+			border_width="1"
+			border_radius="$cs_height_10"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_white"
+			textcolor_active="$cs_color_white"
+			textcolor_disable="$cs_color_white"
+			value="확인"
+			onClicked="$closescreen(pop_caution1);"
+		/>
 	</screen>
 </popscreen>
 <popscreen id="pop_caution2"
-	width="$g_lcdWidth" 
+	width="$p_lcdWidth" 
 	height="$p_lcdHeight"
-	//backcolor="0000ff"
-	modal="true"
-	modalbackcolor="#00000088"
 	layout="center"
 	layout_vertical="center"
-	onload=""
-	onclicked="$closescreen();"
-	key=""
-	>
-	<screen id="screen_comboAccountPopover"
-		width="$w($g_lcdWidth,88.3)"
-		//height="$h($g_lcdHeight,70)"
-		height="$h($g_lcdHeight,49.5)"
-		backcolor="none"
+	backcolor="00000060"
+>
+	<screen
+		width="$cs_width_300"
+		height="$cs_height_200"
+		backcolor="$cs_color_white"
 		layout="center"
 		layout_vertical="center"
 		noscroll_width="true"
+		border_width="1"
+		border_radius="$cs_height_20"
+		margin_left="$cs_width_25"
+		margin_right="$cs_width_25"
+		margin_top="$cs_height_47"
+		margin_bottom="$cs_height_25"
+	>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_26"
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_16"
+			textcolor="$cs_color_black"
+			align="center"
+			value="진위여부가 확인되지 않네요"
+		/>
+		<br/>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_26"
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_16"
+			textcolor="$cs_color_black"
+			align="center"
+			value="영상통화를 신청하시겠어요?"
+		/>
+		<br/>
+		<viewgroup
+			width="$this.remain_right" 
+			height="$cs_height_50"
+			layout_vertical="bottom"
 		>
-		<viewgroup 
-			width="$super.width"
-			height="$h($g_lcdHeight,8.6)"
-			backcolor="ffffff"
-			>
-			<label width="$super.width" height="$super.height" align="left" margin_left="$w($g_lcdWidth,3.2)" 
-			fontname="$g_baseFontNameBold"
-			fontsize="$g_fontsize_big2"
-			value="안내" />
-		</viewgroup>
-		<br/><hr backcolor="3c3c3c" /><br/>
-		<viewgroup 
-			width="$super.width"
-			//height="$h($g_lcdHeight,49)"
-			height="$h($g_lcdHeight,17)"
-			backcolor="ffffff"
-			>
-			<viewgroup
-				width="$super.width"
-				height="$h($g_lcdHeight,20)"
-				>
-				<br height="$h($g_lcdHeight,2)" /><blank width="$w($g_lcdWidth,3.5)"/>
-				<label width="$this.remain_right" height="$this.remain_bottom"
-					fontname="$g_baseFontName" 
-					fontsize="$g_fontSize_big1"
-					value="진위여부가 확인되지 않네요\n영상통화를 신청하시겠어요?" />
-			</viewgroup>
-		</viewgroup>
-		<br />
-		<viewgroup height="$h($g_lcdHeight,10)" backcolor="ffffff">
-			<blank width="3.5%" />
-			<button 
-				width="45%" 
-				height="$result($super.height-$h($g_lcdHeight,1.5))" 
-				value="영상통화 신청" 
-				backcolor="bd3135"
-				backcolor_active="b8240c"
-				fontsize="$g_fontsize_big2"
-				fontname="$g_baseFontNameBold"
-				textcolor="ffffff"
-				textcolor_active="ffffff"
+			<button
+				width="$cs_width_164" 
+				height="$this.remain_bottom"
+				layout="left"
+				backcolor="$cs_color_main"
+				backcolor_disable="$cs_color_main_disable"
+				border_width="1"
+				border_radius="$cs_height_10"
+				fontsize="$cs_fontsize_16"
+				fontname="$cs_font_700"
+				textcolor="$cs_color_white"
+				textcolor_active="$cs_color_white"
+				textcolor_disable="$cs_color_white"
+				value="영상통화 신청"
 				onclicked="$closescreen();
 				$callaction(Act_Open_Account_Move, 1018);"
-				/>
-			<blank width="3%" />
-			<button 
-				width="45%" 
-				height="$result($super.height-$h($g_lcdHeight,1.5))"
-				value="취소" 
-				backcolor="ffffff"
-				backcolor_active="e5e5e5"
-				border_width="$g_roundHeight"
-				border_color="bd3135"
-				fontsize="$g_fontsize_big2"
-				fontname="$g_baseFontNameBold"
-				textcolor="bd3135"
-				textcolor_active="bd3135"
+			/>
+
+			<button
+				width="$cs_width_80" 
+				height="$this.remain_bottom"
+				layout="right"
+				backcolor="$cs_color_line"
+				border_width="1"
+				border_radius="$cs_radius_10"
+				fontsize="$cs_fontsize_16"
+				fontname="$cs_font_700"
+				textcolor="$cs_color_black"
+				textcolor_active="$cs_color_black"
+				value="취소"
 				onclicked="$closescreen();
 				$popscreen(pop_caution5);"
-				/>
+			/>
 		</viewgroup>
 	</screen>
 </popscreen>
 <popscreen id="pop_caution5"
-	width="$g_lcdWidth" 
+	width="$p_lcdWidth" 
 	height="$p_lcdHeight"
-	//backcolor="0000ff"
-	modal="true"
-	modalbackcolor="#00000088"
 	layout="center"
 	layout_vertical="center"
-	onload=""
-	onclicked="$closescreen();"
-	key=""
-	>
-	<screen id="screen_comboAccountPopover"
-		width="$w($g_lcdWidth,88.3)"
-		//height="$h($g_lcdHeight,70)"
-		height="$h($g_lcdHeight,49.5)"
-		backcolor="none"
+	backcolor="00000060"
+>
+	<screen
+		width="$cs_width_300"
+		height="$cs_height_230"
+		backcolor="$cs_color_white"
 		layout="center"
 		layout_vertical="center"
 		noscroll_width="true"
-		>
-		<viewgroup 
-			width="$super.width"
-			height="$h($g_lcdHeight,8.6)"
-			backcolor="ffffff"
-			>
-			<label width="$super.width" height="$super.height" align="left" margin_left="$w($g_lcdWidth,3.2)" 
-			fontname="$g_baseFontNameBold"
-			fontsize="$g_fontsize_big2"
-			value="안내" />
-		</viewgroup>
-		<br/><hr backcolor="3c3c3c" /><br/>
-		<viewgroup 
-			width="$super.width"
-			//height="$h($g_lcdHeight,49)"
-			height="$h($g_lcdHeight,14)"
-			backcolor="ffffff"
-			>
-			<viewgroup
-				width="$super.width"
-				height="$h($g_lcdHeight,20)"
-				>
-				<br height="$h($g_lcdHeight,2)" /><blank width="$w($g_lcdWidth,4)"/>
-				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
-					fontname="$g_baseFontName" 
-					fontsize="$g_fontSize_big1"
-					value="영상통화 신청이 취소되었어요." />
-				<br /><blank width="$w($g_lcdWidth,4)"/>
-				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
-					fontname="$g_baseFontName" 
-					fontsize="$g_fontSize_big1"
-					value="다음날 계좌이체방식으로" />
-				<br /><blank width="$w($g_lcdWidth,4)"/>
-				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
-					fontname="$g_baseFontName" 
-					fontsize="$g_fontSize_big1"
-					value="다시 신청해 주세요." />
-			</viewgroup>
-		</viewgroup>
-		<br />
-		<viewgroup height="$h($g_lcdHeight,10)">
-			<button 
-				width="100%" 
-				height="$super.height" 
-				value="확인" 
-				backcolor="bd3135"
-				backcolor_active="b8240c"
-				fontsize="$g_fontsize_big2"
-				fontname="$g_baseFontNameBold"
-				textcolor="ffffff"
-				textcolor_active="ffffff"
-				onclicked="$closescreen();
-				$closescreen(popscreen_open_account);"
-				/>
-		</viewgroup>
+		border_width="1"
+		border_radius="$cs_height_20"
+		margin_left="$cs_width_25"
+		margin_right="$cs_width_25"
+		margin_top="$cs_height_49"
+		margin_bottom="$cs_height_25"
+	>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_26"
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_16"
+			textcolor="$cs_color_black"
+			align="center"
+			value="영상통화 신청이 취소되었어요"
+		/>
+		<br/>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_26"
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_16"
+			textcolor="$cs_color_black"
+			align="center"
+			value="다음날 계좌이체방식으로"
+		/>
+		<br/>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_26"
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_16"
+			textcolor="$cs_color_black"
+			align="center"
+			value="다시 신청해 주세요."
+		/>
+		<br/>
+		<button
+			width="$this.remain_right" 
+			height="$cs_height_50"
+			layout_vertical="bottom"
+			backcolor="$cs_color_main"
+			backcolor_disable="$cs_color_main_disable"
+			border_width="1"
+			border_radius="$cs_height_10"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_white"
+			textcolor_active="$cs_color_white"
+			textcolor_disable="$cs_color_white"
+			value="확인"
+			onclicked="$closescreen();
+			$closescreen(popscreen_open_account);"
+		/>
 	</screen>
 </popscreen>
+
 <popscreen id="pop_caution4"
-	width="$g_lcdWidth" 
+	width="$p_lcdWidth" 
 	height="$p_lcdHeight"
-	//backcolor="0000ff"
-	modal="true"
-	modalbackcolor="#00000088"
 	layout="center"
 	layout_vertical="center"
-	onload=""
-	onclicked="$closescreen();"
-	key=""
-	>
-	<screen id="screen_comboAccountPopover"
-		width="$w($g_lcdWidth,88.3)"
-		//height="$h($g_lcdHeight,70)"
-		height="$h($g_lcdHeight,49.5)"
-		backcolor="none"
+	backcolor="00000060"
+>
+	<screen
+		width="$cs_width_300"
+		height="$cs_height_200"
+		backcolor="$cs_color_white"
 		layout="center"
 		layout_vertical="center"
 		noscroll_width="true"
-		>
-		<viewgroup 
-			width="$super.width"
-			height="$h($g_lcdHeight,8.6)"
-			backcolor="ffffff"
-			>
-			<label width="$super.width" height="$super.height" align="left" margin_left="$w($g_lcdWidth,3.2)" 
-			fontname="$g_baseFontNameBold"
-			fontsize="$g_fontsize_big2"
-			value="안내" />
-		</viewgroup>
-		<br/><hr backcolor="3c3c3c" /><br/>
-		<viewgroup 
-			width="$super.width"
-			//height="$h($g_lcdHeight,49)"
-			height="$h($g_lcdHeight,10)"
-			backcolor="ffffff"
-			>
-			<viewgroup
-				width="$super.width"
-				height="$h($g_lcdHeight,20)"
-				>
-				<br height="$h($g_lcdHeight,2)" /><blank width="$w($g_lcdWidth,4)"/>
-				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
-					fontname="$g_baseFontName" 
-					fontsize="$g_fontSize_big1"
-					value="정보가 맞는지 다시 한번 확인후에" />
-				<br /><blank width="$w($g_lcdWidth,4)"/>
-				<label width="$this.remain_right" height="$h($g_lcdHeight,3)"
-					fontname="$g_baseFontName" 
-					fontsize="$g_fontSize_big1"
-					value="다음단계로 진행해주시기 바랍니다." />
-			</viewgroup>
-		</viewgroup>
-		<br />
-		<viewgroup height="$h($g_lcdHeight,10)">
-			<button 
-				width="100%" 
-				height="$super.height" 
-				value="확인" 
-				backcolor="bd3135"
-				backcolor_active="b8240c"
-				fontsize="$g_fontsize_big2"
-				fontname="$g_baseFontNameBold"
-				textcolor="ffffff"
-				textcolor_active="ffffff"
-				onclicked="$closescreen();"
-				/>
-		</viewgroup>
+		border_width="1"
+		border_radius="$cs_height_20"
+		margin_left="$cs_width_25"
+		margin_right="$cs_width_25"
+		margin_top="$cs_height_47"
+		margin_bottom="$cs_height_25"
+	>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_26"
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_16"
+			textcolor="$cs_color_black"
+			align="center"
+			value="정보가 맞는지 다시 한번 확인후에"
+		/>
+		<br/>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_26"
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_16"
+			textcolor="$cs_color_black"
+			align="center"
+			value="다음단계로 진행해주시기 바랍니다."
+		/>
+		<br/>
+		<button
+			width="$this.remain_right" 
+			height="$cs_height_50"
+			layout_vertical="bottom"
+			backcolor="$cs_color_main"
+			backcolor_disable="$cs_color_main_disable"
+			border_width="1"
+			border_radius="$cs_height_10"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_white"
+			textcolor_active="$cs_color_white"
+			textcolor_disable="$cs_color_white"
+			value="확인"
+			onclicked="$closescreen();"
+		/>
 	</screen>
 </popscreen>
+
 <popscreen id="pop_caution_result_N_count_5"
-	width="$g_lcdWidth" 
+	width="$p_lcdWidth" 
 	height="$p_lcdHeight"
-	//backcolor="0000ff"
-	modal="true"
-	modalbackcolor="#00000088"
 	layout="center"
 	layout_vertical="center"
-	onload=""
-	onclicked="$closescreen();"
-	key=""
-	>
-	<screen id="screen_comboAccountPopover"
-		width="$w($g_lcdWidth,88.3)"
-		//height="$h($g_lcdHeight,70)"
-		height="$h($g_lcdHeight,49.5)"
-		backcolor="none"
+	backcolor="00000060"
+>
+	<screen
+		width="$cs_width_300"
+		height="$cs_height_200"
+		backcolor="$cs_color_white"
 		layout="center"
 		layout_vertical="center"
 		noscroll_width="true"
+		border_width="1"
+		border_radius="$cs_height_20"
+		margin_left="$cs_width_25"
+		margin_right="$cs_width_25"
+		margin_top="$cs_height_47"
+		margin_bottom="$cs_height_25"
+	>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_26"
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_16"
+			textcolor="$cs_color_black"
+			align="center"
+			value="신분증 인식이 어려워요"
+		/>
+		<br/>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_26"
+			fontname="$cs_font_400"
+			fontsize="$cs_fontsize_16"
+			textcolor="$cs_color_black"
+			align="center"
+			value="영상통화로 인증을 진행할까요?"
+		/>
+		<br/>
+		<viewgroup
+			width="$this.remain_right" 
+			height="$cs_height_50"
+			layout_vertical="bottom"
 		>
-		<viewgroup 
-			width="$super.width"
-			height="$h($g_lcdHeight,8.6)"
-			backcolor="ffffff"
-			>
-			<label width="$super.width" height="$super.height" align="left" margin_left="$w($g_lcdWidth,3.2)" 
-			fontname="$g_baseFontNameBold"
-			fontsize="$g_fontsize_big2"
-			value="안내" />
-		</viewgroup>
-		<br/><hr backcolor="3c3c3c" /><br/>
-		<viewgroup 
-			width="$super.width"
-			//height="$h($g_lcdHeight,49)"
-			height="$h($g_lcdHeight,17)"
-			backcolor="ffffff"
-			>
-			<viewgroup
-				width="$super.width"
-				height="$h($g_lcdHeight,17)"
-				>
-				//<br height="$h($g_lcdHeight,2)" /><blank width="$w($g_lcdWidth,3.5)"/>
-				<label width="$this.remain_right" height="$this.remain_bottom"
-					fontname="$g_baseFontName" 
-					fontsize="$g_fontSize_big1"
-					align="left" 
-					margin_left="$w($g_lcdWidth,3.2)"
-					valign="center"
-					value="신분증 인식이 어려워요\n영상통화로 인증을 진행할까요?" />
-			</viewgroup>
-		</viewgroup>
-		<br />
-		<viewgroup height="$h($g_lcdHeight,10)" backcolor="ffffff">
-			<blank width="3.5%" />
-			<button 
-				width="45%" 
-				height="$result($super.height-$h($g_lcdHeight,1.5))"
-				value="아니요" 
-				backcolor="ffffff"
-				backcolor_active="e5e5e5"
-				border_width="$g_roundHeight"
-				border_color="bd3135"
-				fontsize="$g_fontsize_big2"
-				fontname="$g_baseFontNameBold"
-				textcolor="bd3135"
-				textcolor_active="bd3135"
+			<button
+				width="$cs_width_80" 
+				height="$this.remain_bottom"
+				layout="left"
+				backcolor="$cs_color_white"
+				backcolor_active="$cs_color_white"
+				border_width="1"
+				border_radius="$cs_radius_10"
+				border_color="$cs_color_main"
+				fontsize="$cs_fontsize_16"
+				fontname="$cs_font_700"
+				textcolor="$cs_color_main"
+				textcolor_active="$cs_color_main"
+				value="아니요"
 				onclicked="btn_result_N_count_5_cancel_onClicked"
-				/>
-			<blank width="3%" />
-			
-			<button 
-				width="45%" 
-				height="$result($super.height-$h($g_lcdHeight,1.5))" 
-				value="영상통화 할게요" 
-				backcolor="bd3135"
-				backcolor_active="b8240c"
-				fontsize="$g_fontsize_big2"
-				fontname="$g_baseFontNameBold"
-				textcolor="ffffff"
-				textcolor_active="ffffff"
+			/>
+			<button
+				width="$cs_width_164" 
+				height="$this.remain_bottom"
+				layout="right"
+				backcolor="$cs_color_main"
+				backcolor_disable="$cs_color_main_disable"
+				border_width="1"
+				border_radius="$cs_height_10"
+				fontsize="$cs_fontsize_16"
+				fontname="$cs_font_700"
+				textcolor="$cs_color_white"
+				textcolor_active="$cs_color_white"
+				textcolor_disable="$cs_color_white"
+				value="영상통화 할게요"
 				onclicked="$closescreen();
 				$callaction(Act_Open_Account_Move, 1018);"
 			/>
-			<!-- <blank width="3.5%" />
-			
-			<button 
-				width="93%" 
-				height="$result($super.height-$h($g_lcdHeight,1.5))"
-				value="취소" 
-				backcolor="ffffff"
-				backcolor_active="e5e5e5"
-				border_width="$g_roundHeight"
-				border_color="bd3135"
-				fontsize="$g_fontsize_big2"
-				fontname="$g_baseFontNameBold"
-				textcolor="bd3135"
-				textcolor_active="bd3135"
-				layout="center"
-				onclicked="$closescreen()"
-				/> -->
-
 		</viewgroup>
 	</screen>
-</popscreen>
 <action id="btn_result_N_count_5_cancel_onClicked"
 value="
 	$closescreen();
