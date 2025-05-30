@@ -124,40 +124,45 @@ value="
 "/>
 <action id="tf_1002_confirm_3_onChange"
 value="
-	$log($this.value);
-	$delvar(tmp_before_value,tmp_keypad_value,tmp_keypad_value_str_len);
-	$setvar(
-		tmp_id = $this.id
-		,tmp_keypad_value = $tmp_id.value
-		,tmp_keypad_value_str_len = $strlen($tmp_keypad_value)
-	);
-	$logvar(tmp_id, tmp_before_value);
-	if($tmp_keypad_value_str_len >= 13){
-		return;
+    $log($this.value,$this.id);
+
+    if($tmp_tf_phone_change_flag){
+    	$setvar(tmp_tf_phone_change_flag = false);
+    	return;
+    }
+    
+    if($strlen($this.value) <= 0 ){
+    	$closescreen(popscreen_1002_100_info_open);
+    	$setvar(btn_1002_af.enable = false);
+	}else{
+		$setvar(btn_1002_af.enable = true);
 	}
 
-	if($tmp_keypad_value_str_len == 4 && $tmp_first_phone_slash_flage){
-        $setvar(
-            ,$($tmp_id).value = $formatstring(###-#,$tmp_keypad_value)
-            ,tmp_first_phone_slash_flage = false
-        );
-    }elseif($tmp_keypad_value_str_len == 4 && !$tmp_first_phone_slash_flage){
-        $setvar(
-            ,$($tmp_id).value = $replace(-,,$tmp_keypad_value)
-            ,tmp_first_phone_slash_flage = true
-        );
-    }elseif($tmp_keypad_value_str_len == 9 && $tmp_second_phone_slash_flage){
-        $setvar( 
-            ,$($tmp_id).value = $formatstring(###-####-#,$replace(-,,$tmp_keypad_value))
-            ,tmp_second_phone_slash_flage = false
-        );
-    }elseif($tmp_keypad_value_str_len == 9 && !$tmp_second_phone_slash_flage){
-        $setvar(
-            ,$($tmp_id).value = $formatstring(###-####,$replace(-,,$tmp_keypad_value))
-            ,tmp_second_phone_slash_flage = true
-        );
+    // 13자리 이상이면 입력 제한
+    if($strlen($this.value) >= 13){
+        return;
     }
 
+    // 모든 하이픈 제거
+    $setvar(
+        tmp_clean_number = $replace(-,,$this.value)
+        ,tmp_tf_phone_change_flag = true
+    );
+    
+    // 번호 길이에 따라 포맷팅
+    if($strlen($tmp_clean_number) <= 3){
+    	$setvar(
+    		$($this.id).value = $tmp_clean_number
+    	);
+    }elseif($strlen($tmp_clean_number) <= 7){
+		$setvar(
+        	$($this.id).value = $formatstring(###-####,$tmp_clean_number)
+        );
+    }else{
+    	$setvar(
+        	$($this.id).value = $formatstring(###-####-####,$tmp_clean_number)
+        );
+    }
 "/>
 //디자인 시안에 맞게 작업했던 keypad 주석
 <!-- <action id="fnAccountKeypad_1002_100_confirm"
