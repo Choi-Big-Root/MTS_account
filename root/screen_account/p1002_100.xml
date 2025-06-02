@@ -124,7 +124,6 @@ value="
 "/>
 <action id="tf_1002_confirm_3_onChange"
 value="
-    $log($this.value,$this.id);
 
     if($tmp_tf_phone_change_flag){
     	$setvar(tmp_tf_phone_change_flag = false);
@@ -167,7 +166,6 @@ value="
 //디자인 시안에 맞게 작업했던 keypad 주석
 <!-- <action id="fnAccountKeypad_1002_100_confirm"
 value="
-	$log(최대근**************);
 	$setvar( 
 		tmp_af_result = $callaction(fnBtnAfConfirmCheck)
 		,btn_1002_af.enable = $tmp_af_result
@@ -417,12 +415,6 @@ value="
 		recvSSL_body_use_yn = Y
 	);
 
-	$log([$g_open_account_save][$getdiffday($g_open_account_save_date,$recvSSL_body_dt)][$strlen($g_open_account_save_date)]);
-
-	$logvar(
-		g_open_account_save
-	);
-
 	if($g_open_account_save > 1 
 		&& $getdiffday($g_open_account_save_date,$recvSSL_body_dt) <= 8
 		&& $strlen($g_open_account_save_date) > 1
@@ -440,7 +432,6 @@ value="
 //통신사 선택 관련
 <action id="1002_phone_onclicked" 
 value="
-	$log(선택:$this.key);
 	$popscreen(popscreen_1002_phone_choice);
 "/>
 
@@ -466,10 +457,6 @@ value="
 		,1002_phone_choice.value=$1002_phone_choice_set_val
 	);
 
-	$logvar(
-		1002_phone_select_key
-		,1002_phone_choice.value
-	);
 	if($1002_phone_select_key==1){ 		// skt,kt,lg : 1,2,3
 		$memcpy(1002_htmldata_phone,1002_htmldata_2);
 		$setvar(g_1002_html_phone = 1002_htmldata_2);
@@ -756,8 +743,6 @@ value="
 <action id="btn_essential_1002_100_onClicked"
 params="p_key"
 value="
-	$log(선택키:$p_key);
-	$log(선택동의서 : $vg_1002_100_agree_kind.selectkey );
 	$delvar(popscreen_html);
 	$setvar(
 		,tmp_btn_id			= $addstring(chk_1002_100_,$p_key)
@@ -900,7 +885,7 @@ value="
 		tmp_scroll_gap 		= $result($screen_html.SCROLL_HEIGHT - ($p_pos_y + $screen_html.HEIGHT))
 		,tmp_this_pos_y_1002 = $p_pos_y
 	);	
-	$logvar(tmp_scroll_gap);
+
 	if($tmp_scroll_gap <= 0	){
 		$setvar(
 			btn_1002_100_agree_bottom.hidden = true
@@ -1034,11 +1019,6 @@ value="
 	}
 
 	$delvar(strRequestData, strRequestDataReal,tmp_auth_code_phone);
-    	
-	$log(SMS 이름:$tf_1002_confirm_1.value);
-	$log(SMS 주민:$g_tf_1002_confirm_2_var);
-	$log(SMS 이통사:$1002_phone_select_key);
-	$log(SMS 전화번호:$tf_1002_confirm_3.value);
 
 	$setvar(
 		tmp_auth_code_phone = $replace(-,,$tf_1002_confirm_3.value)
@@ -1055,7 +1035,6 @@ value="
 
 	$KISA_SEED_CBC_DECRYPT(strRequestDataEnc,strRequestDataDEC);
 
-	$logvar(strRequestDataDEC);
 
 	$setnstimer(TIMER_SMS_INPUT,1,Act_sms_timer,TRUE);
 
@@ -1070,7 +1049,6 @@ value="
 <action id="Act_ResponseTelecomAuthCodeMts" 
 params="result,strVarName,strURL"
 value="
-	$logvar($strVarName);
 
 	$setvar(jsonName=json_AuthCode);
 
@@ -1084,18 +1062,8 @@ value="
 		,json_selfAuthResSeq 	= $json_getdata($jsonname,selfAuthResSeq)
 		,json_errorMsg 		= $json_getdata($jsonname,errorMsg)
 	);
-	$logvar(
-		json_result 		
-		,json_selfAuthReqSeq 	
-		,json_selfAuthResSeq 	
-		,json_errorMsg 		
-	);
 
 	$json_delete($jsonName);
-
-	$log(SMS 이름:$tf_1002_confirm_1.value); 
-	$log(SMS 이통사:$1002_phone_select_key);
-	$log(SMS 전화번호:$tf_1002_confirm_3.value);
 
 	if(!$isequal_string($json_result,success)){
 		$closescreen(popscreen_1002_100_telecom_auth_code);
@@ -1125,12 +1093,6 @@ value="
 		,lbl_sms_timer.key = $tmp_remain_time
 		,lbl_sms_timer.value = $tmp_remain_min_sec
 	);
-	$logvar(
-		tmp_remain_time 
-		,tmp_remain_min 
-		,tmp_remain_sec 
-		,tmp_remain_min_sec
-	);
 " />
 <action id="btn_1002_confirm_onclicked"
 value="
@@ -1158,8 +1120,6 @@ value="
 	$setvar(jsonName=json_VerifyCode);
 	// 복호화 해야 한다.
 	$KISA_SEED_CBC_DECRYPT($strVarName,strVarNameDataDEC);
-	$logvar($strVarName);
-	$logvar(strVarNameDataDEC);
 
 	$json_create($jsonName);
 	$json_parsebuffer($jsonname,$strVarNameDataDEC);
@@ -1171,12 +1131,6 @@ value="
 		,json_selfAuthResSeq_confirm 	= $json_getdata($jsonname,selfAuthResSeq) 		// 이값으로 확인 비교한다.
 	);
 	
-	$logvar(
-		json_result 		
-		,json_errorMsg 		
-		,json_selfAuthReqSeq_confirm
-		,json_selfAuthResSeq_confirm
-	);
 	$json_delete($jsonName);
 
 
@@ -1212,8 +1166,6 @@ value="
 		,tf_1002_confirm_3_val = $replace(-,,$tf_1002_confirm_3.value) 		// 4117_100에서 사용
 	);
 
-	$log(주민번호길이:$strlen($g_tf_1002_confirm_2_encvar));
-	$log(주민번호길이:$getvarlen(g_tf_1002_confirm_2_encvar));
 	$callaction(fnConfig_SetValue,g_IN_AGREE_RMN_NO_VAR 	,$g_tf_1002_confirm_2_var); 	// 주민번호
 	$callaction(fnConfig_SetValue,g_IN_AGREE_RMN_NO 	,$g_tf_1002_confirm_2_encvar); 	// 주민번호
 	$callaction(fnConfig_SetValue,g_IN_AGREE_CLNT_NM 	,$tf_1002_confirm_1.value);		// 고객명
@@ -1228,15 +1180,10 @@ value="
  	if($tmp_year_gubun > 2){	$setvar(tmp_jumin = $addstring(20,$tmp_jumin));		}
  	else{						$setvar(tmp_jumin = $addstring(19,$tmp_jumin));		}
 
- 	//$logvar(tmp_jumin,tmp_year_gubun,tmp_now);
 
  	$setvar(
  		tmp_age_man_remain = $result($tmp_now - $tmp_jumin)
  		,tmp_age_man = $substring($tmp_age_man_remain,0,2)
- 	);
- 	$logvar(
- 		tmp_age_man_remain 
- 		,tmp_age_man 
  	);
  	$callaction(fnConfig_SetValue,g_IN_REQUEST_AGE 	,$tmp_age_man);		// 만나이
 
@@ -1258,7 +1205,6 @@ value="
 	$setvar(	
 		jsonName 		= MO_AGREE 	
 	);
-	$logvar(g_IN_AGREE_CLNT_NM,tmp_doc_data);
 	$json_create($jsonName);
 
 	$json_setdata($jsonName,,HDR,,{});
@@ -1288,7 +1234,6 @@ value="
 	$delvar(strSSLSendData);
 	$json_getfullstring($jsonName,strSSLSendData);
 	$json_delete($jsonName);
-	$logvar(strSSLSendData);
 	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
 "/>
 <action id="fnRecvSSL_MO_AGREE" 
@@ -1303,12 +1248,6 @@ value="
 	);
 	$setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_hdr_err_code));
 
-	$log(========= SSL 받은데이터 ==============);
-	$logvar(
-		recvSSL_hdr_ret 
-		,recvSSL_hdr_msg 
-		,recvSSL_body_work_no 
-	);
 	if(!$isequal_string($recvSSL_hdr_ret,OK)){
 		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
 		$callaction(fnPopover_AlertAction,,$recvSSL_hdr_msg,,확인); 			
@@ -1342,7 +1281,6 @@ value="	// 비대면 절차개선 - 2020.09.28
 	$delvar(strSSLSendData);
 	$json_getfullstring($jsonName,strSSLSendData);
 	$json_delete($jsonName);
-	$logvar(strSSLSendData);
 	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
 "/>
 <action id="fnRecvSSL_MO_CREDIT" 
@@ -1359,14 +1297,6 @@ value="	// 비대면 절차개선 - 2020.09.28
 	);
 	$setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_hdr_err_code));
 
-	$log(========= SSL 받은데이터 ==============);
-	$logvar(
-		recvSSL_hdr_ret 
-		,recvSSL_hdr_msg 
-		,recvSSL_body_able_yn
-		,recvSSL_body_credi_score
-		,recvSSL_body_credi_grade
-	);
 	if(!$isequal_string($recvSSL_hdr_ret,OK)){
 		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
 		$callaction(fnPopover_AlertAction,,$recvSSL_hdr_msg,,확인);
@@ -1418,7 +1348,6 @@ value="
 	$delvar(strSSLSendData);
 	$json_getfullstring($jsonName,strSSLSendData);
 	$json_delete($jsonName);
-	$logvar(strSSLSendData);
 	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
 " />
 <action id="fnRecvSSL_MO_REQVIEW" 
@@ -1431,14 +1360,6 @@ value="
 		,recvSSL_body_resv_eddt 	= $json_getdata($jsonname,BODY.RESV_EDDT)
 		
 	);
-	$log(========= SSL 받은데이터 ==============);
-	$logvar(
-		recvSSL_hdr_ret 			
-		,recvSSL_hdr_msg 			
-		,recvSSL_body_work_no 		
-		,recvSSL_body_resv_stdt 	
-		,recvSSL_body_resv_eddt 	
-	);
 	$setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_hdr_err_code));
 
 	if(!$isequal_string($recvSSL_hdr_ret,OK)){
@@ -1448,7 +1369,6 @@ value="
 	}
 	//$callaction(fnConfig_SetValue,g_open_account_save,2);
 	$closescreen(pop_host_msg); 		// 동글뱅이 멈춤
-	$log(진행단계:$g_open_account_save);
 
 
 
@@ -1470,7 +1390,6 @@ value="
 	$delvar(strSSLSendData);
 	$json_getfullstring($jsonName,strSSLSendData);
 	$json_delete($jsonName);
-	$logvar(strSSLSendData);
 	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
 "/>
 <action id="fnRecvSSL_MO_WORKNO"
@@ -1481,32 +1400,12 @@ value="
 		,recvSSL_body_use_yn		= $json_getdata($jsonname,BODY.USE_YN)
 		,recvSSL_body_dt 	= $json_getdata($jsonname,BODY.DT)		
 	);
-	$log(========= SSL 받은데이터 최대근 ==============);
-	$logvar(
-		recvSSL_hdr_ret 			
-		,recvSSL_hdr_msg 			
-		,recvSSL_body_dt 		
-	);
 	
 	if(!$isequal_string($recvSSL_hdr_ret,OK)){
 		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
 		$callaction(fnPopover_AlertAction,,$recvSSL_hdr_msg,,확인);
 		return;
 	}
-	/*
-	$log(
-		확인용 : 
-			1001 g_IN_AGREE_ITEM1[$g_IN_AGREE_ITEM1],
-			1001 g_IN_AGREE_ITEM2[$g_IN_AGREE_ITEM2],
-			1001 g_IN_AGREE_ITEM3[$g_IN_AGREE_ITEM3],
-			1002 g_save_tel_num[$g_save_tel_num],
-			1002 g_IN_AGREE_RMN_NO[$g_IN_AGREE_RMN_NO],
-			1002 g_IN_AGREE_CLNT_NM[$g_IN_AGREE_CLNT_NM],
-			1002 g_IN_REQUEST_TEL_NUM[$g_IN_REQUEST_TEL_NUM],
-			1002 g_IN_REQUEST_AGE[$g_IN_REQUEST_AGE],
-			1002 g_OUT_AGREE_WORK_NO[$g_OUT_AGREE_WORK_NO],
-	);
-	*/
 
 	//이어하기 처음하기 일단 대기 꼭 확인. //수정.
 	$closescreen(popscreen_number_keypad);
@@ -1575,7 +1474,6 @@ value="
 <action id="P_SMS_RECEV_ACTION" scope="common"
 params="p_contents"
 value="
-    //$log(받은 메세지 : $p_contents);
     if($strlen($p_contents) == 6 && !$btn_1002_number_bf_resend.enable){
     	$setvar(
     		tf_1002_confirm_4.value = $p_contents
@@ -1980,7 +1878,6 @@ value="
 //textfield_security 는 textFieldEnd_local를 호출하지 않는다.
 <action id="tf_1002_confirm_2_onchanged" value="
 	//데이터 확인.
-	//$logvar(g_tf_1002_confirm_2_var,g_tf_1002_confirm_2_encvar);
 	$setvar( btn_1002_af.enable = $callaction(fnBtnAfConfirmCheck));
 	if($strlen($g_tf_1002_confirm_2_var) > 0
 	&& $vg_1002_100_input_3.hidden

@@ -401,7 +401,6 @@ value="
 	);
 
 	$setvar( $($tmp_btn_id).checked = true ); //일단 다시 누르면 무조건 true
-	//$logvar(popscreen_html,tmp_html_height_idx_val,tmp_pop_height_idx);
 
 	if($p_key <= 5){
 		$setvar(
@@ -429,7 +428,6 @@ value="
 		}
 	}
 
-	$logvar(tmp_kind_checked_count);
 
 	$setvar(
 		,tmp_total_count = $getarrayvarcount($tmp_arr_var_name)
@@ -447,8 +445,6 @@ value="
 	$setvar( tmp_pop_1007_100_flag = true, tmp_this_pos_y_1007 = );
 	
 	// 아이폰용 
-	$log(컨텐츠 사이즈:$html_pop.height);
-	$log(컨텐츠 사이즈:$html_pop.SCROLL_HEIGHT);	
 	if($html_pop.SCROLL_HEIGHT < $html_pop.height){
 		$setvar(
 			btn_1007_100_agree.hidden = false
@@ -583,7 +579,6 @@ value="
 		tmp_scroll_gap 		= $result($screen_html.SCROLL_HEIGHT - ($p_pos_y + $screen_html.HEIGHT))
 		,tmp_this_pos_y_1007 = $p_pos_y
 	);	
-	$logvar(tmp_scroll_gap);
 	if($tmp_scroll_gap <= 0	){
 		$setvar(
 			btn_1007_100_agree_bottom.hidden = true
@@ -643,7 +638,6 @@ value="
 	}
 	$setvar( $($chk_all_id).checked = false ); 
 	$setvar(btn_1007_af.value = 약관 확인할게요);
-	$logvar(tmp_btn_id_agree);
 	$closescreen(popscreen_1007_100)
 " />
 
@@ -651,7 +645,6 @@ value="
 <action id="fnAgree_Check_1007_100" 
 params="p_key"
 value="
-	$logvar(p_key);
 
 	if($p_key == 0){
 		$setvar(
@@ -671,7 +664,6 @@ value="
 		);
 	}
 
-	$logarrayvar($tmp_arr_var_name);
 	
 	for($i=0; $i<$getarrayvarcount($tmp_arr_var_name); $i++ ){
 		$delvar(chk_all_id);
@@ -687,7 +679,6 @@ value="
 		}else{
 			$setvar(chk_all_id = chk_1007_100_3_all);
 		}
-		$logvar(tmp_btn_id,tmp_checked);
 		if(!$tmp_checked){
 			$setvar($($tmp_btn_id).checked = true);
 			$callaction(btn_1007_100_onClicked,$1007_top_cnt);

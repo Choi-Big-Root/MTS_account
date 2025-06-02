@@ -118,14 +118,10 @@ value="
 //영상 통화 신청
 <action id="fnSendSSL_MO_REQUEST" 
 value="	
-if($g_save_open_tp==1){	// 소액이체 신청한경우 알림창
-	$callaction(fnPopover_AlertAction,,이미 소액이체 계좌인증을 신청하셨습니다. 영상통화 신청을 원하시면 처음부터 다시 계좌개설을 진행해 주십시오.,,확인);
-	return;
+	if($g_save_open_tp==1){	// 소액이체 신청한경우 알림창
+		$callaction(fnPopover_AlertAction,,이미 소액이체 계좌인증을 신청하셨습니다. 영상통화 신청을 원하시면 처음부터 다시 계좌개설을 진행해 주십시오.,,확인);
+		return;
 }
-$logvar(
- 	g_save_members_nm 		//추천인 성명
-	,g_save_members_no 		//추천인 사원번호
-);
 	$popscreen(pop_host_msg,center); 		// 동글뱅이 띄운다.
 
 	// ,g_IN_AGREE_RMN_NO 
@@ -195,9 +191,6 @@ $logvar(
 	$json_setdata($jsonName,BODY.PICTURE,DRV_NO,,$g_IN_REQUEST_DRV_NO_ENC); 					// 운전면허번호
 	$json_setdata($jsonName,BODY.PICTURE,DRV_CODE,,$g_IN_REQUEST_DRV_CODE_ENC); 				// 운전면허증 암호일련번호
 
-// 비대면 절차개선 - 2020.09.28
-// === 역이체 인증 이후 개설 신청 - 추가
-	$log(진위여부 저장된 값 >> g_save_result_yn[$g_save_result_yn]);
 	//$json_setdata($jsonName,BODY.PICTURE,CHK_YN,,Y); 										// Y:진위여부체크함, N:진위여부체크하지 않음
 	$json_setdata($jsonName,BODY.PICTURE,CHK_YN,,$g_save_result_yn); 						// Y:진위여부체크함, N:진위여부체크하지 않음
 	$json_setdata($jsonName,BODY,OPEN_TP,,2); 							// 1:역이체, 2:영상통화
@@ -213,7 +206,6 @@ $logvar(
 	$delvar(strSSLSendData);
 	$json_getfullstring($jsonName,strSSLSendData);
 	$json_delete($jsonName);
-	$logvar(strSSLSendData);
 	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
 
 
@@ -225,11 +217,6 @@ value="
 	$setvar(
 		recvSSL_hdr_ret 	= $json_getdata($jsonname,HDR.RET)
 		,recvSSL_hdr_msg 	= $json_getdata($jsonname,HDR.MSG)
-	);
-	$log(========= SSL 받은데이터 ==============);
-	$logvar(
-		recvSSL_hdr_ret
-		,recvSSL_hdr_msg 	
 	);
 	if(!$isequal_string($recvSSL_hdr_ret,OK)){
 		$callaction(fnPopover_AlertAction,,$recvSSL_hdr_msg,,확인);

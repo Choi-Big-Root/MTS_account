@@ -122,11 +122,6 @@ value="
 		$callaction(fnPopover_AlertAction,,이미 소액이체 계좌인증을 신청하셨습니다. 영상통화 신청을 원하시면 처음부터 다시 계좌개설을 진행해 주십시오.,,확인);
 		return;
 	}
-	$logvar(
-	 	g_save_members_nm 		//추천인 성명
-		,g_save_members_no 		//추천인 사원번호
-	);
-	$log([$combo_period_1020.key],[$lbl_1020_100_2.key]);
 	if($lbl_1020_100_2.key == 1){	$setvar(tmp_STDT_start = 09, tmp_STDT_end = 10);	}
 	elseif($lbl_1020_100_2.key == 2){	$setvar(tmp_STDT_start = 10, tmp_STDT_end = 11);	}
 	elseif($lbl_1020_100_2.key == 3){	$setvar(tmp_STDT_start = 11, tmp_STDT_end = 12);	}
@@ -143,11 +138,6 @@ value="
 
 	$setvar(
 		tmp_now = $now(yyyyMMddHH)
-	);
-	$logvar(
-		tmp_now 
-		,tmp_RESV_STDT
-		,tmp_RESV_EDDT
 	);
 	if($tmp_now >= $tmp_RESV_STDT){
 		$callaction(fnPopover_AlertAction,,현재시간 이후로 예약이 가능해요,,확인);
@@ -225,7 +215,6 @@ value="
 	$delvar(strSSLSendData);
 	$json_getfullstring($jsonName,strSSLSendData);
 	$json_delete($jsonName);
-	$logvar(strSSLSendData);
 	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
 
 "/>
@@ -236,11 +225,6 @@ value="
 	$setvar(
 		recvSSL_hdr_ret 	= $json_getdata($jsonname,HDR.RET)
 		,recvSSL_hdr_msg 	= $json_getdata($jsonname,HDR.MSG)
-	);
-	$log(========= SSL 받은데이터 ==============);
-	$logvar(
-		recvSSL_hdr_ret
-		,recvSSL_hdr_msg 	
 	);
 	if(!$isequal_string($recvSSL_hdr_ret,OK)){
 		$callaction(fnPopover_AlertAction,,$recvSSL_hdr_msg,,확인);

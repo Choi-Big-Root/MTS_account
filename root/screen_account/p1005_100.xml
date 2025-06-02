@@ -179,7 +179,6 @@ value="
 <action id="fn1005_100_GroupCheck"
 params="p_vg_gr_id"
 value="
-	$log(******$p_vg_gr_id.selectkey);
 	if($p_vg_gr_id.selectkey != 0){
 		if( $isequal_string($p_vg_gr_id,vg_gr_1005_100_1 )
 		){
@@ -561,7 +560,6 @@ value="
 	}
 	if($btn_1005_meme.key == 5){  // E-mail
 		if($strlen($g_IN_REQUEST_CLNT_EMAIL) < 1){
-			$logvar(g_IN_REQUEST_CLNT_EMAIL);
 			$callaction(fnPopover_AlertAction,,[변경예정]E-mail을 입력하세요.,,확인);
 			return;
 		}
@@ -607,45 +605,6 @@ value="
 
 	//매매 체결 통보
 	$callaction(fnConfig_SetValue,g_IN_REQUEST_TRADE 	,$btn_1005_meme.key);
-
-	/*
-	$log(
-		확인용 : 
-			1001 g_IN_AGREE_ITEM1[$g_IN_AGREE_ITEM1],
-			1001 g_IN_AGREE_ITEM2[$g_IN_AGREE_ITEM2],
-			1001 g_IN_AGREE_ITEM3[$g_IN_AGREE_ITEM3],
-
-			1002 g_save_tel_num[$g_save_tel_num],
-			1002 g_IN_AGREE_RMN_NO[$g_IN_AGREE_RMN_NO],
-			1002 g_IN_AGREE_CLNT_NM[$g_IN_AGREE_CLNT_NM],
-			1002 g_IN_REQUEST_TEL_NUM[$g_IN_REQUEST_TEL_NUM],
-			1002 g_IN_REQUEST_AGE[$g_IN_REQUEST_AGE],
-			1002 g_OUT_AGREE_WORK_NO[$g_OUT_AGREE_WORK_NO],
-
-			1003 g_IN_REQUEST_HOME_POST_NO[$g_IN_REQUEST_HOME_POST_NO],
-			1003 g_IN_REQUEST_HOME_ADDR[$g_IN_REQUEST_HOME_ADDR],
-			1003 g_IN_REQUEST_HOME_ADDR2[$g_IN_REQUEST_HOME_ADDR2],
-			1003 g_IN_REQUEST_CLNT_EMAIL[$g_IN_REQUEST_CLNT_EMAIL],
-
-			1004 g_IN_REQUEST_JOB_NM[$g_IN_REQUEST_JOB_NM],
-			1004 g_IN_REQUEST_COM_NM[$g_IN_REQUEST_COM_NM],
-			1004 g_IN_REQUEST_COM_DEPART[$g_IN_REQUEST_COM_DEPART],
-			1004 g_IN_REQUEST_COM_TEL[$g_IN_REQUEST_COM_TEL],
-			1004 g_IN_REQUEST_COM_POST_NO[$g_IN_REQUEST_COM_POST_NO],
-			1004 g_IN_REQUEST_COM_ADDR[$g_IN_REQUEST_COM_ADDR],
-			1004 g_IN_REQUEST_COM_ADDR2[$g_IN_REQUEST_COM_ADDR2],
-
-			1005 g_IN_REQUEST_TRD_PPO[$g_IN_REQUEST_TRD_PPO],
-			1005 g_IN_REQUEST_FUNDS[$g_IN_REQUEST_FUNDS],
-			1005 g_IN_REQUEST_AMERICAN_YN[$g_IN_REQUEST_AMERICAN_YN],
-			1005 g_IN_REQUEST_LOCAL_YN[$g_IN_REQUEST_LOCAL_YN],
-			1005 g_IN_REQUEST_ABODE_NM[$g_IN_REQUEST_ABODE_NM],
-			1005 g_IN_REQUEST_OWN_YN[$g_IN_REQUEST_OWN_YN],
-			1005 g_IN_REQUEST_DEAL[$g_IN_REQUEST_DEAL],
-			1005 g_IN_REQUEST_TRADE[$g_IN_REQUEST_TRADE],
-	);
-	*/
-
 	$callaction(Act_Open_Account_Move,1006);
 "/>
 
@@ -715,7 +674,6 @@ value="
 	}
 	//월간거래통지
 	elseif( $isequal_string($popscreen_1005_choice_onclicked_param1,7) ){
-		$logvar(g_IN_REQUEST_COM_POST_NO);
 		if($strlen($g_IN_REQUEST_COM_POST_NO) > 0){
 			$setvar(
 	 			arr_1005_choice=[
@@ -756,7 +714,6 @@ value="
 "/>
 <action id="tr_tbl_pop_1005_onClicked"
 value="
-	$log($this.key, $this.rowkey1);
 	if( $isequal_string($1005_choice_key,4) ){
 		$setvar(
 			,btn_1005_purpose.value = $this.rowkey1

@@ -85,15 +85,6 @@ value="
 
         ,menu_num=1015
     );
-    $logvar(
-        g_save_acno             // 국내
-        ,g_save_cybr_acct_no
-        ,g_save_acno2           // 해외
-        ,g_save_cybr_acct_no2
-        ,g_save_acnt_name       // 계좌명
-        ,g_IN_REQUEST_NEW_PW    // 계좌비밀번호
-        ,g_save_hts_id
-    );
 "/>
 <screen 
     id="screen_1015_100"
@@ -147,7 +138,7 @@ value="
             value="본인의 출신초등학교 이름은?"
         />
         <br height="$cs_height_10"/>
-        <textfield id="txt_4131_question_1"
+        <textfield id="txt_1015_question_1"
            class="cs_1015_100_question_input"
             placeholder="출신 초등학교 이름을 입력해주세요."
         />
@@ -157,7 +148,7 @@ value="
             value="본인의 가장 친한친구 이름은?"
         />
         <br height="$cs_height_10"/>
-        <textfield id="txt_4131_question_2"
+        <textfield id="txt_1015_question_2"
            class="cs_1015_100_question_input"
             placeholder="가장 친한 친구 이름을 입력해주세요."
         />
@@ -178,7 +169,7 @@ value="
         layout="center"
         layout_vertical="bottom"
     >
-        <button id="btn_4131_ok"
+        <button id="btn_1015_ok"
             width="$this.remain_right"
             height="$this.remain_bottom"
             backcolor="$cs_color_main"
@@ -196,11 +187,11 @@ value="
     </viewgroup>
 </screen>
 <action id="fnInputDataCheck" value="
-    if($strlen($txt_4131_question_1.value)<1){
+    if($strlen($txt_1015_question_1.value)<1){
         $callaction(fnPopover_AlertAction,,본인확인 질문을 입력해주세요.,,확인);
         return;
     }
-    if($strlen($txt_4131_question_2.value)<1){
+    if($strlen($txt_1015_question_2.value)<1){
         $callaction(fnPopover_AlertAction,,본인확인 질문을 입력해주세요.,,확인);
         return;
     }
@@ -214,7 +205,6 @@ value=" // 비대면 절차개선 - 2020.09.28
     $setvar(    
         jsonName        = MO_HTSID2
     );
-    $logvar(g_tf_4102_confirm_2_var);
     $json_create($jsonName);
 
     $json_setdata($jsonName,,HDR,,{});
@@ -225,8 +215,8 @@ value=" // 비대면 절차개선 - 2020.09.28
 
     $json_setdata($jsonName,BODY,USID,,$g_save_hts_id);                       // HTS ID
     $json_setdata($jsonName,BODY,NPWD,,$g_IN_REQUEST_NEW_PW);             // 접속비밀번호
-    $json_setdata($jsonName,BODY,ANS1,,$txt_4131_question_1.value);             // 본인확인 답변 1
-    $json_setdata($jsonName,BODY,ANS2,,$txt_4131_question_2.value);             // 본인확인 답변 2
+    $json_setdata($jsonName,BODY,ANS1,,$txt_1015_question_1.value);             // 본인확인 답변 1
+    $json_setdata($jsonName,BODY,ANS2,,$txt_1015_question_2.value);             // 본인확인 답변 2
     $json_setdata($jsonName,BODY,IP_ADDR,,0.0.0.0);                             // IP주소
     $json_setdata($jsonName,BODY,MAC_ADDR,,$g_mac_address);                     // 맥어드레스
     $json_setdata($jsonName,BODY,OS_VER,,$g_os_version);                        // OS버전
@@ -235,7 +225,6 @@ value=" // 비대면 절차개선 - 2020.09.28
     $delvar(strSSLSendData);
     $json_getfullstring($jsonName,strSSLSendData);
     $json_delete($jsonName);
-    $logvar(strSSLSendData);
     $callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
 "/>
 <action id="fnRecvSSL_MO_HTSID2" 
@@ -247,12 +236,6 @@ value=" // 비대면 절차개선 - 2020.09.28
         ,recvSSL_hdr_err_code   = $json_getdata($jsonname,HDR.ERR_CODE)
     );
     $setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_hdr_err_code));
-
-    $log(========= SSL 받은데이터 ==============);
-    $logvar(
-        recvSSL_hdr_ret 
-        ,recvSSL_hdr_msg 
-    );
     if(!$isequal_string($recvSSL_hdr_ret,OK)){
         $closescreen(pop_host_msg);         // 동글뱅이 멈춤 
         $callaction(fnPopover_AlertAction,,$recv_error_msg,,확인);
@@ -260,18 +243,8 @@ value=" // 비대면 절차개선 - 2020.09.28
     }
     
     $callaction(fnConfig_SetValue,g_save_acno3,$g_save_acno2);              // 개설된 계좌번호
-    $callaction(fnConfig_SetValue,g_save_qustion_1,$txt_4131_question_1.value);     // 답변1
-    $callaction(fnConfig_SetValue,g_save_qustion_2,$txt_4131_question_2.value);     // 답변2
-
-    $logvar(
-        g_IN_AGREE_CLNT_NM
-        ,g_save_acno3
-        ,g_save_cybr_acct_no2
-        ,g_save_qustion_1
-        ,g_save_qustion_2
-
-        ,g_save_hts_id
-    );
+    $callaction(fnConfig_SetValue,g_save_qustion_1,$txt_1015_question_1.value);     // 답변1
+    $callaction(fnConfig_SetValue,g_save_qustion_2,$txt_1015_question_2.value);     // 답변2
     $closescreen(pop_host_msg);         // 동글뱅이 멈춤 
     $callaction(Act_Open_Account_Move,1016);
     return;

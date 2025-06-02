@@ -432,7 +432,6 @@ p_socket_name
 ,p_result
 " 
 value="
-    $logvar(g_SSLSocketName,p_socket_name,p_result);
 
     if($comparevar(g_SSLSocketName,p_socket_name) != 0) {
         $callaction(fnPopover_AlertAction,,ssl_connect_callaction 소켓명이 다르다.,,확인);
@@ -445,7 +444,6 @@ value="
         return;
     }
 
-    $log(SSL 서버 접속 성공 [$g_SSLSocketName]);
     if($bStringLength || $bNetLength) {
         $setvar(bRecvServerMultiStart=false);
     }

@@ -383,7 +383,6 @@ value="
 
 <action id="Act_CheckYesNo_onClicked"
 value="
-$log($Act_CheckYesNo_onClicked_param1, $Act_CheckYesNo_onClicked_param2);
 	if($Act_CheckYesNo_onClicked_param1==0){	// 전체동의 클릭
 		if($chk_allcheck.checked){
 			$setvar(

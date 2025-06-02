@@ -90,7 +90,6 @@ value="
 	$callaction(popscreen_open_account_confirm_onclicked,$tmp_pop_info_x_cal,$tmp_pop_imfo_y_cal);
 "/>
 <action id="btn_1010_number_onclicked" value="
-	$log(g_is_open_account_testing:$g_is_open_account_testing);
 
 	$callaction(fnConfig_SetValue,g_IN_BNKNAME_BNK_CODE 	,$btn_1010_100.key);
 	$callaction(fnConfig_SetValue,g_IN_BNKNAME_BNK_NO 	,$tf_1010_confirm_01.value);
@@ -124,7 +123,6 @@ value="
 	$delvar(strSSLSendData);
 	$json_getfullstring($jsonName,strSSLSendData);
 	$json_delete($jsonName);
-	$logvar(strSSLSendData);
 	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
 "/>
 <action id="fnRecvSSL_MO_BNKNAME" 
@@ -140,15 +138,6 @@ value="
 		,recvSSL_body_NAME		= $json_getdata($jsonname,BODY.NAME)
 	);
 	$setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_hdr_err_code));
-	$log(========= SSL 받은데이터 ==============);
-	$logvar(
-		recvSSL_hrd_ret 	
-		,recvSSL_hrd_msg 	
-		,recvSSL_body_result	
-		,recvSSL_body_NAME		
-		,recvSSL_hdr_err_code
-		,recv_error_msg
-	);
 	if(!$isequal_string($recvSSL_hrd_ret,OK)){
 		$setvar(vg_1010_100_result.hidden = true);
 		$callaction(fnPopover_AlertAction,,$recv_error_msg,,확인);
@@ -169,13 +158,6 @@ value="
 	$callaction(fnConfig_SetValue,g_save_bank_code,$btn_1010_100.key);
 	$callaction(fnConfig_SetValue,g_save_acnt_name,$recvSSL_body_NAME);
 	$callaction(fnConfig_SetValue,g_save_acnt_no,$tf_1010_confirm_01.value);
-
-	$logvar(
-		g_save_bank_name
-		,g_save_bank_code
-		,g_save_acnt_name
-		,g_save_acnt_no
-	);
 
 	$callaction(fnActive_Next_1010);
 
@@ -381,59 +363,6 @@ value="
 
 <action id="btn_1010_confirm_onclicked"
 value="
-	/*
-	$log(
-		확인용 : 
-			1001 g_IN_AGREE_ITEM1[$g_IN_AGREE_ITEM1],
-			1001 g_IN_AGREE_ITEM2[$g_IN_AGREE_ITEM2],
-			1001 g_IN_AGREE_ITEM3[$g_IN_AGREE_ITEM3],
-
-			1002 g_save_tel_num[$g_save_tel_num],
-			1002 g_IN_AGREE_RMN_NO[$g_IN_AGREE_RMN_NO],
-			1002 g_IN_AGREE_CLNT_NM[$g_IN_AGREE_CLNT_NM],
-			1002 g_IN_REQUEST_TEL_NUM[$g_IN_REQUEST_TEL_NUM],
-			1002 g_IN_REQUEST_AGE[$g_IN_REQUEST_AGE],
-			1002 g_OUT_AGREE_WORK_NO[$g_OUT_AGREE_WORK_NO],
-
-			1003 g_IN_REQUEST_HOME_POST_NO[$g_IN_REQUEST_HOME_POST_NO],
-			1003 g_IN_REQUEST_HOME_ADDR[$g_IN_REQUEST_HOME_ADDR],
-			1003 g_IN_REQUEST_HOME_ADDR2[$g_IN_REQUEST_HOME_ADDR2],
-			1003 g_IN_REQUEST_CLNT_EMAIL[$g_IN_REQUEST_CLNT_EMAIL],
-
-			1004 g_IN_REQUEST_JOB_NM[$g_IN_REQUEST_JOB_NM],
-			1004 g_IN_REQUEST_COM_NM[$g_IN_REQUEST_COM_NM],
-			1004 g_IN_REQUEST_COM_DEPART[$g_IN_REQUEST_COM_DEPART],
-			1004 g_IN_REQUEST_COM_TEL[$g_IN_REQUEST_COM_TEL],
-			1004 g_IN_REQUEST_COM_POST_NO[$g_IN_REQUEST_COM_POST_NO],
-			1004 g_IN_REQUEST_COM_ADDR[$g_IN_REQUEST_COM_ADDR],
-			1004 g_IN_REQUEST_COM_ADDR2[$g_IN_REQUEST_COM_ADDR2],
-
-			1005 g_IN_REQUEST_TRD_PPO[$g_IN_REQUEST_TRD_PPO],
-			1005 g_IN_REQUEST_FUNDS[$g_IN_REQUEST_FUNDS],
-			1005 g_IN_REQUEST_AMERICAN_YN[$g_IN_REQUEST_AMERICAN_YN],
-			1005 g_IN_REQUEST_LOCAL_YN[$g_IN_REQUEST_LOCAL_YN],
-			1005 g_IN_REQUEST_ABODE_NM[$g_IN_REQUEST_ABODE_NM],
-			1005 g_IN_REQUEST_OWN_YN[$g_IN_REQUEST_OWN_YN],
-			1005 g_IN_REQUEST_DEAL[$g_IN_REQUEST_DEAL],
-			1005 g_IN_REQUEST_TRADE[$g_IN_REQUEST_TRADE],
-
-			1006 g_IN_REQUEST_PD1[$g_IN_REQUEST_PD1],
-			1006 g_chk_4117_5gr_1[$g_chk_4117_5gr_1],
-			1006 g_chk_4117_5gr_2[$g_chk_4117_5gr_2],
-			1006 g_IN_REQUEST_NEW_PW[$g_IN_REQUEST_NEW_PW],
-			1006 g_save_members_nm[$g_save_members_nm],
-			1006 g_save_members_no[$g_save_members_no],
-			1006 g_open_tp_select[$g_open_tp_select],
-
-			1010 g_IN_BNKNAME_BNK_CODE[$g_IN_BNKNAME_BNK_CODE],
-			1010 g_IN_BNKNAME_BNK_NO[$g_IN_BNKNAME_BNK_NO],
-			1010 g_IN_BNKNAME_BNK_NM[$g_IN_BNKNAME_BNK_NM],
-			1010 g_save_bank_name[$g_save_bank_name],
-			1010 g_save_bank_code[$g_save_bank_code],
-			1010 g_save_acnt_name[$g_save_acnt_name],
-			1010 g_save_acnt_no[$g_save_acnt_no],
-	);
-	*/
 	$popscreen(pop_1010_input_check_confirm);
 "/>
 
@@ -457,7 +386,6 @@ value="
 	$delvar(strSSLSendData);
 	$json_getfullstring($jsonName,strSSLSendData);
 	$json_delete($jsonName);
-	$logvar(strSSLSendData);
 	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
 "/>
 <action id="fnRecvSSL_MO_BANK" 
@@ -474,13 +402,10 @@ value="
 		return;
 	}
 
-	$log(배열갯수 = [$json_getcount($jsonname,BODY.BNKS)]);
 	$json_getdata($jsonname,BODY.BNKS[1].BNK_NM,strBNKName);
-	$logvar(strBNKName);
 
 	$delarrayvar(arrJsonData_Bank);
 	$json_toArrayData(arrJsonData_Bank,$jsonName,BODY.BNKS,,$(BNK_CODE,BNK_NM));
-	$logarrayvar(arrJsonData_Bank);
 	
 	$delarrayvar(arrData_Bank);
 	$delarrayvar(arrData_Stock);
@@ -488,8 +413,6 @@ value="
 	$getCompareArray(arrData_Stock,arrJsonData_Bank,0,LT,200);
 	$arraysort(arrData_Bank,true,false,1);
 	$arraysort(arrData_Stock,true,false,1);
-	$logarrayvar(arrData_Bank);
-	$logarrayvar(arrData_Stock);
 
 	$callaction(subscreen_1010_menu_1_onload);
 "/>
@@ -501,7 +424,6 @@ value="
 		$setvar(set_bank_name = arrData_Stock);
 	}
 	$clearcontrol(screen_1010_menu_1);
-	$log(갯수:$getarrayvarcount($set_bank_name));
 
 	$add_parsetag_parent(screen_1010_menu_1,
 		<table id='tbl_1010_menu_1'
@@ -518,7 +440,6 @@ value="
 			,tmp_name 	= $getarrayvar($set_bank_name,$i,1)
 			,tmp_mod 	= $result($i%2)
 		);
-		$log(뭔데[$i][$tmp_mod][$tmp_name]);
 		
 		if($tmp_mod==0){
 			$add_parsetag_parent(screen_1010_menu_1,

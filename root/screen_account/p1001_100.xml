@@ -88,7 +88,6 @@ align="center"
 valign="bottom"
 />
 <action id="screen_contents_onload" value="
-	$log(확인용);
 	$setvar(
 		,img_step_1.hidden=true
 		,img_step_2.hidden=true
@@ -708,7 +707,6 @@ value="
 		$setvar(tmp_mo = $addstring($tmp_mo,NNN));
 	}
 
-	$logvar(tmp_mo);
 
 	$setvar(tmp_mo_f2 = );
 	if($isequal_string($tmp_mo,YYY)){
@@ -723,14 +721,6 @@ value="
 
 	$callaction(fnConfig_SetValue,g_IN_AGREE_ITEM2 	,$tmp_mo_f1); 		// 개인정보선택동의 
 	$callaction(fnConfig_SetValue,g_IN_AGREE_ITEM3 	,$tmp_mo_f2); 		// 연락방식- 전체,SMS,전화,이메일,우편:NYYYN
-	/*
-	$log(
-		확인용 : 
-			1001 g_IN_AGREE_ITEM1[$g_IN_AGREE_ITEM1],
-			1001 g_IN_AGREE_ITEM2[$g_IN_AGREE_ITEM2],
-			1001 g_IN_AGREE_ITEM3[$g_IN_AGREE_ITEM3],
-	);
-	*/
 	$closescreen(pop_1001_100_1);
 	$callaction(Act_Open_Account_Move, 1002);
 "/>
@@ -739,8 +729,6 @@ value="
 params="p_key"
 value="
 	//1001_100_4_1_n_htmldata
-	$log(선택키:$p_key);
-	$log(선택동의서 : $vg_1001_100_agree_kind.selectkey );
 	$setvar(
 		,tmp_btn_id			= $addstring(btn_,$p_key)
 		,popscreen_title 	= $tmp_btn_id.value
@@ -767,7 +755,6 @@ value="
 	if($btn_2_1.checked){$setvar(tmp_confirm_count = $result($tmp_confirm_count + 1));}
 	if($btn_2_2.checked){$setvar(tmp_confirm_count = $result($tmp_confirm_count + 1));}
 	if($btn_3_1.checked){$setvar(tmp_confirm_count = $result($tmp_confirm_count + 1));}
-	$logvar(tmp_confirm_count);
 
 	if($popscreen_key != 4_1){
 		$setvar(btn_1001_100_agree.value = $(확인했고 동의해요%28$tmp_confirm_count/4%29) );
@@ -806,7 +793,6 @@ value="
 		tmp_scroll_gap 		= $result($screen_html.SCROLL_HEIGHT - ($p_pos_y + $screen_html.HEIGHT))
 		,tmp_this_pos_y_1001 = $p_pos_y
 	);	
-	$logvar(tmp_scroll_gap);
 	if($tmp_scroll_gap <= 0	){
 		$setvar(
 			btn_1001_100_agree_bottom.hidden = true

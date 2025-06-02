@@ -5274,17 +5274,11 @@ value="
 		,recvSSL_body_HTS_ID  = $json_getdata($jsonname,BODY.HTS_ID) 				//HTS_ID 
 	);
 	$setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_body_ERR_CODE)); 
-
-	$log(========= SSL 받은데이터 :fnRecvSSL_MO_RESULT ==============);
 	$logvar(
 		recvSSL_body_USER_ID 		
 		,recvSSL_body_WORK_NO 		
 		,recvSSL_body_STAT 			
 		,recvSSL_body_MSG 			
-		,recvSSL_body_ACNO 			
-		,recvSSL_body_CYBR_ACCT_NO 	
-		,recvSSL_body_ACNO2 		
-		,recvSSL_body_CYBR_ACCT_NO2 
 	);
 
 	if($isequal_string($recvSSL_body_STAT,ST11)){
@@ -5300,8 +5294,6 @@ value="
 		$callaction(fnConfig_SetValue,g_save_hts_id,$recvSSL_body_HTS_ID);					// 계좌번호(해외)
 		
 		$logvar(
-			g_save_acno
-			,g_save_cybr_acct_no
 			,g_save_acno2
 			,g_save_cybr_acct_no2
 			,g_save_hts_id
@@ -5316,29 +5308,24 @@ value="
 		}
 		$callaction(fnConfig_SetValue,g_save_keep_go,1); // 개설후 ID등록
 		$callaction(Act_Open_Account_Move,1015);
-		//$setvar_common(g_OUT_AGREE_WORK_NO = );
 
 
 		
 		return;
 	}	
 	elseif($isequal_string($recvSSL_body_STAT,ST12)){
-		//$alertaction(,,신분증거절,확인);
 		$callaction(fnPopover_AlertAction,,신분증거절,,확인);
 		return;
 	}
 	elseif($isequal_string($recvSSL_body_STAT,ST13)){
-		//$alertaction(,,영상통화가 거절되었습니다.,확인);
 		$callaction(fnPopover_AlertAction,,영상통화가 거절되었습니다.,,확인);
 		return;
 	}
 	elseif($isequal_string($recvSSL_body_STAT,ST14)){
-		//$alertaction(,,$recv_error_msg,확인);
 		$callaction(fnPopover_AlertAction,,$recv_error_msg,,확인);
 		return;
 	}
 	else{
-		//$alertaction(,,에러[$recvSSL_body_STAT][$recvSSL_body_MSG],확인);
 		$callaction(fnPopover_AlertAction,,에러[$recvSSL_body_STAT][$recvSSL_body_MSG],,확인);
 		return;
 	}

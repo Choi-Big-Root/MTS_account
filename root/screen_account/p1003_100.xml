@@ -90,7 +90,6 @@ value="
 "/>
 <action id="btn_1003_100_mail_sel_onClicked"
 value="
-	$logarrayvar(tmp_email_arr);
 	$popscreen(pop_1003_100_email);
 "/>
 <action id="tf_1003_email_1_onChange"
@@ -137,47 +136,9 @@ value="
 		$callaction(fnConfig_SetValue,g_IN_REQUEST_CLNT_EMAIL 	,);
 	}
 
-	/*
-	$log(
-		확인용 : 
-			1001 g_IN_AGREE_ITEM1[$g_IN_AGREE_ITEM1],
-			1001 g_IN_AGREE_ITEM2[$g_IN_AGREE_ITEM2],
-			1001 g_IN_AGREE_ITEM3[$g_IN_AGREE_ITEM3],
-
-			1002 g_save_tel_num[$g_save_tel_num],
-			1002 g_IN_AGREE_RMN_NO[$g_IN_AGREE_RMN_NO],
-			1002 g_IN_AGREE_CLNT_NM[$g_IN_AGREE_CLNT_NM],
-			1002 g_IN_REQUEST_TEL_NUM[$g_IN_REQUEST_TEL_NUM],
-			1002 g_IN_REQUEST_AGE[$g_IN_REQUEST_AGE],
-			1002 g_OUT_AGREE_WORK_NO[$g_OUT_AGREE_WORK_NO],
-
-			1003 g_IN_REQUEST_HOME_POST_NO[$g_IN_REQUEST_HOME_POST_NO],
-			1003 g_IN_REQUEST_HOME_ADDR[$g_IN_REQUEST_HOME_ADDR],
-			1003 g_IN_REQUEST_HOME_ADDR2[$g_IN_REQUEST_HOME_ADDR2],
-			1003 g_IN_REQUEST_CLNT_EMAIL[$g_IN_REQUEST_CLNT_EMAIL],
-	);
-	*/
-
 	$callaction(Act_Open_Account_Move,1004);
 	
 "/>
-<!-- <action id="tf_1003_email_1_onChanged"
-value="
-	$log($this.value, $this.width, $cs_width_53, $this.remain_right);
-	$setvar(
-		tmp_tf_1003_email_strlen = $strlen_uni($this.value)
-		,tmp_tf_1003_email_width_val = $result($cs_fontsize_16 * $tmp_tf_1003_email_strlen)
-	);
-	$logvar(tmp_tf_1003_email_strlen, tmp_tf_1003_email_width_val);
-
-	if($tmp_tf_1003_email_width_val > $this.width){
-		$log(자 늘려보자잇); // 가로길이 늘리자잇.
-		$setvar(
-			tf_1003_email_1.width = $tmp_tf_1003_email_width_val
-			,vg_1003_100_email_move.x = $result($tf_1003_email_1.x + $tf_1003_email_1.width)
-		);
-	}
-"/> -->
 <screen 
 	id="screen_1003_100"
 	class="cs_screen_contents"
@@ -434,7 +395,6 @@ value="
     $addurlparam(strPostData,confmKey,$g_juso_go_kr_key);	// 이 키는 juso.go.kr 에서 인증을 받아서 넣어야 한다.
     
     $addurlparam(strPostData,resultType,json);
-    $logvar(strPostData);
 	$postrequestdata(OPENAPI_TEST,https://www.juso.go.kr/addrlink/addrLinkApiJsonp.do,fnNaverAddressSearch_CallBack,strPostData);
 " />
 <action id="fnNaverAddressSearch_CallBack" params="result,strVarName,strURL" value="
@@ -467,16 +427,6 @@ value="
 		,tmp_cal_height = $result($tmp_add_line_count * $tmp_control_height)
 	);
 
-	$logvar(
-		tmp_control_width
-		,tmp_control_height
-		,tmp_control_fontsize
-		,tmp_control_str_len
-		,tmp_max_len
-		,tmp_add_line_count
-		,tmp_cal_height
-	);
-
 	if($isequal_string($p_type,count)){
 		return $tmp_add_line_count;
 	}
@@ -506,7 +456,6 @@ value="
 				);
 			}
 		}
-		$logvar(tmp_substr_val);
 		return $tmp_substr_val;
 	}
 "/>
@@ -521,11 +470,6 @@ value="
 " />
 <action id="popscreen_address_find_onunload"
 value="
-	$logvar(
-		,tmp_jatek_1_val
-		,tmp_jatek_2_val
-		,tmp_jatek_3_val
-	);
 
 	$setvar(btn_1003_100_confirm.enable = $callaction(fnDataInputCheck_1003_100));
 
@@ -743,11 +687,6 @@ value="
 	$setvar(
 		tmp_jatek_3_val = $tf_pop_jatek_3_input.value
 	);
-	$logvar(
-		tmp_jatek_1_val
-		,tmp_jatek_2_val
-		,tmp_jatek_3_val
-	);
 
 	$setvar(
 		lbl_1003_jatek_1.value = $tmp_jatek_1_val 		// 우편번호
@@ -911,7 +850,6 @@ onClicked="fn_1003_100_email_choice_confirm"
 />	
 <action id="fn_1003_100_email_choice_confirm"
 value="
-	$log($this.value , $this.key);
 
 	if($this.key == -1){
 		$setvar(tf_1003_email_2.value = );

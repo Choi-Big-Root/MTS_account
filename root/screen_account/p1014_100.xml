@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actiondata value=" 
 	if($getvarlen(g_SSLSocketName) <= 0 || !$ssl_isconnect($g_SSLSocketName)) {
-		$log(SSL Socket Exist Check SocketName [$g_SSLSocketName] ********************************************* Connect Start);
 		$setvar_common(
 			g_SSLSocketName = $callaction(Act_SSL_Connect,$g_serverIP_account,$g_serverPort_account_ssl,Act_SSL_Connected,Act_SSL_Closed,Act_SSL_RecvData)
 		);
-		$log(SSL Socket Not Exists SocketName $g_SSLSocketName ********************************************* Connect After);
 	}
 	else {
-		$log(SSL Socket Exists SocketName $g_SSLSocketName *********************************************);
 	}
 	$setvar(iSelectKind=1);
 "/>
@@ -290,7 +287,6 @@ value="
 	$delvar(strSSLSendData);
 	$json_getfullstring($jsonName,strSSLSendData);
 	$json_delete($jsonName);
-	$logvar(strSSLSendData);
 	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
 "/>
 <action id="fnRecvSSL_MO_TRANSAT" 
@@ -304,15 +300,6 @@ value="
 	);
 	$setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_hdr_err_code));
 
-	$log(========= SSL 받은데이터 ==============);
-	$logvar(
-		recvSSL_hdr_ret 
-		,recvSSL_hdr_msg 
-		,recvSSL_body_bsns_date
-		,recvSSL_body_inout_no
-		,recvSSL_body_mast_acctno
-	);
-
 	if($isequal_string($recvSSL_body_result_yn,P)){
 		$closescreen(pop_host_msg);
 		return;
@@ -325,26 +312,20 @@ value="
 	}
 	
 	$setvar($date_compare=$now(dd));
-	$log(현재일자[$now(dd)], 번수 저장일자[$date_compare]);
 
 	if($strlen($g_date_compare1)<1){
 		$callaction(fnConfig_SetValue,g_date_compare1,$date_compare);
 	}
 	if($now(dd)!=$g_date_compare1){
-		$log(>> 진위여부 횟수 초기화);
 		$callaction(fnConfig_SetValue,g_date_compare1,$date_compare); 	// 자정마다 날짜를 전역변수에 저장
 		$callaction(fnConfig_SetValue,g_transat_count,0);	// 자정이후 진위여부 횟수 초기화
 	}
 	else{
-		$log(>> 일자 변동없음..진위여부 횟수 초기화 x);
 	}
 	if(!$isequal_string($recvSSL_body_result_yn,Y)){
-		$log( =============== 역이체 인증확인 여부 =============== );
-		$logvar(g_transat_count);
 		if($strlen($g_transat_count)<1){
 			$setvar(transat_count=1);
 			$callaction(fnConfig_SetValue,g_transat_count,$transat_count);
-			$logvar(g_transat_count);
 		}
 		elseif($strlen($g_transat_count)>0){
 			if($g_transat_count==5){
@@ -372,10 +353,6 @@ value="
 		$callaction(fnPopover_AlertAction,,이미 영상통화 인증을 신청하셨습니다. 소액이체 계좌인증을 원하시면 처음부터 다시 계좌개설을 진행해 주십시오.,,확인);
 		return;
 	}
-	$logvar(
- 		g_save_members_nm 		//추천인 성명
-		,g_save_members_no 		//추천인 사원번호
-	);
 	$popscreen(pop_host_msg,center); 		// 동글뱅이 띄운다.
 
 	if($g_isAndroid){		$callaction(fnConfig_SetValue,g_IN_REQUEST_DEV_OS 	,OS01); 		}
@@ -446,7 +423,6 @@ value="
 
 	// 비대면 절차개선 - 2020.09.28
 	// === 역이체 인증 이후 개설 신청 - 추가
-	$log(진위여부 저장된 값 >> g_save_result_yn[$g_save_result_yn]);
 	//$json_setdata($jsonName,BODY.PICTURE,CHK_YN,,Y); 										// Y:진위여부체크함, N:진위여부체크하지 않음
 	$json_setdata($jsonName,BODY.PICTURE,CHK_YN,,$g_save_result_yn); 						// Y:진위여부체크함, N:진위여부체크하지 않음
 
@@ -462,7 +438,6 @@ value="
 	$delvar(strSSLSendData);
 	$json_getfullstring($jsonName,strSSLSendData);
 	$json_delete($jsonName);
-	$logvar(strSSLSendData);
 	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
 " />
 <action id="fnRecvSSL_MO_REQUEST" 
@@ -470,11 +445,6 @@ value="
 	$setvar(
 		recvSSL_hdr_ret 	= $json_getdata($jsonname,HDR.RET)
 		,recvSSL_hdr_msg 	= $json_getdata($jsonname,HDR.MSG)
-	);
-	$log(========= SSL 받은데이터 ==============);
-	$logvar(
-		recvSSL_hdr_ret
-		,recvSSL_hdr_msg 	
 	);
 	if(!$isequal_string($recvSSL_hdr_ret,OK)){
 		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤

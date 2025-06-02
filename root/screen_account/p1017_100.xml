@@ -31,7 +31,6 @@ value="
 	$delvar(strSSLSendData);
 	$json_getfullstring($jsonName,strSSLSendData);
 	$json_delete($jsonName);
-	$logvar(strSSLSendData);
 	$callaction(Act_SSL_SendData,$g_SSLSocketName,strSSLSendData);
 "/>
 <action id="fnRecvSSL_MO_TIME" 
@@ -47,16 +46,6 @@ value="
 
 	);
 	$setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_hdr_err_code));
-
-	$log(========= SSL 받은데이터 ==============);
-
-	$logvar(
-		recvSSL_hdr_ret 
-		,recvSSL_hdr_msg 
-		,recvSSL_body_open_able_yn
-		,recvSSL_body_reason_code
-		,recvSSL_body_reason_msg
-	);
 
 	if(!$isequal_string($recvSSL_hdr_ret,OK)){
 		if($strlen($recvSSL_hdr_err_code) <= 0){
@@ -182,7 +171,7 @@ value="
 		layout="center"
 		layout_vertical="bottom"
 	>
-		<button id="btn_4103_bf"
+		<button id="btn_1017_bf"
 			width="$cs_bottom_two_button_width" 
 			height="$this.remain_bottom"
 			layout="left"
@@ -197,7 +186,7 @@ value="
 			value="이어하기"
 			onclicked="$callaction(fnOpenAccount_continus);"
 		/>
-		<button id="btn_4103_af"
+		<button id="btn_1017_af"
 			width="$cs_bottom_two_button_width" 
 			height="$this.remain_bottom"
 			layout="right"
@@ -220,17 +209,11 @@ value="
 	if($g_save_keep_go!=1){	
 		if($g_menu_code_open_account==1015 || $g_menu_code_open_account==1016){
 			$callaction(fnConfig_SetValue,g_menu_code_open_account,$g_menu_code_open_account_before);
-			$log(########## 이어하기 누를경우 이전화면으로 변경.);
-			$log(저장된화면이전 g_menu_code_open_account_before[$g_menu_code_open_account_before]);
-			$log(저장된화면 	g_menu_code_open_account[$g_menu_code_open_account]);
 		}
 		elseif($g_menu_code_open_account==1014){
 			$callaction(fnConfig_SetValue,g_menu_code_open_account,1013);
 		}
 	}
-	$log(상담번호:$g_OUT_AGREE_WORK_NO);
-	$log(마지막 화면번호:$g_menu_code_open_account);
-	$log(마지막 화면번호:$g_open_account_save);
 
 	$callaction(Act_Open_Account_Move,$g_menu_code_open_account);
 	
