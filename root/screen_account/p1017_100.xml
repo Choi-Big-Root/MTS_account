@@ -6,7 +6,7 @@
 		,popscreen_open_account_history_2.hidden=false
 		,vg_account_title_step.hidden = true
 
-		,menu_num=1001
+		,menu_num=1017
 	);
 	$callaction(fnSendSSL_MO_TIME);
 "/>
