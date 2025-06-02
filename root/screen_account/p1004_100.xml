@@ -1352,7 +1352,7 @@ value="
 <!-- https://dev-options.eugenefutures.com/wts/kodataapi/enp_search7?enpnm=투자선물&page=1&format=JSON&pagerowcn=60 -->
 <action id="tf_popscreen_1004_choice_jikjang_onChanged" 
 value="
-	$setnstimer(TIMER_TF_CHANGE_WAIT,0.5,tf_popscreen_1004_choice_jikjang_onChanged_2,FALSE);
+	$setnstimer(TIMER_TF_CHANGE_WAIT,0.2,tf_popscreen_1004_choice_jikjang_onChanged_2,FALSE);
 " />
 <action id="tf_popscreen_1004_choice_jikjang_onChanged_2"
 value="
