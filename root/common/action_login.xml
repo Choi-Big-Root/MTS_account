@@ -5270,7 +5270,8 @@ value="
 		,recvSSL_body_ACNO2 		= $json_getdata($jsonname,BODY.ACNO2) 				//계좌번호(해외)
 		,recvSSL_body_CYBR_ACCT_NO2 = $json_getdata($jsonname,BODY.CYBR_ACCT_NO2) 		//연계계좌번호(해외)
 		,recvSSL_body_ERR_CODE = $json_getdata($jsonname,BODY.ERR_CODE) 				//에러코드
-		,
+
+		,recvSSL_body_HTS_ID  = $json_getdata($jsonname,BODY.HTS_ID) 				//HTS_ID 
 	);
 	$setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_body_ERR_CODE)); 
 
@@ -5295,12 +5296,15 @@ value="
 		$callaction(fnConfig_SetValue,g_save_cybr_acct_no,$recvSSL_body_CYBR_ACCT_NO);		// 연계계좌번호(국내)
 		$callaction(fnConfig_SetValue,g_save_acno2,$recvSSL_body_ACNO2);					// 계좌번호(해외)
 		$callaction(fnConfig_SetValue,g_save_cybr_acct_no2,$recvSSL_body_CYBR_ACCT_NO2);	// 연계계좌번호(해외)
+
+		$callaction(fnConfig_SetValue,g_save_hts_id,$recvSSL_body_HTS_ID);					// 계좌번호(해외)
 		
 		$logvar(
 			g_save_acno
 			,g_save_cybr_acct_no
 			,g_save_acno2
 			,g_save_cybr_acct_no2
+			,g_save_hts_id
 		);
 
 		// 로그인 화면일 경우에는 팝업을 띄워야한다.
@@ -5310,7 +5314,8 @@ value="
 		if(!$isequal_string($tmp_popscreen_name,popscreen_open_account)){
 			$popscreen(popscreen_open_account);	
 		}
-		$callaction(Act_Open_Account_Move,4129);
+		$callaction(fnConfig_SetValue,g_save_keep_go,1); // 개설후 ID등록
+		$callaction(Act_Open_Account_Move,1015);
 		//$setvar_common(g_OUT_AGREE_WORK_NO = );
 
 
