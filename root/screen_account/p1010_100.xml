@@ -430,6 +430,9 @@ value="
 		width='$this.remain_right'
 		height='$super.height'
 		margin_bottom=''
+		nsrowline='true'
+		nsrowlinecolor='$cs_color_white'
+		margin_top=''
 		>
 
 	);
@@ -438,39 +441,54 @@ value="
 		$setvar(
 			tmp_key 	= $getarrayvar($set_bank_name,$i,0)
 			,tmp_name 	= $getarrayvar($set_bank_name,$i,1)
-			,tmp_mod 	= $result($i%2)
+			,tmp_mod 	= $result($i%4)
 		);
 		
 		if($tmp_mod==0){
 			$add_parsetag_parent(screen_1010_menu_1,
-				<tr width='$super.width' height='$h($g_lcdHeight,6)' margin_bottom=''>
-					<td width='$this.remain_right' height='$this.remain_bottom' backcolor='none' margin_bottom=''>
+				<tr width='$super.width' height='[[$cs_height_97]]' margin_top=''>
+					<td width='$this.remain_right' height='$this.remain_bottom' backcolor='none' margin_bottom='' margin_top='' >
 			);
 		}
 
+		$setvar(
+			tmp_icon_path_id = $getvar($addstring(icon_bank_stock_,$tmp_key))
+		);
+
 		$add_parsetag_parent(screen_1010_menu_1,
-			<button id='btn_1010_01' width='50%' height='$this.remain_bottom'
+
+			<button id='btn_1010_$tmp_key' width='[[$cs_width_72]]' height='$this.remain_bottom'
 			key='[[$tmp_key]]'
 			value='[[$tmp_name]]'
 			backcolor='$cs_color_white' backcolor_active='$cs_color_white'
-			textcolor='$cs_color_black' textcolor_active='$cs_color_black'
-			fontname='$cs_font_500'
-			fontsize='$cs_fontsize_14'
-			valign='center'
+			textcolor='$cs_color_text' textcolor_active='$cs_color_text'
+			fontname='$cs_font_400'
+			fontsize='$cs_fontsize_11'
+			valign='bottom'
+			margin_top='$cs_height_20'
+			margin_bottom='$cs_height_20'
 			onclicked='btn_menu1_onclicked'
-			border_color_active='222222' 
-			border_width_active='2'
+
+			BACKGROUNDSVG='[[$tmp_icon_path_id]]'
+            BACKGROUNDSVG_DISABLE='[[$tmp_icon_path_id]]'
+            BACKGROUNDSVG_HIGHLIGHT='[[$tmp_icon_path_id]]'
+            BACKGROUNDSVG_WIDTH='$cs_height_37'
+            BACKGROUNDSVG_HEIGHT='$cs_height_37'
+            backgroundimage_align='center'
+            backgroundimage_align_vertical='top'
+            backgroundimage_y='$cs_height_20'
 			/>
 		);
-		if($tmp_mod==0){
-			$add_parsetag_parent(screen_1010_menu_1,
-				<hr width='1' height='$super.height'/>
-			);
-		}
-		if($tmp_mod==1){
+
+		
+		if($tmp_mod==3){
 			$add_parsetag_parent(screen_1010_menu_1,
 					</td>
 				</tr>
+			);
+		}else{
+			$add_parsetag_parent(screen_1010_menu_1,
+				<blank width='$cs_width_18'/>
 			);
 		}
 		
@@ -514,7 +532,7 @@ onload="popscreen_1010_choice_onload"
 	>
 		<viewgroup
 			width="$this.remain_right"
-			height="$cs_height_141"
+			height="$cs_height_144"
 			//backcolor="ff000022"
 		>
 			<br height="$cs_height_30" />
@@ -589,13 +607,7 @@ onload="popscreen_1010_choice_onload"
 				<viewgroup
 					width="$this.remain_right"
 					height="$this.remain_bottom"
-					backcolor="$cs_color_line"
-					border_width="1"
-					border_radius="$cs_height_7"
-					margin_top="$cs_height_3"
-					margin_bottom="$cs_height_3"
-					margin_left="$cs_width_3"
-					margin_right="$cs_width_3"
+					backcolor="$cs_color_white"
 				>
 					<screen
 						id="screen_1010_menu_1"
