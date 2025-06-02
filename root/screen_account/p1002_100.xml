@@ -124,6 +124,15 @@ value="
 "/>
 <action id="tf_1002_confirm_3_onChange"
 value="
+ 	if($strlen($this.value) <= 0 ){
+    	$closescreen(popscreen_1002_100_info_open);
+    	$setvar(btn_1002_af.enable = false);
+	}else{
+		$setvar(btn_1002_af.enable = true);
+	}
+"/>
+<!-- <action id="tf_1002_confirm_3_onChange"
+value="
 
     if($tmp_tf_phone_change_flag){
     	$setvar(tmp_tf_phone_change_flag = false);
@@ -162,7 +171,7 @@ value="
         	$($this.id).value = $formatstring(###-####-####,$tmp_clean_number)
         );
     }
-"/>
+"/> -->
 //디자인 시안에 맞게 작업했던 keypad 주석
 <!-- <action id="fnAccountKeypad_1002_100_confirm"
 value="
@@ -1913,8 +1922,27 @@ value="
 
     if($isequal_string($TEXTFIELDEND_LOCAL_PARAM1,tf_1002_confirm_3)){
     	if($strlen($tf_1002_confirm_3.value) > 0){
-    		$closescreen(popscreen_number_keypad);
+    		//$closescreen(popscreen_number_keypad);
 			if($tmp_textFieldEnd_local_result){
+				$setvar(
+				 	tmp_clean_number = $replace(-,,$tf_1002_confirm_3.value)
+				);
+
+				 if($strlen($tmp_clean_number) <= 3){
+			    	$setvar(
+			    		tf_1002_confirm_3.value = $tmp_clean_number
+			    	);
+			    }elseif($strlen($tmp_clean_number) <= 7){
+					$setvar(
+			        	tf_1002_confirm_3.value = $formatstring(###-####,$tmp_clean_number)
+			        );
+			    }else{
+			    	$setvar(
+			        	tf_1002_confirm_3.value = $formatstring(###-####-####,$tmp_clean_number)
+			        );
+			    }
+
+
 				$popscreen(popscreen_1002_100_info_open);
 			}else{
 				return;
