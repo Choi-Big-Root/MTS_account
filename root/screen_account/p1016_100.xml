@@ -27,6 +27,18 @@ value="
 
         ,menu_num=1016
     );
+
+    $logvar(
+        g_IN_AGREE_CLNT_NM
+        ,g_save_acno3
+        ,g_save_cybr_acct_no2
+        ,g_save_qustion_1
+        ,g_save_qustion_2
+
+        ,g_save_hts_id
+    );
+
+
 "/>
 
 <screen 
@@ -90,7 +102,7 @@ value="
             //추후 데이터를 넣어야 한다.
             <label
                 class="cs_lbl_1016_100_1_right"
-                value="$g_save_acno3_format"
+                value="$formatstring(#-##-#####,$g_save_acno3)"
             />
             <br height="$cs_height_20"/>
             <label
