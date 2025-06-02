@@ -435,13 +435,13 @@ value="
     $logvar(g_SSLSocketName,p_socket_name,p_result);
 
     if($comparevar(g_SSLSocketName,p_socket_name) != 0) {
-        $alert(,ssl_connect_callaction 소켓명이 다르다.)
+        $callaction(fnPopover_AlertAction,,ssl_connect_callaction 소켓명이 다르다.,,확인);
         return;
     }
     if(!$p_result) {
         $ssl_close($g_SSLSocketName);
         $delvar(g_SSLSocketName);
-        $alert(,ssl_connect_callaction,접속 실패);
+        $callaction(fnPopover_AlertAction,,ssl_connect_callaction,접속 실패,,확인);
         return;
     }
 

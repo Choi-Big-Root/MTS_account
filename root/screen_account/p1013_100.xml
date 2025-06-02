@@ -371,7 +371,6 @@ value="	// 비대면 절차개선 - 2020.09.28
 	);
 	if(!$isequal_string($recvSSL_hdr_ret,OK)){
 		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤
-		//$alertaction(,,$recv_error_msg,확인);
 		$callaction(fnPopover_AlertAction,,$recv_error_msg,,확인);
 		return;
 	}

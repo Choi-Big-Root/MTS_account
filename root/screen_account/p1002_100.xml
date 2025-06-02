@@ -1135,7 +1135,7 @@ value="
 <action id="btn_1002_confirm_onclicked"
 value="
 	if($strlen($tf_1002_confirm_4.value)<1){
-		$alert(,,인증번호를 입력해주세요.);
+		$callaction(fnPopover_AlertAction,,인증번호를 입력해주세요.,,확인);
 		return;
 	}
 	$callaction(Act_VerifyTelecomAuthCodeMts);
@@ -1241,7 +1241,7 @@ value="
  	$callaction(fnConfig_SetValue,g_IN_REQUEST_AGE 	,$tmp_age_man);		// 만나이
 
  	if($g_IN_REQUEST_AGE >= 65) {
- 		$alert(fnAGEAlertResult,,만 65세 이상의 고령투자자 고객은 비대면 계좌개설을 지원하지 않습니다. 직접 내방을 통해 개설을 부탁드립니다.,확인);
+ 		$callaction(fnPopover_AlertAction,fnAGEAlertResult,만 65세 이상의 고령투자자 고객은 비대면 계좌개설을 지원하지 않습니다. 직접 내방을 통해 개설을 부탁드립니다.,,확인);
  		return;
  	}
  	$KISA_SEED_CBC_ENCRYPT(g_tf_1002_confirm_2_var,g_tf_1002_confirm_2_kisa_encrypt);
@@ -1443,8 +1443,6 @@ value="
 
 	if(!$isequal_string($recvSSL_hdr_ret,OK)){
 		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
-		//$alertaction(,,$recv_error_msg,확인);
-		//$callaction(fnPopover_AlertAction,,$recv_error_msg,,확인);
 		$callaction(fnPopover_AlertAction,,$recvSSL_hdr_msg,,확인);
 		return;
 	}

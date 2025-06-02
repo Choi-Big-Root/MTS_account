@@ -163,10 +163,6 @@ value="
 
 	$callaction(fnConfig_SetValue,g_IN_BNKNAME_BNK_NM 	,$recvSSL_body_NAME);
 
-	//$alertaction(fnActive_Next_1010,,계좌조회가 완료되었습니다.,확인);
-	//$callaction(fnPopover_AlertAction,fnActive_Next_1010,계좌조회가 완료되었습니다.,,확인);
-
-
 	// 비대면 절차개선 - 2020.09.28
 	// 은행사, 계좌주, 계좌번호 데이터 전역변수에 저장
 	$callaction(fnConfig_SetValue,g_save_bank_name,$btn_1010_100.value);
@@ -474,7 +470,6 @@ value="
 	$setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_hdr_err_code));
 
 	if(!$isequal_string($recvSSL_hdr_ret,OK)){
-		//$alertaction(,,$recv_error_msg,확인);
 		$callaction(fnPopover_AlertAction,,$recv_error_msg,,확인);
 		return;
 	}

@@ -232,7 +232,7 @@ value="
 		,recvSSL_hdr_msg 	
 	);
 	if(!$isequal_string($recvSSL_hdr_ret,OK)){
-		$alert(,,$recvSSL_hdr_msg);
+		$callaction(fnPopover_AlertAction,,$recvSSL_hdr_msg,,확인);
 		return;
 	}
 	$callaction(fnConfig_SetValue,g_save_open_tp,2);	// 1:역이체, 2:영상통화

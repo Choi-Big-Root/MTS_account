@@ -661,7 +661,7 @@ value="
 		&& !$chk_1001_2gr_2.checked 
 		&& !$chk_1001_2gr_3.checked
 		){
-			$alert(,,안내 방법을 하나 이상 선택해 주세요.);
+			$callaction(fnPopover_AlertAction,,안내 방법을 하나 이상 선택해 주세요.,,확인);
 			return;
 		}
 	}
