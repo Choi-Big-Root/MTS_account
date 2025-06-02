@@ -283,6 +283,11 @@ value="
 
 	$callaction(fnConfig_SetValue,g_open_tp_select,1); // g_open_tp_select 해외:1, 국내:2
 	$closescreen(popscreen_1006_100_pwd_check);
+
+	if($g_dev_memory_check_flag){
+		$callaction(Act_Open_Account_Move,1010); 계좌확인 - 이후 카메라 화면으로 이동 
+		return;
+	}
 	$callaction(Act_Open_Account_Move,1007);
 "/>
 <popscreen id="popscreen_1006_100_pwd_check"

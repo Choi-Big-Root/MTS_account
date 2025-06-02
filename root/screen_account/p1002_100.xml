@@ -1412,7 +1412,7 @@ value="
 	$closescreen(popscreen_1002_100_telecom_auth_code);
 
 	if($g_dev_memory_check_flag){ 					// 금융보안원 검수 버전 
-    	$callaction(Act_Open_Account_Move,1010); 	// 계좌확인 - 이후 카메라 화면으로 이동 
+    	$callaction(Act_Open_Account_Move,1006); 	// 비밀번호 설정
     	return;
     }
 
