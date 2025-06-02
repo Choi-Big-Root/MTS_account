@@ -560,8 +560,9 @@ value="
 	}
 	if($btn_1005_meme.key == 5){  // E-mail
 		if($strlen($g_IN_REQUEST_CLNT_EMAIL) < 1){
-			$callaction(fnPopover_AlertAction,,[변경예정]E-mail을 입력하세요.,,확인);
-			return;
+			//이메일 필수입력이라 비어있을수가 없음.
+			//$callaction(fnPopover_AlertAction,,[변경예정]E-mail을 입력하세요.,,확인);
+			//return;
 		}
 	}
 

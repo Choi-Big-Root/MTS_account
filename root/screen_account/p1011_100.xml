@@ -289,5 +289,36 @@ value="
 </screen>
 <action id="1011_camera_onclicked" 
 value="
+
+	// 신분증 촬영 1012 부터는 영상통화,1원인증 나눠지는데 그전에 데이터를 셋팅.
+	if($g_dev_memory_check_flag){
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_LOCAL_YN 		,Y);
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_ABODE_NM 		,Y);
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_HOME_POST_NO 	,07327);
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_HOME_ADDR 		,서울 영등포구 국제금융로 24%28여의도동%29);
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_HOME_ADDR2 		,5층);
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_HOME_TEL 		,);
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_JOB_NM 			,1001);
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_COM_NM 			,유진투자선물%28주%29);
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_COM_DEPART 		,);
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_COM_TEL 			,);
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_COM_POST_NO 		,07327);
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_COM_ADDR 		,서울 영등포구 국제금융로 24);
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_COM_ADDR2 		,5층 %28여의도동%29);
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_CLNT_EMAIL 		,test@naver.com);
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_CLNT_FAX 		,);
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_TRD_PPO 			,1);
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_FUNDS 			,2);
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_OWN_YN 			,Y);
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_AMERICAN_YN 		,N);
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_TRADE 			,5);
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_DEAL 			,1);
+		$callaction(fnConfig_SetValue,g_IN_REQUEST_PD1 				,20);
+		$callaction(fnConfig_SetValue,g_save_members_no 			,51140800);
+		$callaction(fnConfig_SetValue,g_save_members_nm 			,최용호);
+	}
+
+
+
 	$callaction(Act_Open_Account_Move,1012);
 "/>
