@@ -212,7 +212,7 @@ value="
 			height="$cs_height_98"
 		>
 			<label
-				width="$cs_width_56"
+				width="$cs_width_60"
 				height="$cs_height_20"
 				fontsize="$cs_fontsize_15"
 				fontname="$cs_font_400"
