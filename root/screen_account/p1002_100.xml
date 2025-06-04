@@ -493,6 +493,9 @@ value="
 
 	$setvar( btn_1002_af.enable = $callaction(fnBtnAfConfirmCheck));
 	$closescreen(popscreen_1002_phone_choice);
+
+	//팝업이 닫히고..포커스를 주는 과정의 순서가..영..이상하다
+	$setnstimer(TIMER_DISCONNECTALL,0.3,fnDisConnectAll,FALSE);
 	if($1002_phone_choice_set_key != -1 && $strlen($tf_1002_confirm_3.value) <= 0){
 		$setvar(tf_1002_confirm_3.focus = true);
 	}
