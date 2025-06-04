@@ -27,7 +27,6 @@ margin_right="$cs_width_15"
 margin_left="$cs_width_15"
 margin_top="$cs_height_13"
 margin_bottom="$cs_height_13"
-input_type="none"
 border_width="1"
 border_radius="$cs_radius_10"
 border_color="EBEBEB"
@@ -139,7 +138,7 @@ value="
         />
         <br height="$cs_height_10"/>
         <textfield id="txt_1015_question_1"
-           class="cs_1015_100_question_input"
+            class="cs_1015_100_question_input"
             placeholder="출신 초등학교 이름을 입력해주세요."
         />
         <br height="$cs_height_20"/>
@@ -149,7 +148,7 @@ value="
         />
         <br height="$cs_height_10"/>
         <textfield id="txt_1015_question_2"
-           class="cs_1015_100_question_input"
+            class="cs_1015_100_question_input"
             placeholder="가장 친한 친구 이름을 입력해주세요."
         />
         <br height="$cs_height_20"/>
