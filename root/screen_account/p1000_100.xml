@@ -24,6 +24,55 @@ fontsize="$cs_fontsize_16"
 textcolor="$cs_color_black"
 />
 
+<class id="cs_pop_screen_1000_100"
+width="$this.remain_right"
+layout="center"
+layout_vertical="bottom"
+margin_bottom="$cs_height_20"
+height="$cs_height_477"
+background_roundinfo="$cs_color_white,$cs_color_white,$cs_radius_30,1,true,true,false,false"
+/>
+<class id="cs_pop_1000_100"
+width="$p_lcdWidth"
+height="$p_lcdHeight"
+backcolor="00000060"
+/>
+<class id="cs_pop_1000_100_title"
+width="$this.remain_right"
+height="$cs_height_25"
+textcolor="$cs_color_black"
+fontsize="$cs_fontsize_18"
+fontname="$cs_font_700"
+/>
+<class id="cs_pop_vg_content"
+width="$this.remain_right"
+backcolor="$cs_color_bg"
+border_width="1"
+border_radius="$cs_radius_10"
+margin_top="$cs_height_16"
+margin_bottom="$cs_height_16"
+margin_left="$cs_height_16"
+margin_right="$cs_height_16"
+/>
+<class id="cs_pop_1_2_lbl_rectangle"
+width="$cs_width_4"
+height="$cs_height_22"
+BACKGROUNDSVG="$icon_rectangle_230"
+BACKGROUNDSVG_DISABLE="$icon_rectangle_230"
+BACKGROUNDSVG_HIGHLIGHT="$icon_rectangle_230"
+BACKGROUNDSVG_WIDTH="$cs_height_4"
+BACKGROUNDSVG_HEIGHT="$cs_height_4"
+backgroundimage_align="center"
+backgroundimage_align_vertical="center"
+/>
+<class id="cs_pop_1_2_lbl_text"
+width="$this.remain_right"
+height="$cs_height_22"
+fontsize="$cs_fontsize_14"
+textcolor="$cs_color_text"
+fontname="$cs_font_400"
+/>
+
 <action id="screen_contents_onload" value="
 	$setvar(g_is_open_account = true); // 안드로이드 키맵에서 쓰인다. 
 	$setvar(
@@ -178,17 +227,10 @@ value="
 
 //초기화면 1_2
 <popscreen id="pop_1000_1_2"
-	width="$p_lcdWidth"
-	height="$p_lcdHeight"
-	backcolor="00000060"
+	class="cs_pop_1000_100"
 >
 	<screen id="pop_1000_1_2_screen"
-		width="$this.remain_right"
-		layout="center"
-		layout_vertical="bottom"
-		margin_bottom="$cs_height_20"
-		height="$cs_height_477"
-		background_roundinfo="$cs_color_white,$cs_color_white,$cs_radius_30,1,true,true,false,false"
+		class="cs_pop_screen_1000_100"
 	>
 		<br height="$cs_height_30" />
 		<viewgroup
@@ -198,105 +240,50 @@ value="
 			margin_right="$cs_width_23"
 		>
 			<label
-				width="$this.remain_right"
-				height="$cs_height_25"
-				textcolor="$cs_color_black"
-				fontsize="$cs_fontsize_18"
-				fontname="$cs_font_700"
+				class="cs_pop_1000_100_title"
 				value="금융거래 한도제한 안내"
 			/>
 			<br height="$cs_height_10"/>
 			<viewgroup
-				width="$this.remain_right"
+				class="cs_pop_vg_content"
 				height="$cs_height_260"
-				backcolor="$cs_color_bg"
-				border_width="1"
-				border_radius="$cs_radius_10"
-				margin_top="$cs_height_16"
-				margin_bottom="$cs_height_16"
-				margin_left="$cs_height_16"
-				margin_right="$cs_height_16"
 			>
 				<label
-					width="$cs_width_4"
-					height="$cs_height_22"
-            		BACKGROUNDSVG="$icon_rectangle_230"
-			        BACKGROUNDSVG_DISABLE="$icon_rectangle_230"
-			        BACKGROUNDSVG_HIGHLIGHT="$icon_rectangle_230"
-			        BACKGROUNDSVG_WIDTH="$cs_height_4"
-			        BACKGROUNDSVG_HEIGHT="$cs_height_4"
-			        backgroundimage_align="center"
-			        backgroundimage_align_vertical="center"
+					class="cs_pop_1_2_lbl_rectangle"
 				/>
 				<blank width="$cs_width_5"/>
 				<label
-					width="$this.remain_right"
-					height="$cs_height_22"
-					fontsize="$cs_fontsize_14"
-					textcolor="$cs_color_text"
-					fontname="$cs_font_400"
+					class="cs_pop_1_2_lbl_text"
 					value="거래 없이 입금, 출금만 하는 경우, 금융거래 목적이"
 				/>
 				<br/>
 				<label
-					width="$this.remain_right"
-					height="$cs_height_22"
+					class="cs_pop_1_2_lbl_text"
 					margin_left="$cs_width_9"
-					fontsize="$cs_fontsize_14"
-					textcolor="$cs_color_text"
-					fontname="$cs_font_400"
 					value="확인 되지 않은 경우,금융사기 방지를 위해’출금제한"
 				/>
 				<br/>
 				<label
-					width="$this.remain_right"
-					height="$cs_height_22"
+					class="cs_pop_1_2_lbl_text"
 					margin_left="$cs_width_9"
-					fontsize="$cs_fontsize_14"
-					textcolor="$cs_color_text"
-					fontname="$cs_font_400"
 					value="계좌’ 로 설정이 됩니다."
 				/>
 				<br height="$cs_height_10"/>
 				<label
-					width="$cs_width_4"
-					height="$cs_height_22"
-					BACKGROUNDSVG="$icon_rectangle_230"
-			        BACKGROUNDSVG_DISABLE="$icon_rectangle_230"
-			        BACKGROUNDSVG_HIGHLIGHT="$icon_rectangle_230"
-			        BACKGROUNDSVG_WIDTH="$cs_height_4"
-			        BACKGROUNDSVG_HEIGHT="$cs_height_4"
-			        backgroundimage_align="center"
-			        backgroundimage_align_vertical="center"
+					class="cs_pop_1_2_lbl_rectangle"
 				/>
 				<blank width="$cs_width_5"/>
 				<label
-					width="$this.remain_right"
-					height="$cs_height_22"
-					fontsize="$cs_fontsize_14"
-					textcolor="$cs_color_text"
-					fontname="$cs_font_400"
+					class="cs_pop_1_2_lbl_text"
 					value="거래발생시 출금제한은 해지됩니다."
 				/>
 				<br height="$cs_height_10"/>
 				<label
-					width="$cs_width_4"
-					height="$cs_height_22"
-					BACKGROUNDSVG="$icon_rectangle_230"
-			        BACKGROUNDSVG_DISABLE="$icon_rectangle_230"
-			        BACKGROUNDSVG_HIGHLIGHT="$icon_rectangle_230"
-			        BACKGROUNDSVG_WIDTH="$cs_height_4"
-			        BACKGROUNDSVG_HEIGHT="$cs_height_4"
-			        backgroundimage_align="center"
-			        backgroundimage_align_vertical="center"
+					class="cs_pop_1_2_lbl_rectangle"
 				/>
 				<blank width="$cs_width_5"/>
 				<label
-					width="$this.remain_right"
-					height="$cs_height_22"
-					fontsize="$cs_fontsize_14"
-					textcolor="$cs_color_text"
-					fontname="$cs_font_400"
+					class="cs_pop_1_2_lbl_text"
 					value="1일 최대 이체 한도"
 				/>
 				<br height="$cs_height_5"/>
@@ -331,23 +318,12 @@ value="
 				</viewgroup>
 				<br height="$cs_height_10"/>
 				<label
-					width="$cs_width_4"
-					height="$cs_height_22"
-					BACKGROUNDSVG="$icon_rectangle_230"
-			        BACKGROUNDSVG_DISABLE="$icon_rectangle_230"
-			        BACKGROUNDSVG_HIGHLIGHT="$icon_rectangle_230"
-			        BACKGROUNDSVG_WIDTH="$cs_height_4"
-			        BACKGROUNDSVG_HEIGHT="$cs_height_4"
-			        backgroundimage_align="center"
-			        backgroundimage_align_vertical="center"
+					class="cs_pop_1_2_lbl_rectangle"
 				/>
 				<blank width="$cs_width_5"/>
 				<label
-					width="$this.remain_right"
+					class="cs_pop_1_2_lbl_text"
 					height="$cs_height_44"
-					fontsize="$cs_fontsize_14"
-					fontname="$cs_font_400"
-					textcolor="$cs_color_text"
 					valign="top"
 					multiline="true"
 					value="이체 한도 조정 관련 문의는 유선으로 연락 주시면 안내해 드리겠습니다."
@@ -477,9 +453,7 @@ value="
 	);
 "/>
 <popscreen id="pop_1000_1_3"
-	width="$p_lcdWidth"
-	height="$p_lcdHeight"
-	backcolor="00000060"
+	class="cs_pop_1000_100"
 	onload="pop_1000_1_3_onload"
 	onunload="pop_1000_1_3_onunload"
 >
@@ -589,17 +563,10 @@ value="
 
 //초기화면 1_4
 <popscreen id="pop_1000_1_4"
-	width="$p_lcdWidth"
-	height="$p_lcdHeight"
-	backcolor="00000060"
+	class="cs_pop_screen_account"
 >
 	<screen id="pop_1000_1_4_screen"
-		width="$this.remain_right"
-		layout="center"
-		layout_vertical="bottom"
-		margin_bottom="$cs_height_20"
-		height="$cs_height_477"
-		background_roundinfo="$cs_color_white,$cs_color_white,$cs_radius_30,1,true,true,false,false"
+		class="cs_pop_screen_1000_100"
 	>
 		<br height="$cs_height_30" />
 		<viewgroup
@@ -609,24 +576,13 @@ value="
 			margin_right="$cs_width_23"
 		>
 			<label
-				width="$this.remain_right"
-				height="$cs_height_25"
-				textcolor="$cs_color_black"
-				fontsize="$cs_fontsize_18"
-				fontname="$cs_font_700"
+				class="cs_pop_1000_100_title"
 				value="비대면 계좌개설 제한고객"
 			/>
 			<br height="$cs_height_10"/>
 			<viewgroup
-				width="$this.remain_right"
+				class="cs_pop_vg_content"
 				height="$cs_height_130"
-				backcolor="$cs_color_bg"
-				border_width="1"
-				border_radius="$cs_radius_10)"
-				margin_top="$cs_height_16"
-				margin_bottom="$cs_height_16"
-				margin_left="$cs_height_16"
-				margin_right="$cs_height_16"
 			>
 				<viewgroup
 					width="$this.remain_right"
@@ -718,11 +674,7 @@ value="
 			</viewgroup>
 			<br height="$cs_height_20)" />
 			<label
-				width="$this.remain_right"
-				height="$cs_height_25"
-				textcolor="$cs_color_black"
-				fontsize="$cs_fontsize_18"
-				fontname="$cs_font_700"
+				class="cs_pop_1000_100_title"
 				value="비대면 계좌개설 제한시간"
 			/>
 			<br height="$cs_height_10"/>
