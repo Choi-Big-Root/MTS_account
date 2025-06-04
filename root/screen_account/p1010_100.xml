@@ -90,10 +90,16 @@ value="
 	$callaction(popscreen_open_account_confirm_onclicked,$tmp_pop_info_x_cal,$tmp_pop_imfo_y_cal);
 "/>
 <action id="btn_1010_number_onclicked" value="
+	
+	if($tmp_1010_number_double_click_flag){
+		return;
+	}
+
 
 	$callaction(fnConfig_SetValue,g_IN_BNKNAME_BNK_CODE 	,$btn_1010_100.key);
 	$callaction(fnConfig_SetValue,g_IN_BNKNAME_BNK_NO 	,$tf_1010_confirm_01.value);
 
+	$setvar(tmp_1010_number_double_click_flag = true);
 	$callaction(fnSendSSL_MO_BNKNAME);
 " />
 //계좌 명의 확인
@@ -129,6 +135,7 @@ value="
 value="
 	
 	$closescreen(pop_host_msg);
+	$setvar(tmp_1010_number_double_click_flag = false);
 
 	$setvar(
 		recvSSL_hrd_ret 		= $json_getdata($jsonname,HDR.RET)
