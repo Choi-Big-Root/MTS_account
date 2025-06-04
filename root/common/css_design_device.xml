@@ -30,6 +30,7 @@
     //$callaction(set_base_ratio, $g_design_width, $g_design_height, $g_device_width, $g_device_height);
     $callaction(set_base_ratio, $g_design_width, $g_design_height, $g_device_width, $p_lcdHeight);
     $callaction(set_font_size, $g_design_width, $g_design_height, $g_device_width, $g_device_height);
+
     $callaction(set_image_path);
 
     if( $g_iBottomVar > 0) {
@@ -157,7 +158,7 @@ value="
         );
         $setvar(
             //var_size = $result_double($getvar($var_name) * $p_design_width / 100)
-            var_size = $result_double($getvar($var_name) * $p_device_width / 100)           // 기기비율로 계산
+            var_size = $result_floor($getvar($var_name) * $p_device_width / 100, 0)           // 기기비율로 계산
         );
         $setvar_common(
             $($var_size_name) = $var_size
