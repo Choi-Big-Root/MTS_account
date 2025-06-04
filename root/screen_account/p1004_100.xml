@@ -1297,9 +1297,18 @@ value="
 <!-- https://dev-options.eugenefutures.com/wts/kodataapi/enp_search7?enpnm=투자선물&page=1&format=JSON&pagerowcn=60 -->
 <action id="tf_popscreen_1004_choice_jikjang_onChanged" 
 value="
-	$setnstimer(TIMER_TF_CHANGE_WAIT,0.2,tf_popscreen_1004_choice_jikjang_onChanged_2,FALSE);
+	$cleartablerow(tbl_jikjang_addrees);
+	$delvar(strPostData);
+    $addurlparam(strPostData,enpnm,$tf_popscreen_1004_choice_jikjang.value);
+    $addurlparam(strPostData,page,1);
+    $addurlparam(strPostData,pagerowcn,30);
+    $addurlparam(strPostData,format,JSON);
+    
+
+	$getrequestdata(OPENAPI_TEST,https://dev-options.eugenefutures.com/wts/kodataapi/enp_search7,fnJikJangSearch_CallBack,strPostData);
+	//$setnstimer(TIMER_TF_CHANGE_WAIT,0.2,tf_popscreen_1004_choice_jikjang_onChanged_2,FALSE);
 " />
-<action id="tf_popscreen_1004_choice_jikjang_onChanged_2"
+<!-- <action id="tf_popscreen_1004_choice_jikjang_onChanged_2"
 value="
 	$cleartablerow(tbl_jikjang_addrees);
 	$delvar(strPostData);
@@ -1310,7 +1319,7 @@ value="
     
 
 	$getrequestdata(OPENAPI_TEST,https://dev-options.eugenefutures.com/wts/kodataapi/enp_search7,fnJikJangSearch_CallBack,strPostData);
-"/>
+"/> -->
 <action id="fnJikJangSearch_CallBack" params="result,strVarName,strURL" value="
     $cleartablerow(tbl_jikjang_addrees);
 	$setvar(jsonName=openAPIJson);
