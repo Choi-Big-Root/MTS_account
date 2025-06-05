@@ -34,6 +34,7 @@ backgroundimage_align_vertical="center"
 fontsize="$cs_fontsize_16"
 fontname="$cs_font_600"
 textcolor="232B2B"
+onclicked="$callaction(fnAgree_check_All_onclicked,$this.key,$this.id);"
 />
 
 <class id="cs_1007_100_vg_chk_kind"
@@ -61,7 +62,7 @@ BACKGROUNDSVG_WIDTH="$cs_height_18"
 BACKGROUNDSVG_HEIGHT="$cs_height_18"
 backgroundimage_align="left"
 backgroundimage_align_vertical="center"
-onClicked="$callaction(btn_1007_100_onClicked,$this.key);"
+onClicked="$setvar(tmp_all_check_flag = true);$callaction(btn_1007_100_onClicked,$this.key);"
 />	
 <action id="screen_contents_onload" value="
 	$setvar(
@@ -143,6 +144,8 @@ onClicked="$callaction(btn_1007_100_onClicked,$this.key);"
 		,vg_account_title_step.hidden = false
 
 		,menu_num=1007
+
+		tmp_all_check_flag = 
 	);
 "/>
 <action id="screen_1007_100_onunload" value="
@@ -238,8 +241,8 @@ value="
 	>
 		<checkbox id="chk_1007_100_1_all"
 			class="cs_1007_100_chk_all" 
+			key="1"
 			value="약관승인"
-			onclicked="$callaction(fnAgree_Check_1007_100,1);"
 		/>
 		<br height="$cs_height_15" />
 		<hr width="$this.remain_right" backcolor="$cs_color_line"/>
@@ -286,8 +289,8 @@ value="
 	>
 		<checkbox id="chk_1007_100_2_all"
 			class="cs_1007_100_chk_all" 
+			key="10"
 			value="위험고지 확인"
-			onclicked="$callaction(fnAgree_Check_1007_100,10);"
 		/>
 		<br height="$cs_height_15" />
 		<hr width="$this.remain_right" backcolor="$cs_color_line"/>
@@ -323,7 +326,7 @@ value="
 		<checkbox id="chk_1007_100_3_all"
 			class="cs_1007_100_chk_all" 
 			value="고객 유의사항"
-			onclicked="$callaction(fnAgree_Check_1007_100,15);"
+			key="15"
 		/>
 		<br height="$cs_height_15" />
 		<hr width="$this.remain_right" backcolor="$cs_color_line"/>
@@ -381,11 +384,49 @@ value="
 			textcolor_active="$cs_color_white"
 			textcolor_disable="$cs_color_white"
 			value="약관 확인할게요"
-			onclicked="$callaction(fnAgree_Check_1007_100,0);"
+			key="0"
+			onclicked="$setvar(tmp_all_check_flag=false);$callaction(fnAgree_Check_1007_100,$this.key);"
 		/>
 	</viewgroup>
 	<br height="$cs_screen_bottom_margin" />
 </screen>
+<action id="fnAgree_check_All_onclicked"
+params="p_key,p_id"
+value="
+	if(!$p_id.checked){
+		if($p_key <= 5){
+			$setvar(
+				tmp_arr_var_name = tmp_array_1007_htmldata_top
+			);
+		}elseif($p_key < 15){
+			$setvar(
+				tmp_arr_var_name = tmp_array_1007_htmldata_middel
+			);
+		}else{
+			$setvar(
+				tmp_arr_var_name = tmp_array_1007_htmldata_bottom
+			);
+		}
+
+		for($i=0; $i<$getarrayvarcount($tmp_arr_var_name); $i++ ){
+			$delvar(chk_all_id);
+			$setvar(
+				1007_top_cnt	= $getarrayvar($tmp_arr_var_name,$i,0)
+				,tmp_btn_id = $addstring(btn_,$1007_top_cnt)
+			);
+			
+			$setvar($($tmp_btn_id).checked = false);
+		}
+
+		$setvar(
+			,btn_1007_af.value = 약관 확인할게요
+		);
+		return;
+	}
+
+	$setvar(tmp_all_check_flag=false);
+	$callaction(fnAgree_Check_1007_100,$p_key);
+"/>
 
 <action id="btn_1007_100_onClicked"
 params="p_key"
@@ -399,6 +440,20 @@ value="
 		,tmp_html_height_idx_val 	= $getarrayvar(tmp_array_1007_htmldata,$tmp_html_idx,2)
 		
 	);
+
+	if(!$tmp_btn_id.checked){
+		if($p_key <= 5){
+			$setvar(chk_1007_100_1_all.checked = false);
+		}elseif($p_key < 15){
+			$setvar(chk_1007_100_2_all.checked = false);
+		}else{
+			$setvar(chk_1007_100_3_all.checked = false);
+		}
+
+		$setvar(btn_1007_af.value = 약관 확인할게요);
+
+		return;
+	}
 
 	$setvar( $($tmp_btn_id).checked = true ); //일단 다시 누르면 무조건 true
 
@@ -680,8 +735,12 @@ value="
 			$setvar(chk_all_id = chk_1007_100_3_all);
 		}
 		if(!$tmp_checked){
-			$setvar($($tmp_btn_id).checked = true);
-			$callaction(btn_1007_100_onClicked,$1007_top_cnt);
+			if($tmp_all_check_flag){
+				$setvar( $($chk_all_id).checked = false ); 
+			}else{
+				$setvar($($tmp_btn_id).checked = true);
+				$callaction(btn_1007_100_onClicked,$1007_top_cnt);
+			}
 			return false;
 		}
 		$setvar( $($chk_all_id).checked = true ); 
