@@ -45,7 +45,7 @@ BACKGROUNDSVG_WIDTH="$cs_height_18"
 BACKGROUNDSVG_HEIGHT="$cs_height_18"
 backgroundimage_align="left"
 backgroundimage_align_vertical="center"
-onClicked="$callaction(btn_essential_1001_100_onClicked,$this.key);"
+onClicked="$setvar(tmp_all_check_flag = true); $callaction(btn_essential_1001_100_onClicked,$this.key);"
 />
 <class id="cs_1001_100_chk_all"
 width="$cs_width_229"
@@ -151,6 +151,39 @@ value="
 	);
 	$callaction(popscreen_open_account_confirm_onclicked,$tmp_pop_info_x_cal,$tmp_pop_imfo_y_cal);
 "/>
+<action id="chk_1001_100_1_all_onClicked"
+value="
+	if($chk_1001_100_1_all.checked){
+		$setvar(tmp_all_check_flag = false);
+		$callaction(btn_1001_confirm_onclicked);
+	}else{
+		$setvar(
+			,btn_1_1.checked = false
+			,btn_2_1.checked = false
+			,btn_2_2.checked = false
+			,btn_3_1.checked = false
+			,btn_1001_100_confirm.value = 약관 확인할게요
+		);
+	}
+	
+"/>
+<action id="chk_1001_100_2_onClicked"
+value="
+	if($chk_1001_100_2.checked){
+		if($vg_1001_100_agree_kind.selectkey == 1){ 		//상세동의서
+			$setvar( 	popscreen_html = 1001_100_4_1_n_htmldata_d	);
+		}
+		else{												//요약동의서 
+			$setvar(	popscreen_html = 1001_100_4_1_n_htmldata	);
+			// htmlview height 지정해야 함.
+		}
+		$setvar(popscreen_key=4_1);
+		$popscreen(popscreen_1001_100);
+	}else{
+		$setvar(btn_4_1.checked = false);
+	}
+"/>
+
 <screen id="screen_1001_100"
 	class="cs_screen_contents"
 	backcolor="ffffff"
@@ -235,7 +268,7 @@ value="
 				<checkbox id="chk_1001_100_1_all"
 					class="cs_1001_100_chk_all"
 					value="개인(신용)정보 필수동의서"
-					onClicked="$callaction(btn_1001_confirm_onclicked);"
+					onClicked="chk_1001_100_1_all_onClicked"
 				/>			
 				<viewgroup id="vg_1001_100_agree_kind"
 					width="$this.remain_right"
@@ -308,7 +341,7 @@ value="
 				<checkbox id="chk_1001_100_2"
 					class="cs_1001_100_chk_all"
 					value="[선택]개인(신용)정보 동의서"
-					onClicked="$callaction(btn_essential_1001_100_onClicked,4_1);"
+					onClicked="chk_1001_100_2_onClicked"
 				/>
 			</viewgroup>
 			<br height="$cs_height_15"/>
@@ -434,6 +467,7 @@ value="
 <action id="btn_1001_100_confirm_onclicked"
 value="
 	//추후 동의서 확인이 필요.
+	$setvar(tmp_all_check_flag = false);
 	$setvar(tmp_result_confrim = $callaction(btn_1001_confirm_onclicked));
 	if($tmp_result_confrim){
 		$popscreen(pop_1001_100_1);
@@ -728,12 +762,27 @@ value="
 <action id="btn_essential_1001_100_onClicked"
 params="p_key"
 value="
-	//1001_100_4_1_n_htmldata
 	$setvar(
 		,tmp_btn_id			= $addstring(btn_,$p_key)
 		,popscreen_title 	= $tmp_btn_id.value
 		,popscreen_key 		= $p_key
 	);
+
+	//20250605 문창오 대리 요청 수정사항 
+	// 해당 내용 참고하면 나머지도 전부 변경될듯.
+	if(!$tmp_btn_id.checked && !$isequal_string($p_key,4_2)){
+
+		if($isequal_string($tmp_btn_id,btn_4_1)){
+			$setvar(chk_1001_100_2.checked = false);
+		}else{
+			$setvar(
+				chk_1001_100_1_all.checked = false
+				,btn_1001_100_confirm.value = 약관 확인할게요
+			);
+		}
+		return;
+	}
+
 	$setvar( $($tmp_btn_id).checked = true ); //일단 다시 누르면 무조건 true
 	if($vg_1001_100_agree_kind.selectkey == 1){ 		//상세동의서
 		$setvar( 	popscreen_html = $addstring(1001_100_,$p_key,_n_htmldata,_d)	);
@@ -1003,13 +1052,32 @@ value="
 	$setvar(btn_1001_af.enable = true); 			// 다음버튼 활성화 
 	return true;
 " />
+<action id="fnAgree_Check_1001_100_kind"
+value="
+
+	if(!$btn_1_1.checked 
+	|| !$btn_2_1.checked
+	|| !$btn_2_2.checked
+	|| !$btn_3_1.checked
+	){
+		return false;
+	}
+	$setvar(btn_1001_af.enable = true); 			// 다음버튼 활성화 
+	return true;
+" />
 
 // 다음버튼
 <action id="btn_1001_confirm_onclicked" 
 value="
+	$log(최대근확인******** $tmp_all_check_flag);
+
+	if($tmp_all_check_flag){
+		$setvar(tmp_isAgree = $callaction(fnAgree_Check_1001_100_kind)	);
+	}else{
+		$setvar(tmp_isAgree = $callaction(fnAgree_Check_1001_100)	);
+	}
 	// 필수동의서는 자동으로 띄운다.
-	$setvar(	
-		tmp_isAgree = $callaction(fnAgree_Check_1001_100)	
+	$setvar(
 		,chk_1001_100_1_all.checked = $tmp_isAgree
 	);
 
