@@ -38,6 +38,22 @@ textcolor="$cs_color_text"
 fontsize="$cs_fontsize_12"
 fontname="$cs_font_400"
 />
+<class id="cs_1002_100_pop_info_chk"
+width="$this.remain_right"
+height="$cs_height_20"
+fontname="$cs_font_400"
+fontsize="$cs_fontsize_14"
+textcolor="$cs_color_text"
+margin_left="$result($cs_height_20 + $cs_width_10)"
+CHECKIMAGESVG="$icon_checkbox_on" 
+UNCHECKIMAGESVG="$icon_checkbox_off"
+CHECKIMAGESVG_DISABLE="$icon_checkbox_off"
+BACKGROUNDSVG_WIDTH="$cs_height_20"
+BACKGROUNDSVG_HEIGHT="$cs_height_20"
+backgroundimage_align="left"
+backgroundimage_align_vertical="center"
+onClicked="$setvar(tmp_all_check_flag = true);$callaction(btn_essential_1002_100_onClicked,$this.key);"
+/>
 <action id="screen_contents_onload" value="
 	$setvar(
 		,img_step_1.hidden=false
@@ -87,6 +103,8 @@ fontname="$cs_font_400"
 
         ,tmp_first_phone_slash_flage = true
         ,tmp_second_phone_slash_flage = true
+
+        ,tmp_all_check_flag = 
 	);
 "/>
 
@@ -658,7 +676,7 @@ value="
 					backgroundimage_align="left"
 					backgroundimage_align_vertical="center"
 					value="전체 동의하기"
-					onClicked="$callaction(chk_1002_100_all_onclicked);"
+					onClicked="chk_1002_100_all_onclicked_before"
 				/>
 				<br height="$cs_height_20" />
 				<viewgroup
@@ -668,40 +686,14 @@ value="
 				>
 					<checkbox id="chk_1002_100_1"
 						layout_vertical="top"
-						width="$this.remain_right"
-						height="$cs_height_20"
-						fontname="$cs_font_400"
-						fontsize="$cs_fontsize_14"
-						textcolor="$cs_color_text"
-						margin_left="$result($cs_height_20 + $cs_width_10)"
-						CHECKIMAGESVG="$icon_checkbox_on" 
-						UNCHECKIMAGESVG="$icon_checkbox_off"
-						CHECKIMAGESVG_DISABLE="$icon_checkbox_off"
-						BACKGROUNDSVG_WIDTH="$cs_height_20"
-						BACKGROUNDSVG_HEIGHT="$cs_height_20"
-						backgroundimage_align="left"
-						backgroundimage_align_vertical="center"
-						onClicked="$callaction(btn_essential_1002_100_onClicked,1);"
+						class="cs_1002_100_pop_info_chk"
 						key="1"
 						value="(필수) 통신사 이용약관 동의"
 					/>
 					<br/>
 					<checkbox id="chk_1002_100_2"
 						layout_vertical="bottom"
-						width="$this.remain_right"
-						height="$cs_height_20"
-						fontname="$cs_font_400"
-						fontsize="$cs_fontsize_14"
-						textcolor="$cs_color_text"
-						margin_left="$result($cs_height_20 + $cs_width_10)"
-						CHECKIMAGESVG="$icon_checkbox_on" 
-						UNCHECKIMAGESVG="$icon_checkbox_off"
-						CHECKIMAGESVG_DISABLE="$icon_checkbox_off"
-						BACKGROUNDSVG_WIDTH="$cs_height_20"
-						BACKGROUNDSVG_HEIGHT="$cs_height_20"
-						backgroundimage_align="left"
-						backgroundimage_align_vertical="center"
-						onClicked="$callaction(btn_essential_1002_100_onClicked,2);"
+						class="cs_1002_100_pop_info_chk"
 						key="2"
 						value="(필수) 개인(신용)정보의 업무위탁에 관한 사항"
 					/>
@@ -762,6 +754,14 @@ value="
 		,popscreen_key 		= $p_key
 	);
 
+	//20250605 문창오 대리님 요청 수정사항 
+	if(!$tmp_btn_id.checked){
+		$setvar(
+			chk_1002_100_all.checked = false
+			,btn_1002_number_bf.enable = false
+		);
+		return;
+	}
 
 	if($isequal_string($p_key,1)){
 		$setvar(	popscreen_html = $g_1002_html_phone	);
@@ -798,11 +798,28 @@ value="
 	$callaction(chk_1002_100_all_onclicked); 		// 필수동의서는 자동으로 띄운다.
 "/>
 // 인증번호
+<action id="chk_1002_100_all_onclicked_before"
+value="
+	if($chk_1002_100_all.checked){
+		$setvar(tmp_all_check_flag = false);
+		$callaction(chk_1002_100_all_onclicked);
+	}else{
+		$setvar(
+			chk_1002_100_1.checked = false
+			,chk_1002_100_2.checked = false
+			,btn_1002_number_bf.enable = false
+		);
+	}
+"/>
 <action id="chk_1002_100_all_onclicked" 
 value="
 	// 필수동의서는 자동으로 띄운다.
+	if($tmp_all_check_flag){
+		$setvar(tmp_isAgree = $callaction(fnAgree_Check_1002_100_kind)	);
+	}else{
+		$setvar(tmp_isAgree = $callaction(fnAgree_Check_1002_100)	);
+	}
 	$setvar(	
-		tmp_isAgree = $callaction(fnAgree_Check_1002_100)	
 		,chk_1002_100_all.checked = $tmp_isAgree
 	);
 
@@ -861,6 +878,16 @@ value="
 	$setvar(btn_1002_number_bf.enable = true); 			// 다음버튼 활성화 
 	return true;
 " />
+<action id="fnAgree_Check_1002_100_kind"
+value="
+	if(!$chk_1002_100_1.checked
+	|| !$chk_1002_100_2.checked
+	){
+		return false;
+	}
+	$setvar(btn_1002_number_bf.enable = true); 			// 다음버튼 활성화 
+	return true;
+"/>
 <action id="ppopscreen_1002_100_onload" 
 value="
 	$setvar( 
