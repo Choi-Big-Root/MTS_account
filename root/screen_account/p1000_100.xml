@@ -563,7 +563,7 @@ value="
 
 //초기화면 1_4
 <popscreen id="pop_1000_1_4"
-	class="cs_pop_screen_account"
+	class="cs_pop_1000_100"
 >
 	<screen id="pop_1000_1_4_screen"
 		class="cs_pop_screen_1000_100"
