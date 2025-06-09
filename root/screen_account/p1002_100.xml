@@ -149,67 +149,6 @@ value="
 		$setvar(btn_1002_af.enable = true);
 	}
 "/>
-<!-- <action id="tf_1002_confirm_3_onChange"
-value="
-
-    if($tmp_tf_phone_change_flag){
-    	$setvar(tmp_tf_phone_change_flag = false);
-    	return;
-    }
-    
-    if($strlen($this.value) <= 0 ){
-    	$closescreen(popscreen_1002_100_info_open);
-    	$setvar(btn_1002_af.enable = false);
-	}else{
-		$setvar(btn_1002_af.enable = true);
-	}
-
-    // 13자리 이상이면 입력 제한
-    if($strlen($this.value) >= 13){
-        return;
-    }
-
-    // 모든 하이픈 제거
-    $setvar(
-        tmp_clean_number = $replace(-,,$this.value)
-        ,tmp_tf_phone_change_flag = true
-    );
-    
-    // 번호 길이에 따라 포맷팅
-    if($strlen($tmp_clean_number) <= 3){
-    	$setvar(
-    		$($this.id).value = $tmp_clean_number
-    	);
-    }elseif($strlen($tmp_clean_number) <= 7){
-		$setvar(
-        	$($this.id).value = $formatstring(###-####,$tmp_clean_number)
-        );
-    }else{
-    	$setvar(
-        	$($this.id).value = $formatstring(###-####-####,$tmp_clean_number)
-        );
-    }
-"/> -->
-//디자인 시안에 맞게 작업했던 keypad 주석
-<!-- <action id="fnAccountKeypad_1002_100_confirm"
-value="
-	$setvar( 
-		tmp_af_result = $callaction(fnBtnAfConfirmCheck)
-		,btn_1002_af.enable = $tmp_af_result
-	);
-
-	$closescreen(popscreen_number_keypad);
-	if($tmp_af_result){
-		$popscreen(popscreen_1002_100_info_open);
-	}else{
-		return;
-	}
-
-"/>
-<action id="fnAccountKeypad_1002_100_onunload"
-value="
-	$setvar( btn_1002_af.enable = $callaction(fnBtnAfConfirmCheck));
-"/> -->
 <screen id="screen_1002_100"
 	class="cs_screen_contents"
 	backcolor="ffffff"
@@ -323,13 +262,6 @@ value="
 					enable="true"
 					onChanged="tf_1002_confirm_3_onChange"
 				/>
-				<!-- <button class="cs_button_none" 
-					x="$tf_1002_confirm_3.x"
-					y="$tf_1002_confirm_3.y"
-					width="$this.remain_right" 
-					height="$cs_height_24"
-					onClicked="$callaction(fnAccountShowInputKeypad,tf_1002_confirm_3,phone,fnAccountKeypad_1002_100_confirm,fnAccountKeypad_1002_100_onunload);"
-				/> -->
 			</viewgroup>
 			<br height="$cs_height_20" />
 			<viewgroup id="vg_1002_100_input_2"
