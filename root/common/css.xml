@@ -15,6 +15,19 @@
 **
 ********************************************************
  -->
+<action id="fnCalFontsizePercent"
+params="p_font_size_px"
+value="
+	$setvar(
+		tmp_width = $result($p_font_size_px/375 * $g_lcdwidth)
+		,tmp_height = $result($p_font_size_px/812 * $g_lcdHeight)
+		,tmp_fontsize = $result( $tmp_width + $tmp_height )
+	);
+
+	return $result($tmp_fontsize / 2);
+"/>
+
+
 <actiondata value="
 	//$printfont();
 
@@ -86,17 +99,17 @@
 
 	//font size
 	$setvar_common(
-		,cs_fontsize_11 = $h($g_lcdHeight,1.4)
-		,cs_fontsize_12 = $h($g_lcdHeight,1.5)
-		,cs_fontsize_13 = $h($g_lcdHeight,1.6)
-		,cs_fontsize_14 = $h($g_lcdHeight,1.8)
-		,cs_fontsize_15 = $h($g_lcdHeight,1.9)
-		,cs_fontsize_16 = $h($g_lcdHeight,2.0)
-		,cs_fontsize_18 = $h($g_lcdHeight,2.3)
-		,cs_fontsize_20 = $h($g_lcdHeight,2.5)
-		,cs_fontsize_22 = $h($g_lcdHeight,2.7)
-		,cs_fontsize_24 = $h($g_lcdHeight,3.0)
-		,cs_fontsize_30 = $h($g_lcdHeight,3.7)
+		,cs_fontsize_11 = $callaction(fnCalFontsizePercent,11)
+		,cs_fontsize_12 = $callaction(fnCalFontsizePercent,12)
+		,cs_fontsize_13 = $callaction(fnCalFontsizePercent,13)
+		,cs_fontsize_14 = $callaction(fnCalFontsizePercent,14)
+		,cs_fontsize_15 = $callaction(fnCalFontsizePercent,15)
+		,cs_fontsize_16 = $callaction(fnCalFontsizePercent,16)
+		,cs_fontsize_18 = $callaction(fnCalFontsizePercent,18)
+		,cs_fontsize_20 = $callaction(fnCalFontsizePercent,20)
+		,cs_fontsize_22 = $callaction(fnCalFontsizePercent,22)
+		,cs_fontsize_24 = $callaction(fnCalFontsizePercent,24)
+		,cs_fontsize_30 = $callaction(fnCalFontsizePercent,30)
 	);	
 
 	/*

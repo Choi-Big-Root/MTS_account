@@ -8,6 +8,10 @@
 		$callaction(textFieldEnd_local,$TEXTFIELDEND_PARAM1);
 	}
 " />
+
+<action id="TEXTFIELDBEGIN" scope="common" value="
+	$callaction(textFieldbegin_local,$TEXTFIELDBEGIN_PARAM1);
+" />
 <!--
 <action id="fnGoScreen_Base" scope="common" 
 params="p_menu_code"
