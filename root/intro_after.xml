@@ -87,7 +87,7 @@
 		<label 
     	width="$cs_width_335" 
     	height="$cs_height_20"
-    	value="V 0.0.1" 
+    	value="$versionStr_new" 
     	align="center"
     	layout="center"
         fontname="$cs_font_100"
