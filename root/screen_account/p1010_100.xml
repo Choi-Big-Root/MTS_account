@@ -147,6 +147,13 @@ value="
 	$setvar(recv_error_msg = $callaction(Act_Error_Message_Account,$recvSSL_hdr_err_code));
 	if(!$isequal_string($recvSSL_hrd_ret,OK)){
 		$setvar(vg_1010_100_result.hidden = true);
+
+		//20250609 문창오대리님 요청사항 : 서버에서 문구를 변경하는 방법도 있으나 서버에서 변경시 기존것도 변경되는 문제가 있으니 이렇게 처리.
+		if($isequal_string($recvSSL_hdr_err_code,G00918) || $recvSSL_hdr_err_code,G01999)){
+			$callaction(fnPopover_AlertAction,,계좌 정보를 정확히 입력해 주세요,,확인);		
+			return;	
+		}
+
 		$callaction(fnPopover_AlertAction,,$recv_error_msg,,확인);
 		return;
 	}

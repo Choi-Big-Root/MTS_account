@@ -177,7 +177,7 @@ value="
 	backcolor="$cs_color_white"
 	onload="screen_contents_onload"
 	onunload="screen_contents_onunload"
-	noscroll_height="false"
+	noscroll_height="true"
 	margin_top="$cs_screen_top_margin"
 	margin_bottom="$cs_screen_bottom_margin"
 	margin_left="$cs_screen_left_right_margin"
@@ -235,119 +235,124 @@ value="
    		</viewgroup>
 	</viewgroup>
 	<br height="$cs_height_20" />
-	<viewgroup
-		height="$cs_height_249"
-		class="cs_1007_100_vg_chk_kind"
+	<screen id="screen_1007_100_contents"
+		height="$result($this.remain_bottom - $cs_height_67)"
+		noscroll_height="false"
 	>
-		<checkbox id="chk_1007_100_1_all"
-			class="cs_1007_100_chk_all" 
-			key="1"
-			value="약관승인"
-		/>
-		<br height="$cs_height_15" />
-		<hr width="$this.remain_right" backcolor="$cs_color_line"/>
-		<br height="$cs_height_15" />
 		<viewgroup
-			width="$this.remain_right"
-			height="$this.remain_bottom"
-		>		
-			<checkbox id="btn_1"
-				class="cs_btn_essential_1007_100"
+			height="$cs_height_249"
+			class="cs_1007_100_vg_chk_kind"
+		>
+			<checkbox id="chk_1007_100_1_all"
+				class="cs_1007_100_chk_all" 
 				key="1"
-				value="계좌간 자금대체약관"
+				value="약관승인"
 			/>
-			<br height="$cs_height_11" />
-			<checkbox id="btn_2"
-				class="cs_btn_essential_1007_100"
-				key="2"
-				value="HTS이용약관"
-			/>
-			<br height="$cs_height_11" />
-			<checkbox id="btn_3"
-				class="cs_btn_essential_1007_100"
-				key="3"
-				value="전자금융거래이용에관한약관"
-			/>
-			<br height="$cs_height_11" />
-			<checkbox id="btn_4"
-				class="cs_btn_essential_1007_100"
-				key="4"
-				value="(해외)파생상품총괄계좌설정약관"
-			/>
-			<br height="$cs_height_11" />
-			<checkbox id="btn_5"
-				class="cs_btn_essential_1007_100"
-				key="5"
-				value="(해외)파생상품입출금약관"
-			/>
+			<br height="$cs_height_15" />
+			<hr width="$this.remain_right" backcolor="$cs_color_line"/>
+			<br height="$cs_height_15" />
+			<viewgroup
+				width="$this.remain_right"
+				height="$this.remain_bottom"
+			>		
+				<checkbox id="btn_1"
+					class="cs_btn_essential_1007_100"
+					key="1"
+					value="계좌간 자금대체약관"
+				/>
+				<br height="$cs_height_11" />
+				<checkbox id="btn_2"
+					class="cs_btn_essential_1007_100"
+					key="2"
+					value="HTS이용약관"
+				/>
+				<br height="$cs_height_11" />
+				<checkbox id="btn_3"
+					class="cs_btn_essential_1007_100"
+					key="3"
+					value="전자금융거래이용에관한약관"
+				/>
+				<br height="$cs_height_11" />
+				<checkbox id="btn_4"
+					class="cs_btn_essential_1007_100"
+					key="4"
+					value="(해외)파생상품총괄계좌설정약관"
+				/>
+				<br height="$cs_height_11" />
+				<checkbox id="btn_5"
+					class="cs_btn_essential_1007_100"
+					key="5"
+					value="(해외)파생상품입출금약관"
+				/>
+			</viewgroup>
 		</viewgroup>
-	</viewgroup>
-	<br height="$cs_height_20" />
-	<viewgroup
-		height="$cs_height_183"
-		class="cs_1007_100_vg_chk_kind"
-	>
-		<checkbox id="chk_1007_100_2_all"
-			class="cs_1007_100_chk_all" 
-			key="10"
-			value="위험고지 확인"
-		/>
-		<br height="$cs_height_15" />
-		<hr width="$this.remain_right" backcolor="$cs_color_line"/>
-		<br height="$cs_height_15" />
+		<br height="$cs_height_20" />
 		<viewgroup
-			width="$this.remain_right"
-			height="$this.remain_bottom"
-		>		
-			<checkbox id="btn_10"
-				class="cs_btn_essential_1007_100"
+			height="$cs_height_183"
+			class="cs_1007_100_vg_chk_kind"
+		>
+			<checkbox id="chk_1007_100_2_all"
+				class="cs_1007_100_chk_all" 
 				key="10"
-				value="(해외)파생상품거래 위험고지서"
+				value="위험고지 확인"
 			/>
-			<br height="$cs_height_11" />
-			<checkbox id="btn_11"
-				class="cs_btn_essential_1007_100"
-				key="11"
-				value="일중거래위험고지서"
-			/>
-			<br height="$cs_height_11" />
-			<checkbox id="btn_12"
-				class="cs_btn_essential_1007_100"
-				key="12"
-				value="시스템매매위험고지서"
-			/>
+			<br height="$cs_height_15" />
+			<hr width="$this.remain_right" backcolor="$cs_color_line"/>
+			<br height="$cs_height_15" />
+			<viewgroup
+				width="$this.remain_right"
+				height="$this.remain_bottom"
+			>		
+				<checkbox id="btn_10"
+					class="cs_btn_essential_1007_100"
+					key="10"
+					value="(해외)파생상품거래 위험고지서"
+				/>
+				<br height="$cs_height_11" />
+				<checkbox id="btn_11"
+					class="cs_btn_essential_1007_100"
+					key="11"
+					value="일중거래위험고지서"
+				/>
+				<br height="$cs_height_11" />
+				<checkbox id="btn_12"
+					class="cs_btn_essential_1007_100"
+					key="12"
+					value="시스템매매위험고지서"
+				/>
+			</viewgroup>
 		</viewgroup>
-	</viewgroup>
-	<br height="$cs_height_20" />
-	<viewgroup
-		height="$cs_height_150"
-		class="cs_1007_100_vg_chk_kind"
-	>
-		<checkbox id="chk_1007_100_3_all"
-			class="cs_1007_100_chk_all" 
-			value="고객 유의사항"
-			key="15"
-		/>
-		<br height="$cs_height_15" />
-		<hr width="$this.remain_right" backcolor="$cs_color_line"/>
-		<br height="$cs_height_15" />
+		<br height="$cs_height_20" />
 		<viewgroup
-			width="$this.remain_right"
-			height="$this.remain_bottom"
-		>		
-			<checkbox id="btn_15"
-				class="cs_btn_essential_1007_100"
+			height="$cs_height_150"
+			class="cs_1007_100_vg_chk_kind"
+		>
+			<checkbox id="chk_1007_100_3_all"
+				class="cs_1007_100_chk_all" 
+				value="고객 유의사항"
 				key="15"
-				value="(해외)장중추가증거금 관리 안내"
 			/>
-			<br height="$cs_height_11" />
-			<checkbox id="btn_16"
-				class="cs_btn_essential_1007_100"
-				key="16"
-				value="불법차명거래금지 및 자금세탁방지에 대한 안내"
-			/>
+			<br height="$cs_height_15" />
+			<hr width="$this.remain_right" backcolor="$cs_color_line"/>
+			<br height="$cs_height_15" />
+			<viewgroup
+				width="$this.remain_right"
+				height="$this.remain_bottom"
+			>		
+				<checkbox id="btn_15"
+					class="cs_btn_essential_1007_100"
+					key="15"
+					value="(해외)장중추가증거금 관리 안내"
+				/>
+				<br height="$cs_height_11" />
+				<checkbox id="btn_16"
+					class="cs_btn_essential_1007_100"
+					key="16"
+					value="불법차명거래금지 및 자금세탁방지에 대한 안내"
+				/>
+			</viewgroup>
 		</viewgroup>
-	</viewgroup>
+	</screen>
 	<br height="$cs_height_13" />
 	<viewgroup
 		width="$cs_bottom_one_button_width"
@@ -744,6 +749,11 @@ value="
 			return false;
 		}
 		$setvar( $($chk_all_id).checked = true ); 
+	}
+
+	if($chk_1007_100_1_all.checked || $chk_1007_100_2_all.checked){
+		//20250609 문창오 대리님 요청사항 : 내부 스크롤 사용 + 1번째 완료할경우 스크롤이 하단으로 내려갔으면 좋겠다는 내용을 반영
+		$setvar(screen_1007_100_contents.scrolloffset_y= $cs_height_80);
 	}
 
 	if($chk_1007_100_1_all.checked

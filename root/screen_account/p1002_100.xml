@@ -1192,7 +1192,10 @@ value="
 			,tf_1002_confirm_4.value =
 			,btn_1002_confirm.enable = false
 		);
-		$callaction(fnPopover_AlertAction,,$json_errorMsg,,확인);
+		//20250609 문창오대리님 요청사항 : 에러 메시지 내용 변경.
+		//$callaction(fnPopover_AlertAction,,$json_errorMsg,,확인);
+		$callaction(fnPopover_AlertAction,,문자인증번호 또는 주민등록번호가 일치하지 않아요.다시 확인해 주세요.,,확인);
+		
 		return;
 	}
 " />
@@ -1572,7 +1575,7 @@ value="
 				height="$cs_height_98"
 			>
 				<label
-					width="$cs_width_56"
+					width="$cs_width_60"
 					height="$cs_height_20"
 					fontsize="$cs_fontsize_15"
 					fontname="$cs_font_400"

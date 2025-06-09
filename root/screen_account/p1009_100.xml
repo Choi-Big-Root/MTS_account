@@ -346,9 +346,19 @@ value="
 value="
 	if($chk_radio1_2.checked && $chk_radio2_2.checked){
 		$callaction(Act_Open_Account_Move,1010);
-	}
-	else{
-		$callaction(fnPopover_AlertAction,,타인의 요청에 의한 계좌 개설은 불가해요,,확인);
 		return;
 	}
+
+	//20250609 문창오 대리님 요청사항 : 안내 팝업의 순서로 인한 수정이니 이대로 진행이 필요.
+	if(!$chk_radio1_1.checked && !$chk_radio1_2.checked){
+		$callaction(fnPopover_AlertAction,,금융거래 목적을 확인해 주세요,,확인);
+	}elseif(!$chk_radio1_2.checked){
+		$callaction(fnPopover_AlertAction,,타인의 요청에 의한 계좌 개설은 불가해요,,확인);
+	}elseif(!$chk_radio2_1.checked && !$chk_radio2_2.checked){
+		$callaction(fnPopover_AlertAction,,금융거래 목적을 확인해 주세요,,확인);
+	}elseif(!$chk_radio2_2.checked){
+		$callaction(fnPopover_AlertAction,,타인의 요청에 의한 계좌 개설은 불가해요,,확인);
+	}
+
+	return;
 " />
