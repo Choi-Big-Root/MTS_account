@@ -230,8 +230,7 @@ value="
 			<label
 				class="cs_1009_100_kind_lbl_right"
 				height="$cs_height_60"
-				value="타인으로부터 신용등급상향, 대출 등이 목적으로
-계좌개설을 요청받은 사실이 있습니까?"
+				value="타인으로부터 신용등급상향, 대출 등의 목적으로 계좌개설을 요청받은 사실이 있습니까?"
 			/>
 			<br/>
 			<viewgroup id="vg_qustion2_check" 
