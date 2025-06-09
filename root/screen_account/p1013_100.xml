@@ -227,6 +227,10 @@ value="
 	</viewgroup>
 </screen>
 <action id="fnInputDataCheck" value="
+	if($g_dev_memory_check_flag){
+		$callaction(fnPopover_AlertAction,,금융보안원 검수버전은 1원 송금은 불가합니다.,,확인);
+		return;
+	}
 	if($fnInputDataCheck_param1 == 1){
 		$callaction(fnSendSSL_MO_TRANSIN);		// 역이체 입금 서비스
 		return;

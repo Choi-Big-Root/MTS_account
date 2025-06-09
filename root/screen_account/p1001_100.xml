@@ -1069,6 +1069,7 @@ value="
 // 다음버튼
 <action id="btn_1001_confirm_onclicked" 
 value="
+	$log(최대근확인******** $tmp_all_check_flag);
 
 	if($tmp_all_check_flag){
 		$setvar(tmp_isAgree = $callaction(fnAgree_Check_1001_100_kind)	);

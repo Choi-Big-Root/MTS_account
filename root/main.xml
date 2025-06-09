@@ -3,7 +3,7 @@
 <actiondata value="
     $checkapns_key();
     $logvar(p_APNS_RegKey);
-    $printfont();
+    //$printfont();
 "/>
 <action id="screen_main_onload"
 value="
