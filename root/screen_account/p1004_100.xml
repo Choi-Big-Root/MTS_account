@@ -1166,13 +1166,13 @@ value="
 					<td 
 						width="$this.remain_right"
 						height="$this.remain_bottom"
-						margin_top="$cs_height_20"
+						margin_top="$cs_height_10"
 						margin_left=""
 						margin_right=""
 					>
 						<label
 							width="$this.remain_right"
-							height="$cs_height_18"
+							height="$cs_height_28"
 							fontname="$cs_font_600"
 							fontsize="$cs_fontsize_16"
 							textcolor="$cs_color_black"

@@ -372,6 +372,10 @@ value="
 <action id="subscreen_open_account_onload" scope="common"
 value="
 " />
+<action id="subscreen_open_account_onunload" scope="common"
+value="
+    $closescreen(pop_info_tip);
+"/>
 <popscreen id="popscreen_open_account" scope="common"
 width="$g_lcdWidth" 
 height="$g_lcdHeight"
@@ -619,7 +623,7 @@ onunload="popscreen_open_account_onunload"
     </viewgroup>
     <br/>
     <screen id="screen_open_account" backcolor="ffffff" >
-        <subscreen id="subscreen_open_account" onload="subscreen_open_account_onload">
+        <subscreen id="subscreen_open_account" onload="subscreen_open_account_onload" onunload="subscreen_open_account_onunload">
             <import_dynamic filename="$tmp_open_account_file"/>
         </subscreen>
     </screen>
