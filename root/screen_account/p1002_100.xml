@@ -1863,7 +1863,41 @@ value="
 		$callaction(1002_phone_onclicked);
 	}
 "/>
+<action id="textfieldbegin_local"
+value="
+	if($isequal_string($TEXTFIELDBEGIN_LOCAL_PARAM1,tf_1002_confirm_1)){
+		$setvar(
+			tf_1002_confirm_1.enable = true
+			,tf_1002_confirm_2.enable = false
+			,tf_1002_confirm_3.enable = false
+			,1002_phone_choice.enable = false
+		);
+	}
+	if($isequal_string($TEXTFIELDBEGIN_LOCAL_PARAM1,tf_1002_confirm_2)){
+		$setvar(
+			tf_1002_confirm_1.enable = false
+			,tf_1002_confirm_2.enable = true
+			,tf_1002_confirm_3.enable = false
+			,1002_phone_choice.enable = false
+		);
+	}
+	if($isequal_string($TEXTFIELDBEGIN_LOCAL_PARAM1,tf_1002_confirm_3)){
+		$setvar(
+			tf_1002_confirm_1.enable = false
+			,tf_1002_confirm_2.enable = false
+			,tf_1002_confirm_3.enable = true
+			,1002_phone_choice.enable = false
+		);;
+	}
+"/>
 <action id="textFieldEnd_local" value="
+	$setvar(
+		tf_1002_confirm_1.enable = true
+		,tf_1002_confirm_2.enable = true
+		,tf_1002_confirm_3.enable = true
+		,1002_phone_choice.enable = true
+	);
+
 	$setvar( 
 		tmp_textFieldEnd_local_result = $callaction(fnBtnAfConfirmCheck)
 		,btn_1002_af.enable = $tmp_textFieldEnd_local_result
