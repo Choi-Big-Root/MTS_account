@@ -963,9 +963,9 @@ value="
 		}
 	}
 "/>
-<action id="TEXTFIELDBEGIN_LOCAL"
+<!-- <action id="TEXTFIELDBEGIN_LOCAL"
 value="
 	if($isequal_string($TEXTFIELDBEGIN_LOCAL_PARAM1,tf_pop_jatek_3_input)){
 		$setvar(popscreen_jatek_3_input.scrolloffset_y = $cs_height_150);
 	}
-"/>
+"/> -->
