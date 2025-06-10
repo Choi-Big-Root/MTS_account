@@ -278,7 +278,6 @@ value="
 		<br height="$cs_height_20" />
 		<viewgroup
 			class="cs_1010_100_input_vg"
-			margin_right=""
 		>
 			<label
 				class="cs_1010_100_input_lbl"
@@ -286,7 +285,7 @@ value="
 			/>
 			<br/>
 			<textfield id="tf_1010_confirm_01"
-				width="$result($this.remain_right - $cs_width_87)"
+				width="$cs_width_245"
 				height="$this.remain_bottom"
 				input_type="number"
 				maxlength="16"
@@ -297,19 +296,23 @@ value="
 				placeholder="계좌번호를 입력해주세요"
 				onChanged="tf_1010_confirm_01_onChanged"
 			/>
-			<blank width="$cs_width_2"/>
-			<button 
-				id="btn_1010_number_01"
+			<blank width="$cs_width_6"/>
+			<!-- 20250610 문창오 대리님 요청사항 : 본인인즈에 재전송 버튼과 디자인 동일하게 -->
+			<button id="btn_1010_number_01"
 				width="$this.remain_right"
 				height="$this.remain_bottom"
-				value="계좌확인" 
+				textcolor="$cs_color_white"
+				textcolor_active="$cs_color_white"
+				textcolor_disable="$cs_color_white"
 				fontsize="$cs_fontsize_13"
 				fontname="$cs_font_400"
-				textcolor="$cs_color_black"
-				textcolor_active="$cs_color_black"
-				backcolor="$cs_color_white"
-				backcolor_active="$cs_color_white"
-				onclicked="btn_1010_number_onclicked"
+				align="center"
+				value="계좌확인"
+				backcolor="$cs_color_main"
+				backcolor_active="$cs_color_main"
+				backcolor_disable="$cs_color_main_disable"
+				border_radius="$cs_height_12"
+				onclicked="btn_1010_number_onclicked" 
 			/>
 		</viewgroup>
 		<br height="$cs_height_20" />

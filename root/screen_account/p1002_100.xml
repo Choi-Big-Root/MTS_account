@@ -732,16 +732,12 @@ value="
 // 인증번호
 <action id="chk_1002_100_all_onclicked_before"
 value="
-	if($chk_1002_100_all.checked){
-		$setvar(tmp_all_check_flag = false);
-		$callaction(chk_1002_100_all_onclicked);
-	}else{
-		$setvar(
-			chk_1002_100_1.checked = false
-			,chk_1002_100_2.checked = false
-			,btn_1002_number_bf.enable = false
-		);
-	}
+	//20250610 문창오대리님 요청사항 : 해당 체크박스로 버튼 전부 제어 + 약관표시 x
+	$setvar(
+		chk_1002_100_1.checked = $chk_1002_100_all.checked
+		,chk_1002_100_2.checked = $chk_1002_100_all.checked
+		,btn_1002_number_bf.enable = $chk_1002_100_all.checked
+	);
 "/>
 <action id="chk_1002_100_all_onclicked" 
 value="
@@ -1125,8 +1121,9 @@ value="
 			,btn_1002_confirm.enable = false
 		);
 		//20250609 문창오대리님 요청사항 : 에러 메시지 내용 변경.
+		//20250610 문창오대리님 요청사항 : space 추가.
 		//$callaction(fnPopover_AlertAction,,$json_errorMsg,,확인);
-		$callaction(fnPopover_AlertAction,,문자인증번호 또는 주민등록번호가 일치하지 않아요.다시 확인해 주세요.,,확인);
+		$callaction(fnPopover_AlertAction,,문자인증번호 또는 주민등록번호가 일치하지 않아요.%20%20다시 확인해 주세요.,,확인);
 		
 		return;
 	}
