@@ -1297,7 +1297,8 @@ value="
 <!-- https://dev-options.eugenefutures.com/wts/kodataapi/enp_search7?enpnm=투자선물&page=1&format=JSON&pagerowcn=60 -->
 <action id="tf_popscreen_1004_choice_jikjang_onChanged" 
 value="
-	$setnstimer(TIMER_TF_CHANGE_WAIT,0.2,tf_popscreen_1004_choice_jikjang_onChanged_2,FALSE);
+	//debounce를 구현. xml에서 제어하는게 맞나 싶
+	$setnstimer(TIMER_TF_CHANGE_WAIT,0.3,tf_popscreen_1004_choice_jikjang_onChanged_2,FALSE);
 " />
 <action id="tf_popscreen_1004_choice_jikjang_onChanged_2"
 value="
@@ -1322,8 +1323,14 @@ value="
 
 	$setvar(
 		tmp_enpcnt = $json_getdata($jsonName,KED.HEADER.enpcnt)
+		,tmp_enpnm = $json_getdata($jsonName,KED.HEADER.enpnm)
 		
 	);
+	$logvar(tmp_enpnm);
+	if(!$isequal_string($tmp_enpnm,$tf_popscreen_1004_choice_jikjang.value)){
+		$callaction(tf_popscreen_1004_choice_jikjang_onChanged);
+		return;
+	}
 
 	if($tmp_enpcnt == 0){
 		$setvar(
