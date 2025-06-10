@@ -18,13 +18,19 @@
 <action id="fnCalFontsizePercent"
 params="p_font_size_px"
 value="
+	$delvar(tmp_width,tmp_height,tmp_fontsize);
+	
 	$setvar(
-		tmp_width = $result($p_font_size_px/375 * $g_lcdwidth)
-		,tmp_height = $result($p_font_size_px/812 * $g_lcdHeight)
-		,tmp_fontsize = $result( $tmp_width + $tmp_height )
+		tmp_width = $result_double($p_font_size_px / $g_design_width * $g_lcdwidth)
+
+		,tmp_height = $result_double($p_font_size_px / $g_design_height * $g_lcdHeight)
+
+		,tmp_fontsize = $result_double( ($tmp_width + $tmp_height) / 2 )
 	);
 
-	return $result($tmp_fontsize / 2);
+	$logvar(tmp_fontsize);
+
+	return $tmp_fontsize;
 "/>
 
 
