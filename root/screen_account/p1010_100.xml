@@ -285,7 +285,7 @@ value="
 			/>
 			<br/>
 			<textfield id="tf_1010_confirm_01"
-				width="$cs_width_245"
+				width="$cs_width_242"
 				height="$this.remain_bottom"
 				input_type="number"
 				maxlength="16"
