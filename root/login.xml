@@ -24,6 +24,19 @@ height="$super.height"
 layout="left"
 layout_vertical="top"
 />
+<class id="cs_login_gr_theme_kind"
+groupid="gr_login_theme_kind"
+height="$this.remain_bottom"
+backcolor="$cs_color_black"
+backcolor_active="$cs_color_main"
+align="center"
+textcolor="$cs_color_white"
+textcolor_active="$cs_color_white"
+fontsize="$cs_fontsize_12"
+fontname="$cs_font_400"
+fontname_active="$cs_font_600"
+onClicked="$callaction(fnSelectTheme);"
+/>
 
 <actiondata value="
     $logvar(bg_frame_48096451);
@@ -33,8 +46,20 @@ layout_vertical="top"
 " />
 <action id="screen_login_onload" 
 value="
-    
+    if($g_theme_dark){
+        $setvar(btn_login_theme_black.select = true);
+    }else{
+        $setvar(btn_login_theme_white.select = true);
+    }
 " />
+<action id="fnSelectTheme"
+value="
+    $setvar_common(g_theme_dark = $vg_login_theme_kind.selectkey);
+    $log($vg_login_theme_kind.selectkey);
+    $callaction(fnSetSvgIconPath);
+    $callaction(fnSetCSSAccount);
+    $reopenfile();
+"/>
 <screen id="screen_login"
 backcolor="ffffff"
 width="$g_lcdWidth"
@@ -60,6 +85,27 @@ onLoad="screen_login_onload"
     width="$super.width" 
     height="$cs_height_50"
     >
+        <blank width="$cs_width_21" />
+        <viewgroup id="vg_login_theme_kind"
+            width="$cs_width_90"
+            height="$cs_height_20"
+            border_width="1"            
+            border_radius="$cs_radius_5"
+            layout_vertical="center"
+        >
+            <button id="btn_login_theme_white"
+                class="cs_login_gr_theme_kind"
+                width="$result($this.remain_right/2)"
+                value="White"
+                key="0"
+            />
+            <button id="btn_login_theme_black"
+                class="cs_login_gr_theme_kind"
+                width="$this.remain_right"
+                value="Black"
+                key="1"
+            />
+        </viewgroup>
         <label
         x="$cs_width_227"
         y="$cs_width_13"

@@ -32,12 +32,8 @@ value="
 
 	return $tmp_fontsize;
 "/>
-
-
-<actiondata value="
-	//$printfont();
-
-
+<action id="fnSetCSSAccount"
+value="
 	//테마 별 색상 컬러
 	if($g_theme_dark){
 		//black 테마.
@@ -171,6 +167,8 @@ value="
 ********************************************************
  -->
 <actiondata value="
+	$callaction(fnSetCSSAccount);
+
 	$setvar_common(
 		g_fontSize_big1     = $result($g_baseFontSize+$g_baseFontUnitSize)
 		,g_fontSize_big2    = $result($g_baseFontSize+($g_baseFontUnitSize*2))
