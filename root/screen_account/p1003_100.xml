@@ -488,7 +488,7 @@ value="
 <popscreen id="popscreen_address_find"
 	width="$p_lcdWidth" 
 	height="$p_lcdHeight"
-	backcolor="00000060"
+	backcolor="$cs_color_pop_bg"
 	layout="center"
 	layout_vertical="center"
 	onload="popscreen_address_find_onload"
@@ -565,6 +565,7 @@ value="
 			<table id="tbl_address_find_1003"
 				class="cs_grid"
 				width="$this.remain_right"
+				backcolor="$cs_color_white"
 				rowheight="$cs_height_102"
 				json_looparrayname="results.juso"
 				rowkey_count="30"
@@ -597,12 +598,14 @@ value="
 						~buldSlno:rowkey24:trim
 					"
 					onClicked="tbl_address_find_1003_onclicked" 
+					backcolor="$cs_color_white"
 				>
 					<td 
 						width="$this.remain_right"
 						height="$this.remain_bottom"
 						margin_top="$cs_height_20"
 						margin_left="$cs_width_16"
+						backcolor="$cs_color_white"
 					>
 						<label
 							width="$cs_width_254"
@@ -612,6 +615,7 @@ value="
 							textcolor="$cs_color_black"
 							align="left"
 							json_data="zipNo:value"
+							backcolor="$cs_color_white"
 						/>
 
 						<viewgroup
@@ -655,6 +659,7 @@ value="
 							textcolor="$cs_color_black"
 							align="left"
 							json_data="roadAddr:value"
+							backcolor="$cs_color_white"
 						/>
 						<br/>
 						<label
@@ -666,6 +671,7 @@ value="
 							textcolor="$cs_color_black"
 							align="left"
 							json_data="jibunAddr:value"
+							backcolor="$cs_color_white"
 						/>
 					</td>
 				</tr>
@@ -731,7 +737,7 @@ value="
 <popscreen id="popscreen_jatek_3_input"
 	width="$p_lcdWidth" 
 	height="$p_lcdHeight"
-	backcolor="00000060"
+	backcolor="$cs_color_pop_bg"
 	layout="center"
 	layout_vertical="center"
 	onload="popscreen_jatek_3_input_onload"
@@ -861,7 +867,7 @@ value="
 <popscreen id="pop_1003_100_email"
 	width="$p_lcdWidth" 
 	height="$p_lcdHeight"
-	backcolor="00000060"
+	backcolor="$cs_color_pop_bg"
 	layout="center"
 	layout_vertical="center"
 	onload="pop_1003_100_email_onload"
