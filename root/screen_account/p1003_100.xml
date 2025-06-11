@@ -797,7 +797,7 @@ value="
 		</viewgroup>
 
 		<br/>
-		<viewgroup
+		<viewgroup id="vg_pop_jatek_3_confirm"
 			width="$this.remain_right"
 			height="$cs_height_50"
 			layout="center"
@@ -951,7 +951,7 @@ value="
     />
 </popscreen>
 
-<action id="TEXTFIELDEND_LOCAL"
+<!-- <action id="TEXTFIELDEND_LOCAL"
 value="
 	if($isequal_string($TEXTFIELDEND_LOCAL_PARAM1,tf_pop_jatek_3_input)){
 		$setvar(popscreen_jatek_3_input.scrolloffset_y = 0);
@@ -962,8 +962,8 @@ value="
 			$setvar(btn_pop_jatek_3_confirm.enable = false);
 		}
 	}
-"/>
-<!-- <action id="TEXTFIELDEND_LOCAL"
+"/> -->
+<action id="TEXTFIELDEND_LOCAL"
 value="
 	if($isequal_string($TEXTFIELDEND_LOCAL_PARAM1,tf_pop_jatek_3_input)){
 		$setvar(popscreen_jatek_3_input.scrolloffset_y = 0);
@@ -984,15 +984,15 @@ value="
 <action id="TEXTFIELDBEGIN_LOCAL"
 value="
 	if($isequal_string($TEXTFIELDBEGIN_LOCAL_PARAM1,tf_pop_jatek_3_input)){
-		$setvar(popscreen_jatek_3_input.scrolloffset_y = $screen_popscreen_jatek_3_input.height);
+		$setvar(popscreen_jatek_3_input.scrolloffset_y = $vg_pop_jatek_3_confirm.y);
 	}
 	elseif($isequal_string($TEXTFIELDBEGIN_LOCAL_PARAM1,tf_1003_email_1)){
-		$setvar(screen_1003_100.scrolloffset_y = $tf_1003_email_1.height);
+		$setvar(screen_1003_100.scrolloffset_y = $lbl_1003_jatek_3.y);
 	}
 	elseif($isequal_string($TEXTFIELDBEGIN_LOCAL_PARAM1,tf_1003_email_2)){
-		$setvar(screen_1003_100.scrolloffset_y = $tf_1003_email_2.height);
+		$setvar(screen_1003_100.scrolloffset_y = $lbl_1003_jatek_3.y);
 	}
-"/> -->
+"/>
 
 
 

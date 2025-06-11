@@ -803,7 +803,7 @@ value="
 		</viewgroup>
 
 		<br/>
-		<viewgroup
+		<viewgroup id="vg_pop_jikjang_3_confirm"
 			width="$this.remain_right"
 			height="$cs_height_50"
 			layout="center"
@@ -1353,7 +1353,7 @@ value="
 
 	$json_delete($jsonName);
 "/>
-<!-- <action id="TEXTFIELDEND_LOCAL"
+<action id="TEXTFIELDEND_LOCAL"
 value="
 	if($isequal_string($TEXTFIELDEND_LOCAL_PARAM1,tf_pop_jikjang_3_input)){
 		$setvar(popscreen_jikjang_3_input.scrolloffset_y = 0);
@@ -1362,6 +1362,6 @@ value="
 <action id="TEXTFIELDBEGIN_LOCAL"
 value="
 	if($isequal_string($TEXTFIELDBEGIN_LOCAL_PARAM1,tf_pop_jikjang_3_input)){
-		$setvar(popscreen_jikjang_3_input.scrolloffset_y = $screen_popscreen_jikjang_3_input.height);
+		$setvar(popscreen_jikjang_3_input.scrolloffset_y = $vg_pop_jikjang_3_confirm.y);
 	}
-"/> -->
+"/>
