@@ -57,7 +57,11 @@ value="
 			cs_color_box2 = 27282C,
 			cs_color_sky_blue = 239AFD,
 			cs_color_disable = BABBBD,
-			cs_color_pop_bg = FFFFFF60
+			cs_color_pop_bg = FFFFFF60,
+
+			//디자인 색상에 정해져 있지도 않은 color
+			cs_color_text_2 = CCCCCC,
+			cs_color_text_3 = A5ABB7,
 		);
 	}else{
 		// white 테마.
@@ -77,7 +81,12 @@ value="
 			cs_color_box = F8F9FB,
 			cs_color_box2 = F5F6F8,
 			cs_color_sky_blue = 008DFF,
-			cs_color_pop_bg = 00000060
+			cs_color_disable = BABBBD,
+			cs_color_pop_bg = 00000060,
+
+			//디자인 색상에 정해져 있지도 않은 color
+			cs_color_text_2 = 232B2B,
+			cs_color_text_3 = 070A0F,
 		);
 	}
 	

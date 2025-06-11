@@ -99,7 +99,7 @@ value="
 		,lbl_account_title_step_8.fontname=$cs_font_400
 
 
-		,vg_open_account_title.backcolor=FFFFFF
+		,vg_open_account_title.backcolor=$cs_color_white
 		,popscreen_open_account_history.hidden=false
 		,popscreen_open_account_history_2.hidden=true
 		,vg_account_title_step.hidden = false
@@ -194,7 +194,7 @@ value="
 					backgroundimage_align_vertical="center"
 					fontsize="$cs_fontsize_16"
 					fontname="$cs_font_600"
-					textcolor="232B2B" //디자인정의 안되어있는 색상.
+					textcolor="$cs_color_text_2" //디자인정의 안되어있는 색상.
 					value="전체동의"
 					onclicked="$callaction(Act_CheckYesNo_onClicked,0,0)"
 				/>

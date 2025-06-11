@@ -150,7 +150,7 @@ border_radius="$cs_height_5"
 		,lbl_account_title_step_8.fontname=$cs_font_400
 
 
-		,vg_open_account_title.backcolor=FFFFFF
+		,vg_open_account_title.backcolor=$cs_color_white
 		,popscreen_open_account_history.hidden=false
 		,popscreen_open_account_history_2.hidden=true
 		,vg_account_title_step.hidden = false

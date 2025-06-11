@@ -33,7 +33,7 @@ backgroundimage_align="left"
 backgroundimage_align_vertical="center"
 fontsize="$cs_fontsize_16"
 fontname="$cs_font_600"
-textcolor="232B2B"
+textcolor="$cs_color_text_2"
 onclicked="$callaction(fnAgree_check_All_onclicked,$this.key,$this.id);"
 />
 
@@ -53,7 +53,7 @@ width="$this.remain_right"
 height="$cs_height_22"
 fontname="$cs_font_400"
 fontsize="$cs_fontsize_14"
-textcolor="232B2B"
+textcolor="$cs_color_text_2"
 margin_left="$cs_width_24"
 CHECKIMAGESVG="$icon_checkbox_on" 
 UNCHECKIMAGESVG="$icon_checkbox_off"
@@ -138,7 +138,7 @@ onClicked="$setvar(tmp_all_check_flag = true);$callaction(btn_1007_100_onClicked
 		,lbl_account_title_step_8.fontname=$cs_font_400
 
 
-		,vg_open_account_title.backcolor=FFFFFF
+		,vg_open_account_title.backcolor=$cs_color_white
 		,popscreen_open_account_history.hidden=false
 		,popscreen_open_account_history_2.hidden=true
 		,vg_account_title_step.hidden = false
@@ -546,7 +546,7 @@ backcolor="$cs_color_white"
 			align="left"
 			margin_left="$cs_width_16" 
 			valign="center" 
-			textcolor="070A0F"
+			textcolor="$cs_color_text_3"
 			value="$popscreen_title"
 			/>
 			<button 

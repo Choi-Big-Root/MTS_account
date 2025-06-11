@@ -441,7 +441,7 @@ onunload="popscreen_open_account_onunload"
         height="$h($g_lcdHeight,6.2)"
         margin_right="$w($g_lcdwidth,4.3)"
         layout="right"
-        backcolor="FFFFFF"
+        backcolor="$cs_color_white"
         hidden="false"
         >
         <viewgroup 
@@ -622,7 +622,7 @@ onunload="popscreen_open_account_onunload"
         </viewgroup>
     </viewgroup>
     <br/>
-    <screen id="screen_open_account" backcolor="ffffff" >
+    <screen id="screen_open_account" backcolor="$cs_color_white" >
         <subscreen id="subscreen_open_account" onload="subscreen_open_account_onload" onunload="subscreen_open_account_onunload">
             <import_dynamic filename="$tmp_open_account_file"/>
         </subscreen>

@@ -59,7 +59,7 @@ backcolor_disable="$cs_color_white"
 		,lbl_account_title_step_8.fontname=$cs_font_400
 
 
-		,vg_open_account_title.backcolor=FFFFFF
+		,vg_open_account_title.backcolor=$cs_color_white
 		,popscreen_open_account_history.hidden=false
 		,popscreen_open_account_history_2.hidden=true
 		,vg_account_title_step.hidden = false
@@ -443,7 +443,7 @@ value="
 
 <popscreen id="pop_image_process" modal="true"
 	width="$w($g_lcdwidth,60)" height="$h($g_lcdHeight,10)"  layout="center" layout_vertical="center"
-	backcolor="ffffff" border_color="cccccc" border_radius="$result($this.height/4)" border_width="$g_roundHeight"
+	backcolor="$cs_color_white" border_color="cccccc" border_radius="$result($this.height/4)" border_width="$g_roundHeight"
 	>
 	<label width="$super.width" height="$super.height" fontsize="$g_fontsize_basic"  value="이미지\n변환작업중입니다" align="center"/>
 </popscreen>

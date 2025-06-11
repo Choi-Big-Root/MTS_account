@@ -94,7 +94,7 @@ onClicked="$setvar(tmp_all_check_flag = true);$callaction(btn_essential_1002_100
 		,lbl_account_title_step_8.fontname=$cs_font_400
 
 
-		,vg_open_account_title.backcolor=FFFFFF
+		,vg_open_account_title.backcolor=$cs_color_white
 		,popscreen_open_account_history.hidden=false
 		,popscreen_open_account_history_2.hidden=true
 		,vg_account_title_step.hidden = false
@@ -151,7 +151,7 @@ value="
 "/>
 <screen id="screen_1002_100"
 	class="cs_screen_contents"
-	backcolor="ffffff"
+	backcolor="$cs_color_white"
 	onload="screen_contents_onload"
 	onunload="screen_1002_100_onunload"
 	noscroll_height="true"
@@ -889,7 +889,7 @@ backcolor="$cs_color_white"
 			align="left"
 			margin_left="$cs_width_16" 
 			valign="center" 
-			textcolor="070A0F"
+			textcolor="$cs_color_text_3"
 			value="$popscreen_title"
 			/>
 			<button 
@@ -1791,7 +1791,7 @@ value="
 		<viewgroup 
 			width="$super.width"
 			height="$h($g_lcdHeight,8.6)"
-			backcolor="ffffff"
+			backcolor="$cs_color_white"
 			>
 			<label width="$super.width" height="$super.height" align="left" margin_left="$w($g_lcdWidth,3.2)" 
 			fontname="$g_baseFontNameBold"
@@ -1803,7 +1803,7 @@ value="
 			width="$super.width"
 			//height="$h($g_lcdHeight,49)"
 			height="$h($g_lcdHeight,15)"
-			backcolor="ffffff"
+			backcolor="$cs_color_white"
 			>
 			<viewgroup
 				width="$super.width"
@@ -1836,8 +1836,8 @@ value="
 				backcolor_active="b8240c"
 				fontsize="$g_fontsize_big2"
 				fontname="$g_baseFontNameBold"
-				textcolor="ffffff"
-				textcolor_active="ffffff"
+				textcolor="$cs_color_white"
+				textcolor_active="$cs_color_white"
 				onclicked="$closescreen(pop_caution);
 				$closescreen(popscreen_open_account);
 				"

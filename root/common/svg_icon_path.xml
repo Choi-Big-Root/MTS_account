@@ -6,11 +6,15 @@
 		// black 테마
 		$setvar_common(
 			,icon_arrow_left 		= $callaction(fnGetSvgIconPathName,arrow-left_white)
+
+			,icon_cancel_2 			= $callaction(fnGetSvgIconPathName,cancel-2_white)
 		);
 	}else{
 		// white 테마
 		$setvar_common(
 			,icon_arrow_left 		= $callaction(fnGetSvgIconPathName,arrow-left)
+
+			,icon_cancel_2 			= $callaction(fnGetSvgIconPathName,cancel-2)
 		);
 
 	}
@@ -37,7 +41,6 @@
 		,icon_polygon_5 			= $callaction(fnGetSvgIconPathName,polygon-5)
 
 		,icon_cancel 			= $callaction(fnGetSvgIconPathName,cancel)
-		,icon_cancel_2 			= $callaction(fnGetSvgIconPathName,cancel-2)
 		,icon_cancel_3 			= $callaction(fnGetSvgIconPathName,cancel-3)
 
 		,icon_step 			= $callaction(fnGetSvgIconPathName,step)

@@ -36,7 +36,7 @@ width="$this.remain_right"
 height="$cs_height_22"
 fontname="$cs_font_400"
 fontsize="$cs_fontsize_14"
-textcolor="232B2B"
+textcolor="$cs_color_text_2"
 margin_left="$cs_width_24"
 CHECKIMAGESVG="$icon_checkbox_on" 
 UNCHECKIMAGESVG="$icon_checkbox_off"
@@ -52,7 +52,7 @@ width="$cs_width_229"
 height="$this.remain_bottom"
 fontsize="$cs_fontsize_16"
 fontname="$cs_font_600"
-textcolor="232B2B"
+textcolor="$cs_color_text_2"
 margin_left="$result($cs_height_24 + $cs_width_6)"
 CHECKIMAGESVG="$icon_checkbox_check_on" 
 UNCHECKIMAGESVG="$icon_checkbox_check_off"
@@ -157,7 +157,7 @@ fontname="$cs_font_700"
 		,lbl_account_title_step_8.fontname=$cs_font_400
 
 
-		,vg_open_account_title.backcolor=FFFFFF
+		,vg_open_account_title.backcolor=$cs_color_white
 		,popscreen_open_account_history.hidden=false
 		,popscreen_open_account_history_2.hidden=true
 		,vg_account_title_step.hidden = false
@@ -218,7 +218,7 @@ value="
 
 <screen id="screen_1001_100"
 	class="cs_screen_contents"
-	backcolor="ffffff"
+	backcolor="$cs_color_white"
 	onload="screen_contents_onload"
 	onunload="screen_1001_100_onunload"
 	noscroll_height="true"
@@ -880,7 +880,7 @@ backcolor="$cs_color_white"
 			align="left"
 			margin_left="$cs_width_16" 
 			valign="center" 
-			textcolor="070A0F"
+			textcolor="$cs_color_text_3"
 			value="$popscreen_title"
 			/>
 			<button 
