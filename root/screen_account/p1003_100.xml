@@ -963,6 +963,10 @@ value="
 		}
 	}
 "/> -->
+
+//keyPad 높이를 건네주는 플랫폼 함수나 deviceinfo 가 있다면
+//keypad 의 높이를 기준으로 작업을 전부 다시 해야한다. 현재는 입력상위 컨트롤의 y값만큼만 올려서 해둔거기에
+//ui가 달라지면 그에 맞게 다시 수정이 필요한 아주 불필요한 상태.
 <action id="TEXTFIELDEND_LOCAL"
 value="
 	if($isequal_string($TEXTFIELDEND_LOCAL_PARAM1,tf_pop_jatek_3_input)){
