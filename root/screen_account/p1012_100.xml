@@ -584,7 +584,7 @@ value="	// 비대면 절차개선 - 2020.09.28
 	height="$p_lcdHeight"
 	layout="center"
 	layout_vertical="center"
-	backcolor="00000060"
+	backcolor="$cs_color_pop_bg"
 >
 	<screen
 		width="$cs_width_300"
@@ -653,7 +653,7 @@ value="	// 비대면 절차개선 - 2020.09.28
 	height="$p_lcdHeight"
 	layout="center"
 	layout_vertical="center"
-	backcolor="00000060"
+	backcolor="$cs_color_pop_bg"
 >
 	<screen
 		width="$cs_width_300"
@@ -735,7 +735,7 @@ value="	// 비대면 절차개선 - 2020.09.28
 	height="$p_lcdHeight"
 	layout="center"
 	layout_vertical="center"
-	backcolor="00000060"
+	backcolor="$cs_color_pop_bg"
 >
 	<screen
 		width="$cs_width_300"
@@ -806,7 +806,7 @@ value="	// 비대면 절차개선 - 2020.09.28
 	height="$p_lcdHeight"
 	layout="center"
 	layout_vertical="center"
-	backcolor="00000060"
+	backcolor="$cs_color_pop_bg"
 >
 	<screen
 		width="$cs_width_300"
@@ -866,7 +866,7 @@ value="	// 비대면 절차개선 - 2020.09.28
 	height="$p_lcdHeight"
 	layout="center"
 	layout_vertical="center"
-	backcolor="00000060"
+	backcolor="$cs_color_pop_bg"
 >
 	<screen
 		width="$cs_width_300"

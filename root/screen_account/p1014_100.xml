@@ -460,7 +460,7 @@ value="
 	height="$p_lcdHeight"
 	layout="center"
 	layout_vertical="center"
-	backcolor="00000060"
+	backcolor="$cs_color_pop_bg"
 >
 	<screen
 		width="$cs_width_300"
@@ -519,7 +519,7 @@ value="
 	height="$p_lcdHeight"
 	layout="center"
 	layout_vertical="center"
-	backcolor="00000060"
+	backcolor="$cs_color_pop_bg"
 >
 	<screen
 		width="$cs_width_300"
@@ -621,7 +621,7 @@ value="
 	height="$p_lcdHeight"
 	layout="center"
 	layout_vertical="center"
-	backcolor="00000060"
+	backcolor="$cs_color_pop_bg"
 >
 	<screen
 		width="$cs_width_300"

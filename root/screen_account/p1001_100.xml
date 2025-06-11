@@ -510,7 +510,7 @@ value="
 <popscreen id="pop_1001_100_1"
 	width="$p_lcdWidth"
 	height="$p_lcdHeight"
-	backcolor="00000060"
+	backcolor="$cs_color_pop_bg"
 >
 	<screen id="pop_1001_100_1_screen"
 		width="$this.remain_right"
