@@ -708,7 +708,7 @@ value="
 	modalbackcolor="none"
 	layout="center"
 	layout_vertical="center"
-	onload="$xmlactivity_start(,,000000);"
+	onload="$xmlactivity_start(,,$cs_color_black);"
 	onUnload="$xmlactivity_stop();"
 	>
 </popscreen>
