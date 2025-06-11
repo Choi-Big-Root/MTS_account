@@ -282,7 +282,6 @@ value="
 				/>
 				<br/>
 				<textfield id="tf_1003_email_1"
-					//width="$result($this.remain_right - $cs_width_35 - $cs_width_103 - $cs_width_30)"
 					width="$cs_width_90"
 					keyboard_type="text"
 					height="$cs_height_24"
@@ -308,7 +307,7 @@ value="
 						value="@"
 					/>
 					<textfield id="tf_1003_email_2"
-						width="$cs_width_103"
+						width="$cs_width_105"
 						height="$cs_height_24"
 						keyboard_type="text"
 						height="$cs_height_24"
