@@ -974,10 +974,10 @@ value="
 			$setvar(btn_pop_jatek_3_confirm.enable = false);
 		}
 	}
-	elseif($isequal_string($TEXTFIELDEND_LOCAL_PARAM1,tf_1003_email_1)){
-		$setvar(screen_1003_100.scrolloffset_y = 0);
-	}
-	elseif($isequal_string($TEXTFIELDEND_LOCAL_PARAM1,tf_1003_email_2)){
+	elseif(
+		$isequal_string($TEXTFIELDEND_LOCAL_PARAM1,tf_1003_email_1)
+		|| $isequal_string($TEXTFIELDEND_LOCAL_PARAM1,tf_1003_email_2)
+	){
 		$setvar(screen_1003_100.scrolloffset_y = 0);
 	}
 "/>
@@ -986,10 +986,10 @@ value="
 	if($isequal_string($TEXTFIELDBEGIN_LOCAL_PARAM1,tf_pop_jatek_3_input)){
 		$setvar(popscreen_jatek_3_input.scrolloffset_y = $vg_pop_jatek_3_confirm.y);
 	}
-	elseif($isequal_string($TEXTFIELDBEGIN_LOCAL_PARAM1,tf_1003_email_1)){
-		$setvar(screen_1003_100.scrolloffset_y = $lbl_1003_jatek_3.y);
-	}
-	elseif($isequal_string($TEXTFIELDBEGIN_LOCAL_PARAM1,tf_1003_email_2)){
+	elseif(
+		$isequal_string($TEXTFIELDBEGIN_LOCAL_PARAM1,tf_1003_email_1)
+		|| $isequal_string($TEXTFIELDBEGIN_LOCAL_PARAM1,tf_1003_email_2)
+	){
 		$setvar(screen_1003_100.scrolloffset_y = $lbl_1003_jatek_3.y);
 	}
 "/>
