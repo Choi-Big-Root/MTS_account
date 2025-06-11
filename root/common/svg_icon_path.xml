@@ -11,6 +11,8 @@
 
 			,icon_polygon_3 			= $callaction(fnGetSvgIconPathName,polygon-3_white)
 			,icon_polygon_5 			= $callaction(fnGetSvgIconPathName,polygon-5_white)
+
+			,icon_checkbox_on 			= $callaction(fnGetSvgIconPathName,checkbox-on_white)
 		);
 	}else{
 		// white 테마
@@ -21,6 +23,8 @@
 
 			,icon_polygon_3 			= $callaction(fnGetSvgIconPathName,polygon-3)
 			,icon_polygon_5 			= $callaction(fnGetSvgIconPathName,polygon-5)
+
+			,icon_checkbox_on 			= $callaction(fnGetSvgIconPathName,checkbox-on)
 		);
 
 	}
@@ -40,7 +44,6 @@
 		,icon_checkbox_check_off 			= $callaction(fnGetSvgIconPathName,checkbox-check-off)
 		,icon_checkbox_check_on 			= $callaction(fnGetSvgIconPathName,checkbox-check-on)
 		,icon_checkbox_off 			= $callaction(fnGetSvgIconPathName,checkbox-off)
-		,icon_checkbox_on 			= $callaction(fnGetSvgIconPathName,checkbox-on)
 		,icon_checkbox_2 			= $callaction(fnGetSvgIconPathName,checkbox-2)
 
 		,icon_cancel 			= $callaction(fnGetSvgIconPathName,cancel)
