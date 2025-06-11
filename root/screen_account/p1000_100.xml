@@ -35,7 +35,7 @@ background_roundinfo="$cs_color_white,$cs_color_white,$cs_radius_30,1,true,true,
 <class id="cs_pop_1000_100"
 width="$p_lcdWidth"
 height="$p_lcdHeight"
-backcolor="00000060"
+backcolor="$cs_color_pop_bg"
 />
 <class id="cs_pop_1000_100_title"
 width="$this.remain_right"

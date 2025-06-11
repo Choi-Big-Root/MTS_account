@@ -386,7 +386,7 @@ onunload="popscreen_open_account_onunload"
 >
     <viewgroup 
         id="vg_open_account_title"
-        width="$super.width" height="$h($g_lcdHeight,6.2)" backcolor="FFFFFF"  
+        width="$super.width" height="$h($g_lcdHeight,6.2)" backcolor="$cs_color_white"  
         margin_left="$w($g_lcdwidth,4.3)"
         >
         <!-- <label  id="lbl_open_account_title"  width="$w($g_lcdWidth,50)"
