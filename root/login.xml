@@ -8,9 +8,9 @@ align="left"
 margin_left="$cs_width_20"
 fontname="$cs_font_400"
 fontsize="$cs_fontsize_14" 
-backcolor="F3F4F5"
+backcolor="$cs_color_bg"
 border_radius="$w($g_lcdWidth,1.6)"
-textcolor="060B11"
+textcolor="$cs_color_black"
 BACKGROUNDSVG="$icon_next"
 BACKGROUNDSVG_WIDTH="$cs_height_16"                     
 BACKGROUNDSVG_HEIGHT="$cs_height_16"                   // 정사각형 이미지의 경우 가로 세로 크기가 같아야 함.
@@ -61,26 +61,11 @@ value="
     $reopenfile();
 "/>
 <screen id="screen_login"
-backcolor="ffffff"
+backcolor="$cs_color_white"
 width="$g_lcdWidth"
 height="$g_lcdHeight"
 onLoad="screen_login_onload"
 >
-    <!-- <label
-    width="$super.width" 
-    height="$cs_height_50"
-    BACKGROUNDSVG="$icon_ci"
-    //BACKGROUNDSVG="$icon_arrow_left"
-    BACKGROUNDSVG_WIDTH="$cs_width_132"
-    BACKGROUNDSVG_HEIGHT="$cs_height_28"
-    backgroundimage_align="right"
-    backgroundimage_align_vertical="center"
-    backgroundimage_x="$cs_width_14"
-    backgroundimage_y="$cs_height_13"
-    //layout="center"
-    //backcolor="ff0000"
-    onClicked="$reopenfile();"
-    /> -->
     <viewgroup
     width="$super.width" 
     height="$cs_height_50"
@@ -117,15 +102,25 @@ onLoad="screen_login_onload"
         onClicked="$reopenfile();"
         />
     </viewgroup>
-    <br height="$cs_height_20"/>
+    <br height="$cs_height_21"/>
     <label 
     width="$cs_width_343"
-    height="$cs_height_68"
+    height="$cs_height_34"
     layout="center"
-    value="건강한 생활%2C\n건강한 투자를 응원합니다." 
+    value="건강한 생활" 
     fontname="$cs_font_600"
     fontsize="$cs_fontsize_24"
-    textcolor="000000"
+    textcolor="$cs_color_black"
+    />
+    <br/>
+    <label 
+    width="$cs_width_343"
+    height="$cs_height_34"
+    layout="center"
+    value="건강한 투자를 응원합니다." 
+    fontname="$cs_font_600"
+    fontsize="$cs_fontsize_24"
+    textcolor="$cs_color_black"
     />
     <br height="$cs_height_30"/>
     <viewgroup
@@ -139,16 +134,24 @@ onLoad="screen_login_onload"
     layout="center"
     >
         <br height="$cs_height_22"/>
-        <blank width="$cs_width_21" />
+        <blank width="$cs_width_22" />
         <label 
         width="$cs_width_144"
-        height="$cs_width_56"
-        value="클라우드\n공동인증서 로그인" 
+        height="$cs_width_28"
+        value="클라우드" 
         fontname="$cs_font_600"
-        fontsize="$cs_fontsize_22" 
-        textcolor="060B11"
-        //fontname="Pretendard-Medium"
-
+        fontsize="$cs_fontsize_20" 
+        textcolor="$cs_color_black"
+        />
+        <br/>
+        <blank width="$cs_width_22" />
+        <label 
+        width="$cs_width_144"
+        height="$cs_width_28"
+        value="공동인증서 로그인" 
+        fontname="$cs_font_600"
+        fontsize="$cs_fontsize_20" 
+        textcolor="$cs_color_black"
         />
         <br/>
         <blank width="$cs_width_151" />
@@ -182,14 +185,14 @@ onLoad="screen_login_onload"
     
     >
         <br height="$cs_height_22"/>
-        <blank width="$cs_width_21" />
+        <blank width="$cs_width_22" />
         <label 
         width="$cs_width_144"
-        height="$cs_width_56"
+        height="$cs_width_28"
         value="계좌개설" 
         fontname="$cs_font_600"
         fontsize="$cs_fontsize_20" 
-        textcolor="FFFFFF"
+        textcolor="$cs_color_white"
         //fontname="Pretendard-Medium"
 
         />
@@ -223,7 +226,7 @@ onLoad="screen_login_onload"
         value="인증서관리" 
         fontname="$cs_font_600"
         fontsize="$cs_fontsize_20" 
-        textcolor="060B11"
+        textcolor="$cs_color_black"
         />
         <br height="$cs_height_10"/>
         
