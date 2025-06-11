@@ -596,7 +596,7 @@ value="
 			>
 				<checkbox id="chk_1002_100_all"
 					width="$this.remain_right"
-					height="$cs_height_22"
+					height="$cs_height_28"
 					fontsize="$cs_fontsize_15"
 					fontname="$cs_font_700"
 					textcolor="$cs_color_black"
@@ -611,7 +611,7 @@ value="
 					value="전체 동의하기"
 					onClicked="chk_1002_100_all_onclicked_before"
 				/>
-				<br height="$cs_height_20" />
+				<br height="$cs_height_15" />
 				<viewgroup
 					width="$this.remain_right"
 					height="$cs_height_50"
