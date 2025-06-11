@@ -574,6 +574,7 @@ value="
 				rowheight="$cs_height_102"
 				json_looparrayname="results.juso"
 				rowkey_count="30"
+				backcolor="$cs_color_white"
 			>
 				<tr
 					json_data="
@@ -603,12 +604,14 @@ value="
 						~buldSlno:rowkey24:trim
 					"
 					onClicked="tbl_jikjang_address_find_1004_onclicked" 
+					backcolor="$cs_color_white"
 				>
 					<td 
 						width="$this.remain_right"
 						height="$this.remain_bottom"
 						margin_top="$cs_height_20"
 						margin_left="$cs_width_16"
+						backcolor="$cs_color_white"
 					>
 						<label
 							width="$cs_width_254"
@@ -618,6 +621,7 @@ value="
 							textcolor="$cs_color_black"
 							align="left"
 							json_data="zipNo:value"
+							backcolor="$cs_color_white"
 						/>
 
 						<viewgroup
@@ -661,6 +665,7 @@ value="
 							textcolor="$cs_color_black"
 							align="left"
 							json_data="roadAddr:value"
+							backcolor="$cs_color_white"
 						/>
 						<br/>
 						<label
@@ -672,6 +677,7 @@ value="
 							textcolor="$cs_color_black"
 							align="left"
 							json_data="jibunAddr:value"
+							backcolor="$cs_color_white"
 						/>
 					</td>
 				</tr>
@@ -1140,6 +1146,7 @@ value="
 				margin_bottom="$cs_height_20"
 				json_looparrayname="KED.CONTENTS.SCHengn0000.enp_list"
 				rowkey_count="30"
+				backcolor="$cs_color_white"
 			>
 				<tr
 					json_data="
@@ -1162,6 +1169,7 @@ value="
 						~email:rowkey17:trim
 					"
 					onClicked="tbl_jikjang_addrees_tr_onclicked"
+					backcolor="$cs_color_white"
 				>
 					<td 
 						width="$this.remain_right"
@@ -1169,6 +1177,7 @@ value="
 						margin_top="$cs_height_10"
 						margin_left=""
 						margin_right=""
+						backcolor="$cs_color_white"
 					>
 						<label
 							width="$this.remain_right"
@@ -1178,6 +1187,7 @@ value="
 							textcolor="$cs_color_black"
 							align="left"
 							json_data="enp_nm:value:trim"
+							backcolor="$cs_color_white"
 						/>
 						<br/>
 						<label
@@ -1191,6 +1201,7 @@ value="
 							json_data="
 								reper_nm:value:script:$addstring($super.super.rowkey4, | ,$super.super.rowkey15)
 							"
+							backcolor="$cs_color_white"
 						/>
 					</td>
 				</tr>	
