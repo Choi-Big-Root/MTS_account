@@ -39,43 +39,48 @@ value="
 
 
 	//테마 별 색상 컬러
-	// white 테마.
-	$setvar_common(
-		//cs_color_main = FFEB00,
-		cs_color_main = 177DF2,
-		cs_color_main_disable = b9d8fb,
-		cs_color_black = 060B11,
-		cs_color_gray_dark = 545454,
-		cs_color_white = FFFFFF,
-		cs_color_line = E7E9EB,
-		cs_color_bg = F3F4F5,
-		cs_color_gray_light = F1F6FC,
-		cs_color_gray_deep = 3E3A39,
-		cs_color_text = 737679,
-		cs_color_gray_box_light = DFE4E8,
-		cs_color_box = F8F9FB,
-		cs_color_box2 = F5F6F8,
-		cs_color_sky_blue = 008DFF,
-		cs_color_disable = BABBBD
-	);
-	/* black 테마.
-	$setvar_common(
-		//cs_color_main = FEEB00,
-		cs_color_main = 177DF2,
-		cs_color_black = FFFFFF,
-		cs_color_gray_dark = BCC0C3,
-		cs_color_white = 0B0C10,
-		cs_color_line = 27282C,
-		cs_color_bg = 1B1C20,
-		cs_color_gray_light = 1B1C20,
-		cs_color_gray_deep = BCC0C3,
-		cs_color_text = 97989A,
-		cs_color_gray_box_light = 37383E,
-		cs_color_box = 1B1C20,
-		cs_color_box2 = 27282C,
-		cs_color_sky_blue = 239AFD,
-	);
-	*/
+	if($g_theme_dark){
+		//black 테마.
+		$setvar_common(
+			//cs_color_main = FEEB00,
+			cs_color_main = 177DF2,
+			cs_color_black = FFFFFF,
+			cs_color_gray_dark = BCC0C3,
+			cs_color_white = 0B0C10,
+			cs_color_line = 27282C,
+			cs_color_bg = 1B1C20,
+			cs_color_gray_light = 1B1C20,
+			cs_color_gray_deep = BCC0C3,
+			cs_color_text = 97989A,
+			cs_color_gray_box_light = 37383E,
+			cs_color_box = 1B1C20,
+			cs_color_box2 = 27282C,
+			cs_color_sky_blue = 239AFD,
+			cs_color_disable = BABBBD,
+			cs_color_pop_bg = FFFFFF60
+		);
+	}else{
+		// white 테마.
+		$setvar_common(
+			//cs_color_main = FFEB00,
+			cs_color_main = 177DF2,
+			cs_color_main_disable = b9d8fb,
+			cs_color_black = 060B11,
+			cs_color_gray_dark = 545454,
+			cs_color_white = FFFFFF,
+			cs_color_line = E7E9EB,
+			cs_color_bg = F3F4F5,
+			cs_color_gray_light = F1F6FC,
+			cs_color_gray_deep = 3E3A39,
+			cs_color_text = 737679,
+			cs_color_gray_box_light = DFE4E8,
+			cs_color_box = F8F9FB,
+			cs_color_box2 = F5F6F8,
+			cs_color_sky_blue = 008DFF,
+			cs_color_pop_bg = 00000060
+		);
+	}
+	
 
 
 	//해당 영역에서 이용되는 모든 값은 가로 375, 세로812 기준으로 계산.

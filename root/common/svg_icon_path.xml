@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <action id="fnSetSvgIconPath" scope="common" value="
 	$log(============== fnSetSvgIconPath);
-	$setvar_common(
-		,icon_arrow_left 		= $callaction(fnGetSvgIconPathName,arrow-left)
 
+	if($g_theme_dark){
+		// black 테마
+		$setvar_common(
+			,icon_arrow_left 		= $callaction(fnGetSvgIconPathName,arrow-left_white)
+		);
+	}else{
+		// white 테마
+		$setvar_common(
+			,icon_arrow_left 		= $callaction(fnGetSvgIconPathName,arrow-left)
+		);
+
+	}
+
+
+	// 공통
+	$setvar_common(
 		,icon_icon_1 			= $callaction(fnGetSvgIconPathName,icon-1)
 		,icon_icon_2 			= $callaction(fnGetSvgIconPathName,icon-2)
 		,icon_icon_3 			= $callaction(fnGetSvgIconPathName,icon-3)
@@ -114,8 +128,6 @@
 		// intro_after.xml 
 		,icon_graph 				= $callaction(fnGetSvgIconPathName,graph)
 		,icon_frame_48096229 		= $callaction(fnGetSvgIconPathName,frame_48096229)
-		
-		
 
 	);
 " />
