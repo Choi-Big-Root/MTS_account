@@ -218,8 +218,8 @@ onload="screen_login_onload"
         />
     </viewgroup>
     <br/>
-    //추후 테마 관련 얘기가 없으면 삭제하면 끝.
-    <viewgroup id="vg_login_theme_kind"
+    //추후 black테마 관련 얘기가 나오면 다시 활성화.
+   <!--  <viewgroup id="vg_login_theme_kind"
         x="$cs_width_16"
         y="$cs_height_15"
         width="$cs_width_90"
@@ -239,7 +239,7 @@ onload="screen_login_onload"
             value="Black"
             key="1"
         />
-    </viewgroup>
+    </viewgroup> -->
 </screen>
 
 // 뒤로가기 버튼 클릭 
