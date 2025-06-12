@@ -171,9 +171,13 @@ value="
 "/>
 <action id="btn_1005_jagum_onClicked"
 	value="
-		$setvar(
-			screen_1005_100.scrolloffset_y = $lbl_1005_100_usa.y
-		);
+		// 20250612 문창오 대리님 요청사항 : [자금의 출처]가 선택되어 있지 않다면 scroll이동 X
+		if($btn_1005_purpose.key > 0){
+			$setvar(
+				screen_1005_100.scrolloffset_y = $lbl_1005_100_usa.y
+			);
+		}
+		
 		$callaction(popscreen_1005_choice_onclicked,5);
 "/>
 <action id="fn1005_100_GroupCheck"
