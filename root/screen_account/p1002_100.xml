@@ -445,13 +445,18 @@ value="
 	$setvar( btn_1002_af.enable = $callaction(fnBtnAfConfirmCheck));
 	$closescreen(popscreen_1002_phone_choice);
 
-	//팝업이 닫히고..포커스를 주는 과정의 순서가..영..이상하다
-	$setnstimer(TIMER_DISCONNECTALL,0.3,fnDisConnectAll,FALSE);
+	//20250612 문창오 대리님 요청사항
+	//closescreen 이후 바로 focus를 주면 닫히는 속도보다 focus가 더빨라 팝업이 닫히면서 keypad가 같이 닫힌다.
+	//약간의 딜레이를 추가.
 	if($1002_phone_choice_set_key != -1 && $strlen($tf_1002_confirm_3.value) <= 0){
-		$setvar(tf_1002_confirm_3.focus = true);
+		$setnstimer(TIMER_FOCUS_TF1002,0.3,fnFocusTF1002,FALSE);
+		
 	}
 "/>
-
+<action id="fnFocusTF1002"
+value="
+	$setvar(tf_1002_confirm_3.focus = true);
+"/>
 <action id="popscreen_1002_phone_choice_onunload"
 value="
 "/>

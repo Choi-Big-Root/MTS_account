@@ -662,8 +662,9 @@ value="
             ,pop_info_tip_height=$cs_height_40
         );
     }elseif($menu_num < 1010){
+        //20250612 문창오대리님 요청사항 : 마침표 위치 수정.
         $setvar(
-            pop_info_tip_lbl=$(약관 승인 및 위험고지 내용을. 확인해주세요)
+            pop_info_tip_lbl=$(약관 승인 및 위험고지 내용을 확인해주세요.)
             ,pop_info_tip_height=$cs_height_40
         );
     }elseif($menu_num < 1011){
