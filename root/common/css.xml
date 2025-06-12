@@ -117,6 +117,7 @@ value="
 	);
 
 	//font size
+	/*
 	$setvar_common(
 		,cs_fontsize_11 = $callaction(fnCalFontsizePercent,11)
 		,cs_fontsize_12 = $callaction(fnCalFontsizePercent,12)
@@ -129,7 +130,8 @@ value="
 		,cs_fontsize_22 = $callaction(fnCalFontsizePercent,22)
 		,cs_fontsize_24 = $callaction(fnCalFontsizePercent,24)
 		,cs_fontsize_30 = $callaction(fnCalFontsizePercent,30)
-	);	
+	);
+	*/	
 	$setvar_common(
 		,cs_screen_top_margin 			= $cs_height_15
 		,cs_screen_bottom_margin        = $cs_height_20

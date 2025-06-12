@@ -141,30 +141,53 @@ value="
 	$setvar(
 		font_name = cs_fontsize
 	);
-	
 	$setvar(
         font_ratio_name = font_ratio,
         font_size_name = cs_fontsize,       // 변수명 
     );
-    // width 계산 
+
+    $setvar(
+    	tmp_design_ratio = $result_double($p_design_width / $p_design_height , 2)
+    	,tmp_device_ratio = $result_double($p_device_width / $p_device_height, 2)
+    );
+
+    $logvar(tmp_design_ratio,tmp_device_ratio);
+    $setvar(
+    	tmp_font_ratio = $result_double($p_device_width/$p_design_width,2) 			// 가로 
+    );
+
+    
+    $log(폰트 증가단위 비율 : [$tmp_font_ratio]);
     for($i = 1; $i <= 100; $i++ ){
-        $setvar(
-            var_name = $addstring($font_ratio_name,_,$i),
-            var_size_name = $addstring($font_size_name,_,$i),
-            var_ratio = $result_double($i/$p_design_width*100),
+    	$setvar(
+            var_name 			= $addstring($font_ratio_name,_,$i),
+            var_size_name 		= $addstring($font_size_name,_,$i),
+            //var_size 			= $result_floor($i*$tmp_font_ratio,0)
         );
-        $setvar_common(
-            $($var_name) = $var_ratio
-        );
-        $setvar(
-            //var_size = $result_double($getvar($var_name) * $p_design_width / 100)
-            var_size = $result_floor($getvar($var_name) * $p_device_width / 100, 0)           // 기기비율로 계산
-        );
+        
+        if($tmp_device_ratio > 0.90){				// 갤럭시 폴드
+        	$setvar(
+        		var_minus_unit 		= $result_double($tmp_device_ratio - $tmp_design_ratio + 1.70,2), 		// 화면 세로 비율 때문에 숫자로 조정 
+        		var_minus_size 		= $result_double($i * $var_minus_unit,2),
+        		var_font_size 		= $result_double($i * $tmp_font_ratio,2),
+        		var_size 			= $result_floor($var_font_size-$var_minus_size,0)
+        	);
+        }
+        elseif($tmp_device_ratio > 0.50){ 			// iPhone SE
+        	$setvar(
+        		var_minus_unit 		= $result_double($tmp_device_ratio - $tmp_design_ratio + 0.02,2), 		// 화면 세로 비율 때문에 숫자로 조정 
+        		var_minus_size 		= $result_double($i * $var_minus_unit,2),
+        		var_font_size 		= $result_double($i * $tmp_font_ratio,2),
+        		var_size 			= $result_floor($var_font_size-$var_minus_size,0)
+        	);
+        	$log(var_minus_unit : [$var_minus_unit], var_minus_size : [$var_minus_size], var_font_size : [$var_font_size],  var_size : [$var_size],);        	
+        }
+        else{
+        	$setvar(var_size 			= $result_floor($i*$tmp_font_ratio,0));
+        }
         $setvar_common(
             $($var_size_name) = $var_size
-        )
-        $log(폰트비율변수명:[$var_name] = $var_ratio, 포트크기변수명:[$var_size_name] = $var_size);
-        
+        );
     }
 "/>
 
