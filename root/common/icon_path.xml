@@ -2,72 +2,10 @@
 <action id="fnSetIconPath" scope="common" value="
 	$log(============== fnSetIconPath);
 	$setvar_common(
-		// 메뉴아이콘
-		,icon_ic_close 		= $callaction(fnGetIconPathName,ic_close)   // 제목줄 
-		,icon_back 			= $callaction(fnGetIconPathName,icon_back)	//뒤로가기<-
-		,icon_like_off 		= $callaction(fnGetIconPathName,icon_like_off)		
-		,icon_down	 		= $callaction(fnGetIconPathName,icon_down)				//종목히스토리 
-		,icon_up	 		= $callaction(fnGetIconPathName,icon_up)				//종목히스토리 
-		,icon_check_off		= $callaction(fnGetIconPathName,icon_check_off)         //체크박스
-		,icon_check_on		= $callaction(fnGetIconPathName,icon_check_on)			//체크박스
-		,icon_pop_cancel_w	= $callaction(fnGetIconPathName,icon_pop_cancel_w)      //닫기
-		,bg_intro				= $callaction(fnGetIconPathName,bg_loding)         		//인트로배경
-		,icon_logo			= $callaction(fnGetIconPathName,logo)					//로고
-		//캘린더
-		,icon_calendar_prv	= $callaction(fnGetIconPathName,btn_calendar_prv)			//이전달
-		,icon_calendar_nxt	= $callaction(fnGetIconPathName,btn_calendar_nxt)			//다음달
-		//공동인증
-		,icon_certificate	= $callaction(fnGetIconPathName,certificate)				//공동인증서
-		,icon_certificate_end	= $callaction(fnGetIconPathName,certificate_end)			//공동인증서만료
-		//비대면 
-		,bg_img_account			= $callaction(fnGetIconPathName,img_account)         		//비대면 로그인 배경
-		,bg_img_account2			= $callaction(fnGetIconPathName,img_account2)         		//HD비대면 로그인 배경
-		,icon_note				= $callaction(fnGetIconPathName,ic_note)				//느낌표
-		,icon_choice_on			= $callaction(fnGetIconPathName,ic_choice_on)			//on 체크박스
-		,icon_choice_off		= $callaction(fnGetIconPathName,ic_choice_off)			//off 체크박스
-		,icon_arrow_right		= $callaction(fnGetIconPathName,icon_arrow_right)		//앞으로 가기 >
-		,icon_arrow_right_2		= $callaction(fnGetIconPathName,icon_arrow_right2)		//앞으로 가기2 >
-		,icon_check2_on			= $callaction(fnGetIconPathName,icon_check2_on)			//체크버튼2 활성화
-		,icon_check2_off		= $callaction(fnGetIconPathName,icon_check2_off)		//체크버튼2 비활성화
-		,icon_check2_disable		= $callaction(fnGetIconPathName,icon_check2_disable)	//체크버튼2 
-		,icon_step_4			= $callaction(fnGetIconPathName,step_4)					//신용정보 수집 4 활성
-		,icon_step_5			= $callaction(fnGetIconPathName,step_5)					//신용정보 수집 5 활성
-		,icon_step_5_off		= $callaction(fnGetIconPathName,step_5_off)				//신용정보 수집 5 비활성화
-		,icon_step_6			= $callaction(fnGetIconPathName,step_6)					//신용정보 수집 6 활성
-		,icon_step_6_off		= $callaction(fnGetIconPathName,step_6_off)				//신용정보 수집 6 비활성화
-		,icon_step_finish		= $callaction(fnGetIconPathName,step_finish)	
-		,icon_ic_tip_off			= $callaction(fnGetIconPathName,ic_tip_off)			//타이틀 ?
-		,icon_clock_on			= $callaction(fnGetIconPathName,icon_clock_on)			//인증번호 시계 활성화
-		,icon_clock_off			= $callaction(fnGetIconPathName,icon_clock_off)			//인증번호 시계 비활성화
-		,icon_choice2_on		= $callaction(fnGetIconPathName,icon_choice2_on)		//체크이미지2
-		,icon_choice2_off		= $callaction(fnGetIconPathName,icon_choice2_off)		//체크이미지2		
-		,icon_radio_on			= $callaction(fnGetIconPathName,icon_radio_on)			//라디오버튼
-		,icon_radio_off			= $callaction(fnGetIconPathName,icon_radio_off)			//라디오버튼
-		,icon_ic_account		= $callaction(fnGetIconPathName,ic_account)				//비대면이미지
-		,icon_title_l				= $callaction(fnGetIconPathName,icon_title_l)			//스크롤왼쪽
-		,icon_title_r				= $callaction(fnGetIconPathName,icon_title_r)			//스크롤오른쪽
-		,bg_img_idcard_slice		= $callaction(fnGetIconPathName,img_idcard_slice)				//신분증이미지		
-		,bg_img_videocall			= $callaction(fnGetIconPathName,img_videocall)			//영상통화이미지
-		,icon_impor1			= $callaction(fnGetIconPathName,ic_impor1)		//경제지표 중요도
-		,icon_impor2			= $callaction(fnGetIconPathName,ic_impor2)		//경제지표 중요도
-		,icon_impor3			= $callaction(fnGetIconPathName,ic_impor3)		//경제지표 중요도
-		,icon_history		= $callaction(fnGetIconPathName,ic_history)		//신청내역이미지
-		,icon_choice3		= $callaction(fnGetIconPathName,icon_choice3)	//체크이미지3
-		,icon_bdm	= $callaction(fnGetIconPathName,icon_bdm)	//비대면아이콘
-		// iphone6plus 이미지 때문에 수정
-		,icon_buy				= $callaction(fnGetIconPathName,icon_buy)	
-		,icon_sell				= $callaction(fnGetIconPathName,icon_sell)	
-		,icon_buy_small			= $callaction(fnGetIconPathName,icon_buy_small)	
-		,icon_sell_small		= $callaction(fnGetIconPathName,icon_sell_small)	
-		,icon_clock 			= $callaction(fnGetIconPathName,icon_clock)	
-
 		// p1000_100.xml
 		,icon_account_time	 		= $callaction(fnGetIconPathName,account_time)				
 		// p1017_100.xml
-		,icon_account_in_progress	= $callaction(fnGetIconPathName,account_in_progress)				
-
-		// intro_after.xml
-		,icon_intro_1	 		= $callaction(fnGetIconPathName,intro_1)				
+		,icon_account_in_progress	= $callaction(fnGetIconPathName,account_in_progress)							
 			
 	);
     $logvar(

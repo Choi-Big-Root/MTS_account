@@ -199,6 +199,9 @@ value="
 </screen>
 <action id="btn_1000_account_open_onClicked"
 value="
+	//1.Summer 타임 관련 TR + 서버시간 조회 TR
+
+
 	// 개설 가능 시간대가 아닌경우 개설불가안내 팝업띄움
 	$setvar(strTimeChackYN = );
 	if($getweekday($now(yyyyMMdd)) == 1){ 	// 일요일의 경우 리턴

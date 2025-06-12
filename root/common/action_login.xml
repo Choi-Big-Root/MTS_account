@@ -5260,6 +5260,8 @@ value="
 " />
 <action id="fnRecvSSL_MO_RESULT"  scope="common"
 value="
+	//2.변경된 MO_RESULT[+HTS_ID] 운영 반영
+
 	$setvar(
 		recvSSL_body_USER_ID 		= $json_getdata($jsonname,BODY.USER_ID)				//상담사ID
 		,recvSSL_body_WORK_NO 		= $json_getdata($jsonname,BODY.WORK_NO) 			//상담번호

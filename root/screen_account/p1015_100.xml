@@ -194,7 +194,7 @@ value="
         $callaction(fnPopover_AlertAction,,본인확인 질문을 입력해주세요.,,확인);
         return;
     }
-    
+    //3.신규 MO_HTSID2 운영 반영
     $callaction(fnSendSSL_MO_HTSID2);
 "/>
 <action id="fnSendSSL_MO_HTSID2"
