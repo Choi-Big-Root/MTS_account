@@ -9,14 +9,14 @@ margin_left="$cs_width_20"
 fontname="$cs_font_400"
 fontsize="$cs_fontsize_14" 
 backcolor="$cs_color_bg"
-border_radius="$w($g_lcdWidth,1.6)"
+border_radius="$cs_height_10"
 textcolor="$cs_color_black"
 BACKGROUNDSVG="$icon_next"
 BACKGROUNDSVG_WIDTH="$cs_height_16"                     
 BACKGROUNDSVG_HEIGHT="$cs_height_16"                   // 정사각형 이미지의 경우 가로 세로 크기가 같아야 함.
-backgroundimage_align="left"
+backgroundimage_align="right"
 backgroundimage_align_vertical="center"
-backgroundimage_x="$cs_width_307"
+backgroundimage_x="$cs_width_17"
 />
 <class id="cs_btn_none" 
 width="$super.width"
@@ -64,49 +64,25 @@ value="
 backcolor="$cs_color_white"
 width="$g_lcdWidth"
 height="$g_lcdHeight"
-onLoad="screen_login_onload"
+margin_left="$cs_width_16"
+margin_right="$cs_width_16"
+onload="screen_login_onload"
 >
-    <viewgroup
-    width="$super.width" 
-    height="$cs_height_50"
-    >
-        <blank width="$cs_width_21" />
-        <viewgroup id="vg_login_theme_kind"
-            width="$cs_width_90"
-            height="$cs_height_20"
-            border_width="1"            
-            border_radius="$cs_radius_5"
-            layout_vertical="center"
-        >
-            <button id="btn_login_theme_white"
-                class="cs_login_gr_theme_kind"
-                width="$result($this.remain_right/2)"
-                value="White"
-                key="0"
-            />
-            <button id="btn_login_theme_black"
-                class="cs_login_gr_theme_kind"
-                width="$this.remain_right"
-                value="Black"
-                key="1"
-            />
-        </viewgroup>
-        <label
-        x="$cs_width_227"
-        y="$cs_width_13"
-        width="$cs_width_132" 
-        height="$cs_height_27"
-        backgroundimage="plist/root/resource/image/3x/ci@3x.png"
-        backgroundfull="true"
-        backgroundrepeat="false"
-        onClicked="$reopenfile();"
-        />
-    </viewgroup>
-    <br height="$cs_height_21"/>
+    <br height="$cs_height_13"/>
+    <label
+    width="$cs_width_132" 
+    height="$cs_height_27"
+    backgroundimage="plist/root/resource/image/3x/ci@3x.png"
+    backgroundfull="true"
+    backgroundrepeat="false"
+    onClicked="$reopenfile();"
+    layout="right"
+    />
+    <br height="$cs_height_10"/> <!-- Top Title End -->
+    <br height="$cs_height_21"/> 
     <label 
-    width="$cs_width_343"
+    width="$this.remain_right"
     height="$cs_height_34"
-    layout="center"
     value="건강한 생활" 
     fontname="$cs_font_600"
     fontsize="$cs_fontsize_24"
@@ -114,9 +90,8 @@ onLoad="screen_login_onload"
     />
     <br/>
     <label 
-    width="$cs_width_343"
+    width="$this.remain_right"
     height="$cs_height_34"
-    layout="center"
     value="건강한 투자를 응원합니다." 
     fontname="$cs_font_600"
     fontsize="$cs_fontsize_24"
@@ -124,17 +99,17 @@ onLoad="screen_login_onload"
     />
     <br height="$cs_height_30"/>
     <viewgroup
-    width="$cs_width_343" 
+    width="$this.remain_right"
     height="$cs_height_250"
     BACKGROUNDSVG="$bg_frame_48096450"
-    BACKGROUNDSVG_WIDTH="$cs_width_343"
+    BACKGROUNDSVG_WIDTH="$this.remain_right"
     BACKGROUNDSVG_HEIGHT="$cs_height_250"
     backgroundimage_align="center"
     backgroundimage_align_vertical="center"
-    layout="center"
+    margin_top="$cs_height_22"
+    margin_left="$cs_width_22"
+    margin_right="$cs_width_18"
     >
-        <br height="$cs_height_22"/>
-        <blank width="$cs_width_22" />
         <label 
         width="$cs_width_144"
         height="$cs_width_28"
@@ -144,7 +119,6 @@ onLoad="screen_login_onload"
         textcolor="$cs_color_black"
         />
         <br/>
-        <blank width="$cs_width_22" />
         <label 
         width="$cs_width_144"
         height="$cs_width_28"
@@ -154,38 +128,33 @@ onLoad="screen_login_onload"
         textcolor="$cs_color_black"
         />
         <br/>
-        <blank width="$cs_width_151" />
         <label 
         width="$cs_height_174"
         height="$cs_height_174"
         backgroundimage="plist/root/resource/image/3x/login_acount_open_1@3x.png"
         backgroundfull="true"
         backgroundrepeat="false"
+        layout="right"
         />
         <button class="cs_btn_none" 
         onClicked="
         $callaction(Act_Open_Web, https://dev-options.eugenefutures.com/wts/login/egcloud);
-        //$callaction(Act_Open_Web, https://dev-options.eugenefutures.com/wts/);
-        //$callaction(Act_Open_Web, http://localhost:3000);
-        //$callaction(Act_Open_Web, http://192.168.0.115:3000);
         "
         /> 
     </viewgroup>
     <br height="$cs_height_15"/>
     <viewgroup
-    width="$cs_width_343" 
+    width="$this.remain_right" 
     height="$cs_height_150"
-    //BACKGROUNDSVG="$bg_frame_48096451"
     BACKGROUNDSVG="$bg_frame_48096451"
-    BACKGROUNDSVG_WIDTH="$cs_width_343"
+    BACKGROUNDSVG_WIDTH="$this.remain_right"
     BACKGROUNDSVG_HEIGHT="$cs_height_150"
     backgroundimage_align="center"
     backgroundimage_align_vertical="center"
-    layout="center"
-    
+    margin_top="$cs_height_22"
+    margin_left="$cs_width_22"
+    margin_right="$cs_width_18"
     >
-        <br height="$cs_height_22"/>
-        <blank width="$cs_width_22" />
         <label 
         width="$cs_width_144"
         height="$cs_width_28"
@@ -193,32 +162,25 @@ onLoad="screen_login_onload"
         fontname="$cs_font_600"
         fontsize="$cs_fontsize_20" 
         textcolor="$cs_color_white"
-        //fontname="Pretendard-Medium"
-
         />
         <br/>
         <label 
-        x="$cs_width_205"
         y="$cs_height_15"
         width="$cs_height_120"
         height="$cs_height_120"
         backgroundimage="plist/root/resource/image/3x/login_acount_open_2@3x.png"
         backgroundfull="true"
         backgroundrepeat="false"
-
+        layout="right"
         />
         <button class="cs_btn_none" onClicked="
         $callaction(Act_Open_Account_Popup, 1000);
-        //$callaction(Act_Open_Account_Popup, 1002);
-        //$callaction(Act_Open_Account_Popup, 1002);
         "/> 
     </viewgroup>
     <br height="$cs_height_30"/>
     <viewgroup
-    width="$cs_width_343" 
+    width="$this.remain_right" 
     height="$cs_height_268"
-    layout="center"
-    
     >
         <label 
         width="$this.remain_right"
@@ -258,7 +220,29 @@ onLoad="screen_login_onload"
         "
         />
     </viewgroup>
-    <br height="$cs_height_20"/>
+    <br/>
+    //추후 테마 관련 얘기가 없으면 삭제하면 끝.
+    <viewgroup id="vg_login_theme_kind"
+        x="$cs_width_16"
+        y="$cs_height_15"
+        width="$cs_width_90"
+        height="$cs_height_20"
+        border_width="1"            
+        border_radius="$cs_radius_5"
+    >
+        <button id="btn_login_theme_white"
+            class="cs_login_gr_theme_kind"
+            width="$result($this.remain_right/2)"
+            value="White"
+            key="0"
+        />
+        <button id="btn_login_theme_black"
+            class="cs_login_gr_theme_kind"
+            width="$this.remain_right"
+            value="Black"
+            key="1"
+        />
+    </viewgroup>
 </screen>
 
 // 뒤로가기 버튼 클릭 
