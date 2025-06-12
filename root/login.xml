@@ -45,11 +45,13 @@ onClicked="$callaction(fnSelectTheme);"
 " />
 <action id="screen_login_onload" 
 value="
+    /*
     if($g_theme_dark){
         $setvar(btn_login_theme_black.select = true);
     }else{
         $setvar(btn_login_theme_white.select = true);
     }
+    */
 " />
 <action id="fnSelectTheme"
 value="
