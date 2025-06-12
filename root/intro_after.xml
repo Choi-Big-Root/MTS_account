@@ -278,6 +278,9 @@ value="
 	
 	$setvar_common(g_is_vaccine_ing = false);
 	$callaction(fnConfig_Load_All);         	// config 읽어옴.
+	$callaction(fnSetSvgIconPath);
+    $callaction(fnSetCSSAccount);
+
 	$lcdallopen($lcd_open); 	
 	//$callaction(fnConfig_Log);        
 	$log(다운폴더:$g_path_down);	
