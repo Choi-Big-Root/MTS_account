@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<action id="screen_webview_unonload"
+value="
+    $webview_clear(trading_webview);
+" />
 <screen id="webview"
 backcolor="ffffff"
 width="$g_lcdWidth"
 height="$g_lcdHeight"
-onLoad="screen_login_onload"
+onLoad="screen_webview_onload"
+onunload="screen_webview_unonload"
 >	
 	// 에이전트 값에 eugene_champion 추가해야함.
 	<webview id="trading_webview" width="$super.width" height="$this.remain_bottom"
