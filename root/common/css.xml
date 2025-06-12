@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<actiondata value="
+	$callaction(fnSetCSSAccount);
+"/>
 <!--
 ********************************************************
 **
@@ -15,7 +17,7 @@
 **
 ********************************************************
  -->
-<action id="fnCalFontsizePercent"
+<action id="fnCalFontsizePercent" scope="common"
 params="p_font_size_px"
 value="
 	$delvar(tmp_width,tmp_height,tmp_fontsize);
@@ -32,7 +34,7 @@ value="
 
 	return $tmp_fontsize;
 "/>
-<action id="fnSetCSSAccount"
+<action id="fnSetCSSAccount" scope="common"
 value="
 	//테마 별 색상 컬러
 	if($g_theme_dark){
@@ -128,21 +130,6 @@ value="
 		,cs_fontsize_24 = $callaction(fnCalFontsizePercent,24)
 		,cs_fontsize_30 = $callaction(fnCalFontsizePercent,30)
 	);	
-
-	/*
-
-	,전체스크린 상단 마진
-	,전체스크린 하단 마진
-	,전체스크린 왼,오 마진
-
-	,하단 하나의 버튼 가로
-	,하단 두개의 버튼 가로
-	,하단 버튼의 높이
-
-	,내부 컨텐츠 높이 : 
-
-	,상단 뒤로가기 영역 높이
-	*/
 	$setvar_common(
 		,cs_screen_top_margin 			= $cs_height_15
 		,cs_screen_bottom_margin        = $cs_height_20
@@ -167,8 +154,6 @@ value="
 ********************************************************
  -->
 <actiondata value="
-	$callaction(fnSetCSSAccount);
-
 	$setvar_common(
 		g_fontSize_big1     = $result($g_baseFontSize+$g_baseFontUnitSize)
 		,g_fontSize_big2    = $result($g_baseFontSize+($g_baseFontUnitSize*2))
