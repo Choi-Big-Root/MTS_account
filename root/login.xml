@@ -54,7 +54,9 @@ value="
 " />
 <action id="fnSelectTheme"
 value="
-    $setvar_common(g_theme_dark = $vg_login_theme_kind.selectkey);
+    // 동일 selectkey 클릭 제어
+    if($g_theme_dark == $vg_login_theme_kind.selectkey){ return;}
+    $callaction(fnConfig_SetValue,g_theme_dark,$vg_login_theme_kind.selectkey);
     $log($vg_login_theme_kind.selectkey);
     $callaction(fnSetSvgIconPath);
     $callaction(fnSetCSSAccount);

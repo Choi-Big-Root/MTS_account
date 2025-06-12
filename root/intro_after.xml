@@ -290,6 +290,8 @@ value="
 " />
 <action id="fn_Move_Login" 
 value="
+	$callaction(fnSetSvgIconPath);
+    $callaction(fnSetCSSAccount);
 	$openfile(plist/root/login.xml);
 "/>
 
