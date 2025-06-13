@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<import filename="plist/root/common/css.xml"/>
 
 <class id="cs_btn_login_cert" 
 width="$this.remain_right"
@@ -45,22 +46,20 @@ onClicked="$callaction(fnSelectTheme);"
 " />
 <action id="screen_login_onload" 
 value="
-    /*
+    
     if($g_theme_dark){
         $setvar(btn_login_theme_black.select = true);
     }else{
         $setvar(btn_login_theme_white.select = true);
     }
-    */
+    
 " />
 <action id="fnSelectTheme"
 value="
     // 동일 selectkey 클릭 제어
     if($g_theme_dark == $vg_login_theme_kind.selectkey){ return;}
-    //$callaction(fnConfig_SetValue,g_theme_dark,$vg_login_theme_kind.selectkey);
     $setvar_common(g_theme_dark = $vg_login_theme_kind.selectkey);
     $callaction(fnSetSvgIconPath);
-    $callaction(fnSetCSSAccount);
     $reopenfile();
 "/>
 <screen id="screen_login"
@@ -221,7 +220,7 @@ onload="screen_login_onload"
     </viewgroup>
     <br/>
     //추후 black테마 관련 얘기가 나오면 다시 활성화.
-   <!--  <viewgroup id="vg_login_theme_kind"
+    <viewgroup id="vg_login_theme_kind"
         x="$cs_width_16"
         y="$cs_height_15"
         width="$cs_width_90"
@@ -241,7 +240,7 @@ onload="screen_login_onload"
             value="Black"
             key="1"
         />
-    </viewgroup> -->
+    </viewgroup>
 </screen>
 
 // 뒤로가기 버튼 클릭 
