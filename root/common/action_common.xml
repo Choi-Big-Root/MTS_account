@@ -8,7 +8,11 @@
 		$callaction(textFieldEnd_local,$TEXTFIELDEND_PARAM1);
 	}
 " />
-
+<action id="TEXTFIELDEND_FINISH" scope="common" 
+params="p_ctrl_id"
+value="
+	$callaction(TEXTFIELDEND_FINISH_local,$TEXTFIELDEND_FINISH_PARAM1);
+" />
 <action id="TEXTFIELDBEGIN" scope="common" value="
 	$callaction(textFieldbegin_local,$TEXTFIELDBEGIN_PARAM1);
 " />

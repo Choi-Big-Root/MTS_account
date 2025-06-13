@@ -811,7 +811,10 @@ value="
 
 <action id="TEXTFIELDEND_LOCAL"
 value="
-	if($isequal_string($TEXTFIELDEND_LOCAL_PARAM1,tf_1010_confirm_01)){
+"/>
+<action id="TEXTFIELDEND_FINISH_LOCAL"
+value="
+	if($isequal_string($TEXTFIELDEND_FINISH_LOCAL_PARAM1,tf_1010_confirm_01)){
 		$callaction(btn_1010_number_onclicked);
 		return;
 	}

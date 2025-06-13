@@ -1032,7 +1032,9 @@ margin_top="$h($g_lcdHeight,1)"
             value="완료"
             onClicked="
        //     $log(************TEXTID $super.key);
-            $setctrlattr(super,rowkey1,$getctrlattr($super.key,value));"
+            $setctrlattr(super,rowkey1,$getctrlattr($super.key,value));
+            $callaction(TEXTFIELDEND_FINISH,$super.key);
+            "
             />
         <hr x="0" width="$super.width" backcolor="d4d6d9" layout_vertical="bottom" layout_vertical_ori="bottom"/>
     </viewgroup>
