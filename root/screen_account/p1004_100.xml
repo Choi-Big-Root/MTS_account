@@ -670,7 +670,7 @@ value="
 						<br/>
 						<label
 							width="$this.remain_right"
-							height="$cs_height_16"
+							height="$cs_height_17"
 							margin_right="$cs_width_16"
 							fontname="$cs_font_400"
 							fontsize="$cs_fontsize_12"
@@ -1070,7 +1070,7 @@ value="
 		<br height="$cs_height_20" />
 		<viewgroup
 			width="$this.remain_right"
-			height="$cs_height_50"
+			height="$cs_height_51"
 			backcolor="$cs_color_bg"
 			border_width="1"
 			border_radius="$cs_radius_10"
@@ -1098,7 +1098,7 @@ value="
 			<label
 				x="$result($tf_popscreen_1004_choice_jikjang.width - $cs_height_50)" 
 		    	width="$cs_height_50"
-		    	height="$cs_height_50"
+		    	height="$cs_height_51"
 		        BACKGROUNDSVG="$icon_cancel"
 				BACKGROUNDSVG_DISABLE="$icon_cancel"
 				BACKGROUNDSVG_HIGHLIGHT="$icon_cancel"

@@ -664,7 +664,7 @@ value="
 						<br/>
 						<label
 							width="$this.remain_right"
-							height="$cs_height_16"
+							height="$cs_height_17"
 							margin_right="$cs_width_16"
 							fontname="$cs_font_400"
 							fontsize="$cs_fontsize_12"

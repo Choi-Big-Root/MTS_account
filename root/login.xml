@@ -3,7 +3,7 @@
 
 <class id="cs_btn_login_cert" 
 width="$this.remain_right"
-height="$cs_height_50"
+height="$cs_height_51"
 align="left"
 margin_left="$cs_width_20"
 fontname="$cs_font_400"
@@ -46,12 +46,13 @@ onClicked="$callaction(fnSelectTheme);"
 " />
 <action id="screen_login_onload" 
 value="
-    
+    /*
     if($g_theme_dark){
         $setvar(btn_login_theme_black.select = true);
     }else{
         $setvar(btn_login_theme_white.select = true);
     }
+    */
     
 " />
 <action id="fnSelectTheme"
@@ -178,7 +179,7 @@ onload="screen_login_onload"
     <br height="$cs_height_30"/>
     <viewgroup
     width="$this.remain_right" 
-    height="$cs_height_268"
+    height="$cs_height_272"
     >
         <label 
         width="$this.remain_right"
@@ -220,7 +221,7 @@ onload="screen_login_onload"
     </viewgroup>
     <br/>
     //추후 black테마 관련 얘기가 나오면 다시 활성화.
-    <viewgroup id="vg_login_theme_kind"
+   <!--  <viewgroup id="vg_login_theme_kind"
         x="$cs_width_16"
         y="$cs_height_15"
         width="$cs_width_90"
@@ -240,7 +241,7 @@ onload="screen_login_onload"
             value="Black"
             key="1"
         />
-    </viewgroup>
+    </viewgroup> -->
 </screen>
 
 // 뒤로가기 버튼 클릭 
