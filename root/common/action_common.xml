@@ -16,6 +16,19 @@ value="
 <action id="TEXTFIELDBEGIN" scope="common" value="
 	$callaction(textFieldbegin_local,$TEXTFIELDBEGIN_PARAM1);
 " />
+// 플랫폼 콜백 함수임 - UI모드 변경 시 
+<action id="P_UIMODE_DARKMODE_CHANGE" scope="common"
+params="p_is_darkmode"
+value="
+    $setvar_common(g_is_darkmode = $p_is_darkmode);
+    if($p_is_darkmode){
+        $log(다크모드로 변경됐다.);
+    }
+    else{
+        $log(라이트모드로 변경됐다.);
+    }
+    $callaction(P_UIMODE_DARKMODE_CHANGE_Local, $g_is_darkmode);
+" />
 <!--
 <action id="fnGoScreen_Base" scope="common" 
 params="p_menu_code"

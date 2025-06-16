@@ -3,6 +3,11 @@
 <import filename="plist/root/common/device_info.xml"/>   // 하드웨어 정보
 
 <actiondata value="
+	// 다크모드 여부 
+	$setvar_common(
+		g_is_darkmode = $getIsSystemDarkMode()
+	);
+	$logvar(g_is_darkmode);
 	$setvar_common(
 		g_file_name = intro
 		,g_is_background = 
