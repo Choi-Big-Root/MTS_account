@@ -1337,7 +1337,6 @@ value="
 		,tmp_enpnm = $json_getdata($jsonName,KED.HEADER.enpnm)
 		
 	);
-	$logvar(tmp_enpnm);
 	if(!$isequal_string($tmp_enpnm,$tf_popscreen_1004_choice_jikjang.value)){
 		$callaction(tf_popscreen_1004_choice_jikjang_onChanged);
 		return;

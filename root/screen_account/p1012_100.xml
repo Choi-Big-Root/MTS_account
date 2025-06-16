@@ -528,8 +528,6 @@ value="
 		,tf_1012_LicenceNumber2.hidden = $p_kind
 	);
 
-	$logvar(g_IN_REQUEST_IDCARD_TYPE);
-
 	if($isequal_string($g_IN_REQUEST_IDCARD_TYPE,ID01)){
 		$setvar(
 			tf_1012_LicenceNumber.hidden = true
