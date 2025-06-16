@@ -236,7 +236,7 @@ value="
 		return;
 	}
 	elseif($fnInputDataCheck_param1 == 2){
-		$callaction(Act_Open_Account_Move, 4121); 	// 영상통화 인증화면
+		$callaction(Act_Open_Account_Move, 1018); 	// 영상통화 인증화면
 		return;
 	}
 "/>
