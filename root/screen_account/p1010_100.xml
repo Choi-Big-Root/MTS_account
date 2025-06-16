@@ -187,7 +187,6 @@ value="
 "/>
 <action id="fnActive_Next_1010" 
 value="
-	$setvar(btn_1010_af.enable = true);
 	$callaction(btn_1010_confirm_onclicked);
 " />
 <screen 
@@ -373,7 +372,7 @@ value="
 			textcolor_disable="$cs_color_white"
 			enable="false"
 			value="다음"
-			onclicked="btn_1010_confirm_onclicked"
+			onclicked="btn_1010_number_onclicked"
 		/>
 	</viewgroup>
 </screen>
@@ -527,6 +526,12 @@ value="
 	);
 	$closescreen(popscreen_1010_choice);
 	$setvar(tf_1010_confirm_01.focus = true);
+
+	if($strlen($btn_1010_100.value) > 0 && $strlen($tf_1010_confirm_01.value) > 0){
+		$setvar(btn_1010_af.enable = true);
+	}else{
+		$setvar(btn_1010_af.enable = false);
+	}
 "/>
 <action id="gr_1010_100_onclicked" value="
 	$callaction(subscreen_1010_menu_1_onload);
@@ -811,6 +816,11 @@ value="
 
 <action id="TEXTFIELDEND_LOCAL"
 value="
+	if($strlen($btn_1010_100.value) > 0 && $strlen($tf_1010_confirm_01.value) > 0){
+		$setvar(btn_1010_af.enable = true);
+	}else{
+		$setvar(btn_1010_af.enable = false);
+	}
 "/>
 <action id="TEXTFIELDEND_FINISH_LOCAL"
 value="

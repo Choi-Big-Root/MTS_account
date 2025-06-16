@@ -130,18 +130,25 @@ value="
 	$delvar_common(utf8_IssueDate);		// common으로 반환됨
 	$delvar_common(utf8_LicenceNumber);	// common으로 반환됨
 
+	$iconv_utf32le_to_utf8(strJuminNumber,utf8_JuminNumber); 
+	$iconv_utf32le_to_utf8(strIssueDate,utf8_IssueDate);
+	$iconv_utf32le_to_utf8(strLicenceNumber,utf8_LicenceNumber);
+
 	if($strlen($strType) <  1){		$setvar(strType = 1);		}
 
 	if(	$isequal_string($strType,1) ){			// 주민등록증 
 		$setvar(
 			,lbl_1012_LicenceNumber.hidden 	= true 
 			,tf_1012_LicenceNumber.hidden 	= true 
+			,tf_1012_LicenceNumber2.hidden 	= true 
 			,lbl_1012_SecuritySerial.hidden = true 
 			//,tf_1012_SecuritySerial.hidden 	= true 
 
 			,tf_1012_name.value 			= $strName 					// 이름
 			,tf_1012_jumin.value 			= $viewJuminNumber 			// 주민번호 (마스킹 O) 
+			,tf_1012_jumin2.value 			= $formatstring(###### - #######,$utf8_JuminNumber) 			// 주민번호 (마스킹 X)
 			,tf_1012_date.value 			= $viewIssueDate 			// 발급일자 (마스킹 O)
+			,tf_1012_date2.value 			= $formatstring(####.##.##,$utf8_IssueDate) 			// 발급일자 (마스킹 X)
 			
 		);
 		$delvar_all(viewJuminNumber);
@@ -151,19 +158,30 @@ value="
 		$setvar(
 			,lbl_1012_LicenceNumber.hidden 	= false 
 			,tf_1012_LicenceNumber.hidden 	= false 
+			,tf_1012_LicenceNumber2.hidden 	= false
 			,lbl_1012_SecuritySerial.hidden = false 
 			//,tf_1012_SecuritySerial.hidden 	= false 
 
 			,tf_1012_name.value 			= $strName 					// 이름
 			,tf_1012_jumin.value 			= $viewJuminNumber 			// 주민번호 (마스킹 O)
+			,tf_1012_jumin2.value 			= $formatstring(######-#######,$utf8_JuminNumber) 			// 주민번호 (마스킹 X)
+
 			,tf_1012_date.value 			= $viewIssueDate 			// 발급일자 (마스킹 O)
+			,tf_1012_date2.value 			= $formatstring(####.##.##,$utf8_IssueDate) 			// 발급일자 (마스킹 X)
+
 			//,tf_1012_SecuritySerial.value 	= $strSecuritySerial 		// 암호일련번호 (마스킹 X)
+
 			,tf_1012_LicenceNumber.value 	= $viewLicenceNumber 		// 면허번호 (마스킹 O)
+			,tf_1012_LicenceNumber2.value 	= $formatstring(## - ## - ###### - ##,$utf8_LicenceNumber) 		// 면허번호 (마스킹 X)
 			
 		);
         $delvar_all(viewJuminNumber);
 		$callaction(fnConfig_SetValue,g_IN_REQUEST_IDCARD_TYPE 	,ID02);
 	}
+	$delvar_common(utf8_JuminNumber); 	// common으로 반환됨
+	$delvar_common(utf8_IssueDate);		// common으로 반환됨
+	$delvar_common(utf8_LicenceNumber);	// common으로 반환됨
+
 	// 이미지 파일 저장 - ACCOUNT_PHOTO 에서 사용하기 위해 
 	$setvar( frontImageName = frontImageFile.png );
     $removefile($frontImageName);
@@ -368,6 +386,16 @@ value="
 				class="cs_1012_100_input_tf"
 				input_type="number"
 				keyboard_type="number"
+				hidden="true"
+				enable="false"
+			/>
+			<textfield id="tf_1012_jumin2"
+				class="cs_1012_100_input_tf"
+				x="$tf_1012_jumin.x"
+				y="$tf_1012_jumin.y"
+				input_type="number"
+				keyboard_type="number"
+				hidden="false"
 				enable="false"
 			/>
 			<br height="$cs_height_18" />
@@ -382,6 +410,16 @@ value="
 				class="cs_1012_100_input_tf"
 				input_type="number"
 				keyboard_type="number"
+				hidden="true"
+				enable="false"
+			/>
+			<textfield id="tf_1012_LicenceNumber2"
+				class="cs_1012_100_input_tf"
+				x="$tf_1012_LicenceNumber.x"
+				y="$tf_1012_LicenceNumber.y"
+				input_type="number"
+				keyboard_type="number"
+				hidden="false"
 				enable="false"
 			/>
 			<br height="$cs_height_18" />
@@ -396,12 +434,22 @@ value="
 				class="cs_1012_100_input_tf"
 				input_type="number"
 				keyboard_type="number"
+				hidden="true"
+				enable="false"
+			/>
+			<textfield id="tf_1012_date2"
+				class="cs_1012_100_input_tf"
+				x="$tf_1012_date.x"
+				y="$tf_1012_date.y"
+				input_type="number"
+				keyboard_type="number"
+				hidden="false"
 				enable="false"
 			/>
 		</viewgroup>
 	</viewgroup>
 	<br/>
-	<viewgroup
+	<viewgroup id="vg_1012_100_confirm"
 		width="$cs_width_343"
 		height="$cs_height_54"
 		layout="center"
@@ -439,6 +487,13 @@ value="
 			onclicked="btn_1012_af_onClicked"
 		/>
 	</viewgroup>
+	<label id="lbl_id_card_info"
+		x="$vg_1012_100_confirm.x"
+		y="$result($vg_1012_100_confirm.y - $cs_height_75)"
+		align="center"
+		value="뒷자리 숫자는 안전하게 보호했어요"
+		hidden="true"
+	/>
 </screen>
 
 <popscreen id="pop_image_process" modal="true"
@@ -448,9 +503,52 @@ value="
 	<label width="$super.width" height="$super.height" fontsize="$g_fontsize_basic"  value="이미지\n변환작업중입니다" align="center"/>
 </popscreen>
 
+<action id="lbl_id_card_info_status_set"
+value="
+	$setvar(lbl_id_card_info.hidden = true);
+"/>
+<action id="fn1012TextFieldHiddenFalse"
+params="p_kind"
+value="
+	if($p_kind){
+		$setvar(lbl_id_card_info.hidden = false);
+		$setnstimer(TIMER_SHOW_ID_CARD_INFO,2,lbl_id_card_info_status_set,FALSE);
+	}else{
+		$setvar(lbl_id_card_info.hidden = true);
+	}
+
+	$setvar(
+		tf_1012_jumin.hidden = !$p_kind
+		,tf_1012_date.hidden = !$p_kind
+		,tf_1012_LicenceNumber.hidden = !$p_kind
+
+
+		,tf_1012_jumin2.hidden = $p_kind
+		,tf_1012_date2.hidden = $p_kind
+		,tf_1012_LicenceNumber2.hidden = $p_kind
+	);
+
+	$logvar(g_IN_REQUEST_IDCARD_TYPE);
+
+	if($isequal_string($g_IN_REQUEST_IDCARD_TYPE,ID01)){
+		$setvar(
+			tf_1012_LicenceNumber.hidden = true
+			,tf_1012_LicenceNumber2.hidden = true
+		);
+	}else{
+		$setvar(
+			tf_1012_LicenceNumber.hidden = !$p_kind
+			,tf_1012_LicenceNumber2.hidden = $p_kind
+		);
+	}
+"/>
+
 <action id="btn_1012_af_onClicked"
 value="
 	$changescreen_parse(screen_1012_100_photo,subscreen_1012_100);
+
+	$callaction(fn1012TextFieldHiddenFalse,true);
+
 	$callaction(fnSendSSL_MO_IDCARD);
 "/>
 <action id="fnSendSSL_MO_IDCARD"
@@ -480,7 +578,12 @@ value="	// 비대면 절차개선 - 2020.09.28
 	$json_setdata($jsonName,BODY,CLNT_NM,,$tf_1012_name.value); 			// 고객명
 	$json_setdata($jsonName,BODY,RMN_NO,,$utf8_JuminNumber_kisa_encrypt); 			// 주민등록번호
 	$json_setdata($jsonName,BODY,RMN_DATE,,$utf8_IssueDate_kisa_encrypt); 		// 주민등록증 발급일자
-	$json_setdata($jsonName,BODY,DRV_NO,,$utf8_LicenceNumber_kisa_encrypt); 			// 운전면허번호
+	if($isequal_string($g_IN_REQUEST_IDCARD_TYPE,ID01)){
+		$json_setdata($jsonName,BODY,DRV_NO,,); 			// 운전면허번호
+	}else{
+		$json_setdata($jsonName,BODY,DRV_NO,,$utf8_LicenceNumber_kisa_encrypt); 			// 운전면허번호
+	}
+	
 	$json_setdata($jsonName,BODY,WORK_NO,,$g_OUT_AGREE_WORK_NO); 			// 상담번호
 
 	// 20240617 금결원 이슈로 인해 추가요청함.
@@ -515,12 +618,14 @@ value="	// 비대면 절차개선 - 2020.09.28
 
 	if($tmp_result_N_count == 5){
 		$closescreen(pop_host_msg); 
+		$callaction(fn1012TextFieldHiddenFalse,false);
 		$popscreen(pop_caution_result_N_count_5);
 		return;
 	}
 
 	if(!$isequal_string($recvSSL_hdr_ret,OK)){
 		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
+		$callaction(fn1012TextFieldHiddenFalse,false);
 		$callaction(fnPopover_AlertAction,,$recvSSL_hdr_msg,,확인);
 		return;
 	}
@@ -552,12 +657,14 @@ value="	// 비대면 절차개선 - 2020.09.28
 			}
 			if($g_recvSSL_body_result_count==5){
 				$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
+				$callaction(fn1012TextFieldHiddenFalse,false);
 				$popscreen(pop_caution2);
 				return;
 			}
 		}
 		$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
 		$setvar(recvSSL_body_reject_reason=$recvSSL_body_reject_reason 신분증 재촬영 또는 입력정보를 수정해주세요.);
+		$callaction(fn1012TextFieldHiddenFalse,false);
 		$popscreen(pop_caution1);
 		return;
 	}
@@ -565,6 +672,7 @@ value="	// 비대면 절차개선 - 2020.09.28
 		if($g_recvSSL_body_result_count==5){
 			$callaction(fnConfig_SetValue,g_save_result_yn,N);	// 진위여부 Y 저장
 			$closescreen(pop_host_msg); 		// 동글뱅이 멈춤 
+			$callaction(fn1012TextFieldHiddenFalse,false);
 			$popscreen(pop_caution2);
 			return;
 		}
