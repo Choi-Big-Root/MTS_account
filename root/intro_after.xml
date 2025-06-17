@@ -38,7 +38,7 @@
 	backcolor="ffffff"
 	width="$p_lcdWidth"
 	height="$p_lcdHeight"
-	onLoad="screen_intro_after_onload"
+	onLoad="screen_intro_after_onload_before"
 	>
     <br/>
     <viewgroup
@@ -133,11 +133,11 @@ value="
 <action id="fnExit_Timer" value="
 	$exit();
 " />
-
-<action id="screen_intro_after_onload" value="
+<action id="screen_intro_after_onload_before"
+value="
 	// 1. 백신체크 
 	$setvar_common(g_os_version = $getSDKInt());
-	//2022년 12월 12일 추가.
+
 	if(!$g_isAndroid){ //아이폰은 상관없다.
 		$log(****** IOS ***********);
 		$setvar(strPermission=GET_ACCOUNTS|CAMERA|RECORD_AUDIO|POST_NOTIFICATIONS|RECEIVE_SMS);
@@ -151,6 +151,17 @@ value="
 		$setvar(strPermission=GET_ACCOUNTS|CAMERA|RECORD_AUDIO);
 	}
 
+
+	if(!$isPermission($strPermission) && $g_isAndroid){
+		$callaction(fnPopoverPermissionAgree,screen_intro_after_onload);
+		return;
+	}
+
+	$callaction(screen_intro_after_onload);
+"/>
+
+
+<action id="screen_intro_after_onload" value="
 	$log(OSVERSION = g_os_version);	
 	if(!$isPermission($strPermission)) {
 		$log(**** 퍼미션 없는거 있음. );
@@ -169,17 +180,21 @@ value="
 		$callaction(Act_VaccineCheck,fn_VaccineCheck_AfterAction);	
 	}
 	else{
-		$callaction(fnPopover_AlertAction,Act_Permission_Check_Confirm,마이크%2C카메라%2C동영상녹화 중\n필요한 권한이 부족합니다.설정화면으로 이동하셔서\n변경 후 실행하시기 바랍니다. \n설정화면으로 이동하시겠습니까?,취소,확인);
+		$callaction(fnPopover_AlertAction,Act_Permission_Check_Confirm,마이크%2C카메라%2C동영상녹화 중\n필요한 권한이 부족합니다.\n설정화면으로 이동하셔서\n변경 후 실행하시기 바랍니다.\n설정화면으로 이동하시겠습니까?,취소,확인);
 	}
 " />
 <action id="Act_Permission_Check_Confirm" 
 value="
 	if($Act_Permission_Check_Confirm_param1 == 1){
+
+		$setvar_common(tmp_go_app_settings = true);
+
 		// 권한 설정창으로 이동 
 		$setvar(strSetting=ACTION_APPLICATION_SETTINGS);
 		$goPhoneSetting($strSetting);
 	}
 	else{
+		$setvar_common(tmp_go_app_settings = false);
 		$callaction(Act_VaccineCheck,fn_VaccineCheck_AfterAction);
 	}
 " />
@@ -375,3 +390,300 @@ value="
     }
 " />
 
+
+<action id="fnPopoverPermissionAgree" scope="common"
+params="
+p_after_action
+"
+value="
+	$setvar(
+		tmp_Permission_agree_after_action = $p_after_action
+	);
+	$popscreen(pop_screen_permission_agree);
+" />
+<class id="pop_intro_after_permission_info_image"
+width="$cs_height_50" 
+height="$cs_height_50"
+BACKGROUNDSVG_WIDTH="$cs_height_50"
+BACKGROUNDSVG_HEIGHT="$cs_height_50"
+backgroundimage_align="center"
+backgroundimage_align_vertical="center" 
+/>			
+<class id="pop_intro_after_permission_info_vg"
+width="$this.remain_right"
+height="$cs_height_50"
+margin_left="$cs_width_15"
+/>
+<class id="pop_intro_after_permission_info_lbl_top"
+width="$this.remain_right"
+height="$cs_height_25" 
+fontname="$cs_font_700"
+fontsize="$cs_fontsize_16"
+textcolor="$cs_color_black"
+/>
+<class id="pop_intro_after_permission_info_lbl_bottom"
+width="$this.remain_right"
+height="$this.remain_bottom" 
+fontname="$cs_font_400"
+fontsize="$cs_fontsize_16"
+textcolor="$cs_color_text"
+/>
+<popscreen scope="common"
+	id="pop_screen_permission_agree"
+	x="0"
+	y="0"
+	width="$g_lcdWidth" 
+	height="$g_lcdHeight"
+	backcolor="$cs_color_white"
+	scroll_hbar="false"
+	noscroll_width="true"
+    margin_bottom="$cs_screen_bottom_margin"
+>
+	<viewgroup
+		width="$this.remain_right"
+		height="$result($this.remain_bottom - $cs_height_54)"
+		margin_left="$cs_screen_left_right_margin"
+    	margin_right="$cs_screen_left_right_margin"
+	>
+		<br height="$cs_height_13" />
+		<label
+		    width="$cs_width_132" 
+		    height="$cs_height_27"
+		    backgroundimage="plist/root/resource/image/3x/ci@3x.png"
+		    backgroundfull="true"
+		    backgroundrepeat="false"
+		    layout="right"
+		/>
+		<br height="$cs_height_25" />
+		<label
+			width="$this.remain_right"
+			height="$cs_height_34"
+			valign="center"
+			fontname="$cs_font_600"
+			fontsize="$cs_fontsize_24"
+			textcolor="$cs_color_black"
+			value="앱 이용을 위한"
+		/>
+		<br/>
+		<label
+			width="$this.remain_right"
+			height="$cs_height_34"
+			valign="center"
+			fontname="$cs_font_600"
+			fontsize="$cs_fontsize_24"
+			textcolor="$cs_color_black"
+			value="접근 권한을 허용해주세요."
+		/>
+		<br height="$cs_height_50" />
+		<label 
+			class="pop_intro_after_permission_info_image" 
+			BACKGROUNDSVG="$icon_icon_2"
+	        BACKGROUNDSVG_DISABLE="$icon_icon_2"
+	        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_2"
+		/>
+		<viewgroup
+			class="pop_intro_after_permission_info_vg" 
+		>
+			<label
+				class="pop_intro_after_permission_info_lbl_top"
+				value="[필수] 파일 및 미디어(저장공간)"
+			/>
+			<br/>
+			<label
+				class="pop_intro_after_permission_info_lbl_bottom"
+				value="주민등록증 또는 운전면허증"
+			/>
+		</viewgroup>
+		<br height="$cs_height_15" />
+		<label 
+			class="pop_intro_after_permission_info_image" 
+			BACKGROUNDSVG="$icon_icon_2"
+	        BACKGROUNDSVG_DISABLE="$icon_icon_2"
+	        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_2"
+		/>
+		<viewgroup
+			class="pop_intro_after_permission_info_vg" 
+		>
+			<label
+				class="pop_intro_after_permission_info_lbl_top"
+				value="[필수] 파일 및 미디어(저장공간)"
+			/>
+			<br/>
+			<label
+				class="pop_intro_after_permission_info_lbl_bottom"
+				value="주민등록증 또는 운전면허증"
+			/>
+		</viewgroup>
+		<br height="$cs_height_15" />
+		<label 
+			class="pop_intro_after_permission_info_image" 
+			BACKGROUNDSVG="$icon_icon_2"
+	        BACKGROUNDSVG_DISABLE="$icon_icon_2"
+	        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_2"
+		/>
+		<viewgroup
+			class="pop_intro_after_permission_info_vg" 
+		>
+			<label
+				class="pop_intro_after_permission_info_lbl_top"
+				value="[필수] 파일 및 미디어(저장공간)"
+			/>
+			<br/>
+			<label
+				class="pop_intro_after_permission_info_lbl_bottom"
+				value="주민등록증 또는 운전면허증"
+			/>
+		</viewgroup>
+		<br height="$cs_height_15" />
+		<label 
+			class="pop_intro_after_permission_info_image" 
+			BACKGROUNDSVG="$icon_icon_2"
+	        BACKGROUNDSVG_DISABLE="$icon_icon_2"
+	        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_2"
+		/>
+		<viewgroup
+			class="pop_intro_after_permission_info_vg" 
+		>
+			<label
+				class="pop_intro_after_permission_info_lbl_top"
+				value="[필수] 파일 및 미디어(저장공간)"
+			/>
+			<br/>
+			<label
+				class="pop_intro_after_permission_info_lbl_bottom"
+				value="주민등록증 또는 운전면허증"
+			/>
+		</viewgroup>
+		<br height="$cs_height_15" />
+		<label 
+			class="pop_intro_after_permission_info_image" 
+			BACKGROUNDSVG="$icon_icon_2"
+	        BACKGROUNDSVG_DISABLE="$icon_icon_2"
+	        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_2"
+		/>
+		<viewgroup
+			class="pop_intro_after_permission_info_vg" 
+		>
+			<label
+				class="pop_intro_after_permission_info_lbl_top"
+				value="[필수] 파일 및 미디어(저장공간)"
+			/>
+			<br/>
+			<label
+				class="pop_intro_after_permission_info_lbl_bottom"
+				value="주민등록증 또는 운전면허증"
+			/>
+		</viewgroup>
+		<br height="$cs_height_15" />
+		<label 
+			class="pop_intro_after_permission_info_image" 
+			BACKGROUNDSVG="$icon_icon_2"
+	        BACKGROUNDSVG_DISABLE="$icon_icon_2"
+	        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_2"
+		/>
+		<viewgroup
+			class="pop_intro_after_permission_info_vg" 
+		>
+			<label
+				class="pop_intro_after_permission_info_lbl_top"
+				value="[필수] 파일 및 미디어(저장공간)"
+			/>
+			<br/>
+			<label
+				class="pop_intro_after_permission_info_lbl_bottom"
+				value="주민등록증 또는 운전면허증"
+			/>
+		</viewgroup>
+		<br height="$cs_height_15" />
+		<label 
+			class="pop_intro_after_permission_info_image" 
+			BACKGROUNDSVG="$icon_icon_1"
+	        BACKGROUNDSVG_DISABLE="$icon_icon_1"
+	        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_1"
+		/>
+		<viewgroup
+			class="pop_intro_after_permission_info_vg" 
+		>
+			<label
+				class="pop_intro_after_permission_info_lbl_top"
+				value="[필수] 파일 및 미디어(저장공간)"
+			/>
+			<br/>
+			<label
+				class="pop_intro_after_permission_info_lbl_bottom"
+				value="주민등록증 또는 운전면허증"
+			/>
+		</viewgroup>
+
+	</viewgroup>
+	<br/>
+	<!-- <viewgroup
+		width="$cs_width_343"
+		height="$cs_height_54"
+		layout="center"
+		layout_vertical="bottom"
+	>
+		<button 
+			width="$cs_width_100" 
+			height="$this.remain_bottom"
+			layout="left"
+			backcolor="$cs_color_white"
+			border_width="1"
+			border_radius="$cs_height_10"
+			border_color="$cs_color_disable"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_black"
+			textcolor_active="$cs_color_black"
+			value="종료"
+			onClicked="fnPopoverPermissionAgreeExit"
+		/>
+		<button 
+			width="$cs_width_235" 
+			height="$this.remain_bottom"
+			layout="right"
+			backcolor="$cs_color_main"
+			border_width="1"
+			border_radius="$cs_height_10"
+			fontsize="$cs_fontsize_16"
+			fontname="$cs_font_700"
+			textcolor="$cs_color_white"
+			textcolor_active="$cs_color_white"
+			value="동의"
+			onclicked="fnPopoverPermissionAgree_agree"	
+		/>
+	</viewgroup> -->
+	<button 
+		width="$cs_width_343"
+		height="$cs_height_54"
+		layout="center"
+		layout_vertical="bottom"
+		border_radius="$cs_radius_10"
+		backcolor_disable="$cs_color_main_disable"
+		backcolor="$cs_color_main"
+		enable="true"
+		fontsize="$cs_fontsize_15"
+		textcolor="$cs_color_white"
+		textcolor_active="$cs_color_white"
+		textcolor_disable="$cs_color_white"
+		fontname="$cs_font_700"
+		value="확인" 
+		onClicked="fnPopoverPermissionAgree_agree"
+	/>
+</popscreen>
+<action id="fnPopoverPermissionAgree_agree" scope="common"
+value="
+	$closescreen(pop_screen_permission_agree);
+	$callaction($tmp_Permission_agree_after_action);
+" />
+<action id="fnPopoverPermissionAgreeExit" scope="common"
+value="
+	$exit();
+" />
+
+<action id="android_keymap" scope="common" 
+value="
+    if($android_keymap_param1 == 1 && $android_keymap_param2 == 4) {
+        $exit();
+    }
+" />

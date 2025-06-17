@@ -207,7 +207,16 @@ value="
 		$log(************** N_BecomeActive Return Android Vaccine p_not_background_check:[$p_not_background_check]);
 		$setvar_common(p_not_background_check = FALSE); 
 		return;		
-	} 		
+	}
+
+	if($tmp_go_app_settings){
+		$log(********권한 부족으로 인한 권한셋팅 화면 이동후);
+		$setvar_common(tmp_go_app_settings = false);
+		$callaction(screen_intro_after_onload);
+		return;
+	}
+
+
 	if($isequal_string($g_file_name,intro_after)){		//intro,intro_after 체크
 		$log(************** N_BecomeActive Return intro_after.xml g_file_name:[$g_file_name]);
 		return;		
