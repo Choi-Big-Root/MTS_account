@@ -109,7 +109,6 @@ onClicked="$setvar(tmp_all_check_flag = true);$callaction(btn_essential_1002_100
 	// 화면 오픈시 주민등록번호 데이터 초기화
 	$callaction(fnConfig_SetValue,g_tf_1002_confirm_2_var,);
 	$callaction(fnConfig_SetValue,g_tf_1002_confirm_2_encvar,);
-	$callaction(fnConfig_SetValue,g_IN_AGREE_RMN_NO,);
 "/>
 
 <action id="screen_1002_100_onunload" 
@@ -1011,6 +1010,10 @@ value="
 
 	$KISA_SEED_CBC_ENCRYPT(strRequestData,strRequestDataEnc);
 
+	$delvar(strRequestData);
+	$delvar_all(strRequestData);
+	$delvar_common(strRequestData);
+
 	$addurlparam(strRequestDataReal,q,$strRequestDataEnc);
 
 	$setnstimer(TIMER_SMS_INPUT,1,Act_sms_timer,TRUE);
@@ -1021,7 +1024,7 @@ value="
 		,btn_1002_confirm.enable = false
 	);
 
-	$getRequestData(VAR_GET_Request,$g_sms_request_url,Act_ResponseTelecomAuthCodeMts,strRequestDataReal,TRUE);	
+	$getRequestData(VAR_GET_Request,$g_sms_request_url,Act_ResponseTelecomAuthCodeMts,strRequestDataReal,FALSE);	
 " />
 <action id="Act_ResponseTelecomAuthCodeMts" 
 params="result,strVarName,strURL"
@@ -1088,7 +1091,7 @@ value="
 	$addurlparam(strVerifyData,AuthReqSeq,);
 	$addurlparam(strVerifyData,selfAuthResSeq,$json_selfAuthResSeq);
 
-    $getRequestData(VAR_GET_Verify,$g_sms_verify_url,Act_VerifyTelecomAuthCodeMts_Response,strVerifyData,TRUE);
+    $getRequestData(VAR_GET_Verify,$g_sms_verify_url,Act_VerifyTelecomAuthCodeMts_Response,strVerifyData,FALSE);
 " />
 //일단 대기.
 <action id="Act_VerifyTelecomAuthCodeMts_Response" 
@@ -1109,6 +1112,10 @@ value="
 	);
 	
 	$json_delete($jsonName);
+
+	$delvar(strVarName,strVarNameDataDEC);
+	$delvar_all(strVarName,strVarNameDataDEC);
+	$delvar_common(strVarName,strVarNameDataDEC);
 
 
 	if($isequal_string($json_result,success)){
@@ -1143,11 +1150,12 @@ value="
 value="
 	$setvar(
 		,tf_1002_confirm_1_val = $tf_1002_confirm_1.value 		// 4117_100에서 사용
-		//,tf_1002_confirm_2_val = $g_tf_1002_confirm_2_var 	// 4117_100에서 사용안함.
+
 		,tf_1002_confirm_3_val = $replace(-,,$tf_1002_confirm_3.value) 		// 4117_100에서 사용
 	);
 
-	$callaction(fnConfig_SetValue,g_IN_AGREE_RMN_NO 	,$g_tf_1002_confirm_2_encvar); 	// 주민번호
+	// 주민번호
+
 	$callaction(fnConfig_SetValue,g_IN_AGREE_CLNT_NM 	,$tf_1002_confirm_1.value);		// 고객명
 	$callaction(fnConfig_SetValue,g_IN_REQUEST_TEL_NUM 	,$tf_1002_confirm_3_val);		// 전화번호
 
@@ -1165,9 +1173,10 @@ value="
  		tmp_age_man_remain = $result($tmp_now - $tmp_jumin)
  		,tmp_age_man = $substring($tmp_age_man_remain,0,2)
  	);
- 	$callaction(fnConfig_SetValue,g_IN_REQUEST_AGE 	,$tmp_age_man);		// 만나이
-
  	$delvar(tmp_jumin);
+ 	$delvar_all(tmp_jumin);
+ 	$delvar_common(tmp_jumin);
+ 	$callaction(fnConfig_SetValue,g_IN_REQUEST_AGE 	,$tmp_age_man);		// 만나이
 
  	if($g_IN_REQUEST_AGE >= 65) {
  		$callaction(fnPopover_AlertAction,fnAGEAlertResult,만 65세 이상의 고령투자자 고객은 비대면 계좌개설을 지원하지 않습니다. 직접 내방을 통해 개설을 부탁드립니다.,,확인);
@@ -1194,6 +1203,7 @@ value="
 	$json_setdata($jsonName,HDR,CMD,,$jsonName);			// 
 
 	$json_setdata($jsonName,,BODY,,{});
+
 	$json_setdata($jsonName,BODY,RMN_NO,,$g_tf_1002_confirm_2_kisa_encrypt); 		// 주민번호
 	$json_setdata($jsonName,BODY,CLNT_NM,,$g_IN_AGREE_CLNT_NM); 	// 고객명
 	$json_setdata($jsonName,BODY,DOC_ID,,P0001); 						// 문서아이디
@@ -1321,6 +1331,7 @@ value="
 	$json_setdata($jsonName,,BODY,,{});
 	$json_setdata($jsonName,BODY,WORK_NO,,$g_OUT_AGREE_WORK_NO); 	// 상담번호
 	$json_setdata($jsonName,BODY,CLNT_NM,,$g_IN_AGREE_CLNT_NM); 	// 고객명 (40이하)
+
 	$json_setdata($jsonName,BODY,RMN_NO,,$g_tf_1002_confirm_2_kisa_encrypt); 	// 고객 주민등록번호
 	
 
