@@ -253,7 +253,6 @@ value="
 		if(!$isnumcheck($tmp_check_pwd_val,3,true,true,true)
 		|| $find($tmp_phone_middel_4_num,$tmp_check_pwd_val) > -1
 		|| $find($tmp_phone_last_4_num,$tmp_check_pwd_val) > -1
-		|| $find($g_IN_AGREE_RMN_NO_VAR,$tmp_check_pwd_val) > -1
 		){
 			$callaction(fnPopover_AlertAction,,비밀번호는 3자리 이상 동일숫자$2C\n연속숫자 및 고객정보 관련 숫자는\n사용할 수 없어요,,확인);
 			return;
