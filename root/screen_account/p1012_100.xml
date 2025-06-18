@@ -201,12 +201,21 @@ value="
 value="
 	$setvar(frontImage.SRCCLEAR = true); 		// 아이폰 이미지 초기화를 위해 사용 
 	$setvar(tmp_result_N_count = );
+	$delvar(
+        strType, strName, strJuminNumber, strIssueDate, strLicenceNumber, strAddress, strIssueOffice, strSecuritySerial, common,
+        viewJuminNumber, viewIssueDate, viewLicenceNumber
+    );
     $delvar_all(
         strType, strName, strJuminNumber, strIssueDate, strLicenceNumber, strAddress, strIssueOffice, strSecuritySerial, common,
         viewJuminNumber, viewIssueDate, viewLicenceNumber
     );
     $setvar(
         tf_1012_jumin.value = 000000 - 0000000
+        ,tf_1012_jumin2.value = 000000 - 0000000
+        ,tf_1012_LicenceNumber.value = 00 - 00 - 000000 - 00
+        ,tf_1012_LicenceNumber2.value = 00 - 00 - 000000 - 00
+        ,tf_1012_date.value = 0000.00.00
+        ,tf_1012_date2.value = 0000.00.00
     );
     
 
