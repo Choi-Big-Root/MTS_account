@@ -37,6 +37,13 @@
 		,icon_icon_3 			= $callaction(fnGetSvgIconPathName,icon-3)
 		,icon_icon_4 			= $callaction(fnGetSvgIconPathName,icon-4)
 
+		,icon_call 			= $callaction(fnGetSvgIconPathName,icon_call)
+		,icon_file 			= $callaction(fnGetSvgIconPathName,icon_file)
+		,icon_camera 			= $callaction(fnGetSvgIconPathName,icon_camera)
+		,icon_audio 			= $callaction(fnGetSvgIconPathName,icon_audio)
+		,icon_notification 			= $callaction(fnGetSvgIconPathName,icon_notification)
+
+
 		,icon_rectangle_230 			= $callaction(fnGetSvgIconPathName,rectangle-230 )
 
 		,icon_question 			= $callaction(fnGetSvgIconPathName,question)

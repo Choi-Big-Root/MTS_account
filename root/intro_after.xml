@@ -402,30 +402,37 @@ value="
 	$popscreen(pop_screen_permission_agree);
 " />
 <class id="pop_intro_after_permission_info_image"
-width="$cs_height_50" 
-height="$cs_height_50"
-BACKGROUNDSVG_WIDTH="$cs_height_50"
-BACKGROUNDSVG_HEIGHT="$cs_height_50"
+width="$cs_height_64" 
+height="$cs_height_64"
+BACKGROUNDSVG_WIDTH="$cs_height_64"
+BACKGROUNDSVG_HEIGHT="$cs_height_64"
 backgroundimage_align="center"
 backgroundimage_align_vertical="center" 
 />			
 <class id="pop_intro_after_permission_info_vg"
 width="$this.remain_right"
-height="$cs_height_50"
+height="$cs_height_64"
 margin_left="$cs_width_15"
 />
 <class id="pop_intro_after_permission_info_lbl_top"
 width="$this.remain_right"
-height="$cs_height_25" 
-fontname="$cs_font_700"
-fontsize="$cs_fontsize_16"
+height="$cs_height_20" 
+fontname="$cs_font_600"
+fontsize="$cs_fontsize_15"
 textcolor="$cs_color_black"
+/>
+<class id="pop_intro_after_permission_info_lbl_middle"
+width="$this.remain_right"
+height="$cs_height_18" 
+fontname="$cs_font_400"
+fontsize="$cs_fontsize_13"
+textcolor="$cs_color_text"
 />
 <class id="pop_intro_after_permission_info_lbl_bottom"
 width="$this.remain_right"
-height="$this.remain_bottom" 
+height="$cs_height_18" 
 fontname="$cs_font_400"
-fontsize="$cs_fontsize_16"
+fontsize="$cs_fontsize_13"
 textcolor="$cs_color_text"
 />
 <popscreen scope="common"
@@ -445,16 +452,7 @@ textcolor="$cs_color_text"
 		margin_left="$cs_screen_left_right_margin"
     	margin_right="$cs_screen_left_right_margin"
 	>
-		<br height="$cs_height_13" />
-		<label
-		    width="$cs_width_132" 
-		    height="$cs_height_27"
-		    backgroundimage="plist/root/resource/image/3x/ci@3x.png"
-		    backgroundfull="true"
-		    backgroundrepeat="false"
-		    layout="right"
-		/>
-		<br height="$cs_height_25" />
+		<br height="$cs_height_35" />
 		<label
 			width="$this.remain_right"
 			height="$cs_height_34"
@@ -462,7 +460,7 @@ textcolor="$cs_color_text"
 			fontname="$cs_font_600"
 			fontsize="$cs_fontsize_24"
 			textcolor="$cs_color_black"
-			value="앱 이용을 위한"
+			value="앱 접근"
 		/>
 		<br/>
 		<label
@@ -472,146 +470,132 @@ textcolor="$cs_color_text"
 			fontname="$cs_font_600"
 			fontsize="$cs_fontsize_24"
 			textcolor="$cs_color_black"
-			value="접근 권한을 허용해주세요."
+			value="권한 요청이에요"
 		/>
 		<br height="$cs_height_50" />
 		<label 
 			class="pop_intro_after_permission_info_image" 
-			BACKGROUNDSVG="$icon_icon_2"
-	        BACKGROUNDSVG_DISABLE="$icon_icon_2"
-	        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_2"
+			BACKGROUNDSVG="$icon_call"
+	        BACKGROUNDSVG_DISABLE="$icon_call"
+	        BACKGROUNDSVG_HIGHLIGHT="$icon_call"
 		/>
 		<viewgroup
 			class="pop_intro_after_permission_info_vg" 
 		>
 			<label
 				class="pop_intro_after_permission_info_lbl_top"
-				value="[필수] 파일 및 미디어(저장공간)"
+				value="전화"
+			/>
+			<br height="$cs_height_3"/>
+			<label
+				class="pop_intro_after_permission_info_lbl_middle"
+				value="비대면계좌개설, 본인인증 및 확인을 위해"
 			/>
 			<br/>
 			<label
 				class="pop_intro_after_permission_info_lbl_bottom"
-				value="주민등록증 또는 운전면허증"
+				value="휴대폰번호를 수집해요."
 			/>
 		</viewgroup>
-		<br height="$cs_height_15" />
+
+		<br height="$cs_height_30" />
 		<label 
 			class="pop_intro_after_permission_info_image" 
-			BACKGROUNDSVG="$icon_icon_2"
-	        BACKGROUNDSVG_DISABLE="$icon_icon_2"
-	        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_2"
+			BACKGROUNDSVG="$icon_file"
+	        BACKGROUNDSVG_DISABLE="$icon_file"
+	        BACKGROUNDSVG_HIGHLIGHT="$icon_file"
 		/>
 		<viewgroup
 			class="pop_intro_after_permission_info_vg" 
 		>
 			<label
 				class="pop_intro_after_permission_info_lbl_top"
-				value="[필수] 파일 및 미디어(저장공간)"
+				value="파일 및 미디어"
+			/>
+			<br height="$cs_height_3"/>
+			<label
+				class="pop_intro_after_permission_info_lbl_middle"
+				value="비대면계좌개설을 위해 고객님의 신분증"
 			/>
 			<br/>
 			<label
 				class="pop_intro_after_permission_info_lbl_bottom"
-				value="주민등록증 또는 운전면허증"
+				value="이미지 정보를 수집해요."
 			/>
 		</viewgroup>
-		<br height="$cs_height_15" />
+		<br height="$cs_height_30" />
 		<label 
 			class="pop_intro_after_permission_info_image" 
-			BACKGROUNDSVG="$icon_icon_2"
-	        BACKGROUNDSVG_DISABLE="$icon_icon_2"
-	        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_2"
+			BACKGROUNDSVG="$icon_camera"
+	        BACKGROUNDSVG_DISABLE="$icon_camera"
+	        BACKGROUNDSVG_HIGHLIGHT="$icon_camera"
 		/>
 		<viewgroup
 			class="pop_intro_after_permission_info_vg" 
 		>
 			<label
 				class="pop_intro_after_permission_info_lbl_top"
-				value="[필수] 파일 및 미디어(저장공간)"
+				value="카메라"
+			/>
+			<br height="$cs_height_3"/>
+			<label
+				class="pop_intro_after_permission_info_lbl_middle"
+				value="신분증 촬영, 영상 통화 및 본인 확인 절차에"
 			/>
 			<br/>
 			<label
 				class="pop_intro_after_permission_info_lbl_bottom"
-				value="주민등록증 또는 운전면허증"
+				value="사용되어요."
 			/>
 		</viewgroup>
-		<br height="$cs_height_15" />
+		<br height="$cs_height_30" />
 		<label 
 			class="pop_intro_after_permission_info_image" 
-			BACKGROUNDSVG="$icon_icon_2"
-	        BACKGROUNDSVG_DISABLE="$icon_icon_2"
-	        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_2"
+			BACKGROUNDSVG="$icon_audio"
+	        BACKGROUNDSVG_DISABLE="$icon_audio"
+	        BACKGROUNDSVG_HIGHLIGHT="$icon_audio"
 		/>
 		<viewgroup
 			class="pop_intro_after_permission_info_vg" 
 		>
 			<label
 				class="pop_intro_after_permission_info_lbl_top"
-				value="[필수] 파일 및 미디어(저장공간)"
+				value="오디오"
+			/>
+			<br height="$cs_height_3"/>
+			<label
+				class="pop_intro_after_permission_info_lbl_middle"
+				value="본인 확인을 위한 영상 통화 및 음성"
 			/>
 			<br/>
 			<label
 				class="pop_intro_after_permission_info_lbl_bottom"
-				value="주민등록증 또는 운전면허증"
+				value="입력에 사용되어요."
 			/>
 		</viewgroup>
-		<br height="$cs_height_15" />
+		<br height="$cs_height_30" />
 		<label 
 			class="pop_intro_after_permission_info_image" 
-			BACKGROUNDSVG="$icon_icon_2"
-	        BACKGROUNDSVG_DISABLE="$icon_icon_2"
-	        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_2"
+			BACKGROUNDSVG="$icon_notification"
+	        BACKGROUNDSVG_DISABLE="$icon_notification"
+	        BACKGROUNDSVG_HIGHLIGHT="$icon_notification"
 		/>
 		<viewgroup
 			class="pop_intro_after_permission_info_vg" 
 		>
 			<label
 				class="pop_intro_after_permission_info_lbl_top"
-				value="[필수] 파일 및 미디어(저장공간)"
+				value="알림"
+			/>
+			<br height="$cs_height_3"/>
+			<label
+				class="pop_intro_after_permission_info_lbl_middle"
+				value="공지 등 알림(푸시) 메시지를 수신하기 위해"
 			/>
 			<br/>
 			<label
 				class="pop_intro_after_permission_info_lbl_bottom"
-				value="주민등록증 또는 운전면허증"
-			/>
-		</viewgroup>
-		<br height="$cs_height_15" />
-		<label 
-			class="pop_intro_after_permission_info_image" 
-			BACKGROUNDSVG="$icon_icon_2"
-	        BACKGROUNDSVG_DISABLE="$icon_icon_2"
-	        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_2"
-		/>
-		<viewgroup
-			class="pop_intro_after_permission_info_vg" 
-		>
-			<label
-				class="pop_intro_after_permission_info_lbl_top"
-				value="[필수] 파일 및 미디어(저장공간)"
-			/>
-			<br/>
-			<label
-				class="pop_intro_after_permission_info_lbl_bottom"
-				value="주민등록증 또는 운전면허증"
-			/>
-		</viewgroup>
-		<br height="$cs_height_15" />
-		<label 
-			class="pop_intro_after_permission_info_image" 
-			BACKGROUNDSVG="$icon_icon_1"
-	        BACKGROUNDSVG_DISABLE="$icon_icon_1"
-	        BACKGROUNDSVG_HIGHLIGHT="$icon_icon_1"
-		/>
-		<viewgroup
-			class="pop_intro_after_permission_info_vg" 
-		>
-			<label
-				class="pop_intro_after_permission_info_lbl_top"
-				value="[필수] 파일 및 미디어(저장공간)"
-			/>
-			<br/>
-			<label
-				class="pop_intro_after_permission_info_lbl_bottom"
-				value="주민등록증 또는 운전면허증"
+				value="사용되어요."
 			/>
 		</viewgroup>
 
@@ -667,7 +651,7 @@ textcolor="$cs_color_text"
 		textcolor_active="$cs_color_white"
 		textcolor_disable="$cs_color_white"
 		fontname="$cs_font_700"
-		value="확인" 
+		value="다음" 
 		onClicked="fnPopoverPermissionAgree_agree"
 	/>
 </popscreen>
