@@ -106,6 +106,10 @@ onClicked="$setvar(tmp_all_check_flag = true);$callaction(btn_essential_1002_100
 
         ,tmp_all_check_flag = 
 	);
+	// 화면 오픈시 주민등록번호 데이터 초기화
+	$callaction(fnConfig_SetValue,g_tf_1002_confirm_2_var,);
+	$callaction(fnConfig_SetValue,g_tf_1002_confirm_2_encvar,);
+	$callaction(fnConfig_SetValue,g_IN_AGREE_RMN_NO,);
 "/>
 
 <action id="screen_1002_100_onunload" 
@@ -119,6 +123,9 @@ value="
 		,1002_htmldata_4
 		,1002_htmldata_5
 	);
+	$delvar(g_tf_1002_confirm_2_var,g_tf_1002_confirm_2_encvar,strRequestData,strRequestDataReal,tmp_auth_code_phone);
+	$delvar_all(g_tf_1002_confirm_2_var,g_tf_1002_confirm_2_encvar,strRequestData,strRequestDataReal,tmp_auth_code_phone);
+	$delvar_common(g_tf_1002_confirm_2_var,g_tf_1002_confirm_2_encvar,strRequestData,strRequestDataReal,tmp_auth_code_phone);
 " />
 <action id="btn_pop_info_1002_100_onClicked"
 value="
@@ -1006,9 +1013,6 @@ value="
 
 	$addurlparam(strRequestDataReal,q,$strRequestDataEnc);
 
-	$KISA_SEED_CBC_DECRYPT(strRequestDataEnc,strRequestDataDEC);
-
-
 	$setnstimer(TIMER_SMS_INPUT,1,Act_sms_timer,TRUE);
 
 	$setvar(
@@ -1143,7 +1147,6 @@ value="
 		,tf_1002_confirm_3_val = $replace(-,,$tf_1002_confirm_3.value) 		// 4117_100에서 사용
 	);
 
-	$callaction(fnConfig_SetValue,g_IN_AGREE_RMN_NO_VAR 	,$g_tf_1002_confirm_2_var); 	// 주민번호
 	$callaction(fnConfig_SetValue,g_IN_AGREE_RMN_NO 	,$g_tf_1002_confirm_2_encvar); 	// 주민번호
 	$callaction(fnConfig_SetValue,g_IN_AGREE_CLNT_NM 	,$tf_1002_confirm_1.value);		// 고객명
 	$callaction(fnConfig_SetValue,g_IN_REQUEST_TEL_NUM 	,$tf_1002_confirm_3_val);		// 전화번호
@@ -1163,6 +1166,8 @@ value="
  		,tmp_age_man = $substring($tmp_age_man_remain,0,2)
  	);
  	$callaction(fnConfig_SetValue,g_IN_REQUEST_AGE 	,$tmp_age_man);		// 만나이
+
+ 	$delvar(tmp_jumin);
 
  	if($g_IN_REQUEST_AGE >= 65) {
  		$callaction(fnPopover_AlertAction,fnAGEAlertResult,만 65세 이상의 고령투자자 고객은 비대면 계좌개설을 지원하지 않습니다. 직접 내방을 통해 개설을 부탁드립니다.,,확인);
@@ -1189,7 +1194,6 @@ value="
 	$json_setdata($jsonName,HDR,CMD,,$jsonName);			// 
 
 	$json_setdata($jsonName,,BODY,,{});
-	//$json_setdata($jsonName,BODY,RMN_NO,,$g_IN_AGREE_RMN_NO); 		// 주민번호
 	$json_setdata($jsonName,BODY,RMN_NO,,$g_tf_1002_confirm_2_kisa_encrypt); 		// 주민번호
 	$json_setdata($jsonName,BODY,CLNT_NM,,$g_IN_AGREE_CLNT_NM); 	// 고객명
 	$json_setdata($jsonName,BODY,DOC_ID,,P0001); 						// 문서아이디
@@ -1317,7 +1321,6 @@ value="
 	$json_setdata($jsonName,,BODY,,{});
 	$json_setdata($jsonName,BODY,WORK_NO,,$g_OUT_AGREE_WORK_NO); 	// 상담번호
 	$json_setdata($jsonName,BODY,CLNT_NM,,$g_IN_AGREE_CLNT_NM); 	// 고객명 (40이하)
-	//$json_setdata($jsonName,BODY,RMN_NO,,$g_IN_AGREE_RMN_NO); 	// 고객 주민등록번호
 	$json_setdata($jsonName,BODY,RMN_NO,,$g_tf_1002_confirm_2_kisa_encrypt); 	// 고객 주민등록번호
 	
 
