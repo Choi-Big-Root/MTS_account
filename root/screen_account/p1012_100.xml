@@ -197,10 +197,8 @@ value="
 	$closescreen(pop_image_process);
 	$popscreen(pop_caution4);
 "/>
-<action id="screen_contents_onunload_1012" 
+<action id="fnDataClear1012"
 value="
-	$setvar(frontImage.SRCCLEAR = true); 		// 아이폰 이미지 초기화를 위해 사용 
-	$setvar(tmp_result_N_count = );
 	$delvar(
         strType, strName, strJuminNumber, strIssueDate, strLicenceNumber, strAddress, strIssueOffice, strSecuritySerial, common,
         viewJuminNumber, viewIssueDate, viewLicenceNumber
@@ -241,7 +239,13 @@ value="
 
 	$removefile($frontImageName);
 	$delvar(frontImageData);
-
+"/>
+<action id="screen_contents_onunload_1012" 
+value="
+	$setvar(frontImage.SRCCLEAR = true); 		// 아이폰 이미지 초기화를 위해 사용 
+	$setvar(tmp_result_N_count = );
+	
+	$callaction(fnDataClear1012);
 
 " />
 <action id="subscreen_1012_100_onunload" 
@@ -684,6 +688,7 @@ value="	// 비대면 절차개선 - 2020.09.28
 			return;
 		}
 	}
+	$callaction(fnDataClear1012); // 데이터 초기화
 	$callaction(fnConfig_SetValue,g_save_result_yn,$recvSSL_body_result_yn);	// 진위여부 Y 저장
 	
 	$callaction(fnConfig_SetValue,g_recvSSL_body_result_count,0);

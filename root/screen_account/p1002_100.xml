@@ -111,10 +111,8 @@ onClicked="$setvar(tmp_all_check_flag = true);$callaction(btn_essential_1002_100
 	$callaction(fnConfig_SetValue,g_tf_1002_confirm_2_encvar,);
 "/>
 
-<action id="screen_1002_100_onunload" 
+<action id="fnDataClear1002"
 value="
-	$stopnstimer(TIMER_SMS_INPUT); 
-
 	$delvar(
 		1002_htmldata_1
 		,1002_htmldata_2
@@ -125,6 +123,12 @@ value="
 	$delvar(g_tf_1002_confirm_2_var,g_tf_1002_confirm_2_encvar,strRequestData,strRequestDataReal,tmp_auth_code_phone);
 	$delvar_all(g_tf_1002_confirm_2_var,g_tf_1002_confirm_2_encvar,strRequestData,strRequestDataReal,tmp_auth_code_phone);
 	$delvar_common(g_tf_1002_confirm_2_var,g_tf_1002_confirm_2_encvar,strRequestData,strRequestDataReal,tmp_auth_code_phone);
+"/>
+<action id="screen_1002_100_onunload" 
+value="
+	$stopnstimer(TIMER_SMS_INPUT); 
+
+	$callaction(fnDataClear1002);
 " />
 <action id="btn_pop_info_1002_100_onClicked"
 value="
@@ -1401,6 +1405,8 @@ value="
 	//이어하기 처음하기 일단 대기 꼭 확인. //수정.
 	$closescreen(popscreen_number_keypad);
 	$closescreen(popscreen_1002_100_telecom_auth_code);
+
+	$callaction(fnDataClear1002);
 
 	if($g_dev_memory_check_flag){ 					// 금융보안원 검수 버전 
     	$callaction(Act_Open_Account_Move,1006); 	// 비밀번호 설정
