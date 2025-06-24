@@ -1326,7 +1326,7 @@ value="
     $addurlparam(strPostData,format,JSON);
     
 
-	$getrequestdata(OPENAPI_TEST,https://dev-options.eugenefutures.com/wts/kodataapi/enp_search7,fnJikJangSearch_CallBack,strPostData);
+	$getrequestdata(OPENAPI_TEST,https://options.eugenefutures.com/wts/kodataapi/enp_search7,fnJikJangSearch_CallBack,strPostData);
 "/>
 <action id="fnJikJangSearch_CallBack" params="result,strVarName,strURL" value="
     $cleartablerow(tbl_jikjang_addrees);

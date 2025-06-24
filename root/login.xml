@@ -139,7 +139,7 @@ onload="screen_login_onload"
         />
         <button class="cs_btn_none" 
         onClicked="
-        $callaction(Act_Open_Web, https://dev-options.eugenefutures.com/wts/login/egcloud);
+        $callaction(Act_Open_Web, https://options.eugenefutures.com/wts/login/egcloud);
         "
         /> 
     </viewgroup>
@@ -194,28 +194,28 @@ onload="screen_login_onload"
         <button class="cs_btn_login_cert"
         value="클라우드 공동인증서 발급" 
         onClicked="
-        $callaction(Act_Open_Web, https://dev-options.eugenefutures.com/wts/works/PV_0101);
+        $callaction(Act_Open_Web, https://options.eugenefutures.com/wts/works/PV_0101);
         "
         />
         <br height="$cs_height_10"/>
         <button class="cs_btn_login_cert"
         value="타금융사 클라우드 공동인증서 등록" 
         onClicked="
-        $callaction(Act_Open_Web, https://dev-options.eugenefutures.com/wts/works/PV_0201);
+        $callaction(Act_Open_Web, https://options.eugenefutures.com/wts/works/PV_0201);
         "
         />
         <br height="$cs_height_10"/>
         <button class="cs_btn_login_cert"
         value="클라우드 공동인증서 갱신" 
         onClicked="
-        $callaction(Act_Open_Web, https://dev-options.eugenefutures.com/wts/works/PV_0301);
+        $callaction(Act_Open_Web, https://options.eugenefutures.com/wts/works/PV_0301);
         "
         />
         <br height="$cs_height_10"/>
         <button class="cs_btn_login_cert"
         value="클라우드 공동인증서 관리" 
         onClicked="
-        $callaction(Act_Open_Web, https://dev-options.eugenefutures.com/wts/works/PV_0401);
+        $callaction(Act_Open_Web, https://options.eugenefutures.com/wts/works/PV_0401);
         "
         />
     </viewgroup>
