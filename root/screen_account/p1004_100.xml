@@ -1309,10 +1309,15 @@ value="
 <action id="tf_popscreen_1004_choice_jikjang_onChanged" 
 value="
 	//debounce를 구현. xml에서 제어하는게 맞나 싶
-	$setnstimer(TIMER_TF_CHANGE_WAIT,0.3,tf_popscreen_1004_choice_jikjang_onChanged_2,FALSE);
+	if(!$tmp_tf_onchange_ing_flag){
+		$setnstimer(TIMER_TF_CHANGE_WAIT,0.3,tf_popscreen_1004_choice_jikjang_onChanged_2,FALSE);
+	}
 " />
 <action id="tf_popscreen_1004_choice_jikjang_onChanged_2"
 value="
+
+	$setvar(tmp_tf_onchange_ing_flag = true);
+
 	$cleartablerow(tbl_jikjang_addrees);
 	$delvar(strPostData);
     $addurlparam(strPostData,enpnm,$tf_popscreen_1004_choice_jikjang.value);
@@ -1337,7 +1342,10 @@ value="
 		,tmp_enpnm = $json_getdata($jsonName,KED.HEADER.enpnm)
 		
 	);
-	if(!$isequal_string($tmp_enpnm,$tf_popscreen_1004_choice_jikjang.value)){
+
+	$setvar(tmp_tf_onchange_ing_flag = false);
+
+	if(!$isequal_string($tmp_enpnm,$tf_popscreen_1004_choice_jikjang.value)){	
 		$callaction(tf_popscreen_1004_choice_jikjang_onChanged);
 		return;
 	}
