@@ -257,7 +257,7 @@ value="
 				<blank width="$cs_width_5"/>
 				<label
 					class="cs_pop_1_2_lbl_text"
-					value="거래 없이 입금, 출금만 하는 경우, 금융거래 목적이"
+					value="거래 없이 입금 및 출금만 하는 경우, 금융거래 목적이"
 				/>
 				<br/>
 				<label
